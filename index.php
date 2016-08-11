@@ -1,0 +1,1 @@
+aqui va el tablero de resumen
