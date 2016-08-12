@@ -1,0 +1,2 @@
+SetEnv REDIRECT_PATH_CONFIG C:/xampp/htdocs/globmint.com/
+SetEnv REDIRECT_UPLOAD_FILE "C:\xampp\htdocs\globmint.com\"
