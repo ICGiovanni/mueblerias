@@ -16,23 +16,28 @@
 
 </head>
 
-<body class="white-bg">
+<body class="gray-bg">
 
-    <div class="middle-box text-center loginscreen animated fadeInDown">
-        <div>
-            <h1 class="logo-name"><img src="../img/logo_globmint.png" /></h1>
+    <div class="middle-box text-center animated fadeInDown">
+        <div style="background-color: #FFF; padding: 30px 50px 30px 50px;">
+            <img src="../img/logo_globmint2.png" />
 
+            <div class="clear">&nbsp;</div>
+            <div class="clear">&nbsp;</div>
+            <p>SISTEMA DE INVENTARIOS</p>
             <div class="clear"></div>
-            <form class="m-t" role="form" action="index.html">
-                <div class="form-group">
-                    <input type="email" class="form-control" placeholder="Username" required="">
+            <form class="m-t" method="post" role="form" action="login.php">
+                <div class="input-group m-b">
+                    <span class="input-group-addon">@</span>
+                    <input type="text" name="email" value="" placeholder="Correo Electrónico" class="form-control" required="">
                 </div>
-                <div class="form-group">
-                    <input type="password" class="form-control" placeholder="Password" required="">
-                </div>
-                <button type="submit" class="btn btn-info block full-width m-b">Login</button>
+                <div class="input-group m-b">
+                    <span class="input-group-addon"><i class="fa fa-lock">&nbsp;</i></span>
+                    <input type="password" name="password" value="" class="form-control" placeholder="Contraseña" required="">
+                </div>                
+                <button type="submit" class="btn btn-primary block full-width m-b">Login</button>
 
-                <a href="#"><small>¿Recordar contraseña?</small></a>                                
+                <a href="forgot_password.php"><small>¿Recordar contraseña?</small></a>                                
             </form>            
         </div>
     </div>
