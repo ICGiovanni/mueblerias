@@ -1,5 +1,6 @@
 <?php
 
+
 if($_SERVER["SERVER_NAME"]=="localhost"){
 	
 	define("DATA_BASE_HOST","localhost");

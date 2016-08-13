@@ -1,1 +1,3 @@
-aqui va el tablero de resumen
+<?php 
+    header("location: login/");
+?>
