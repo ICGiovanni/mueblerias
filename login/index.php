@@ -1,26 +1,11 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Globmint | Login</title>
-
-    <link href="../css/bootstrap.min.css" rel="stylesheet">
-    <link href="../font-awesome/css/font-awesome.css" rel="stylesheet">
-
-    <link href="../css/animate.css" rel="stylesheet">
-    <link href="../css/style.css" rel="stylesheet">
-
-</head>
-
-<body class="gray-bg">
+<?php
+    include '../config.php';    
+    include $pathProy.'/header.php';
+?>
 
     <div class="middle-box text-center animated fadeInDown">
         <div style="background-color: #FFF; padding: 30px 50px 30px 50px;">
-            <img src="../img/logo_globmint2.png" />
+            <img src="<?php echo $raizProy?>img/logo_globmint2.png" />
 
             <div class="clear">&nbsp;</div>
             <div class="clear">&nbsp;</div>
@@ -43,8 +28,8 @@
     </div>
 
     <!-- Mainly scripts -->
-    <script src="../js/jquery-2.1.1.js"></script>
-    <script src="../js/bootstrap.min.js"></script>
+    <script src="<?php echo $raizProy?>js/jquery-2.1.1.js"></script>
+    <script src="<?php echo $raizProy?>js/bootstrap.min.js"></script>
 
 </body>
 

@@ -1,5 +1,5 @@
 <?php
-    include 'config.php';    
+    include '../config.php';    
     include $pathProy.'/header.php';
     include $pathProy.'/menu.php';
 ?>
@@ -36,5 +36,5 @@
     </div>
 
 <?php
-    include $pathProy.'footer.php';
+    include 'footer.php';
 ?>

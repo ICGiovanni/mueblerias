@@ -5,7 +5,7 @@
                 <ul class="nav metismenu" id="side-menu">
                     <li class="nav-header">
                         <div class="dropdown profile-element">
-                            <span><img alt="image" class="img-circle" src="img/profile_small.jpg" /></span>
+                            <span><img alt="image" class="img-circle" src="<?php echo $raizProy?>img/profile_small.jpg" /></span>
                             <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                                 <span class="clear">
                                     <span class="block m-t-xs"><strong class="font-bold">David Williams</strong></span> 
@@ -19,7 +19,7 @@
                             </ul>
                         </div>
                         <div class="logo-element">
-                            <img src="img/logo_globmint2.png" class="img-responsive"  />
+                            <img src="<?php echo $raizProy?>img/logo_globmint2.png" class="img-responsive"  />
                         </div>
                     </li>                                                 
                     <li class="active">
@@ -60,7 +60,7 @@
                                 <li>
                                     <div class="dropdown-messages-box">
                                         <a href="profile.html" class="pull-left">
-                                            <img alt="image" class="img-circle" src="img/a7.jpg">
+                                            <img alt="image" class="img-circle" src="<?php echo $raizProy?>img/a7.jpg">
                                         </a>
                                         <div class="media-body">
                                             <small class="pull-right">46h ago</small>
@@ -73,7 +73,7 @@
                                 <li>
                                     <div class="dropdown-messages-box">
                                         <a href="profile.html" class="pull-left">
-                                            <img alt="image" class="img-circle" src="img/a4.jpg">
+                                            <img alt="image" class="img-circle" src="<?php echo $raizProy?>img/a4.jpg">
                                         </a>
                                         <div class="media-body ">
                                             <small class="pull-right text-navy">5h ago</small>
@@ -135,7 +135,7 @@
                             </ul>
                         </li>
                         <li>
-                            <a href="">
+                            <a href="<?php echo $ruta?>">
                                 <i class="fa fa-sign-out"></i> Log out
                             </a>
                         </li>
