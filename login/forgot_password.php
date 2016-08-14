@@ -1,5 +1,5 @@
 <?php
-    include '../config.php';    
+    include $_SERVER['REDIRECT_PATH_CONFIG'].'config.php';    
     include $pathProy.'/header.php';
 ?>
      <div class="middle-box text-center animated fadeInDown">

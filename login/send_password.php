@@ -1,6 +1,12 @@
 <?php
+    include include $_SERVER['REDIRECT_PATH_CONFIG'].'config.php';
 
-echo "<pre>";
-    print_r($_POST);
-echo "</pre>";
+    include $pathProy.'login/models/class.Login.php';
 
+    if($_POST){
+                
+    }
+    else{
+        
+    }
+?>

@@ -1,7 +1,7 @@
 # Proyecto Mueblerias Globmint.
 
 ##Configuracion de variable en .htacces **agregar al git-ignore para funcionamiento local
-SetEnv PATH_CONFIG "/kunden/homepages/1/d642566705/htdocs"
+SetEnv PATH_CONFIG "/kunden/homepages/1/d642566705/htdocs/"
 
 
 ## variable para a raiz de archivos
