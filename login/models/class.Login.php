@@ -52,4 +52,16 @@ class Login {
             return $result;
         }
         
+        public function checkMailRegistered($email){
+            $sql = "SELECT login_id FROM `inv_login` WHERE email = :email";
+            $statement = $this->connect->prepare($sql);
+                    $statement->bindParam(':email', $email, PDO::PARAM_STR);
+
+            $statement->execute();
+            $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+            
+            return(!empty($result))?$result[0]:false;
+            
+        }
+        
 }

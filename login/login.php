@@ -1,6 +1,6 @@
 <?php ob_start();
 session_start();
-include include $_SERVER['REDIRECT_PATH_CONFIG'].'config.php';
+include $_SERVER['REDIRECT_PATH_CONFIG'].'config.php';
 
 include $pathProy.'login/models/class.Login.php';
 

@@ -1,5 +1,4 @@
 <?php
-include $_SERVER['REDIRECT_PATH_CONFIG'].'config.php';  
 date_default_timezone_set("America/Mexico_City");
 
 class Connection

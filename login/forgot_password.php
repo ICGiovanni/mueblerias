@@ -17,9 +17,29 @@
                     <form class="m-t" method="post" role="form" action="send_password.php">
                         <div class="input-group m-b">
                             <span class="input-group-addon">@</span>
-                            <input type="text" placeholder="Correo Electrónico" class="form-control">
+                            <input type="text" name="email" placeholder="Correo Electrónico" class="form-control">
                         </div>
-                         <div class="clear">&nbsp;</div>
+                        <?php 
+                            if (isset($_GET['error'])){                         
+                        ?>
+                        <div class="alert alert-danger alert-dismissable">
+                            <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                            <?php echo base64_decode ($_GET['error']); ?>
+                        </div>
+                        <?php                            
+                            }
+                        
+                            if (isset($_GET['success'])){                         
+                        ?>
+                        <div class="alert alert-success">
+                            <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                            <?php echo base64_decode ($_GET['success']); ?>
+                        </div>
+                        <?php                            
+                            }
+                        ?>
+                        
+                        <div class="clear">&nbsp;</div>
                         <button type="submit" class="btn btn-primary block full-width m-b">Solicitar contraseña</button>
 
                     </form>
@@ -27,7 +47,9 @@
             </div>
         </div>
     </div>
-    
+      <!-- Mainly scripts -->
+    <script src="<?php echo $raizProy?>js/jquery-2.1.1.js"></script>
+    <script src="<?php echo $raizProy?>js/bootstrap.min.js"></script>
 </body>
 
 </html>
