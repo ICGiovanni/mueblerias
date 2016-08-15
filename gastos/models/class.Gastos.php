@@ -10,7 +10,7 @@ class Gasto {
 		$c=new Connection();
 		$this->connect=$c->db;
 	}
-	
+
 	public function getGasto($idGasto){
 
 		$sql="SELECT gasto_id, gasto_concepto, gasto_monto, gasto_timestamp FROM gastos WHERE gasto_id = :gasto_id";
