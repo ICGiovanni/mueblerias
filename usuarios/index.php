@@ -1,8 +1,7 @@
-<?php
-    include $_SERVER['REDIRECT_PATH_CONFIG'].'/config.php';
-    include $pathProy.'/header.php';
-    include $pathProy.'/menu.php';
-    
+<?php   include $_SERVER['REDIRECT_PATH_CONFIG'].'/config.php';
+        include $pathProy.'login/session.php';
+        include $pathProy.'/header.php';
+        include $pathProy.'/menu.php';
 ?>
 
 <link href="<?php echo $raizProy?>css/plugins/dataTables/datatables.min.css" rel="stylesheet">
@@ -73,4 +72,3 @@
 <link href="<?php echo $raizProy?>css/plugins/datapicker/datepicker3.css" rel="stylesheet">
 
 <script src="<?php echo $raizProy?>usuarios/js/usuarios.js"></script>    
-

@@ -1,5 +1,5 @@
-<?php ob_start();
-session_start();
+<?php session_start();
+
 include $_SERVER['REDIRECT_PATH_CONFIG'].'config.php';
 
 include $pathProy.'login/models/class.Login.php';
@@ -14,6 +14,7 @@ if($_POST){
         $loginInfo = $login->auth($email, $password);
          
         if($loginInfo){
+            
             $_SESSION['login_session']=$loginInfo;
             header("Location: profile.php");
             exit();

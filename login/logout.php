@@ -1,4 +1,7 @@
-<?php   session_start();
+<?php  session_start();
+
+ob_start();
+    
 
 include $_SERVER['REDIRECT_PATH_CONFIG'].'config.php';
 
@@ -21,3 +24,4 @@ if (ini_get("session.use_cookies")) {
 session_destroy();
 
 header("Location: ".$raizProy);
+?>

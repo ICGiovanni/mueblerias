@@ -1,5 +1,4 @@
 <?php
-
 include $pathProy.'models/connection/class.Connection.php';
 
 class Login {
@@ -115,3 +114,5 @@ class Login {
             return $this->connect->lastInsertId();
         }
 }
+
+?>

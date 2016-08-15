@@ -7,3 +7,4 @@
     $data = $_POST;
     
     echo "Usuario Numero: ".$userLogin->saveUser($data);
+?>    
