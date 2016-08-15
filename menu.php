@@ -19,7 +19,7 @@
                             </ul>
                         </div>
                         <div class="logo-element">
-                            <img src="<?php echo $raizProy?>img/logo_globmint2.png" class="img-responsive"  />
+                            <img src="<?php echo $raizProy?>img/logo_globmint2.png" class="img-responsive" />
                         </div>
                     </li>                                                 
                     <li class="active">
@@ -135,7 +135,7 @@
                             </ul>
                         </li>
                         <li>
-                            <a href="<?php echo $ruta?>">
+                            <a href="<?php echo $ruta.'login/logout.php'?>">
                                 <i class="fa fa-sign-out"></i> Log out
                             </a>
                         </li>

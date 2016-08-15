@@ -7,7 +7,7 @@
     include $pathProy.'login/models/class.Login.php';
 
     if(!isset($login_session)){
-        header('location: '.$raizProy);
+        header('Location: '.$raizProy);
     }
 
     else{
@@ -23,7 +23,7 @@
         $pagina = $_SERVER['SCRIPT_NAME'];
 
         if(!in_array($pagina, $inArrayPages)){
-            header('location: '.$raizProy.'login/profile.php');
+            header('Location: '.$raizProy.'login/profile.php');
         }
 
     }

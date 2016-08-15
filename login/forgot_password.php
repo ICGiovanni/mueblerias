@@ -4,7 +4,7 @@
 ?>
      <div class="middle-box text-center animated fadeInDown">
         <div class="ibox-content" style="background-color: #FFF; padding: 30px 50px 30px 50px;">
-            <a href="index.php"><img src="../img/logo_globmint2.png" /></a>
+            <a href="index.php"><img src="../img/logo_globmint2.png" class="img-responsive"/></a>
             <div class="clear">&nbsp;</div>
             <div class="clear">&nbsp;</div>           
             <p class="text-left">

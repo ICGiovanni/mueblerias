@@ -15,7 +15,7 @@ if($_POST){
          
         if($loginInfo){
             $_SESSION['login_session']=$loginInfo;
-            header("location: profile.php");
+            header("Location: profile.php");
             exit();
         }
         else{

@@ -21,5 +21,3 @@
     <script src="<?php echo $raizProy?>js/inspinia.js"></script>
     <script src="<?php echo $raizProy?>js/plugins/pace/pace.min.js"></script>   
 
-</body>
-</html>

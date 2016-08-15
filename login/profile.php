@@ -7,7 +7,8 @@
         if(isset($login_session['profile_id'])) {
             //para el caso de 1
             if ($login_session['profile_id'] == 1) {
-                echo "redirigir pagina Inicial profile_id 1";
+                $ruta = $raizProy.'usuarios/index.php';
+                header("Location: ".$ruta);
             } //para el caso de 2
             else if ($login_session['profile_id'] == 2) {
                 echo "redirigir pagina Inicial profile_id 2";
