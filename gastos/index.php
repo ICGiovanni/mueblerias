@@ -2,11 +2,26 @@
     include $_SERVER['REDIRECT_PATH_CONFIG'].'/config.php';
     include $pathProy.'/header.php';
     include $pathProy.'/menu.php';
-?><?php
 require_once($_SERVER["REDIRECT_PATH_CONFIG"].'gastos/models/class.Gastos.php');
 
 $objGasto = new Gasto();
 ?>
+<style>
+.glyphicon-refresh-animate {
+    -animation: spin .9s infinite linear;
+    -webkit-animation: spin2 .9s infinite linear;
+}
+
+@-webkit-keyframes spin2 {
+    from { -webkit-transform: rotate(0deg);}
+    to { -webkit-transform: rotate(360deg);}
+}
+
+@keyframes spin {
+    from { transform: scale(1) rotate(0deg);}
+    to { transform: scale(1) rotate(360deg);}
+}
+</style>
 		<div class="wrapper wrapper-content animated fadeInRight">
             <div class="row">
                 <div class="col-lg-12">
@@ -430,12 +445,12 @@ function crea_gasto(){
 	$.ajax({
 		type: "POST",
 		url: "ajax/crea_gasto.php",			
-		data: {gasto_no_documento:gasto_no_documento, gasto_fecha_vencimiento:gasto_fecha_vencimiento, gasto_fecha_recordatorio_si:gasto_fecha_recordatorio_si ,gasto_fecha_recordatorio:gasto_fecha_recordatorio ,gasto_categoria_id: gasto_categoria_id, gasto_concepto: gasto_concepto, gasto_descripcion: gasto_descripcion, gasto_monto: gasto_monto, gasto_status_id:gasto_status_id},
+		data: {gasto_no_documento:gasto_no_documento},
 		success: function(msg){
-			
-			$("#myModal").modal('hide');
-			$("#boton_crea_gasto").removeClass().addClass("btn btn-primary");
-			$("#span_crea_gasto").removeClass();
+			location.reload();
+			//$("#myModal").modal('hide');
+			//$("#boton_crea_gasto").removeClass().addClass("btn btn-primary");
+			//$("#span_crea_gasto").removeClass();
 		}		
 	});
 }
