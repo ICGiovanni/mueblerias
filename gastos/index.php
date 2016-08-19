@@ -22,6 +22,10 @@ while(list(,$dataGasto) = each($rows)){
 	</tr>';
 }
 ?>
+<!-- Data picker -->
+
+
+
 <style>
 .glyphicon-refresh-animate {
     -animation: spin .9s infinite linear;
@@ -114,7 +118,10 @@ while(list(,$dataGasto) = each($rows)){
     <script src="<?=$raizProy?>js/plugins/jeditable/jquery.jeditable.js"></script>
 
     <script src="<?=$raizProy?>js/plugins/dataTables/datatables.min.js"></script>
-
+	<link href="<?=$raizProy?>css/plugins/datapicker/datepicker3.css" rel="stylesheet">
+	<script src="<?=$raizProy?>js/plugins/datapicker/bootstrap-datepicker.js"></script>
+	<script src="<?=$raizProy?>js/plugins/datapicker/bootstrap-datepicker.es.js"></script>
+	
     <!-- Custom and plugin javascript -->
     <script src="<?=$raizProy?>js/inspinia.js"></script>
     <script src="<?=$raizProy?>js/plugins/pace/pace.min.js"></script>
@@ -166,7 +173,14 @@ while(list(,$dataGasto) = each($rows)){
 			</tr>
 			<tr>
 				<td>Fecha de vencimiento:</td>
-				<td><input type="text" name="gasto_fecha_vencimiento" id="gasto_fecha_vencimiento" /></td>
+				<td>
+				<div class="form-group" id="data_1" >
+					<div class="input-group date">
+						<span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" class="form-control" value="03/04/2014">
+					</div>
+				</div>
+				<input type="text" name="gasto_fecha_vencimiento" id="gasto_fecha_vencimiento" />
+				</td>
 			</tr>
 			<tr>
 				<td>Programar Recordatorio:</td>
@@ -205,6 +219,20 @@ while(list(,$dataGasto) = each($rows)){
 </div>
 
 <script>
+
+$(document).ready(function(){
+     $.fn.datepicker.defaults.language = 'es';
+});
+
+
+ $('#data_1 .input-group.date').datepicker({
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true,
+				language: 'es'
+            }).datepicker("setDate", "0");
+
+
 function crea_gasto(){
 	$("#boton_crea_gasto").addClass("disabled");
 	$("#span_crea_gasto").addClass("glyphicon glyphicon-refresh glyphicon-refresh-animate");
