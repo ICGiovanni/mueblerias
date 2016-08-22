@@ -10,6 +10,7 @@
 
     <link href="<?php echo $raizProy?>css/bootstrap.min.css" rel="stylesheet">
     <link href="<?php echo $raizProy?>font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link href="<?php echo $raizProy?>css/plugins/dataTables/datatables.min.css" rel="stylesheet">
 
     <link href="<?php echo $raizProy?>css/animate.css" rel="stylesheet">
     <link href="<?php echo $raizProy?>css/style.css" rel="stylesheet">
