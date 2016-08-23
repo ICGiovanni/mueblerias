@@ -27,7 +27,7 @@
     <div class="wrapper wrapper-content animated fadeInRight">
 		<form method="get" class="form-horizontal">
 			<div class="form-group"><label class="col-sm-2 control-label">Nombre</label>
-			<div class="col-sm-6"><input type="text" class="form-control" id="nombre"></div>
+			<div class="col-sm-6" ><input type="text" class="form-control" id="nombre"></div>
             </div>
             <div class="form-group"><label class="col-sm-2 control-label">Raz&oacute;n Social</label>
 			<div class="col-sm-6"><input type="text" class="form-control" id="razonS"></div>
@@ -52,19 +52,18 @@
 			<div class="col-sm-2"><input type="text" class="form-control" id="codigoPostal"></div>
             </div>
             <div class="form-group">
-            <label class="col-sm-2 control-label">Telefono de Casa</label>
+            <label class="col-sm-2 control-label">Telefono</label>
 			<div class="col-sm-2 "><input type="text" class="form-control" id="telefono"></div>
-			<label class="col-sm-2 control-label">Celular</label>
-			<div class="col-sm-2"><input type="text" class="form-control" id="celular"></div>
+			<label class="col-sm-2 control-label">Telefono Alterno</label>
+			<div class="col-sm-2"><input type="text" class="form-control" id="telefonoA"></div>
             </div>
             <div class="form-group"><label class="col-sm-2 control-label">E-mail</label>
-			<div class="col-sm-6"><input type="text" class="form-control" id="email"></div>
+			<div class="col-sm-6" id="divEmail"><input type="text" class="form-control" id="email"></div>
             </div>
             <div class="form-group">
 			<div class="col-sm-4 col-sm-offset-2">
 			<button class="btn btn-white" id="cancelar" type="button">Cancelar</button>
-			<button class="btn btn-primary" type="submit">Guardar</button>
-			<label class="col-sm-2 control-label">* </label>
+			<button class="btn btn-primary" id="guardar" type="button">Guardar</button>
 			</div>
 			</div>
         
@@ -74,8 +73,53 @@
 <script>
 $(document).ready(function()
 {
+
+	toastr.options=
+	{
+		  "closeButton": true,
+		  "debug": false,
+		  "progressBar": true,
+		  "preventDuplicates": false,
+		  "positionClass": "toast-top-right",
+		  "onclick": null,
+		  "showDuration": "400",
+		  "hideDuration": "1000",
+		  "timeOut": "7000",
+		  "extendedTimeOut": "1000",
+		  "showEasing": "swing",
+		  "hideEasing": "linear",
+		  "showMethod": "fadeIn",
+		  "hideMethod": "fadeOut"
+	}
+	
 	$("#nombre").focus();
 
+	$( "#guardar" ).click(function()
+	{
+		var email_regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i;
+		if($("#nombre").val()=='')
+		{
+			toastr.error('Debe de agregar un Nombre');
+			$("#nombre").val('');
+			$("#nombre").focus();		
+		}
+		else if($("#telefono").val()=='')
+		{
+			toastr.error('Debe de agregar un Telefono');
+			$("#telefono").val('');
+			$("#telefono").focus();
+		}
+		else if(!email_regex.test($("#email").val()))
+		{
+			toastr.error('Debe de agregar un E-mail valido');
+			$("#email").val('');
+			$("#email").focus();
+		}
+
+
+		$('div').removeClass("has-error");
+	});
+	
 	$( "#cancelar" ).click(function()
 	{
 		var url="index.php";
