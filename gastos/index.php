@@ -58,7 +58,7 @@ while(list(,$dataGasto) = each($rows)){
 		<td>$'.number_format($dataGasto["gasto_monto"],2).'</td>
 		<td>'.number_format($dataGasto["gasto_saldo"],2).'</td>
 		<td>'.$asoccGastoStatus[$dataGasto["gasto_status_id"]].'</td>
-		<td align="center"><a href="editar/?gasto_id='.$dataGasto["gasto_id"].'"><i class="fa fa-edit"></i></a> &nbsp;<i class="fa fa-trash"></i></td>
+		<td align="center"><i class="fa fa-dollar" title="Realizar Pago"></i> &nbsp;<i class="fa fa-list-ul" title="Ver detalle de pagos"></i> &nbsp;<a href="editar/?gasto_id='.$dataGasto["gasto_id"].'"><i class="fa fa-edit" title="Editar"></i></a> &nbsp;<i class="fa fa-trash" title="Borrar"></i></td>
 	</tr>';
 }
 
