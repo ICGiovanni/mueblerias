@@ -5,19 +5,42 @@ require_once $pathProy.'/menu.php';
 require_once($_SERVER["REDIRECT_PATH_CONFIG"].'gastos/models/class.Gastos.php');
 
 $objGasto = new Gasto();
-$rows = $objGasto->getGastos();
+
+$filtro_fecha_activo_checked = '';
+if(isset($_GET) && !empty($_GET)){
+	
+	if(isset($_GET["filtro_fecha_activo"]) && $_GET["filtro_fecha_activo"] == 1){ //add fechas
+		$filtro_fecha_activo_checked = 'checked';
+	}
+	if(isset($_GET["filtro_categoria_activo"]) && $_GET["filtro_categoria_activo"] == 1){ //add fechas
+		
+	}
+	if(isset($_GET["filtro_status_activo"]) && $_GET["filtro_status_activo"] == 1){ //add fechas
+		
+	}
+	
+	$rows = $objGasto->getFilteredGastos($_GET);
+	
+} else {
+	$rows = $objGasto->getGastos();
+}
+
 $rowsGastosCategoria = $objGasto->getGastosCategoria();
 $rowsGastosStatus = $objGasto->getGastosStatus();
 
 
 $asoccGastoCategoria = array();
+$options_gasto_categoria_id = '';
 while(list(,$dataGastoCategoria) = each($rowsGastosCategoria)){
-	$asoccGastoCategoria[$dataGastoCategoria["gasto_categoria_id"]]=$dataGastoCategoria["gasto_categoria_desc"];	
+	$asoccGastoCategoria[$dataGastoCategoria["gasto_categoria_id"]]=$dataGastoCategoria["gasto_categoria_desc"];
+	$options_gasto_categoria_id.='<option value="'.$dataGastoCategoria["gasto_categoria_id"].'">'.$dataGastoCategoria["gasto_categoria_desc"].'</option>';
 }
 
 $asoccGastoStatus = array();
+$options_gasto_status_id = '';
 while(list(,$dataGastoStatus) = each($rowsGastosStatus)){
-	$asoccGastoStatus[$dataGastoStatus["gasto_status_id"]]=$dataGastoStatus["gasto_status_desc"];	
+	$asoccGastoStatus[$dataGastoStatus["gasto_status_id"]]=$dataGastoStatus["gasto_status_desc"];
+	$options_gasto_status_id.='<option value="'.$dataGastoStatus["gasto_status_id"].'">'.$dataGastoStatus["gasto_status_desc"].'</option>';	
 }
 
 //print_r($rows);
@@ -77,14 +100,59 @@ while(list(,$dataGasto) = each($rows)){
                             <button type="button" class="btn btn-primary btn-xs"  onclick="location.href = 'nuevo/';" >+ Nuevo Gasto</button>
                             <!--<a class="collapse-link">
                                 <i class="fa fa-plus-square-o"></i>
-                            </a>-->
+                            </a>
                             <a class="collapse-link">
                                 <i class="fa fa-chevron-up"></i>
-                            </a>
+                            </a>-->
 							
                         </div>
                     </div>
                     <div class="ibox-content">
+						<div id="div_search_tools">
+							FILTRAR BUSQUEDA POR 
+						<form>
+							<table class="table-form ">
+								<tr>
+									<td valign="">
+										<input type="checkbox" name="filtro_fecha_activo" id="filtro_fecha_activo" value="1" <?=$filtro_fecha_activo_checked?>/> <b>Rango de fechas</b><br>
+										inicio 
+										<div class="form-group" id="data_rango_inicio" >
+											<div class="input-group date">
+												<span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" class="form-control" id="filtro_fecha_inicio" name="filtro_fecha_inicio" value="">
+											</div>
+										</div>
+									</td>
+									<td valign=""><br>
+										fin
+										<div class="form-group" id="data_rango_fin" >
+											<div class="input-group date">
+												<span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" class="form-control" id="filtro_fecha_fin" name="filtro_fecha_fin" value="">
+											</div>
+										</div>
+									</td>
+									<td valign="top">
+										<input type="checkbox" name="filtro_categoria_activo" id="filtro_categoria_activo" value="1"/> <b>Categoria</b><br><br>
+										<select name="filtro_categoria_id" id="filtro_categoria_id">
+											<?=$options_gasto_categoria_id?>
+										</select>
+									</td>
+									<td valign="top">
+										<input type="checkbox" name="filtro_status_activo" id="filtro_status_activo" value="1"/> <b>Status</b> <br><br>
+										<select name="filtro_status_id" id="filtro_status_id">
+											<?=$options_gasto_status_id?>
+										</select>
+									</td>
+									<td><br>
+										<button type="submit" class="btn btn-primary btn-xs"  onclick="" >Filtrar</button> &nbsp;&nbsp;&nbsp;
+										<button type="button" class="btn btn-warning btn-xs"  onclick="location.href = '.';" >Limpiar Filtros</button>
+									</td>
+								</tr>
+							</table>
+						</form>	
+							
+							
+							
+						</div>
 					
 					<div class="table-responsive">
                     <table class="table table-striped table-bordered table-hover dataTables-example" >
@@ -192,8 +260,23 @@ $(document).ready(function(){
 
             });
 	
+	
      $.fn.datepicker.defaults.language = 'es';
-	 $('.clockpicker').clockpicker();
+	
+	$('#data_rango_inicio .input-group.date').datepicker({
+	keyboardNavigation: false,
+	forceParse: false,
+	autoclose: true,
+	language: 'es'
+	}).datepicker("setDate", "0");
+	
+	$('#data_rango_fin .input-group.date').datepicker({
+	keyboardNavigation: false,
+	forceParse: false,
+	autoclose: true,
+	language: 'es'
+	}).datepicker("setDate", "0");
+
 });
 </script>
 

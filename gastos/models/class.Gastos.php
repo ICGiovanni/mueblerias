@@ -118,6 +118,56 @@ class Gasto {
 		return $result;
 	}
 	
+	public function getFilteredGastos($params){
+		//print_r($params);
+		
+		$where = array();
+		if(isset($params["filtro_fecha_activo"]) && $params["filtro_fecha_activo"] == 1){ //add fechas
+		
+			list($filtro_fecha_inicio_dia,$filtro_fecha_inicio_mes,$filtro_fecha_inicio_ano)=explode("/",$params["filtro_fecha_inicio"]);
+			list($filtro_fecha_fin_dia,$filtro_fecha_fin_mes,$filtro_fecha_fin_ano)=explode("/",$params["filtro_fecha_fin"]);
+			$where[]=" gasto_fecha_vencimiento BETWEEN '".$filtro_fecha_inicio_ano."-".$filtro_fecha_inicio_mes."-".$filtro_fecha_inicio_dia."' AND '".$filtro_fecha_fin_ano."-".$filtro_fecha_fin_mes."-".$filtro_fecha_fin_dia."' ";
+	
+		}
+		if(isset($params["filtro_categoria_activo"]) && $params["filtro_categoria_activo"] == 1){ //add fechas
+			//echo "add categoria";
+			$where[]=" gasto_categoria_id = '".$params["filtro_categoria_id"]."'";
+		}
+		if(isset($params["filtro_status_activo"]) && $params["filtro_status_activo"] == 1){ //add fechas
+			//echo "add status";
+			$where[]=" gasto_status_id = '".$params["filtro_status_id"]."'";
+		}
+		
+		$str_where = "";
+		if(!empty($where)){
+			$str_where = "WHERE ".implode(" AND ",$where);
+		}
+		//echo $str_where;
+	
+		$sql="SELECT 
+		gasto_id,
+		gasto_no_documento,
+		gasto_fecha_vencimiento,
+		gasto_fecha_recordatorio,
+		gasto_concepto,
+		gasto_descripcion,
+		gasto_monto,
+		gasto_categoria_id,
+		gasto_status_id,
+		proveedor_id,
+		usuario_id FROM gastos ".$str_where." ORDER BY gasto_id DESC";
+		
+
+		$statement=$this->connect->prepare($sql);
+		
+		//$statement->bindParam(':gasto_id', $idGasto, PDO::PARAM_STR);
+
+		$statement->execute();
+        $result=$statement->fetchAll(PDO::FETCH_ASSOC);
+
+		return $result;
+	}
+	
 	public function getGasto($gasto_id){
 
 		$sql="SELECT 
