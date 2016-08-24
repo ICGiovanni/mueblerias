@@ -16,6 +16,7 @@ class General
 	{
 		$sql="SELECT e.id_estado,e.estado
 				FROM estados e
+				WHERE e.estado!=''
 				ORDER BY e.estado ASC";
 		
 		$statement=$this->connect->prepare($sql);		

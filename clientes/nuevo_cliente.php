@@ -26,50 +26,50 @@
     </div>
 
     <div class="wrapper wrapper-content animated fadeInRight">
-		<form method="get" class="form-horizontal">
+		<form method="get" class="form-horizontal" action="/" id="form_cliente">
 			<div class="form-group"><label class="col-sm-2 control-label">Nombre</label>
-			<div class="col-sm-6" ><input type="text" class="form-control" id="nombre"></div>
+			<div class="col-sm-6" ><input type="text" class="form-control" id="nombre" name="nombre"></div>
             </div>
             <div class="form-group"><label class="col-sm-2 control-label">Raz&oacute;n Social</label>
-			<div class="col-sm-6"><input type="text" class="form-control" id="razonS"></div>
+			<div class="col-sm-6"><input type="text" class="form-control" id="razonS" name="razonS"></div>
             </div>
             <div class="form-group"><label class="col-sm-2 control-label">RFC</label>
-			<div class="col-sm-6"><input type="text" class="form-control" id="rfc"></div>
+			<div class="col-sm-6"><input type="text" class="form-control" id="rfc" name="rfc"></div>
             </div>
             <div class="form-group"><label class="col-sm-2 control-label">Calle</label>
-			<div class="col-sm-6"><input type="text" class="form-control" id="calle"></div>
+			<div class="col-sm-6"><input type="text" class="form-control" id="calle" name="calle"></div>
             </div>
             <div class="form-group">
             <label class="col-sm-2 control-label">No. Exterior</label>
-			<div class="col-sm-2"><input type="text" class="form-control" id="noExt"></div>
+			<div class="col-sm-2"><input type="text" class="form-control" id="noExt" name="noExt"></div>
 			<label class="col-sm-2 control-label">No. Interior</label>
-			<div class="col-sm-2"><input type="text" class="form-control" id="noInt"></div>
+			<div class="col-sm-2"><input type="text" class="form-control" id="noInt" name="noInt"></div>
             </div>
             <div class="form-group"><label class="col-sm-2 control-label">Colonia</label>
-			<div class="col-sm-6"><input type="text" class="form-control" id="colonia"></div>
+			<div class="col-sm-6"><input type="text" class="form-control" id="colonia" name="colonia"></div>
             </div>
             <div class="form-group">
 			<label class="col-sm-2 control-label">C.P.</label>
-			<div class="col-sm-2"><input type="text" class="form-control" id="codigoPostal"></div>
+			<div class="col-sm-2"><input type="text" class="form-control" id="codigoPostal" name="codigoPostal"></div>
             </div>
             <div class="form-group"><label class="col-sm-2 control-label">Municipio</label>
-			<div class="col-sm-6"><input type="text" class="form-control" id="municipio"></div>
+			<div class="col-sm-6"><input type="text" class="form-control" id="municipio" name="municipio"></div>
             </div>
             <div class="form-group"><label class="col-sm-2 control-label">Estado</label>
 			<div class="col-sm-6">
-			<select id="estado" class="form-control m-b">
+			<select id="estado" name="estado" class="form-control m-b">
             <option value="">Seleccione un Estado</option>
             </select>
 			</div>
 			</div>
             <div class="form-group">
             <label class="col-sm-2 control-label">Telefono</label>
-			<div class="col-sm-2 "><input type="text" class="form-control" id="telefono"></div>
+			<div class="col-sm-2 "><input type="text" class="form-control" id="telefono" name="telefono"></div>
 			<label class="col-sm-2 control-label">Telefono Alterno</label>
-			<div class="col-sm-2"><input type="text" class="form-control" id="telefonoA"></div>
+			<div class="col-sm-2"><input type="text" class="form-control" id="telefonoA" name="telefonoA"></div>
             </div>
             <div class="form-group"><label class="col-sm-2 control-label">E-mail</label>
-			<div class="col-sm-6" id="divEmail"><input type="text" class="form-control" id="email"></div>
+			<div class="col-sm-6" id="divEmail"><input type="text" class="form-control" id="email" name="email"></div>
             </div>
             <div class="form-group">
 			<div class="col-sm-4 col-sm-offset-2">
@@ -126,9 +126,25 @@ $(document).ready(function()
 			$("#email").val('');
 			$("#email").focus();
 		}
+		else
+		{
+			var url="guardar_cliente.php";
+			 
+			$.ajax(
+			{
+		    	type: "POST",
+		        url: url,
+		        data: $("#form_cliente").serialize(), // serializes the form's elements.
+		        success: function(data)
+		        {
+		        	alert("El Cliente ha sido registrado"); // show response from the php script.
+		        	var url="index.php";
+		    		$(location).attr("href", url);
+				}
+			});
 
-
-		$('div').removeClass("has-error");
+			
+		}
 	});
 	
 	$( "#cancelar" ).click(function()
