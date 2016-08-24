@@ -1,5 +1,6 @@
 <?php
     include $_SERVER['REDIRECT_PATH_CONFIG'].'/config.php';
+    //include $pathProy.'login/session.php';
     include $pathProy.'/header.php';
     include $pathProy.'/menu.php';
 ?>
@@ -51,6 +52,16 @@
 			<label class="col-sm-2 control-label">C.P.</label>
 			<div class="col-sm-2"><input type="text" class="form-control" id="codigoPostal"></div>
             </div>
+            <div class="form-group"><label class="col-sm-2 control-label">Municipio</label>
+			<div class="col-sm-6"><input type="text" class="form-control" id="municipio"></div>
+            </div>
+            <div class="form-group"><label class="col-sm-2 control-label">Estado</label>
+			<div class="col-sm-6">
+			<select id="estado" class="form-control m-b">
+            <option value="">Seleccione un Estado</option>
+            </select>
+			</div>
+			</div>
             <div class="form-group">
             <label class="col-sm-2 control-label">Telefono</label>
 			<div class="col-sm-2 "><input type="text" class="form-control" id="telefono"></div>
@@ -125,6 +136,14 @@ $(document).ready(function()
 		var url="index.php";
 		$(location).attr("href", url);
 	});
+
+	$.getJSON("states_json.php",function(result)
+	{
+        $.each(result, function(i, field)
+		{
+        	$("#estado").append('<option value="'+field.id_estado+'" >'+field.estado+'</option>');
+        });
+    });
 	
 });
 </script>

@@ -1,5 +1,6 @@
 <?php
-    include $_SERVER['REDIRECT_PATH_CONFIG'].'/config.php';
+	include $_SERVER['REDIRECT_PATH_CONFIG'].'/config.php';
+   // include $pathProy.'login/session.php';
     include $pathProy.'/header.php';
     include $pathProy.'/menu.php';
 ?>
