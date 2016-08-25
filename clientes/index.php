@@ -1,5 +1,6 @@
 <?php
 	include $_SERVER['REDIRECT_PATH_CONFIG'].'/config.php';
+	require_once($_SERVER["REDIRECT_PATH_CONFIG"].'clientes/models/class.Clientes.php');
    // include $pathProy.'login/session.php';
     include $pathProy.'/header.php';
     include $pathProy.'/menu.php';
@@ -20,7 +21,7 @@
         </div>
         <div class="col-sm-8">
             <div class="title-action">
-                <a href="./nuevo_cliente.php" class="btn btn-primary">Agregar un nuevo Cliente</a>
+                <a href="./nuevo_cliente.php" class="btn btn-primary">Agregar Cliente</a>
             </div>
         </div>
     </div>
@@ -29,10 +30,9 @@
             <div class="row">
                 <div class="col-lg-12">
                 <div class="ibox float-e-margins">
-                    <div class="ibox-title">
-                        <h5>Basic Data Tables example with responsive plugin</h5>
+                    <!--<div class="ibox-title">
                         <div class="ibox-tools">
-                            <!-- <a class="collapse-link">
+                             <a class="collapse-link">
                                 <i class="fa fa-chevron-up"></i>
                             </a>
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
@@ -46,47 +46,113 @@
                             </ul>
                             <a class="close-link">
                                 <i class="fa fa-times"></i>
-                            </a>-->
+                            </a>
                         </div>
-                    </div>
+                    </div>-->
                     <div class="ibox-content">
 
                         <div class="table-responsive">
-                    <table class="table table-striped table-bordered table-hover dataTables-example" >
+                    <table class="table table-striped table-bordered table-hover dataTables-example" id="tabla_clientes">
                     <thead>
                     <tr>
+                    	<th>ID</th>
                         <th>Cliente</th>
-                        <th>E-mail</th>
+                        <th>Datos Fiscales</th>
                         <th>Direcci&oacute;n</th>
+                        <th>Telefono</th>
+                        <th>E-mail</th>
                         <th></th>
                         
                     </tr>
                     </thead>
-                    <tbody>
-                    <tr class="gradeX">
-                        <td>rident</td>
-                        <td>Internet
-                            Explorer 4.0
-                        </td>
-                        <td>Win 95+</td>
-                        <td class="center">4</td>
-                        
-                    </tr>
-                    <tr class="gradeC">
-                        <td>Trident</td>
-                        <td>Internet
-                            Explorer 5.0
-                        </td>
-                        <td>Win 95+</td>
-                        <td class="center">5</td>
-                        
-                    </tr>
-                                       </tbody>
+                    <tbody id="clientes">
+                    <?php
+                   	$json=file_get_contents("json/lista_clientes.json");
+                    $json=json_decode($json);
+                    $tr="";
+                    foreach($json as $d)
+                    {
+                    	$id_cliente=$d->id_cliente;
+                    	$cliente=$d->cliente;
+                    	$rfc=$d->rfc;
+                    	$razon_social=$d->razon_social;
+                    	$telefono=$d->telefono;
+                    	$email=$d->email;
+                    	$datos_fiscales="";
+                    	$direccion="";
+                    	
+                    	if($rfc!='')
+                    	{
+                    		$datos_fiscales.='RFC: '.$rfc;
+                    	}
+                    	
+                    	if($razon_social)
+                    	{
+                    		$datos_fiscales.='<br>'.$razon_social;
+                    	}
+                    	
+                    	
+                    	if($d->calle!='')
+                    	{
+                    		$direccion.=$d->calle;
+                    	}
+                    	
+                    	if($d->num_exterior!='')
+                    	{
+                    		$direccion.=' No. Exterior '.$d->num_exterior;
+                    	}
+                    	
+                    	if($d->num_interior!='')
+                    	{
+                    		$direccion.=' No. Interior '.$d->num_interior;
+                    	}
+                    	
+                    	if($d->colonia)
+                    	{
+                    		$direccion.=' Col. '.$d->colonia;
+                    	}
+                    	
+                    	if($d->codigo_postal!='')
+                    	{
+                    		$direccion.=' C.P.'.$d->codigo_postal;
+                    	}
+                    	
+                    	if($d->municipio!='' && $d->estado!='')
+                    	{
+                    		$direccion.=' '.$d->municipio.', '.$d->estado;
+                    	}
+                    	else if($d->municipio)
+                    	{
+                    		$direccion.=' '.$d->municipio;
+                    	}
+                    	else if($d->estado!='')
+                    	{
+                    		$direccion.=' '.$d->estado;
+                    	}
+                    	
+                    	$tr.='<tr class="gradeX">';
+                    	$tr.='<td>'.$id_cliente.'</td>';
+                    	$tr.='<td>'.$cliente.'</td>';
+                    	$tr.='<td>'.$datos_fiscales.'</td>';
+                    	$tr.='<td>'.$direccion.'</td>';
+                    	$tr.='<td>'.$telefono.'</td>';
+                    	$tr.='<td>'.$email.'</td>';
+                    	$tr.='<td><div class="infont col-md-3 col-sm-4"><a href="editar_cliente.php?id='.$id_cliente.'"><i class="fa fa-pencil"></i></a></div><div class="infont col-md-3 col-sm-4"><a href="#" onClick="borrar_cliente('.$id_cliente.');"><i class="fa fa-trash-o"></i></a></div></td>';
+                    	$tr.='</tr>';
+                    	
+                    }
+                    echo $tr;                    
+                    ?>
+                   
+                    </tbody>
                     <tfoot>
                     <tr>
+                        <th>ID</th>
                         <th>Cliente</th>
-                        <th>E-mail</th>
+                        <th>Datos Fiscales</th>
                         <th>Direcci&oacute;n</th>
+                        <th>Telefono</th>
+                        <th>E-mail</th>
                         <th></th>
                     </tr>
                     </tfoot>
@@ -104,7 +170,8 @@
     <!-- Page-Level Scripts -->
     <script>
         $(document).ready(function(){
-            $('.dataTables-example').DataTable({
+
+        	$('.dataTables-example').DataTable({
                 dom: '<"html5buttons"B>lTfgitp',
                 buttons: [
                     { extend: 'copy'},
@@ -125,10 +192,26 @@
                 ]
 
             });
-
-
-
+            
         });
+
+        function borrar_cliente(id_cliente)
+        {
+        	var url="borrar_cliente.php";
+        				 
+			$.ajax(
+			{
+		    	type: "POST",
+		        url: url,
+		        data: {id:id_cliente}, // serializes the form's elements.
+		        success: function(data)
+		        {
+		        	alert("El Cliente ha sido borrado"); // show response from the php script.
+		        	var url="index.php";
+		    		$(location).attr("href", url);
+				}
+			});
+        }
 
     </script>
 
