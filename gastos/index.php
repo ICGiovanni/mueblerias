@@ -48,8 +48,10 @@ $html_rows = '';
 
 
 while(list(,$dataGasto) = each($rows)){
-	$suma_pagos = 0;
-	$dataGasto["gasto_saldo"]=$dataGasto["gasto_monto"] - $suma_pagos;
+	$rowPagos = $objGasto->getPagos($dataGasto["gasto_id"]);
+	$rowPagos=$rowPagos[0];
+	
+	$dataGasto["gasto_saldo"]=$dataGasto["gasto_monto"] - $rowPagos["gastos_pagos_monto"];
 	$html_rows.= '<tr>
 		<td>'.$dataGasto["gasto_no_documento"].'</td>
 		<td>'.$dataGasto["gasto_fecha_vencimiento"].'</td>
@@ -57,8 +59,8 @@ while(list(,$dataGasto) = each($rows)){
 		<td>'.$dataGasto["gasto_concepto"].'</td>
 		<td>$'.number_format($dataGasto["gasto_monto"],2).'</td>
 		<td>'.number_format($dataGasto["gasto_saldo"],2).'</td>
-		<td>'.$asoccGastoStatus[$dataGasto["gasto_status_id"]].'</td>
-		<td align="center"><i class="fa fa-dollar" title="Realizar Pago"></i> &nbsp;<i class="fa fa-list-ul" title="Ver detalle de pagos"></i> &nbsp;<a href="editar/?gasto_id='.$dataGasto["gasto_id"].'"><i class="fa fa-edit" title="Editar"></i></a> &nbsp;<i class="fa fa-trash" title="Borrar"></i></td>
+		<!-- <td>'.$asoccGastoStatus[$dataGasto["gasto_status_id"]].'</td>-->
+		<td align="center"><a href="pago_nuevo/?gasto_id='.$dataGasto["gasto_id"].'"><i class="fa fa-dollar" title="Realizar Pago"></i></a> &nbsp;<i class="fa fa-list-ul" title="Ver detalle de pagos"></i> &nbsp;<a href="editar/?gasto_id='.$dataGasto["gasto_id"].'"><i class="fa fa-edit" title="Editar"></i></a> &nbsp;<i class="fa fa-trash" title="Borrar"></i></td>
 	</tr>';
 }
 
@@ -164,7 +166,7 @@ while(list(,$dataGasto) = each($rows)){
                         <th>Concepto</th>
                         <th>Monto</th>
 						<th>Saldo</th>
-                        <th>Status</th>
+                      <!--  <th>Status</th> -->
 						<th style="text-align:center;">Acción</th>
 						
                     </tr>
@@ -180,7 +182,7 @@ while(list(,$dataGasto) = each($rows)){
                         <th>Concepto</th>
                         <th>Monto</th>
 						<th>Saldo</th>
-                        <th>Status</th>
+                     <!--    <th>Status</th> -->
 						<th style="text-align:center;">Acción</th>
                     </tr>
                     </tfoot>

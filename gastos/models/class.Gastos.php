@@ -208,6 +208,21 @@ class Gasto {
 		return $result;
 	}
 	
+	public function getFormasPago(){
+		$sql="SELECT 
+		gastos_pagos_forma_de_pago_id,
+		gastos_pagos_forma_de_pago_desc
+		FROM gastos_pagos_forma_de_pago";
+
+		$statement=$this->connect->prepare($sql);
+		//$statement->bindParam(':gasto_id', $idGasto, PDO::PARAM_STR);
+
+		$statement->execute();
+        $result=$statement->fetchAll(PDO::FETCH_ASSOC);
+
+		return $result;
+	}
+	
 	public function getGastosStatus(){
 		$sql="SELECT 
 		gasto_status_id,
@@ -216,6 +231,54 @@ class Gasto {
 
 		$statement=$this->connect->prepare($sql);
 		//$statement->bindParam(':gasto_id', $idGasto, PDO::PARAM_STR);
+
+		$statement->execute();
+        $result=$statement->fetchAll(PDO::FETCH_ASSOC);
+
+		return $result;
+	}
+	
+	/////////////////////////////////////////////////////////////////////
+	
+	public function insertGastoPago($params){
+		$sql = "INSERT INTO gastos_pagos 
+		( gasto_id,
+		gastos_pagos_monto,
+		gastos_pagos_forma_de_pago_id,
+		gastos_pagos_es_fiscal,
+		gastos_pagos_monto_sin_iva,
+		gastos_pagos_iva,
+		gastos_pagos_fecha )
+		VALUES
+		( :gasto_id,
+		:gastos_pagos_monto,
+		:gastos_pagos_forma_de_pago_id,
+		:gastos_pagos_es_fiscal,
+		:gastos_pagos_monto_sin_iva,		
+		:gastos_pagos_iva,
+		:gastos_pagos_fecha )";
+		
+		//print_r($params);
+		$statement=$this->connect->prepare($sql);
+		
+		$statement->bindParam(':gasto_id', $params['gasto_id'], PDO::PARAM_STR);
+        $statement->bindParam(':gastos_pagos_monto', $params['gastos_pagos_monto'], PDO::PARAM_STR);
+		$statement->bindParam(':gastos_pagos_forma_de_pago_id', $params['gastos_pagos_forma_de_pago_id'], PDO::PARAM_STR);
+		$statement->bindParam(':gastos_pagos_es_fiscal', $params['gastos_pagos_es_fiscal'], PDO::PARAM_STR);
+		$statement->bindParam(':gastos_pagos_monto_sin_iva', $params['gastos_pagos_monto_sin_iva'], PDO::PARAM_STR);
+		$statement->bindParam(':gastos_pagos_iva', $params['gastos_pagos_iva'], PDO::PARAM_STR);
+        $statement->bindParam(':gastos_pagos_fecha', $params['gastos_pagos_fecha'], PDO::PARAM_STR);		
+		
+		$statement->execute();
+		return $this->connect->lastInsertId();
+	}
+	
+	public function getPagos($gasto_id){
+		
+		$sql="SELECT SUM(gastos_pagos_monto) as gastos_pagos_monto FROM gastos_pagos WHERE gasto_id = :gasto_id";
+
+		$statement=$this->connect->prepare($sql);
+		$statement->bindParam(':gasto_id', $gasto_id, PDO::PARAM_STR);
 
 		$statement->execute();
         $result=$statement->fetchAll(PDO::FETCH_ASSOC);
