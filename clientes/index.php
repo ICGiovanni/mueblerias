@@ -1,5 +1,6 @@
 <?php
-    include $_SERVER['REDIRECT_PATH_CONFIG'].'/config.php';
+	include $_SERVER['REDIRECT_PATH_CONFIG'].'/config.php';
+   // include $pathProy.'login/session.php';
     include $pathProy.'/header.php';
     include $pathProy.'/menu.php';
 ?>
@@ -10,16 +11,16 @@
             <h2>Clientes</h2>
             <ol class="breadcrumb">
                 <li>
-                    <a href="">This is</a>
+                    <a href="">Clientes</a>
                 </li>
                 <li class="active">
-                    <strong>Clientes</strong>
+                    <strong>Lista de Clientes</strong>
                 </li>
             </ol>
         </div>
         <div class="col-sm-8">
             <div class="title-action">
-                <a href="" class="btn btn-primary">Agregar un nuevo Cliente</a>
+                <a href="./nuevo_cliente.php" class="btn btn-primary">Agregar un nuevo Cliente</a>
             </div>
         </div>
     </div>
