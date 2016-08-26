@@ -67,8 +67,8 @@ class Login {
             $sql = "SELECT * FROM inv_login 
                     INNER JOIN inv_profile USING (profile_id)
                     INNER JOIN inv_status USING (status_id)
-                    WHERE collaborator=".$typeUser.
-                    " ORDER by created_timestamp DESC";
+                    WHERE status_id!=99
+                     ORDER by created_timestamp DESC";
             
             $statement = $this->connect->prepare($sql);                    
 
@@ -112,6 +112,37 @@ class Login {
             $statement->execute();            
 
             return $this->connect->lastInsertId();
+        }
+        
+        public function getProfiles(){
+            
+            $sql = "SELECT profile_id, profile_name FROM inv_profile";
+            $statement = $this->connect->prepare($sql);                   
+
+            $statement->execute();
+            $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+            
+            return(!empty($result))?$result:false;
+            
+        }
+        
+        public function getSucursales(){
+            
+            $sql = "SELECT sucursal_id, sucursal_name FROM inv_sucursales";
+            $statement = $this->connect->prepare($sql);                   
+
+            $statement->execute();
+            $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+            
+            return(!empty($result))?$result:false;
+            
+        }
+        
+        public function deleteUser($profile_id){
+            $sql = "UPDATE inv_login SET status_id=99  WHERE login_id = ".$profile_id;
+            $statement = $this->connect->prepare($sql);                    
+
+            $statement->execute();
         }
 }
 

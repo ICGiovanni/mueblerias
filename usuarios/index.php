@@ -15,28 +15,10 @@
             <div class="row">
                 <div class="col-lg-10"><h4>Control de Usuarios <small>&nbsp;</small></h4></div>
                 <div class="col-lg-2">
-                    <button class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+                    <a href='newUser.php' class="btn btn-primary" >
                         <i class="fa fa-user-plus"></i>&nbsp;usuario
-                    </button>
-                </div>
-                <div class="modal inmodal" id="myModal" tabindex="-1" role="dialog" aria-hidden="true">
-                    <div class="modal-dialog">
-                    <div class="modal-content animated fadeInDown">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                                <i class="fa fa-user fa-4x"></i>
-                                <h4 class="modal-title">Usuario</h4>                                
-                            </div>
-                            <div class="modal-body">
-                                <?php include 'templateUserForm.php'?>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-white" data-dismiss="modal" id="cancelarUser">Close</button>
-                                <button type="button" class="btn btn-primary" id="saveUser">Save changes</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                    </a>
+                </div>               
             </div>            
         </div>    
         <div class="ibox-content animated fadeInRightBig">
@@ -69,6 +51,9 @@
 <script src="<?php echo $raizProy?>js/plugins/jeditable/jquery.jeditable.js"></script>
 <script src="<?php echo $raizProy?>js/plugins/dataTables/datatables.min.js"></script>    
 <script src="<?php echo $raizProy?>js/plugins/datapicker/bootstrap-datepicker.js"></script>
-<link href="<?php echo $raizProy?>css/plugins/datapicker/datepicker3.css" rel="stylesheet">
+<script src="<?php echo $raizProy?>js/plugins/sweetalert/sweetalert.min.js"></script>
 
+<link href="<?php echo $raizProy?>css/plugins/datapicker/datepicker3.css" rel="stylesheet">
+<link href="<?php echo $raizProy?>css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+  
 <script src="<?php echo $raizProy?>usuarios/js/usuarios.js"></script>    
