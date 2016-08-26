@@ -34,7 +34,7 @@
                 <div class="ibox float-e-margins">
                     <div class="ibox-content no-padding">
 
-                        <div class="summernote">
+                        <div class="summernote" id="textHtml">
                             
                         </div>
 
@@ -55,12 +55,33 @@
 $(document).ready(function()
 {
 	$("#nombre").focus();
-	$('.summernote').summernote();
+	$('#textHtml').summernote();
 
 	$( "#cancelar" ).click(function()
 	{
 		var url="index.php";
 		$(location).attr("href", url);
+	});
+
+	$("#guardar").click(function()
+	{
+		var nombre=$("#nombre").val();
+		var aHTML=$("#textHtml").code();
+		
+		var url="guardar_campana.php";
+		 
+		$.ajax(
+		{
+	    	type: "POST",
+	        url: url,
+	        data: {nombre:nombre,text:aHTML}, // serializes the form's elements.
+	        success: function(data)
+	        {
+	        	alert("La Campa&ntilde;a ha sido guardada"); // show response from the php script.
+	        	var url="index.php";
+	    		$(location).attr("href", url);
+			}
+		});
 	});
 });
 
