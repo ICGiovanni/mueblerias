@@ -273,9 +273,26 @@ class Gasto {
 		return $this->connect->lastInsertId();
 	}
 	
-	public function getPagos($gasto_id){
+	public function getPagosSum($gasto_id){
 		
 		$sql="SELECT SUM(gastos_pagos_monto) as gastos_pagos_monto FROM gastos_pagos WHERE gasto_id = :gasto_id";
+
+		$statement=$this->connect->prepare($sql);
+		$statement->bindParam(':gasto_id', $gasto_id, PDO::PARAM_STR);
+
+		$statement->execute();
+        $result=$statement->fetchAll(PDO::FETCH_ASSOC);
+
+		return $result;
+	}
+	
+	public function getPagosDetalle($gasto_id){
+		$sql="SELECT 
+		gastos_pagos_id, gastos_pagos_monto, gastos_pagos_forma_de_pago_id, gastos_pagos_forma_de_pago_desc, gastos_pagos_es_fiscal, 
+		gastos_pagos_monto_sin_iva, gastos_pagos_iva, gastos_pagos_fecha
+		FROM gastos_pagos 
+		INNER JOIN gastos_pagos_forma_de_pago USING (gastos_pagos_forma_de_pago_id)
+		WHERE gasto_id = :gasto_id";
 
 		$statement=$this->connect->prepare($sql);
 		$statement->bindParam(':gasto_id', $gasto_id, PDO::PARAM_STR);
