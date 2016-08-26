@@ -164,7 +164,9 @@
             </div>
             </div>
 	</div>
-
+	<script src="<?php echo $raizProy?>js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+    <script src="<?php echo $raizProy?>js/plugins/dataTables/datatables.min.js"></script>
+    
 
 
     <!-- Page-Level Scripts -->
