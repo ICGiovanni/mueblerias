@@ -20,13 +20,13 @@
                         </div>    
                     </td>
                     <td>".date('d/m/Y H:i:s ', $user['created_timestamp'])."</td>
-                    <td>".$user['status_name']."</td>
+                    <td>".$user['status_name']."</td>                        
                     <td>".$user['email']."</td>
                     <td class='text-center'>
                         <button class='btn btn-warning'><i class='fa fa-pencil'></i></button>
                     </td>
                     <td class='text-center'>
-                        <button class='btn btn-danger'><i class='fa fa-times'></i></button>
+                        <button class='btn btn-danger borrar-user' id='".$user['login_id']."' data-name='".$user['firstName']."&nbsp;".$user['lastName']."'><i class='fa fa-times'></i></button>
                     </td>
                  </tr>";
         }                                                

@@ -48,7 +48,7 @@
     <div class="col-md-6">
         <div class="form-group" id="data_1">            
             <div class="input-group date">
-                <span class="input-group-addon"><i class="fa fa-calendar"></i></span><input class="form-control" value="" type="text" id="fechaNacimiento">
+                <span class="input-group-addon"><i class="fa fa-calendar"></i></span><input class="form-control" value="" type="text" id="fechaNacimiento" placeholder="Fecha de nacimiento">
             </div>
         </div>
     </div>
