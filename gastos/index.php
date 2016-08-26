@@ -48,19 +48,22 @@ $html_rows = '';
 
 
 while(list(,$dataGasto) = each($rows)){
-	$rowPagos = $objGasto->getPagos($dataGasto["gasto_id"]);
+	$rowPagos = $objGasto->getPagosSum($dataGasto["gasto_id"]);
 	$rowPagos=$rowPagos[0];
 	
 	$dataGasto["gasto_saldo"]=$dataGasto["gasto_monto"] - $rowPagos["gastos_pagos_monto"];
 	$html_rows.= '<tr>
+		<td align="center">'.$dataGasto["gasto_id"].'</td>
 		<td>'.$dataGasto["gasto_no_documento"].'</td>
+		<td>'.$dataGasto["gasto_fecha_vencimiento"].'</td>
 		<td>'.$dataGasto["gasto_fecha_vencimiento"].'</td>
 		<td>'.$asoccGastoCategoria[$dataGasto["gasto_categoria_id"]].'</td>
 		<td>'.$dataGasto["gasto_concepto"].'</td>
+		<td>proximamente</td>
 		<td>$'.number_format($dataGasto["gasto_monto"],2).'</td>
 		<td>'.number_format($dataGasto["gasto_saldo"],2).'</td>
-		<!-- <td>'.$asoccGastoStatus[$dataGasto["gasto_status_id"]].'</td>-->
-		<td align="center"><a href="pago_nuevo/?gasto_id='.$dataGasto["gasto_id"].'"><i class="fa fa-dollar" title="Realizar Pago"></i></a> &nbsp;<i class="fa fa-list-ul" title="Ver detalle de pagos"></i> &nbsp;<a href="editar/?gasto_id='.$dataGasto["gasto_id"].'"><i class="fa fa-edit" title="Editar"></i></a> &nbsp;<i class="fa fa-trash" title="Borrar"></i></td>
+		<td>'.$asoccGastoStatus[$dataGasto["gasto_status_id"]].'</td>
+		<td align="center"><a href="pago_nuevo/?gasto_id='.$dataGasto["gasto_id"].'"><i class="fa fa-dollar" title="Realizar Pago"></i></a> &nbsp;<a href="pagos_lista/?gasto_id='.$dataGasto["gasto_id"].'"><i class="fa fa-list-ul" title="Ver detalle de pagos"></i></a> &nbsp;<a href="editar/?gasto_id='.$dataGasto["gasto_id"].'"><i class="fa fa-edit" title="Editar"></i></a> &nbsp;<i class="fa fa-trash" title="Borrar"></i></td>
 	</tr>';
 }
 
@@ -160,13 +163,16 @@ while(list(,$dataGasto) = each($rows)){
                     <table class="table table-striped table-bordered table-hover dataTables-example" >
                     <thead>
                     <tr>
-                        <th>Numero de Documento</th>
+						<th>Folio</th>
+                        <th>No Documento</th>
                         <th>Fecha Vencimiento</th>
+						<th>Ultimo Pago</th>
 						<th>Categoria</th>
                         <th>Concepto</th>
-                        <th>Monto</th>
-						<th>Saldo</th>
-                      <!--  <th>Status</th> -->
+						<th>Sucursal</th>
+                        <th>Monto a Pagar</th>
+						<th>Restan</th>
+                        <th>Status</th> 
 						<th style="text-align:center;">Acción</th>
 						
                     </tr>
@@ -176,13 +182,16 @@ while(list(,$dataGasto) = each($rows)){
                     </tbody>
                     <tfoot>
                     <tr>
-                        <th>Numero de Documento</th>
+						<th>Folio</th>
+                        <th>No Documento</th>
                         <th>Fecha Vencimiento</th>
+						<th>Ultimo Pago</th>
 						<th>Categoria</th>
                         <th>Concepto</th>
-                        <th>Monto</th>
-						<th>Saldo</th>
-                     <!--    <th>Status</th> -->
+						<th>Sucursal</th>
+                        <th>Monto a Pagar</th>
+						<th>Restan</th>
+                         <th>Status</th> 
 						<th style="text-align:center;">Acción</th>
                     </tr>
                     </tfoot>
