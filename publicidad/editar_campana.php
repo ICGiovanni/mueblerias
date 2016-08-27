@@ -98,7 +98,7 @@ $(document).ready(function()
 		        data: {id:id,nombre:nombre,text:aHTML}, // serializes the form's elements.
 		        success: function(data)
 		        {
-		        	alert("La Campau00f1a ha sido guardada"); // show response from the php script.
+		        	alert("La Campa\u00f1a ha sido guardada"); // show response from the php script.
 		        	var url="index.php";
 		    		$(location).attr("href", url);
 				}
