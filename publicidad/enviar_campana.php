@@ -197,7 +197,7 @@
                 //alert("Id: " + $(this).attr("id") + " Value: " + $(this).val() + " Checked: " + $(this).is(":checked"));
             });
 
-            alert("Envio Exitoso");
+            alert("Envio de Campa\u00f1a exitoso");
 		});
 
         $( "#cancelar" ).click(function()
