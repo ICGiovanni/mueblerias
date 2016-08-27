@@ -198,6 +198,7 @@
             });
 
             alert("Envio de Campa\u00f1a exitoso");
+            var url="index.php";
             $(location).attr("href", url);
 		});
 
