@@ -1,5 +1,4 @@
 <?php
-session_start();
 require_once($_SERVER["REDIRECT_PATH_CONFIG"].'models/connection/class.Connection.php');
 
 class Clientes
