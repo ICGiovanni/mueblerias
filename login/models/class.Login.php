@@ -1,5 +1,5 @@
 <?php
-include $pathProy.'models/connection/class.Connection.php';
+require_once $pathProy.'models/connection/class.Connection.php';
 
 class Login {
 	private $connect;

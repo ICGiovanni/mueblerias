@@ -4,7 +4,7 @@ require_once $pathProy.'/header.php';
 require_once $pathProy.'/menu.php';
 require_once($_SERVER["REDIRECT_PATH_CONFIG"].'gastos/models/class.Gastos.php');
 require_once($_SERVER["REDIRECT_PATH_CONFIG"].'gastos/models/class.Proveedores.php');
-
+require_once($_SERVER["REDIRECT_PATH_CONFIG"].'login/models/class.Login.php');
 /* INICIO SECUENCIA PARA GASTOS */
 $objGasto = new Gasto();
 
@@ -32,7 +32,13 @@ while(list(,$dataProveedor) = each($rowsProveedores)){
 /* FIN SECUENCIA PARA PROVEEDORES */
 
 /* INICIA SECUENCIA PARA EMPLEADOS */
+$objLogin = new Login();
+$rowsLogin = $objLogin->getUsers("");
+//print_r($rowsLogin);
 $options_login_id = '';
+while(list(,$dataLogin) = each($rowsLogin)){
+	$options_login_id.='<option value="'.$dataLogin["login_id"].'">'.$dataLogin["firstName"].' '.$dataLogin["lastName"].'</option>';
+}
 /* FIN SECUENCIA PARA EMPLEADOS */
 ?>
 <!-- Data picker -->
@@ -285,6 +291,7 @@ function crea_gasto(){
 	sucursal_id=$("#sucursal_id").val();
 	
 	proveedor_id=$("#proveedor_id").val();
+	login_id=$("#login_id").val();
 	
 	gasto_status_id = '1';
 	
@@ -304,7 +311,8 @@ function crea_gasto(){
 				gasto_hora_vencimiento:gasto_hora_vencimiento, 
 				gasto_hora_recordatorio:gasto_hora_recordatorio, 
 				sucursal_id:sucursal_id, 
-				proveedor_id:proveedor_id
+				proveedor_id:proveedor_id,
+				login_id:login_id
 			},
 		success: function(msg){
 			location.href = '../';
