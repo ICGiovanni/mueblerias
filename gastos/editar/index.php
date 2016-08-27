@@ -29,6 +29,13 @@ while(list(,$dataGastoCategoria) = each($rowsGastosCategoria)){
 	$options_gasto_categoria_id.='<option value="'.$dataGastoCategoria["gasto_categoria_id"].'"'.$selected.'>'.$dataGastoCategoria["gasto_categoria_desc"].'</option>';
 }
 
+$rowsGastosStatus = $objGasto->getGastosStatus();
+$asoccGastoStatus = array();
+$options_gasto_status_id = '';
+while(list(,$dataGastoStatus) = each($rowsGastosStatus)){
+	$asoccGastoStatus[$dataGastoStatus["gasto_status_id"]]=$dataGastoStatus["gasto_status_desc"];
+	$options_gasto_status_id.='<option value="'.$dataGastoStatus["gasto_status_id"].'">'.$dataGastoStatus["gasto_status_desc"].'</option>';	
+}
 ?>
 <!-- Data picker -->
 <link href="<?=$raizProy?>css/plugins/datapicker/datepicker3.css" rel="stylesheet">
@@ -78,7 +85,7 @@ while(list(,$dataGastoCategoria) = each($rowsGastosCategoria)){
 					
 						<div class="table-responsive">
 						
-						<table class="table-form">
+						<table class="table-form table-bordered">
 							<tr>
 								<td>No de documento:</td>
 								<td><input type="text" name="gasto_no_documento" id="gasto_no_documento" size="30" value="<?=$rowGasto["gasto_no_documento"]?>"/></td>
@@ -145,6 +152,12 @@ while(list(,$dataGastoCategoria) = each($rowsGastosCategoria)){
 							<tr>
 								<td>Descripción:</td>
 								<td><textarea cols="40" name="gasto_descripcion" id="gasto_descripcion" ><?=$rowGasto["gasto_descripcion"]?></textarea></td>
+								<td colspan="2" align="right">Status:</td>
+								<td>
+									<select name="gasto_status_id" id="gasto_status_id">
+										<?=$options_gasto_status_id?>
+									</select>
+								</td>
 							</tr>
 							<tr>
 								<td>Monto:</td>
@@ -260,13 +273,12 @@ function edita_gasto(gasto_id){
 	gasto_monto=$("#gasto_monto").val();
 	gasto_hora_vencimiento=$("#gasto_hora_vencimiento").val();
 	gasto_hora_recordatorio=$("#gasto_hora_recordatorio").val();
-	
-	//gasto_status_id = '1';
+	gasto_status_id=$("#gasto_status_id").val();
 	
 	$.ajax({
 		type: "GET",
 		url: "../ajax/edita_gasto.php",			
-		data: {gasto_id:gasto_id, gasto_no_documento:gasto_no_documento,gasto_fecha_vencimiento:gasto_fecha_vencimiento,gasto_fecha_recordatorio_activo:gasto_fecha_recordatorio_activo,gasto_fecha_recordatorio:gasto_fecha_recordatorio,gasto_categoria_id:gasto_categoria_id,gasto_concepto:gasto_concepto,gasto_descripcion:gasto_descripcion,gasto_monto:gasto_monto, gasto_hora_vencimiento:gasto_hora_vencimiento, gasto_hora_recordatorio:gasto_hora_recordatorio},
+		data: {gasto_id:gasto_id, gasto_no_documento:gasto_no_documento,gasto_fecha_vencimiento:gasto_fecha_vencimiento,gasto_fecha_recordatorio_activo:gasto_fecha_recordatorio_activo,gasto_fecha_recordatorio:gasto_fecha_recordatorio,gasto_categoria_id:gasto_categoria_id,gasto_concepto:gasto_concepto,gasto_descripcion:gasto_descripcion,gasto_monto:gasto_monto, gasto_hora_vencimiento:gasto_hora_vencimiento, gasto_hora_recordatorio:gasto_hora_recordatorio, gasto_status_id:gasto_status_id},
 		success: function(msg){
 			location.href = '../';
 			//$("#myModal").modal('hide');

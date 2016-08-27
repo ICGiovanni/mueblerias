@@ -75,7 +75,7 @@ while(list(,$dataGastoCategoria) = each($rowsGastosCategoria)){
                     <div class="ibox-content">
 					
 						<div class="table-responsive">
-						<table class="table">
+						<table class="table ">
 							<tr>
 								<td>Monto total a cubir: <b>$ <?=number_format($rowGasto["gasto_monto"],2)?></b></td>
 								<td>Suma total de pagos realizados: <b style="color:green;">$ <?=number_format($rowPagos["gastos_pagos_monto"],2)?></b></td>
@@ -87,7 +87,7 @@ while(list(,$dataGastoCategoria) = each($rowsGastosCategoria)){
 							<tr>
 								<td align="right">Monto del pago a registrar: $</td>
 								<td><input type="text" name="gastos_pagos_monto" id="gastos_pagos_monto" size="30" onchange="valida_pago(this);"/></td>
-								<td>Forma del pago:</td>
+								<td align="right">Forma del pago:</td>
 								<td>
 									<select name="gastos_pagos_forma_de_pago_id" id="gastos_pagos_forma_de_pago_id">
 										<?=$options_gastos_pagos_forma_de_pago_id?>
@@ -99,7 +99,13 @@ while(list(,$dataGastoCategoria) = each($rowsGastosCategoria)){
 								<td align="right">
 									<input type="checkbox" name="gastos_pagos_es_fiscal" id="gastos_pagos_es_fiscal" value="1" onclick="update_iva();"/> 
 								</td>
-								<td>Es fiscal</td>								
+								<td>Es fiscal</td>
+								<td align="right">
+									Referencia:
+								</td>
+								<td rowspan="5">
+									<textarea rows="10" name="gastos_pagos_referencia" id="gastos_pagos_referencia"></textarea>
+								</td>
 							</tr>
 							<tr>
 								
@@ -108,7 +114,8 @@ while(list(,$dataGastoCategoria) = each($rowsGastosCategoria)){
 							
 								<td align="right">Monto del pago sin iva: $</td>
 								<td><input type="text" name="gastos_pagos_monto_sin_iva" id="gastos_pagos_monto_sin_iva" value="" size="30" disabled></td>
-
+								<td colspan="2"></td>
+								
 							</tr>
 							<tr>
 							
@@ -232,10 +239,12 @@ function crea_pago(){
 	gastos_pagos_fecha=$("#gastos_pagos_fecha").val();
 	gastos_pagos_hora=$("#gastos_pagos_hora").val();
 	
+	gastos_pagos_referencia=$("textarea#gastos_pagos_referencia").val();
+	
 	$.ajax({
 		type: "GET",
 		url: "../ajax/crea_pago.php",			
-		data: {gasto_id:gasto_id,gastos_pagos_monto:gastos_pagos_monto,gastos_pagos_forma_de_pago_id:gastos_pagos_forma_de_pago_id,gastos_pagos_es_fiscal:gastos_pagos_es_fiscal,gastos_pagos_monto_sin_iva:gastos_pagos_monto_sin_iva,gastos_pagos_iva:gastos_pagos_iva,gastos_pagos_fecha:gastos_pagos_fecha,gastos_pagos_hora:gastos_pagos_hora},
+		data: {gasto_id:gasto_id,gastos_pagos_monto:gastos_pagos_monto,gastos_pagos_forma_de_pago_id:gastos_pagos_forma_de_pago_id,gastos_pagos_es_fiscal:gastos_pagos_es_fiscal,gastos_pagos_monto_sin_iva:gastos_pagos_monto_sin_iva,gastos_pagos_iva:gastos_pagos_iva,gastos_pagos_fecha:gastos_pagos_fecha,gastos_pagos_hora:gastos_pagos_hora,gastos_pagos_referencia:gastos_pagos_referencia},
 		success: function(msg){
 			location.href = '../';
 			//$("#myModal").modal('hide');
@@ -243,6 +252,7 @@ function crea_pago(){
 			//$("#span_crea_registro").removeClass();
 		}		
 	});
+	
 }
 
 function update_iva(){
