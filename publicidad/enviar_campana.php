@@ -198,6 +198,7 @@
             });
 
             alert("Envio de Campa\u00f1a exitoso");
+            $(location).attr("href", url);
 		});
 
         $( "#cancelar" ).click(function()
