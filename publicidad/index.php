@@ -21,6 +21,7 @@
         </div>
         <div class="col-sm-8">
             <div class="title-action">
+                <a href="./enviar_campana.php" class="btn btn-primary">Enviar Campa&ntilde;as</a>
                 <a href="./nueva_campana.php" class="btn btn-primary">Agregar Campa&ntilde;as</a>
             </div>
         </div>
