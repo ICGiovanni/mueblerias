@@ -7,16 +7,22 @@ require_once($_SERVER["REDIRECT_PATH_CONFIG"].'gastos/models/class.Gastos.php');
 $objGasto = new Gasto();
 
 $filtro_fecha_activo_checked = '';
+$filtro_categoria_activo_checked = '';
+$filtro_status_activo_checked = '';
+$filtro_sucursal_activo_checked = '';
 if(isset($_GET) && !empty($_GET)){
 	
 	if(isset($_GET["filtro_fecha_activo"]) && $_GET["filtro_fecha_activo"] == 1){ //add fechas
 		$filtro_fecha_activo_checked = 'checked';
 	}
 	if(isset($_GET["filtro_categoria_activo"]) && $_GET["filtro_categoria_activo"] == 1){ //add fechas
-		
+		$filtro_categoria_activo_checked = 'checked';
 	}
 	if(isset($_GET["filtro_status_activo"]) && $_GET["filtro_status_activo"] == 1){ //add fechas
-		
+		$filtro_status_activo_checked = 'checked';
+	}
+	if(isset($_GET["filtro_sucursal_activo"]) && $_GET["filtro_sucursal_activo"] == 1){ //add fechas
+		$filtro_sucursal_activo_checked = 'checked';
 	}
 	
 	$rows = $objGasto->getFilteredGastos($_GET);
@@ -27,6 +33,7 @@ if(isset($_GET) && !empty($_GET)){
 
 $rowsGastosCategoria = $objGasto->getGastosCategoria();
 $rowsGastosStatus = $objGasto->getGastosStatus();
+$rowsGastosSucursal = $objGasto->getGastosSucursal();
 
 
 $asoccGastoCategoria = array();
@@ -41,6 +48,13 @@ $options_gasto_status_id = '';
 while(list(,$dataGastoStatus) = each($rowsGastosStatus)){
 	$asoccGastoStatus[$dataGastoStatus["gasto_status_id"]]=$dataGastoStatus["gasto_status_desc"];
 	$options_gasto_status_id.='<option value="'.$dataGastoStatus["gasto_status_id"].'">'.$dataGastoStatus["gasto_status_desc"].'</option>';	
+}
+
+$asoccGastoSucursal = array();
+$options_sucursal_id = '';
+while(list(,$dataGastoSucursal) = each($rowsGastosSucursal)){
+	$asoccGastoSucursal[$dataGastoSucursal["sucursal_id"]]=$dataGastoSucursal["sucursal_name"];
+	$options_sucursal_id.='<option value="'.$dataGastoSucursal["sucursal_id"].'">'.$dataGastoSucursal["sucursal_name"].'</option>';	
 }
 
 //print_r($rows);
@@ -59,7 +73,7 @@ while(list(,$dataGasto) = each($rows)){
 		<td>'.$dataGasto["gasto_fecha_vencimiento"].'</td>
 		<td>'.$asoccGastoCategoria[$dataGasto["gasto_categoria_id"]].'</td>
 		<td>'.$dataGasto["gasto_concepto"].'</td>
-		<td>proximamente</td>
+		<td>'.$asoccGastoSucursal[$dataGasto["sucursal_id"]].'</td>
 		<td>$'.number_format($dataGasto["gasto_monto"],2).'</td>
 		<td>'.number_format($dataGasto["gasto_saldo"],2).'</td>
 		<td>'.$asoccGastoStatus[$dataGasto["gasto_status_id"]].'</td>
@@ -136,15 +150,21 @@ while(list(,$dataGasto) = each($rows)){
 										</div>
 									</td>
 									<td valign="top">
-										<input type="checkbox" name="filtro_categoria_activo" id="filtro_categoria_activo" value="1"/> <b>Categoria</b><br><br>
+										<input type="checkbox" name="filtro_categoria_activo" id="filtro_categoria_activo" value="1" <?=$filtro_categoria_activo_checked?>/> <b>Categoria</b><br><br>
 										<select name="filtro_categoria_id" id="filtro_categoria_id">
 											<?=$options_gasto_categoria_id?>
 										</select>
 									</td>
 									<td valign="top">
-										<input type="checkbox" name="filtro_status_activo" id="filtro_status_activo" value="1"/> <b>Status</b> <br><br>
+										<input type="checkbox" name="filtro_status_activo" id="filtro_status_activo" value="1" <?=$filtro_status_activo_checked?>/> <b>Status</b> <br><br>
 										<select name="filtro_status_id" id="filtro_status_id">
 											<?=$options_gasto_status_id?>
+										</select>
+									</td>
+									<td valign="top">
+										<input type="checkbox" name="filtro_sucursal_activo" id="filtro_sucursal_activo" value="1" <?=$filtro_sucursal_activo_checked?>/> <b>Sucursal</b> <br><br>
+										<select name="filtro_sucursal_id" id="filtro_sucursal_id">
+											<?=$options_sucursal_id?>
 										</select>
 									</td>
 									<td><br>
