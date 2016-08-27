@@ -1,6 +1,6 @@
 <?php
 	include $_SERVER['REDIRECT_PATH_CONFIG'].'/config.php';
-	require_once($_SERVER["REDIRECT_PATH_CONFIG"].'clientes/models/class.Clientes.php');
+	require_once($_SERVER["REDIRECT_PATH_CONFIG"].'publicidad/models/class.Publicidad.php');
    // include $pathProy.'login/session.php';
     include $pathProy.'/header.php';
     include $pathProy.'/menu.php';
@@ -9,19 +9,19 @@
 
     <div class="row wrapper border-bottom white-bg page-heading">
         <div class="col-sm-4">
-            <h2>Clientes</h2>
+            <h2>Campa&ntilde;as</h2>
             <ol class="breadcrumb">
                 <li>
-                    <a href="">Clientes</a>
+                    <a href="">Campa&ntilde;as</a>
                 </li>
                 <li class="active">
-                    <strong>Lista de Clientes</strong>
+                    <strong>Lista de Campa&ntilde;a</strong>
                 </li>
             </ol>
         </div>
         <div class="col-sm-8">
             <div class="title-action">
-                <a href="./nuevo_cliente.php" class="btn btn-primary">Agregar Cliente</a>
+                <a href="./nueva_campana.php" class="btn btn-primary">Agregar Campa&ntilde;as</a>
             </div>
         </div>
     </div>
@@ -52,107 +52,51 @@
                     <div class="ibox-content">
 
                         <div class="table-responsive">
-                    <table class="table table-striped table-bordered table-hover dataTables-example" id="tabla_clientes">
+                    <table class="table table-striped table-bordered table-hover dataTables-example" id="tabla_publicidad">
                     <thead>
                     <tr>
                     	<th>ID</th>
-                        <th>Cliente</th>
-                        <th>Datos Fiscales</th>
-                        <th>Direcci&oacute;n</th>
-                        <th>Telefono</th>
-                        <th>E-mail</th>
+                        <th>Campa&ntilde;a</th>
+                        <th>Fecha de Creaci&oacute;n</th>
                         <th></th>
                         
                     </tr>
                     </thead>
                     <tbody id="clientes">
                     <?php
-                   	$json=file_get_contents("json/lista_clientes.json");
-                    $json=json_decode($json);
+                    $publicidad=new Publicidad();
+                    $publicidades=$publicidad->GetPublicidad();
                     $tr="";
-                    foreach($json as $d)
+                    
+                    foreach($publicidades as $p)
                     {
-                    	$id_cliente=$d->id_cliente;
-                    	$cliente=$d->cliente;
-                    	$rfc=$d->rfc;
-                    	$razon_social=$d->razon_social;
-                    	$telefono=$d->telefono;
-                    	$email=$d->email;
-                    	$datos_fiscales="";
-                    	$direccion="";
+                    	$id_publicidad=$p["id_publicidad"];
+                    	$nombre=$p["nombre"];
+                    	$f=$p["fecha"];
+                    	$fh=explode(' ', $f);
+                    	$fecha=$fh[0];
+                    	$f=explode('-', $fecha);
+                    	$fecha=$f[2].'/'.$f[1].'/'.$f[0].' '.$fh[1];
                     	
-                    	if($rfc!='')
-                    	{
-                    		$datos_fiscales.='RFC: '.$rfc;
-                    	}
-                    	
-                    	if($razon_social)
-                    	{
-                    		$datos_fiscales.='<br>'.$razon_social;
-                    	}
-                    	
-                    	
-                    	if($d->calle!='')
-                    	{
-                    		$direccion.=$d->calle;
-                    	}
-                    	
-                    	if($d->num_exterior!='')
-                    	{
-                    		$direccion.=' No. Exterior '.$d->num_exterior;
-                    	}
-                    	
-                    	if($d->num_interior!='')
-                    	{
-                    		$direccion.=' No. Interior '.$d->num_interior;
-                    	}
-                    	
-                    	if($d->colonia)
-                    	{
-                    		$direccion.=' Col. '.$d->colonia;
-                    	}
-                    	
-                    	if($d->codigo_postal!='')
-                    	{
-                    		$direccion.=' C.P.'.$d->codigo_postal;
-                    	}
-                    	
-                    	if($d->municipio!='' && $d->estado!='')
-                    	{
-                    		$direccion.=' '.$d->municipio.', '.$d->estado;
-                    	}
-                    	else if($d->municipio)
-                    	{
-                    		$direccion.=' '.$d->municipio;
-                    	}
-                    	else if($d->estado!='')
-                    	{
-                    		$direccion.=' '.$d->estado;
-                    	}
                     	
                     	$tr.='<tr class="gradeX">';
-                    	$tr.='<td>'.$id_cliente.'</td>';
-                    	$tr.='<td>'.$cliente.'</td>';
-                    	$tr.='<td>'.$datos_fiscales.'</td>';
-                    	$tr.='<td>'.$direccion.'</td>';
-                    	$tr.='<td>'.$telefono.'</td>';
-                    	$tr.='<td>'.$email.'</td>';
-                    	$tr.='<td><div class="infont col-md-1 col-sm-1"><a href="editar_cliente.php?id='.$id_cliente.'"><i class="fa fa-pencil"></i></a></div><div class="infont col-md-1 col-sm-1"><a href="#" onClick="borrar_cliente('.$id_cliente.');"><i class="fa fa-trash-o"></i></a></div></td>';
+                    	$tr.='<td>'.$id_publicidad.'</td>';
+                    	$tr.='<td>'.$nombre.'</td>';
+                    	$tr.='<td>'.$fecha.'</td>';
+                    	$tr.='<td><div class="infont col-md-1 col-sm-1"><a href="editar_campana.php?id='.$id_publicidad.'"><i class="fa fa-pencil"></i></a></div><div class="infont col-md-1 col-sm-1"><a href="#" onClick="borrar_publicidad('.$id_publicidad.');"><i class="fa fa-trash-o"></i></a></div></td>';
                     	$tr.='</tr>';
                     	
                     }
-                    echo $tr;                    
+                    
+                    echo $tr;          
                     ?>
                    
                     </tbody>
                     <tfoot>
                     <tr>
                         <th>ID</th>
-                        <th>Cliente</th>
-                        <th>Datos Fiscales</th>
-                        <th>Direcci&oacute;n</th>
-                        <th>Telefono</th>
-                        <th>E-mail</th>
+                        <th>Campa&ntilde;a</th>
+                        <th>Fecha de Creaci&oacute;n</th>
                         <th></th>
                     </tr>
                     </tfoot>
@@ -196,18 +140,18 @@
             
         });
 
-        function borrar_cliente(id_cliente)
+        function borrar_publicidad(id_publicidad)
         {
-        	var url="borrar_cliente.php";
+        	var url="borrar_campana.php";
         				 
 			$.ajax(
 			{
 		    	type: "POST",
 		        url: url,
-		        data: {id:id_cliente}, // serializes the form's elements.
+		        data: {id:id_publicidad}, // serializes the form's elements.
 		        success: function(data)
 		        {
-		        	alert("El Cliente ha sido borrado"); // show response from the php script.
+		        	alert("La Campaña ha sido borrada"); // show response from the php script.
 		        	var url="index.php";
 		    		$(location).attr("href", url);
 				}

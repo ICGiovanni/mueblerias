@@ -4,7 +4,7 @@
     include $pathProy.'login/models/class.Login.php';
     $userLogin = new Login();
     
-    $data = $_POST;
+    echo $id = $_POST['id'];
     
-    echo "se guardo Usuario Numero: ".$userLogin->saveUser($data);
+    $userLogin->deleteUser($id);
 ?>    

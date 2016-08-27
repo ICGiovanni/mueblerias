@@ -21,18 +21,18 @@
                         <div class="logo-element">
                             <img src="<?php echo $raizProy?>img/logo_globmint2.png" class="img-responsive" />
                         </div>
-                    </li>                                                 
-                    <li class="active">
-                        <a href="#"><i class="fa fa-files-o"></i> <span class="nav-label">Other Pages</span><span class="fa arrow"></span></a>
+                    </li>      
+                    
+                    <li class="<?php if (stristr($_SERVER['SCRIPT_NAME'],'/usuarios/')){ echo 'active';}?>">
+                        <a href="<?php echo $ruta.'usuarios/index.php'?>">
+                            <i class="fa fa-user"></i> <span class="nav-label">Usuarios</span>
+                        </a>
                         <ul class="nav nav-second-level">
-                            <li><a href="">Search results</a></li>
-                            <li><a href="">Lockscreen</a></li>                        
-                            <li class="active"><a href="">Empty page</a></li>
+                            <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/usuarios/index.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'usuarios/index.php'?>" >Lista de Usuarios</a></li>
+                            <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/usuarios/newUser.php'){ echo 'active';}?>"><a href="<?php echo $ruta.'usuarios/newUser.php'?>" >Nuevo Usuario</a></li>                                                    
                         </ul>
-                    </li>   
-                    <li>
-                        <a href=""><i class="fa fa-diamond"></i> <span class="nav-label">Layouts</span></a>
                     </li>  
+                    
                 </ul>
             </div>
         </nav>

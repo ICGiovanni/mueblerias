@@ -81,6 +81,8 @@
 		</form>
 	</div>
 
+<script src="<?php echo $raizProy?>js/plugins/toastr/toastr.min.js"></script>
+
 <script>
 $(document).ready(function()
 {

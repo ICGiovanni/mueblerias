@@ -1,5 +1,6 @@
 <?php
     include $_SERVER['REDIRECT_PATH_CONFIG'].'/config.php';
+    require_once($_SERVER["REDIRECT_PATH_CONFIG"].'publicidad/models/class.Publicidad.php');
     //include $pathProy.'login/session.php';
     include $pathProy.'/header.php';
     include $pathProy.'/menu.php';
@@ -28,14 +29,21 @@
     <div class="wrapper wrapper-content">
 
 	<div class="row">
+	<?php
+	$publicidad=new Publicidad();
+	$id_publicidad=$_REQUEST["id"];
+	$datos=$publicidad->GetPublicidad($id_publicidad);
+	
+	?>
            <label class="col-sm-2 control-label">Campa&ntilde;a</label>
-			<div class="col-sm-12" ><input type="text" class="form-control" id="nombre" name="nombre"></div>
+           <input type="hidden" class="form-control" id="id_publicidad" name="id_publicidad" value="<?php echo $datos[0]["id_publicidad"]?>">
+			<div class="col-sm-12" ><input type="text" class="form-control" id="nombre" name="nombre" value="<?php echo $datos[0]["nombre"];?>"></div>
                 <div class="col-lg-12">
                 <div class="ibox float-e-margins">
                     <div class="ibox-content no-padding">
 
                         <div class="summernote" id="textHtml">
-                            
+                            <?php echo $datos[0]["contenido"];?>
                         </div>
 
                     </div>
@@ -65,6 +73,7 @@ $(document).ready(function()
 
 	$("#guardar").click(function()
 	{
+		var id=$("#id_publicidad").val();
 		var nombre=$("#nombre").val();
 		var aHTML=$("#textHtml").code();
 
@@ -80,13 +89,13 @@ $(document).ready(function()
 		}
 		else
 		{
-				var url="guardar_campana.php";
-		 
+			var url="actualizar_campana.php";
+			 
 			$.ajax(
 			{
 		    	type: "POST",
 		        url: url,
-		        data: {nombre:nombre,text:aHTML}, // serializes the form's elements.
+		        data: {id:id,nombre:nombre,text:aHTML}, // serializes the form's elements.
 		        success: function(data)
 		        {
 		        	alert("La Campau00f1a ha sido guardada"); // show response from the php script.
