@@ -33,6 +33,29 @@
                         </ul>
                     </li>  
                     
+					<li class="<?php if (stristr($_SERVER['SCRIPT_NAME'],'/gastos/')){ echo 'active';}?>">
+                        <a href="<?php echo $ruta.'gastos/'?>">
+                            <i class="fa fa-user"></i> <span class="nav-label">Gastos</span>
+                        </a>
+                        <ul class="nav nav-second-level">
+                            <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/gastos/index.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'gastos/'?>" >Lista de gastos</a></li>
+                            <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/gastos/nuevo/index.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'gastos/nuevo/'?>" >Nuevo</a></li>
+                            <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/gastos/nomina/index.php'){ echo 'active';}?>"><a href="<?php echo $ruta.'gastos/nomina/'?>" >Nomina</a></li>                                                    
+                        </ul>
+                    </li>
+					
+                    <li class="<?php if (stristr($_SERVER['SCRIPT_NAME'],'/publicidad/')){ echo 'active';}?>">
+                        <a href="<?php echo $ruta.'publicidad/index.php'?>">
+                            <i class="fa fa-user"></i> <span class="nav-label">Publicidad</span>
+                        </a>                       
+                    </li>  
+                    
+                    <li class="<?php if (stristr($_SERVER['SCRIPT_NAME'],'/clientes/')){ echo 'active';}?>">
+                        <a href="<?php echo $ruta.'clientes/index.php'?>">
+                            <i class="fa fa-user"></i> <span class="nav-label">Clientes</span>
+                        </a>                       
+                    </li>  
+                    
                 </ul>
             </div>
         </nav>
@@ -142,6 +165,3 @@
                     </ul>
                 </nav>
             </div>            
-
-       
-
