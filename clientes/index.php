@@ -61,6 +61,7 @@
                         <th>Direcci&oacute;n</th>
                         <th>Telefono</th>
                         <th>E-mail</th>
+                        <th>Rating</th>
                         <th></th>
                         
                     </tr>
@@ -137,7 +138,8 @@
                     	$tr.='<td>'.$direccion.'</td>';
                     	$tr.='<td>'.$telefono.'</td>';
                     	$tr.='<td>'.$email.'</td>';
-                    	$tr.='<td><div class="infont col-md-1 col-sm-1"><a href="editar_cliente.php?id='.$id_cliente.'"><i class="fa fa-pencil"></i></a></div><div class="infont col-md-1 col-sm-1"><a href="#" onClick="borrar_cliente('.$id_cliente.');"><i class="fa fa-trash-o"></i></a></div></td>';
+                    	$tr.='<td><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i></td>';
+                    	$tr.='<td><div class="infont col-md-1 col-sm-1"><a href="editar_cliente.php?id='.$id_cliente.'"><i class="fa fa-pencil"></i></a><a href="#" onClick="borrar_cliente('.$id_cliente.');"><i class="fa fa-trash-o"></i></a></div></td>';
                     	$tr.='</tr>';
                     	
                     }
@@ -153,6 +155,7 @@
                         <th>Direcci&oacute;n</th>
                         <th>Telefono</th>
                         <th>E-mail</th>
+                        <th>Rating</th>
                         <th></th>
                     </tr>
                     </tfoot>

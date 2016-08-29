@@ -100,7 +100,7 @@ class Clientes
 	{
 		if($id_cliente)
 		{
-			$where="WHERE c.id_cliente='".$id_cliente."'";
+			$where="WHERE c.id_cliente IN(".$id_cliente.")";
 		}
 		else
 		{

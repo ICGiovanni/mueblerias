@@ -68,8 +68,8 @@
                     	$tr.='<td>'.$id_cliente.'</td>';
                     	$tr.='<td>'.$cliente.'</td>';
                     	$tr.='<td>'.$email.'</td>';
-                    	$tr.='<td>'.$rating.'</td>';
-                    	$tr.='<td><div class="infont col-md-1 col-sm-1"><input type="checkbox" name="cliente_'.$id_cliente.'" id="cliente_'.$id_cliente.' value="'.$id_cliente.'" class="clientes"></div></td>';
+                    	$tr.='<td><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i></td>';
+                    	$tr.='<td><div class="infont col-md-1 col-sm-1"><input type="checkbox" name="cliente_'.$id_cliente.'" id="cliente_'.$id_cliente.'" value="'.$id_cliente.'" class="clientes"></div></td>';
                     	$tr.='</tr>';
                     	
                     }
@@ -132,7 +132,7 @@
                     	$tr.='<td>'.$id_publicidad.'</td>';
                     	$tr.='<td>'.$nombre.'</td>';
                     	$tr.='<td>'.$fecha.'</td>';
-                    	$tr.='<td><div class="infont col-md-1 col-sm-1"><input type="checkbox" name="publicidad_'.$id_publicidad.'" id="publicidad_'.$id_publicidad.' value="'.$id_publicidad.'" class="publicidad"></div></td>';
+                    	$tr.='<td><div class="infont col-md-1 col-sm-1"><input type="checkbox" name="publicidad_'.$id_publicidad.'" id="publicidad_'.$id_publicidad.'" value="'.$id_publicidad.'" class="publicidad"></div></td>';
                     	$tr.='</tr>';
                     	
                     }
@@ -192,14 +192,70 @@
 
         $( "#enviar" ).click(function()
 		{	
+        	var elements=new Object();
+        	var publicidadA=new Array();
+        	var clientesA=new Array();
+        	
+        	var publicidadE=0;
+        	var clientesE=0;
+        	
         	$("input:checkbox[class=publicidad]").each(function ()
 			{
-                //alert("Id: " + $(this).attr("id") + " Value: " + $(this).val() + " Checked: " + $(this).is(":checked"));
+        		var publicidad={};
+				publicidad.id=$(this).attr("value");
+				publicidadA.push(publicidad);
+				publicidadE++;
             });
 
+        	elements.publicidad=publicidadA;
+
+        	$("input:checkbox[class=clientes]").each(function ()
+			{
+        		var clientes={};
+        		clientes.id=$(this).attr("value");
+        		clientesA.push(clientes);
+        		clientesE++;
+            });
+
+            elements.clientes=clientesA;
+
+            if(clientesE==0)
+            {
+				alert("Debe de seleccionar al menos un Cliente");
+            }
+            else if(publicidadE==0)
+            {
+				alert("Debe de seleccionar al menos una Campa\u00f1a");
+            }
+            else
+            {
+            	var json=JSON.stringify(elements);
+
+            	$.ajax
+    			({
+    				type: "POST",
+    				url: "enviar_campanas_clientes.php",
+    				data: json,
+    				contentType: "application/json; charset=utf-8",
+    				dataType: "json",
+    				complete: function(data)
+    				{
+    					
+    					
+    				},
+    				failure: function(errMsg)
+    				{
+    					alert(errMsg);
+    				}
+    			});	
+            }
+        	
+
+			console.log(json);
+        	
             alert("Envio de Campa\u00f1a exitoso");
-            var url="index.php";
-            $(location).attr("href", url);
+            //var url="index.php";
+            //$(location).attr("href", url);
 		});
 
         $( "#cancelar" ).click(function()

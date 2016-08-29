@@ -5,17 +5,22 @@
     include $pathProy.'/header.php';
     include $pathProy.'/menu.php';
 ?>
-
+<?php
+	$publicidad=new Publicidad();
+	$id_publicidad=$_REQUEST["id"];
+	$datos=$publicidad->GetPublicidad($id_publicidad);
+	
+	?>
 
     <div class="row wrapper border-bottom white-bg page-heading">
         <div class="col-sm-4">
-            <h2>Nueva Campa&ntilde;a</h2>
+            <h2>Editar Campa&ntilde;a</h2>
             <ol class="breadcrumb">
                 <li>
                     <a href="">Campa&ntilde;a</a>
                 </li>
                 <li class="active">
-                    <strong>Nueva Campa&ntilde;a</strong>
+                    <strong>Editar Campa&ntilde;a</strong>
                 </li>
             </ol>
         </div>
@@ -29,12 +34,6 @@
     <div class="wrapper wrapper-content">
 
 	<div class="row">
-	<?php
-	$publicidad=new Publicidad();
-	$id_publicidad=$_REQUEST["id"];
-	$datos=$publicidad->GetPublicidad($id_publicidad);
-	
-	?>
            <label class="col-sm-2 control-label">Campa&ntilde;a</label>
            <input type="hidden" class="form-control" id="id_publicidad" name="id_publicidad" value="<?php echo $datos[0]["id_publicidad"]?>">
 			<div class="col-sm-12" ><input type="text" class="form-control" id="nombre" name="nombre" value="<?php echo $datos[0]["nombre"];?>"></div>

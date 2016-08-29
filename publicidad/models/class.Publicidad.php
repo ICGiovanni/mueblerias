@@ -1,5 +1,8 @@
 <?php
 require_once($_SERVER["REDIRECT_PATH_CONFIG"].'models/connection/class.Connection.php');
+require_once($_SERVER["REDIRECT_PATH_CONFIG"].'clientes/models/class.Clientes.php');
+require_once($_SERVER["REDIRECT_PATH_CONFIG"].'models/phpmailer/PHPMailerAutoload.php');
+
 date_default_timezone_set ('America/Mexico_City');
 
 class Publicidad
@@ -86,5 +89,71 @@ class Publicidad
 		$result=$statement->fetchAll(PDO::FETCH_ASSOC);
 	
 		return $result;
+	}
+	
+	public function SendPublicidad($id_publicidad,$clientesE)
+	{
+		$clientes=new Clientes();
+		$dataP=$this->GetPublicidad($id_publicidad);
+		$nombre=$dataP[0]["nombre"];
+		$contenido=$dataP[0]["contenido"];		
+		
+		$mail=new PHPMailer();
+		//
+		$mail->isSMTP();
+		$mail->SMTPDebug = 2;
+		$mail->Debugoutput = 'html';
+		$mail->Host = 'smtp.gmail.com';
+		$mail->Port = 587;
+		$mail->SMTPSecure = 'tls';
+		$mail->SMTPAuth = true;
+		$mail->Username = "umedina86@gmail.com";
+		$mail->Password = "More1989";
+		//
+		$mail->SetFrom('clientes@globmint.com');
+		$mail->Subject=$nombre;
+		
+		$id_cliente="";
+		foreach($clientesE as $c)
+		{
+			if(!$id_cliente)
+			{
+				$id_cliente.=$c["id"];
+			}
+			else
+			{
+				$id_cliente.=",".$c["id"];
+			}
+		}
+		
+		$result=$clientes->GetClientes($id_cliente);
+		
+		
+		foreach($result as $r)
+		{
+			$mail->AddAddress($r["email"], "");
+		}
+		
+		$mensaje='<!DOCTYPE html>
+					<html>
+					<head>
+					<meta>
+					<title></title>
+					</head>
+					<body>';
+		$mensaje.=$contenido;
+		$mensaje.='</body>
+					</html>';
+		
+		$mail->MsgHTML(utf8_decode($mensaje));
+		
+		if(!$mail->Send())
+		{
+			return "Error al enviar el mensaje: " . $mail­>ErrorInfo;
+		}
+		else
+		{
+			return "Mensaje Enviado";
+		}
 	}
 }
