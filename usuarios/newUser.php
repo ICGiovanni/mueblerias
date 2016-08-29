@@ -34,7 +34,7 @@
                     <input type="text" id="email" value="" placeholder="Correo electrónico" class="form-control" >
                 </div>   
                 <div class="col-md-6">
-                    <input type="text" id="password" value="" placeholder="Contraseña" class="form-control" >
+                    <input type="password" id="password" value="" placeholder="Contraseña" class="form-control" >
                 </div>
             </div>
             <div class="clear">&nbsp;</div>

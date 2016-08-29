@@ -9,13 +9,13 @@
 
     <div class="row wrapper border-bottom white-bg page-heading">
         <div class="col-sm-4">
-            <h2>Agregar Cliente</h2>
+            <h2>Editar Cliente</h2>
             <ol class="breadcrumb">
                 <li>
                     <a href="">Clientes</a>
                 </li>
                 <li class="active">
-                    <strong>Agregar Cliente</strong>
+                    <strong>Editar Cliente</strong>
                 </li>
             </ol>
         </div>
@@ -91,7 +91,7 @@ $datos=$clientes->GetClientes($id_cliente);
         
 		</form>
 	</div>
-
+<script src="<?php echo $raizProy?>js/plugins/toastr/toastr.min.js"></script>
 <script>
 $(document).ready(function()
 {

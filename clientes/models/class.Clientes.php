@@ -1,5 +1,4 @@
 <?php
-session_start();
 require_once($_SERVER["REDIRECT_PATH_CONFIG"].'models/connection/class.Connection.php');
 
 class Clientes
@@ -101,7 +100,7 @@ class Clientes
 	{
 		if($id_cliente)
 		{
-			$where="WHERE c.id_cliente='".$id_cliente."'";
+			$where="WHERE c.id_cliente IN(".$id_cliente.")";
 		}
 		else
 		{

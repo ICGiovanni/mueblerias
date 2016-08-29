@@ -1,5 +1,5 @@
 <?php
-include $pathProy.'models/connection/class.Connection.php';
+require_once $pathProy.'models/connection/class.Connection.php';
 
 class Login {
 	private $connect;
@@ -63,12 +63,16 @@ class Login {
             
         }
         
-        public function getUsers($typeUser){
+        public function getUsers($id = 0){
             $sql = "SELECT * FROM inv_login 
                     INNER JOIN inv_profile USING (profile_id)
                     INNER JOIN inv_status USING (status_id)
-                    WHERE status_id!=99
-                     ORDER by created_timestamp DESC";
+                    WHERE status_id!=99";
+            
+            if($id!=0){
+                    $sql .= " and login_id=".$id;
+            }
+            $sql .= " ORDER by created_timestamp DESC";
             
             $statement = $this->connect->prepare($sql);                    
 

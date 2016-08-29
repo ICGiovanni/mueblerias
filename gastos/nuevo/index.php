@@ -3,18 +3,43 @@ require_once $_SERVER['REDIRECT_PATH_CONFIG'].'/config.php';
 require_once $pathProy.'/header.php';
 require_once $pathProy.'/menu.php';
 require_once($_SERVER["REDIRECT_PATH_CONFIG"].'gastos/models/class.Gastos.php');
-
+require_once($_SERVER["REDIRECT_PATH_CONFIG"].'gastos/models/class.Proveedores.php');
+require_once($_SERVER["REDIRECT_PATH_CONFIG"].'login/models/class.Login.php');
+/* INICIO SECUENCIA PARA GASTOS */
 $objGasto = new Gasto();
 
 $rowsGastosCategoria = $objGasto->getGastosCategoria();
-
-
+$rowsGastosSucursal = $objGasto->getGastosSucursal();
 
 $options_gasto_categoria_id = '';
 while(list(,$dataGastoCategoria) = each($rowsGastosCategoria)){
 	$options_gasto_categoria_id.='<option value="'.$dataGastoCategoria["gasto_categoria_id"].'">'.$dataGastoCategoria["gasto_categoria_desc"].'</option>';
 }
 
+$options_sucursal_id = '';
+while(list(,$dataGastoSucursal) = each($rowsGastosSucursal)){
+	$options_sucursal_id.='<option value="'.$dataGastoSucursal["sucursal_id"].'">'.$dataGastoSucursal["sucursal_name"].'</option>';
+}
+/* FIN SECUENCIA PARA GASTOS */
+
+/* INICIA SECUENCIA PARA PROVEEDORES */
+$objProveedor = new Proveedor();
+$rowsProveedores = $objProveedor->getProveedores();
+$options_proveedor_id = '';
+while(list(,$dataProveedor) = each($rowsProveedores)){
+	$options_proveedor_id.='<option value="'.$dataProveedor["proveedor_id"].'">'.$dataProveedor["proveedor_nombre"].'</option>';
+}
+/* FIN SECUENCIA PARA PROVEEDORES */
+
+/* INICIA SECUENCIA PARA EMPLEADOS */
+$objLogin = new Login();
+$rowsLogin = $objLogin->getUsers("");
+//print_r($rowsLogin);
+$options_login_id = '';
+while(list(,$dataLogin) = each($rowsLogin)){
+	$options_login_id.='<option value="'.$dataLogin["login_id"].'">'.$dataLogin["firstName"].' '.$dataLogin["lastName"].'</option>';
+}
+/* FIN SECUENCIA PARA EMPLEADOS */
 ?>
 <!-- Data picker -->
 <link href="<?=$raizProy?>css/plugins/datapicker/datepicker3.css" rel="stylesheet">
@@ -125,11 +150,34 @@ while(list(,$dataGastoCategoria) = each($rowsGastosCategoria)){
 							<tr>
 								<td>Descripción:</td>
 								<td><textarea cols="40" name="gasto_descripcion" id="gasto_descripcion" ></textarea></td>
+								<td colspan="2" align="right">Sucursal:</td>
+								<td>
+									<select name="sucursal_id" id="sucursal_id">
+										<?=$options_sucursal_id?>
+									</select>
+								</td>
 							</tr>
 							<tr>
 								<td>Monto:</td>
 								<td>$ <input type="text" name="gasto_monto" id="gasto_monto" value="" size="10"></td>
+								<td colspan="2" align="right">Proveedor:</td>
+								<td>
+									<select name="proveedor_id" id="proveedor_id">
+										<?=$options_proveedor_id?>
+									</select>
+								</td>
 							</tr>
+							<tr>
+								<td></td>
+								<td></td>
+								<td colspan="2" align="right">Empleado:</td>
+								<td>
+									<select name="login_id" id="login_id">
+										<?=$options_login_id?>
+									</select>
+								</td>
+							</tr>
+							
 					  </table>
 		
                     
@@ -240,13 +288,32 @@ function crea_gasto(){
 	gasto_monto=$("#gasto_monto").val();
 	gasto_hora_vencimiento=$("#gasto_hora_vencimiento").val();
 	gasto_hora_recordatorio=$("#gasto_hora_recordatorio").val();
+	sucursal_id=$("#sucursal_id").val();
+	
+	proveedor_id=$("#proveedor_id").val();
+	login_id=$("#login_id").val();
 	
 	gasto_status_id = '1';
 	
 	$.ajax({
 		type: "GET",
 		url: "../ajax/crea_gasto.php",			
-		data: {gasto_no_documento:gasto_no_documento,gasto_fecha_vencimiento:gasto_fecha_vencimiento,gasto_fecha_recordatorio_activo:gasto_fecha_recordatorio_activo,gasto_fecha_recordatorio:gasto_fecha_recordatorio,gasto_categoria_id:gasto_categoria_id,gasto_concepto:gasto_concepto,gasto_descripcion:gasto_descripcion,gasto_monto:gasto_monto,gasto_status_id:gasto_status_id, gasto_hora_vencimiento:gasto_hora_vencimiento, gasto_hora_recordatorio:gasto_hora_recordatorio},
+		data: {
+				gasto_no_documento:gasto_no_documento,
+				gasto_fecha_vencimiento:gasto_fecha_vencimiento,
+				gasto_fecha_recordatorio_activo:gasto_fecha_recordatorio_activo,
+				gasto_fecha_recordatorio:gasto_fecha_recordatorio,
+				gasto_categoria_id:gasto_categoria_id,
+				gasto_concepto:gasto_concepto,
+				gasto_descripcion:gasto_descripcion,
+				gasto_monto:gasto_monto,
+				gasto_status_id:gasto_status_id, 
+				gasto_hora_vencimiento:gasto_hora_vencimiento, 
+				gasto_hora_recordatorio:gasto_hora_recordatorio, 
+				sucursal_id:sucursal_id, 
+				proveedor_id:proveedor_id,
+				login_id:login_id
+			},
 		success: function(msg){
 			location.href = '../';
 			//$("#myModal").modal('hide');

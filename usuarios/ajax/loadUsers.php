@@ -23,7 +23,7 @@
                     <td>".$user['status_name']."</td>                        
                     <td>".$user['email']."</td>
                     <td class='text-center'>
-                        <button class='btn btn-warning'><i class='fa fa-pencil'></i></button>
+                        <a href='editUser.php?id=".  base64_encode($user['login_id'])."' class='btn btn-warning'><i class='fa fa-pencil'></i></a>
                     </td>
                     <td class='text-center'>
                         <button class='btn btn-danger borrar-user' id='".$user['login_id']."' data-name='".$user['firstName']."&nbsp;".$user['lastName']."'><i class='fa fa-times'></i></button>

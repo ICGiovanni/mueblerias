@@ -9,10 +9,12 @@ class Gasto {
 	{
 		$c=new Connection();
 		$this->connect=$c->db;
+		$this->name_table_gastos = 'gastos';
+		$this->name_table_gastos_pagos = 'gastos_pagos';
 	}
 
 	public function insertGasto($params){
-		$sql = "INSERT INTO gastos 
+		$sql = "INSERT INTO ".$this->name_table_gastos." 
 		( gasto_no_documento,
 		gasto_fecha_vencimiento,
 		gasto_fecha_recordatorio_activo,
@@ -23,7 +25,8 @@ class Gasto {
 		gasto_categoria_id,
 		gasto_status_id,
 		proveedor_id,
-		usuario_id )
+		login_id,
+		sucursal_id )
 		VALUES
 		( :gasto_no_documento,
 		:gasto_fecha_vencimiento,
@@ -35,7 +38,8 @@ class Gasto {
 		:gasto_categoria_id,
 		:gasto_status_id,
 		:proveedor_id,
-		:usuario_id )";
+		:login_id,
+		:sucursal_id )";
 		
 		//print_r($params);
 		//die();
@@ -52,7 +56,8 @@ class Gasto {
 		$statement->bindParam(':gasto_categoria_id', $params['gasto_categoria_id'], PDO::PARAM_STR);
 		$statement->bindParam(':gasto_status_id', $params['gasto_status_id'], PDO::PARAM_STR);
 		$statement->bindParam(':proveedor_id', $params['proveedor_id'], PDO::PARAM_STR);
-		$statement->bindParam(':usuario_id', $params['usuario_id'], PDO::PARAM_STR);
+		$statement->bindParam(':login_id', $params['login_id'], PDO::PARAM_STR);
+		$statement->bindParam(':sucursal_id', $params['sucursal_id'], PDO::PARAM_STR);
 		
 		
 		$statement->execute();
@@ -60,7 +65,7 @@ class Gasto {
 	}
 	
 	public function editGasto($params){
-		$sql = "UPDATE gastos SET 
+		$sql = "UPDATE ".$this->name_table_gastos." SET 
 		gasto_no_documento = :gasto_no_documento,
 		gasto_fecha_vencimiento = :gasto_fecha_vencimiento,
 		gasto_fecha_recordatorio_activo = :gasto_fecha_recordatorio_activo,
@@ -70,10 +75,10 @@ class Gasto {
 		gasto_monto = :gasto_monto,
 		gasto_categoria_id = :gasto_categoria_id,
 		proveedor_id = :proveedor_id,
-		usuario_id = :usuario_id WHERE gasto_id = :gasto_id";
-		
-		//print_r($params);
-		//die();
+		login_id = :login_id,
+		gasto_status_id = :gasto_status_id,
+		sucursal_id = :sucursal_id
+		WHERE gasto_id = :gasto_id";
 		
 		$statement=$this->connect->prepare($sql);
 		$statement->bindParam(':gasto_id', $params['gasto_id'], PDO::PARAM_STR);
@@ -85,10 +90,10 @@ class Gasto {
         $statement->bindParam(':gasto_descripcion', $params['gasto_descripcion'], PDO::PARAM_STR);
 		$statement->bindParam(':gasto_monto', $params['gasto_monto'], PDO::PARAM_STR);
 		$statement->bindParam(':gasto_categoria_id', $params['gasto_categoria_id'], PDO::PARAM_STR);
-		//$statement->bindParam(':gasto_status_id', $params['gasto_status_id'], PDO::PARAM_STR);
+		$statement->bindParam(':gasto_status_id', $params['gasto_status_id'], PDO::PARAM_STR);
 		$statement->bindParam(':proveedor_id', $params['proveedor_id'], PDO::PARAM_STR);
-		$statement->bindParam(':usuario_id', $params['usuario_id'], PDO::PARAM_STR);
-		
+		$statement->bindParam(':login_id', $params['login_id'], PDO::PARAM_STR);
+		$statement->bindParam(':sucursal_id', $params['sucursal_id'], PDO::PARAM_STR);
 		
 		$statement->execute();
 		return "updated";
@@ -107,7 +112,8 @@ class Gasto {
 		gasto_categoria_id,
 		gasto_status_id,
 		proveedor_id,
-		usuario_id FROM gastos ORDER BY gasto_id DESC";
+		login_id,
+		sucursal_id FROM ".$this->name_table_gastos." ORDER BY gasto_id DESC";
 
 		$statement=$this->connect->prepare($sql);
 		//$statement->bindParam(':gasto_id', $idGasto, PDO::PARAM_STR);
@@ -137,6 +143,10 @@ class Gasto {
 			//echo "add status";
 			$where[]=" gasto_status_id = '".$params["filtro_status_id"]."'";
 		}
+		if(isset($params["filtro_sucursal_activo"]) && $params["filtro_sucursal_activo"] == 1){ //add fechas
+			//echo "add status";
+			$where[]=" sucursal_id = '".$params["filtro_sucursal_id"]."'";
+		}
 		
 		$str_where = "";
 		if(!empty($where)){
@@ -155,7 +165,9 @@ class Gasto {
 		gasto_categoria_id,
 		gasto_status_id,
 		proveedor_id,
-		usuario_id FROM gastos ".$str_where." ORDER BY gasto_id DESC";
+		login_id,
+		sucursal_id 
+		FROM ".$this->name_table_gastos." ".$str_where." ORDER BY gasto_id DESC";
 		
 
 		$statement=$this->connect->prepare($sql);
@@ -182,7 +194,9 @@ class Gasto {
 		gasto_categoria_id,
 		gasto_status_id,
 		proveedor_id,
-		usuario_id FROM gastos WHERE gasto_id = :gasto_id";
+		login_id,
+		sucursal_id	
+		FROM ".$this->name_table_gastos." WHERE gasto_id = :gasto_id";
 
 		$statement=$this->connect->prepare($sql);
 		$statement->bindParam(':gasto_id', $gasto_id, PDO::PARAM_STR);
@@ -238,17 +252,33 @@ class Gasto {
 		return $result;
 	}
 	
+	public function getGastosSucursal(){
+		$sql="SELECT 
+		sucursal_id,
+		sucursal_name
+		FROM inv_sucursales";
+
+		$statement=$this->connect->prepare($sql);
+		//$statement->bindParam(':gasto_id', $idGasto, PDO::PARAM_STR);
+
+		$statement->execute();
+        $result=$statement->fetchAll(PDO::FETCH_ASSOC);
+
+		return $result;
+	}
+	
 	/////////////////////////////////////////////////////////////////////
 	
 	public function insertGastoPago($params){
-		$sql = "INSERT INTO gastos_pagos 
+		$sql = "INSERT INTO ".$this->name_table_gastos_pagos." 
 		( gasto_id,
 		gastos_pagos_monto,
 		gastos_pagos_forma_de_pago_id,
 		gastos_pagos_es_fiscal,
 		gastos_pagos_monto_sin_iva,
 		gastos_pagos_iva,
-		gastos_pagos_fecha )
+		gastos_pagos_fecha,
+		gastos_pagos_referencia )
 		VALUES
 		( :gasto_id,
 		:gastos_pagos_monto,
@@ -256,7 +286,8 @@ class Gasto {
 		:gastos_pagos_es_fiscal,
 		:gastos_pagos_monto_sin_iva,		
 		:gastos_pagos_iva,
-		:gastos_pagos_fecha )";
+		:gastos_pagos_fecha,
+		:gastos_pagos_referencia )";
 		
 		//print_r($params);
 		$statement=$this->connect->prepare($sql);
@@ -267,7 +298,8 @@ class Gasto {
 		$statement->bindParam(':gastos_pagos_es_fiscal', $params['gastos_pagos_es_fiscal'], PDO::PARAM_STR);
 		$statement->bindParam(':gastos_pagos_monto_sin_iva', $params['gastos_pagos_monto_sin_iva'], PDO::PARAM_STR);
 		$statement->bindParam(':gastos_pagos_iva', $params['gastos_pagos_iva'], PDO::PARAM_STR);
-        $statement->bindParam(':gastos_pagos_fecha', $params['gastos_pagos_fecha'], PDO::PARAM_STR);		
+        $statement->bindParam(':gastos_pagos_fecha', $params['gastos_pagos_fecha'], PDO::PARAM_STR);
+		$statement->bindParam(':gastos_pagos_referencia', $params['gastos_pagos_referencia'], PDO::PARAM_STR);
 		
 		$statement->execute();
 		return $this->connect->lastInsertId();
@@ -275,7 +307,7 @@ class Gasto {
 	
 	public function getPagosSum($gasto_id){
 		
-		$sql="SELECT SUM(gastos_pagos_monto) as gastos_pagos_monto FROM gastos_pagos WHERE gasto_id = :gasto_id";
+		$sql="SELECT SUM(gastos_pagos_monto) as gastos_pagos_monto FROM ".$this->name_table_gastos_pagos." WHERE gasto_id = :gasto_id";
 
 		$statement=$this->connect->prepare($sql);
 		$statement->bindParam(':gasto_id', $gasto_id, PDO::PARAM_STR);
@@ -289,10 +321,10 @@ class Gasto {
 	public function getPagosDetalle($gasto_id){
 		$sql="SELECT 
 		gastos_pagos_id, gastos_pagos_monto, gastos_pagos_forma_de_pago_id, gastos_pagos_forma_de_pago_desc, gastos_pagos_es_fiscal, 
-		gastos_pagos_monto_sin_iva, gastos_pagos_iva, gastos_pagos_fecha
-		FROM gastos_pagos 
+		gastos_pagos_monto_sin_iva, gastos_pagos_iva, gastos_pagos_fecha, gastos_pagos_referencia
+		FROM ".$this->name_table_gastos_pagos." 
 		INNER JOIN gastos_pagos_forma_de_pago USING (gastos_pagos_forma_de_pago_id)
-		WHERE gasto_id = :gasto_id";
+		WHERE gasto_id = :gasto_id ORDER BY gastos_pagos_id DESC";
 
 		$statement=$this->connect->prepare($sql);
 		$statement->bindParam(':gasto_id', $gasto_id, PDO::PARAM_STR);

@@ -29,6 +29,29 @@ while(list(,$dataGastoCategoria) = each($rowsGastosCategoria)){
 	$options_gasto_categoria_id.='<option value="'.$dataGastoCategoria["gasto_categoria_id"].'"'.$selected.'>'.$dataGastoCategoria["gasto_categoria_desc"].'</option>';
 }
 
+$rowsGastosSucursal = $objGasto->getGastosSucursal();
+$asoccGastoSucursal = array();
+$options_sucursal_id = '';
+while(list(,$dataGastoSucursal) = each($rowsGastosSucursal)){
+	$selected = '';
+	if($rowGasto["sucursal_id"] == $dataGastoSucursal["sucursal_id"]){
+			$selected = 'selected';
+	}
+	$asoccGastoSucursal[$dataGastoSucursal["sucursal_id"]]=$dataGastoSucursal["sucursal_name"];
+	$options_sucursal_id.='<option value="'.$dataGastoSucursal["sucursal_id"].'" '.$selected.'>'.$dataGastoSucursal["sucursal_name"].'</option>';
+}
+
+$rowsGastosStatus = $objGasto->getGastosStatus();
+$asoccGastoStatus = array();
+$options_gasto_status_id = '';
+while(list(,$dataGastoStatus) = each($rowsGastosStatus)){
+	$selected = '';
+	if($rowGasto["gasto_status_id"] == $dataGastoStatus["gasto_status_id"]){
+			$selected = 'selected';
+	}
+	$asoccGastoStatus[$dataGastoStatus["gasto_status_id"]]=$dataGastoStatus["gasto_status_desc"];
+	$options_gasto_status_id.='<option value="'.$dataGastoStatus["gasto_status_id"].'" '.$selected.'>'.$dataGastoStatus["gasto_status_desc"].'</option>';	
+}
 ?>
 <!-- Data picker -->
 <link href="<?=$raizProy?>css/plugins/datapicker/datepicker3.css" rel="stylesheet">
@@ -145,10 +168,22 @@ while(list(,$dataGastoCategoria) = each($rowsGastosCategoria)){
 							<tr>
 								<td>Descripción:</td>
 								<td><textarea cols="40" name="gasto_descripcion" id="gasto_descripcion" ><?=$rowGasto["gasto_descripcion"]?></textarea></td>
+								<td colspan="2" align="right">Status:</td>
+								<td>
+									<select name="gasto_status_id" id="gasto_status_id">
+										<?=$options_gasto_status_id?>
+									</select>
+								</td>
 							</tr>
 							<tr>
 								<td>Monto:</td>
 								<td>$ <input type="text" name="gasto_monto" id="gasto_monto" value="<?=$rowGasto["gasto_monto"]?>" size="10"></td>
+								<td colspan="2" align="right">Sucursal:</td>
+								<td>
+									<select name="sucursal_id" id="sucursal_id">
+										<?=$options_sucursal_id?>
+									</select>
+								</td>
 							</tr>
 					  </table>
 		
@@ -260,13 +295,13 @@ function edita_gasto(gasto_id){
 	gasto_monto=$("#gasto_monto").val();
 	gasto_hora_vencimiento=$("#gasto_hora_vencimiento").val();
 	gasto_hora_recordatorio=$("#gasto_hora_recordatorio").val();
-	
-	//gasto_status_id = '1';
+	gasto_status_id=$("#gasto_status_id").val();
+	sucursal_id=$("#sucursal_id").val();
 	
 	$.ajax({
 		type: "GET",
 		url: "../ajax/edita_gasto.php",			
-		data: {gasto_id:gasto_id, gasto_no_documento:gasto_no_documento,gasto_fecha_vencimiento:gasto_fecha_vencimiento,gasto_fecha_recordatorio_activo:gasto_fecha_recordatorio_activo,gasto_fecha_recordatorio:gasto_fecha_recordatorio,gasto_categoria_id:gasto_categoria_id,gasto_concepto:gasto_concepto,gasto_descripcion:gasto_descripcion,gasto_monto:gasto_monto, gasto_hora_vencimiento:gasto_hora_vencimiento, gasto_hora_recordatorio:gasto_hora_recordatorio},
+		data: {gasto_id:gasto_id, gasto_no_documento:gasto_no_documento,gasto_fecha_vencimiento:gasto_fecha_vencimiento,gasto_fecha_recordatorio_activo:gasto_fecha_recordatorio_activo,gasto_fecha_recordatorio:gasto_fecha_recordatorio,gasto_categoria_id:gasto_categoria_id,gasto_concepto:gasto_concepto,gasto_descripcion:gasto_descripcion,gasto_monto:gasto_monto, gasto_hora_vencimiento:gasto_hora_vencimiento, gasto_hora_recordatorio:gasto_hora_recordatorio, gasto_status_id:gasto_status_id, sucursal_id:sucursal_id},
 		success: function(msg){
 			location.href = '../';
 			//$("#myModal").modal('hide');
