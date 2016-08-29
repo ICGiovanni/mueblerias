@@ -2,9 +2,17 @@
 
         include $pathProy.'login/models/class.Login.php';
         $userLogin = new Login();
+        
         $profiles = $userLogin->getProfiles();
         $sucursales = $userLogin->getSucursales();
         
+        if(isset($_GET['id'])){
+            $userId = base64_decode($_GET['id']);
+        }
+        else{
+            header("location: index.php");
+        }
+        $infoUser = end($userLogin->getUsers($userId));
         
         //include $pathProy.'login/session.php';
         include $pathProy.'/header.php';
@@ -22,19 +30,19 @@
         <div class="ibox-content animated fadeInRightBig">                                    
             <div class="row">    
                 <div class="col-lg-6">
-                    <input type="text" id="firstName" value="" placeholder="Nombre" class="form-control" >
+                    <input type="text" id="firstName" value="<?php echo $infoUser['firstName'] ?>" placeholder="Nombre" class="form-control" >
                 </div>   
                 <div class="col-md-6">
-                    <input type="text" id="lastName" value="" placeholder="Apellido" class="form-control" >
+                    <input type="text" id="lastName" value="<?php echo $infoUser['lastName'] ?>" placeholder="Apellido" class="form-control" >
                 </div>
             </div>
             <div class="clear">&nbsp;</div>
             <div class="row">    
                 <div class="col-lg-6">
-                    <input type="text" id="email" value="" placeholder="Correo electrónico" class="form-control" >
+                    <input type="text" id="email" value="<?php echo $infoUser['email'] ?>" placeholder="Correo electrónico" class="form-control" >
                 </div>   
                 <div class="col-md-6">
-                    <input type="password" id="password" value="" placeholder="Contraseña" class="form-control" >
+                    <input type="text" id="password" value="*****" placeholder="Contraseña" class="form-control" >
                 </div>
             </div>
             <div class="clear">&nbsp;</div>
@@ -44,7 +52,11 @@
                         <option value="0">Selecciona un perfil</option>
                         <?php 
                         foreach($profiles as $profile){
-                            echo "<option value='".$profile['profile_id']."'>".$profile['profile_name']."</option>";
+                            $select = '';
+                            if($infoUser['profile_id']==$profile['profile_id']){
+                                $select = "selected";
+                            }
+                            echo "<option value='".$profile['profile_id']."' ".$select.">".$profile['profile_name']."</option>";
                         }
                         ?>                        
                     </select>
@@ -54,7 +66,11 @@
                         <option value="0">Selecciona una sucursal</option>
                         <?php 
                         foreach($sucursales as $sucursal){
-                            echo "<option value='".$sucursal['sucursal_id']."'>".$sucursal['sucursal_name']."</option>";
+                            $select = '';
+                            if($infoUser['sucursal_id']==$sucursal['sucursal_id']){
+                                $select = "selected";
+                            }
+                            echo "<option value='".$sucursal['sucursal_id']."' ".$select.">".$sucursal['sucursal_name']."</option>";
                         }
                         ?> 
                     </select>
@@ -69,7 +85,7 @@
             <div class="clear">&nbsp;</div>
             <div class="row colaboradorForm">    
                 <div class="col-lg-6">
-                    <input class="form-control" id="comision" value="" placeholder="% Comision" type="text">
+                    <input class="form-control" id="comision" value="<?php echo $infoUser['comision'] ?>" placeholder="% Comision" type="text">
                 </div>   
                 <div class="col-md-6">
                     <input class="form-control" id="telefono" value="" placeholder="Telefono" type="text">
@@ -78,12 +94,12 @@
             <div class="clear">&nbsp;</div>
             <div class="row colaboradorForm">    
                 <div class="col-lg-6">
-                    <input class="form-control" id="salario" value="" placeholder="Salario" type="text">
+                    <input class="form-control" id="salario" value="<?php echo $infoUser['salary'] ?>" placeholder="Salario" type="text">
                 </div>   
                 <div class="col-md-6">
                     <div class="form-group" id="data_1">            
                         <div class="input-group date">
-                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span><input class="form-control" value="" type="text" id="fechaNacimiento" placeholder="Fecha de nacimiento">
+                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span><input class="form-control" value="<?php echo $infoUser['birthdate'] ?>" type="text" id="fechaNacimiento" placeholder="Fecha de nacimiento">
                         </div>
                     </div>
                 </div>
@@ -103,7 +119,7 @@
                     <button class='btn btn-danger' id='cancelarUser'>Cancelar</button>
                 </div>   
                 <div class="col-md-2 text-right">&nbsp;        
-                    <button class='btn btn-primary' id='saveUser'>Agregar usuario</button>
+                    <button class='btn btn-primary' id='saveUser'>Actualizar usuario</button>
                 </div>
             </div>  
              
