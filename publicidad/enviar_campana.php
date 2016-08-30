@@ -6,7 +6,22 @@
     include $pathProy.'/header.php';
     include $pathProy.'/menu.php';
 ?>
-
+<style>
+span.gray {
+  background: #969696;
+  border-radius: 0.8em;
+  -moz-border-radius: 0.8em;
+  -webkit-border-radius: 0.8em;
+  color: #ffffff;
+  display: inline-block;
+  font-weight: bold;
+  line-height: 1.6em;
+  margin-right: 15px;
+  text-align: center;
+  width: 1.6em; 
+  font-size:10px;
+}
+</style>
 
     <div class="row wrapper border-bottom white-bg page-heading">
         <div class="col-sm-4">
@@ -43,11 +58,11 @@
                     <table class="table table-striped table-bordered table-hover dataTables-example" id="tabla_clientes">
                     <thead>
                      <tr>
-                        <th>ID</th>
-                        <th>Cliente</th>
-                        <th>E-mail</th>
-                        <th>Rating</th>
-                        <th></th>
+                        <th align="center">ID</th>
+                        <th align="center">Cliente</th>
+                        <th align="center">E-mail</th>
+                        <th align="center">Rating</th>
+                        <th align="center"></th>
                     </tr>
                     </thead>
                     <tbody id="clientes">
@@ -65,11 +80,11 @@
                     	
                     	
                     	$tr.='<tr class="gradeX">';
-                    	$tr.='<td>'.$id_cliente.'</td>';
+                    	$tr.='<td align="center">'.$id_cliente.'</td>';
                     	$tr.='<td>'.$cliente.'</td>';
-                    	$tr.='<td>'.$email.'</td>';
-                    	$tr.='<td><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i></td>';
-                    	$tr.='<td><div class="infont col-md-1 col-sm-1"><input type="checkbox" name="cliente_'.$id_cliente.'" id="cliente_'.$id_cliente.'" value="'.$id_cliente.'" class="clientes"></div></td>';
+                    	$tr.='<td align="center">'.$email.'</td>';
+                    	$tr.='<td align="center"><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i> <span class="gray">'.$id_cliente.'</span></td>';
+                    	$tr.='<td align="center"><div class="infont col-md-1 col-sm-1"><input type="checkbox" name="cliente_'.$id_cliente.'" id="cliente_'.$id_cliente.'" value="'.$id_cliente.'" class="clientes"></div></td>';
                     	$tr.='</tr>';
                     	
                     }
@@ -79,11 +94,11 @@
                     </tbody>
                     <tfoot>
                     <tr>
-                        <th>ID</th>
-                        <th>Cliente</th>
-                        <th>E-mail</th>
-                        <th>Rating</th>
-                        <th></th>
+                        <th align="center">ID</th>
+                        <th align="center">Cliente</th>
+                        <th align="center">E-mail</th>
+                        <th align="center">Rating</th>
+                        <th align="center"></th>
                     </tr>
                     </tfoot>
                     </table>
@@ -104,10 +119,10 @@
                     <table class="table table-striped table-bordered table-hover dataTables-example" id="tabla_publicidad">
                     <thead>
                     <tr>
-                    	<th>ID</th>
-                        <th>Campa&ntilde;a</th>
-                        <th>Fecha de Creaci&oacute;n</th>
-                        <th></th>
+                    	<th align="center">ID</th>
+                        <th align="center">Campa&ntilde;a</th>
+                        <th align="center">Fecha de Creaci&oacute;n</th>
+                        <th align="center"></th>
                         
                     </tr>
                     </thead>
@@ -129,10 +144,10 @@
                     	
                     	
                     	$tr.='<tr class="gradeX">';
-                    	$tr.='<td>'.$id_publicidad.'</td>';
+                    	$tr.='<td align="center">'.$id_publicidad.'</td>';
                     	$tr.='<td>'.$nombre.'</td>';
-                    	$tr.='<td>'.$fecha.'</td>';
-                    	$tr.='<td><div class="infont col-md-1 col-sm-1"><input type="checkbox" name="publicidad_'.$id_publicidad.'" id="publicidad_'.$id_publicidad.'" value="'.$id_publicidad.'" class="publicidad"></div></td>';
+                    	$tr.='<td align="center">'.$fecha.'</td>';
+                    	$tr.='<td align="center"><div class="infont col-md-1 col-sm-1"><input type="checkbox" name="publicidad_'.$id_publicidad.'" id="publicidad_'.$id_publicidad.'" value="'.$id_publicidad.'" class="publicidad"></div></td>';
                     	$tr.='</tr>';
                     	
                     }
@@ -143,10 +158,10 @@
                     </tbody>
                     <tfoot>
                     <tr>
-                        <th>ID</th>
-                        <th>Campa&ntilde;a</th>
-                        <th>Fecha de Creaci&oacute;n</th>
-                        <th></th>
+                        <th align="center">ID</th>
+                        <th align="center">Campa&ntilde;a</th>
+                        <th align="center">Fecha de Creaci&oacute;n</th>
+                        <th align="center"></th>
                     </tr>
                     </tfoot>
                     </table>
@@ -156,6 +171,8 @@
                 </div>
             </div>
             </div>
+	
+		
     <div class="row">
 	<div class="col-lg-12">
             <div class="col-sm-3 col-sm-offset-5">
@@ -254,6 +271,7 @@
 			console.log(json);
         	
             alert("Envio de Campa\u00f1a exitoso");
+            location.reload();
             //var url="index.php";
             //$(location).attr("href", url);
 		});
@@ -263,6 +281,17 @@
         	var url="index.php";
         	$(location).attr("href", url);
         });
+
+        $('input:checkbox[class=clientes]').change(function()
+		{
+    		var id=$(this).attr("value");
+
+    		if($(this).is(":checked"))
+        	{
+				
+        	}
+		});
+        
     </script>
 
 

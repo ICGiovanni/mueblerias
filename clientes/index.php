@@ -55,14 +55,14 @@
                     <table class="table table-striped table-bordered table-hover dataTables-example" id="tabla_clientes">
                     <thead>
                     <tr>
-                    	<th>ID</th>
-                        <th>Cliente</th>
-                        <th>Datos Fiscales</th>
-                        <th>Direcci&oacute;n</th>
-                        <th>Telefono</th>
-                        <th>E-mail</th>
-                        <th>Rating</th>
-                        <th></th>
+                    	<th align="center">ID</th>
+                        <th align="center">Cliente</th>
+                        <th align="center">Datos Fiscales</th>
+                        <th align="center">Direcci&oacute;n</th>
+                        <th align="center">Telefono</th>
+                        <th align="center">E-mail</th>
+                        <th align="center">Rating</th>
+                        <th align="center"></th>
                         
                     </tr>
                     </thead>
@@ -132,14 +132,14 @@
                     	}
                     	
                     	$tr.='<tr class="gradeX">';
-                    	$tr.='<td>'.$id_cliente.'</td>';
+                    	$tr.='<td align="center">'.$id_cliente.'</td>';
                     	$tr.='<td>'.$cliente.'</td>';
                     	$tr.='<td>'.$datos_fiscales.'</td>';
                     	$tr.='<td>'.$direccion.'</td>';
                     	$tr.='<td>'.$telefono.'</td>';
-                    	$tr.='<td>'.$email.'</td>';
-                    	$tr.='<td><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i></td>';
-                    	$tr.='<td><div class="infont col-md-1 col-sm-1"><a href="editar_cliente.php?id='.$id_cliente.'"><i class="fa fa-pencil"></i></a><a href="#" onClick="borrar_cliente('.$id_cliente.');"><i class="fa fa-trash-o"></i></a></div></td>';
+                    	$tr.='<td align="center">'.$email.'</td>';
+                    	$tr.='<td align="center"><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i></td>';
+                    	$tr.='<td align="center"><div class="infont col-md-1 col-sm-1"><a href="editar_cliente.php?id='.$id_cliente.'"><i class="fa fa-pencil"></i></a><a href="#" onClick="borrar_cliente('.$id_cliente.');"><i class="fa fa-trash-o"></i></a></div></td>';
                     	$tr.='</tr>';
                     	
                     }
@@ -149,14 +149,14 @@
                     </tbody>
                     <tfoot>
                     <tr>
-                        <th>ID</th>
-                        <th>Cliente</th>
-                        <th>Datos Fiscales</th>
-                        <th>Direcci&oacute;n</th>
-                        <th>Telefono</th>
-                        <th>E-mail</th>
-                        <th>Rating</th>
-                        <th></th>
+                        <th align="center">ID</th>
+                        <th align="center">Cliente</th>
+                        <th align="center">Datos Fiscales</th>
+                        <th align="center">Direcci&oacute;n</th>
+                        <th align="center">Telefono</th>
+                        <th align="center">E-mail</th>
+                        <th align="center">Rating</th>
+                        <th align="center"></th>
                     </tr>
                     </tfoot>
                     </table>
@@ -202,19 +202,23 @@
         function borrar_cliente(id_cliente)
         {
         	var url="borrar_cliente.php";
-        				 
-			$.ajax(
-			{
-		    	type: "POST",
-		        url: url,
-		        data: {id:id_cliente}, // serializes the form's elements.
-		        success: function(data)
-		        {
-		        	alert("El Cliente ha sido borrado"); // show response from the php script.
-		        	var url="index.php";
-		    		$(location).attr("href", url);
-				}
-			});
+        	var r=confirm("\u00BFDesea continuar?");
+
+        	if(r==true)
+        	{			 
+				$.ajax(
+				{
+			    	type: "POST",
+			        url: url,
+			        data: {id:id_cliente}, // serializes the form's elements.
+			        success: function(data)
+			        {
+			        	alert("El Cliente ha sido borrado"); // show response from the php script.
+			        	var url="index.php";
+			    		$(location).attr("href", url);
+					}
+				});
+        	}
         }
 
     </script>
