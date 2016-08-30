@@ -25,7 +25,6 @@ if(isset($_GET) && !empty($_GET)){
 		$filtro_sucursal_activo_checked = 'checked';
 	}
 	
-	
 	$rows = $objGasto->getFilteredGastos($_GET);
 	
 } else {
@@ -40,34 +39,22 @@ $rowsGastosSucursal = $objGasto->getGastosSucursal();
 $asoccGastoCategoria = array();
 $options_gasto_categoria_id = '';
 while(list(,$dataGastoCategoria) = each($rowsGastosCategoria)){
-	$selected = '';
-	if(isset($_GET["filtro_categoria_id"]) && $_GET["filtro_categoria_id"] == $dataGastoCategoria["gasto_categoria_id"]){
-		$selected = 'selected';
-	}
 	$asoccGastoCategoria[$dataGastoCategoria["gasto_categoria_id"]]=$dataGastoCategoria["gasto_categoria_desc"];
-	$options_gasto_categoria_id.='<option value="'.$dataGastoCategoria["gasto_categoria_id"].'" '.$selected.'>'.$dataGastoCategoria["gasto_categoria_desc"].'</option>';
+	$options_gasto_categoria_id.='<option value="'.$dataGastoCategoria["gasto_categoria_id"].'">'.$dataGastoCategoria["gasto_categoria_desc"].'</option>';
 }
 
 $asoccGastoStatus = array();
 $options_gasto_status_id = '';
 while(list(,$dataGastoStatus) = each($rowsGastosStatus)){
-	$selected = '';
-	if(isset($_GET["filtro_status_id"]) && $_GET["filtro_status_id"] == $dataGastoStatus["gasto_status_id"]){
-		$selected = 'selected';
-	}
 	$asoccGastoStatus[$dataGastoStatus["gasto_status_id"]]=$dataGastoStatus["gasto_status_desc"];
-	$options_gasto_status_id.='<option value="'.$dataGastoStatus["gasto_status_id"].'" '.$selected.'>'.$dataGastoStatus["gasto_status_desc"].'</option>';	
+	$options_gasto_status_id.='<option value="'.$dataGastoStatus["gasto_status_id"].'">'.$dataGastoStatus["gasto_status_desc"].'</option>';	
 }
 
 $asoccGastoSucursal = array();
 $options_sucursal_id = '';
 while(list(,$dataGastoSucursal) = each($rowsGastosSucursal)){
-	$selected = '';
-	if(isset($_GET["filtro_sucursal_id"]) && $_GET["filtro_sucursal_id"] == $dataGastoSucursal["sucursal_id"]){
-		$selected = 'selected';
-	}
 	$asoccGastoSucursal[$dataGastoSucursal["sucursal_id"]]=$dataGastoSucursal["sucursal_name"];
-	$options_sucursal_id.='<option value="'.$dataGastoSucursal["sucursal_id"].'" '.$selected.'>'.$dataGastoSucursal["sucursal_name"].'</option>';	
+	$options_sucursal_id.='<option value="'.$dataGastoSucursal["sucursal_id"].'">'.$dataGastoSucursal["sucursal_name"].'</option>';	
 }
 
 //print_r($rows);
@@ -76,41 +63,21 @@ $html_rows = '';
 
 while(list(,$dataGasto) = each($rows)){
 	$rowPagos = $objGasto->getPagosSum($dataGasto["gasto_id"]);
-	$rowUltimoPago = $objGasto->getFechaUltimoPago($dataGasto["gasto_id"]);
-		
 	$rowPagos=$rowPagos[0];
 	
-	switch($dataGasto["gasto_status_id"]){
-		case '1':
-			$color_row = "#FBFEC0";
-			break;
-		case '2':
-			$color_row = "#BCF5BD";
-			break;
-		case '3':
-			$color_row = "#F5F5F5";
-			break;
-		case '4':
-			$color_row = "#FFCACA";
-			break;
-		default:
-			$color_row = "#F5F5F5";
-			break;
-	}
-	
 	$dataGasto["gasto_saldo"]=$dataGasto["gasto_monto"] - $rowPagos["gastos_pagos_monto"];
-	$html_rows.= '<tr style="background-color:'.$color_row.';">
+	$html_rows.= '<tr>
 		<td align="center">'.$dataGasto["gasto_id"].'</td>
 		<td>'.$dataGasto["gasto_no_documento"].'</td>
 		<td>'.$dataGasto["gasto_fecha_vencimiento"].'</td>
-		<td>'.$rowUltimoPago["gastos_pagos_fecha"].'</td>
+		<td>'.$dataGasto["gasto_fecha_vencimiento"].'</td>
 		<td>'.$asoccGastoCategoria[$dataGasto["gasto_categoria_id"]].'</td>
 		<td>'.$dataGasto["gasto_concepto"].'</td>
 		<td>'.$asoccGastoSucursal[$dataGasto["sucursal_id"]].'</td>
 		<td>$'.number_format($dataGasto["gasto_monto"],2).'</td>
 		<td>'.number_format($dataGasto["gasto_saldo"],2).'</td>
 		<td>'.$asoccGastoStatus[$dataGasto["gasto_status_id"]].'</td>
-		<td align="center"><a href="pago_nuevo/?gasto_id='.$dataGasto["gasto_id"].'"><i class="fa fa-dollar" title="Realizar Pago"></i></a> &nbsp;<a href="pagos_lista/?gasto_id='.$dataGasto["gasto_id"].'"><i class="fa fa-list-ul" title="Ver detalle de pagos"></i></a> &nbsp;<a href="editar/?gasto_id='.$dataGasto["gasto_id"].'"><i class="fa fa-edit" title="Editar"></i></a> &nbsp;<a href="borrar/?gasto_id='.$dataGasto["gasto_id"].'"><i class="fa fa-trash" title="Borrar"></i></a></td>
+		<td align="center"><a href="pago_nuevo/?gasto_id='.$dataGasto["gasto_id"].'"><i class="fa fa-dollar" title="Realizar Pago"></i></a> &nbsp;<a href="pagos_lista/?gasto_id='.$dataGasto["gasto_id"].'"><i class="fa fa-list-ul" title="Ver detalle de pagos"></i></a> &nbsp;<a href="editar/?gasto_id='.$dataGasto["gasto_id"].'"><i class="fa fa-edit" title="Editar"></i></a> &nbsp;<i class="fa fa-trash" title="Borrar"></i></td>
 	</tr>';
 }
 
@@ -332,14 +299,14 @@ $(document).ready(function(){
 	forceParse: false,
 	autoclose: true,
 	language: 'es'
-	}).datepicker("setDate", "<?=isset($_GET["filtro_fecha_inicio"])?$_GET["filtro_fecha_inicio"]:'0'?>");
+	}).datepicker("setDate", "0");
 	
 	$('#data_rango_fin .input-group.date').datepicker({
 	keyboardNavigation: false,
 	forceParse: false,
 	autoclose: true,
 	language: 'es'
-	}).datepicker("setDate", "<?=isset($_GET["filtro_fecha_fin"])?$_GET["filtro_fecha_fin"]:'0'?>");
+	}).datepicker("setDate", "0");
 
 });
 </script>

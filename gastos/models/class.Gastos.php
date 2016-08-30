@@ -99,6 +99,19 @@ class Gasto {
 		return "updated";
 	}
 	
+	public function deleteGasto($gasto_id){
+		$sql = "DELETE FROM ".$this->name_table_gastos." 
+		WHERE gasto_id = :gasto_id LIMIT 1";
+		
+		echo $sql;
+		
+		$statement=$this->connect->prepare($sql);
+		$statement->bindParam(':gasto_id', $gasto_id, PDO::PARAM_STR);
+		
+		$statement->execute();
+		return "deleted";
+	}
+	
 	public function getGastos(){
 
 		$sql="SELECT 
@@ -332,6 +345,26 @@ class Gasto {
 		$statement->execute();
         $result=$statement->fetchAll(PDO::FETCH_ASSOC);
 
+		return $result;
+	}
+	
+	public function getFechaUltimoPago($gasto_id){
+		$sql="SELECT 
+		gastos_pagos_fecha
+		FROM ".$this->name_table_gastos_pagos." 
+		WHERE gasto_id = :gasto_id ORDER BY gastos_pagos_id DESC LIMIT 1";
+
+		$statement=$this->connect->prepare($sql);
+		$statement->bindParam(':gasto_id', $gasto_id, PDO::PARAM_STR);
+
+		$statement->execute();
+        $result=$statement->fetchAll(PDO::FETCH_ASSOC);
+		if(isset($result[0])){
+			$result = $result[0];
+		} else {
+			$result["gastos_pagos_fecha"] = 'N/A';
+		}
+		
 		return $result;
 	}
 }

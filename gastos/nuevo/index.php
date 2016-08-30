@@ -3,7 +3,7 @@ require_once $_SERVER['REDIRECT_PATH_CONFIG'].'/config.php';
 require_once $pathProy.'/header.php';
 require_once $pathProy.'/menu.php';
 require_once($_SERVER["REDIRECT_PATH_CONFIG"].'gastos/models/class.Gastos.php');
-require_once($_SERVER["REDIRECT_PATH_CONFIG"].'gastos/models/class.Proveedores.php');
+require_once($_SERVER["REDIRECT_PATH_CONFIG"].'proveedores/models/class.Proveedores.php');
 require_once($_SERVER["REDIRECT_PATH_CONFIG"].'login/models/class.Login.php');
 /* INICIO SECUENCIA PARA GASTOS */
 $objGasto = new Gasto();
@@ -11,12 +11,12 @@ $objGasto = new Gasto();
 $rowsGastosCategoria = $objGasto->getGastosCategoria();
 $rowsGastosSucursal = $objGasto->getGastosSucursal();
 
-$options_gasto_categoria_id = '';
+$options_gasto_categoria_id = '<option value="0">-- Elige un Categoria --</option>';
 while(list(,$dataGastoCategoria) = each($rowsGastosCategoria)){
 	$options_gasto_categoria_id.='<option value="'.$dataGastoCategoria["gasto_categoria_id"].'">'.$dataGastoCategoria["gasto_categoria_desc"].'</option>';
 }
 
-$options_sucursal_id = '';
+$options_sucursal_id = '<option value="0">-- Elige una Sucursal --</option>';
 while(list(,$dataGastoSucursal) = each($rowsGastosSucursal)){
 	$options_sucursal_id.='<option value="'.$dataGastoSucursal["sucursal_id"].'">'.$dataGastoSucursal["sucursal_name"].'</option>';
 }
@@ -25,7 +25,7 @@ while(list(,$dataGastoSucursal) = each($rowsGastosSucursal)){
 /* INICIA SECUENCIA PARA PROVEEDORES */
 $objProveedor = new Proveedor();
 $rowsProveedores = $objProveedor->getProveedores();
-$options_proveedor_id = '';
+$options_proveedor_id = '<option value="0">-- Elige un Proveedor --</option>';
 while(list(,$dataProveedor) = each($rowsProveedores)){
 	$options_proveedor_id.='<option value="'.$dataProveedor["proveedor_id"].'">'.$dataProveedor["proveedor_nombre"].'</option>';
 }
@@ -35,7 +35,7 @@ while(list(,$dataProveedor) = each($rowsProveedores)){
 $objLogin = new Login();
 $rowsLogin = $objLogin->getUsers("");
 //print_r($rowsLogin);
-$options_login_id = '';
+$options_login_id = '<option value="0">-- Elige un Empleado --</option>';
 while(list(,$dataLogin) = each($rowsLogin)){
 	$options_login_id.='<option value="'.$dataLogin["login_id"].'">'.$dataLogin["firstName"].' '.$dataLogin["lastName"].'</option>';
 }
@@ -271,8 +271,6 @@ $('#data_2 .input-group.date').datepicker({
 
 
 function crea_gasto(){
-	$("#boton_crea_gasto").addClass("disabled");
-	$("#span_crea_gasto").addClass("glyphicon glyphicon-refresh glyphicon-refresh-animate");
 	
 	gasto_no_documento=$("#gasto_no_documento").val();
 	gasto_fecha_vencimiento=$("#gasto_fecha_vencimiento").val();
@@ -289,11 +287,31 @@ function crea_gasto(){
 	gasto_hora_vencimiento=$("#gasto_hora_vencimiento").val();
 	gasto_hora_recordatorio=$("#gasto_hora_recordatorio").val();
 	sucursal_id=$("#sucursal_id").val();
-	
 	proveedor_id=$("#proveedor_id").val();
 	login_id=$("#login_id").val();
-	
 	gasto_status_id = '1';
+	
+	if(gasto_categoria_id == '0'){
+		alert("Es necesario elegir una categoria");
+		return;
+	}
+	if(sucursal_id == '0'){
+		alert("Es necesario elegir una sucursal");
+		return;
+	}
+	
+	if( (gasto_categoria_id == '15') &&  proveedor_id == '0'){ //gasto inputable a proveedores
+		alert("Es necesario elegir un proveedor");
+		return;
+	}
+	
+	if( (gasto_categoria_id == '13') && login_id == '0' ){ //gasto inputable a empleados
+		alert("Es necesario elegir un empleado");
+		return;
+	}
+	
+	$("#boton_crea_gasto").addClass("disabled");
+	$("#span_crea_gasto").addClass("glyphicon glyphicon-refresh glyphicon-refresh-animate");
 	
 	$.ajax({
 		type: "GET",
