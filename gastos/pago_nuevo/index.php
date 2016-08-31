@@ -19,7 +19,7 @@ $rowPagos=$rowPagos[0];
 $rowsGastosCategoria = $objGasto->getGastosCategoria();
 $rowsFormasPago = $objGasto->getFormasPago();
 
-$options_gastos_pagos_forma_de_pago_id = '';
+$options_gastos_pagos_forma_de_pago_id = '<option value="0">-- Elige un Metodo de Pago --</option>';
 while(list(,$dataFormasPago) = each($rowsFormasPago)){
 	$options_gastos_pagos_forma_de_pago_id.='<option value="'.$dataFormasPago["gastos_pagos_forma_de_pago_id"].'">'.$dataFormasPago["gastos_pagos_forma_de_pago_desc"].'</option>';
 }
@@ -104,7 +104,7 @@ while(list(,$dataGastoCategoria) = each($rowsGastosCategoria)){
 									Referencia:
 								</td>
 								<td rowspan="5">
-									<textarea rows="10" name="gastos_pagos_referencia" id="gastos_pagos_referencia"></textarea>
+									<textarea rows="10" name="gastos_pagos_referencia" cols="25" id="gastos_pagos_referencia"></textarea>
 								</td>
 							</tr>
 							<tr>
@@ -183,6 +183,9 @@ while(list(,$dataGastoCategoria) = each($rowsGastosCategoria)){
     <!-- Page-Level Scripts -->
 
 <script>
+saldo_actual = '<?=($rowGasto["gasto_monto"]-$rowPagos["gastos_pagos_monto"])?>';
+saldo_actual = Number(saldo_actual);
+cierra_gasto = '0';
 
 $(document).ready(function(){
 	
@@ -223,12 +226,16 @@ $('#data_1 .input-group.date').datepicker({
 }).datepicker("setDate", "0");
 
 function crea_pago(){
-	$("#boton_crea_registro").addClass("disabled");
-	$("#span_crea_registro").addClass("glyphicon glyphicon-refresh glyphicon-refresh-animate");
 	
 	gasto_id = '<?=$_GET["gasto_id"]?>';
 	gastos_pagos_monto=$("#gastos_pagos_monto").val();
 	gastos_pagos_forma_de_pago_id=$("#gastos_pagos_forma_de_pago_id").val();
+	
+	if(gastos_pagos_forma_de_pago_id == '0'){
+		alert("Es necesario elegir un metodo de pago");
+		return;
+	}
+	
 	if ( $("#gastos_pagos_es_fiscal").is(':checked') ){
 		gastos_pagos_es_fiscal = "1";
 	} else {
@@ -241,17 +248,21 @@ function crea_pago(){
 	
 	gastos_pagos_referencia=$("textarea#gastos_pagos_referencia").val();
 	
-	$.ajax({
-		type: "GET",
-		url: "../ajax/crea_pago.php",			
-		data: {gasto_id:gasto_id,gastos_pagos_monto:gastos_pagos_monto,gastos_pagos_forma_de_pago_id:gastos_pagos_forma_de_pago_id,gastos_pagos_es_fiscal:gastos_pagos_es_fiscal,gastos_pagos_monto_sin_iva:gastos_pagos_monto_sin_iva,gastos_pagos_iva:gastos_pagos_iva,gastos_pagos_fecha:gastos_pagos_fecha,gastos_pagos_hora:gastos_pagos_hora,gastos_pagos_referencia:gastos_pagos_referencia},
-		success: function(msg){
-			location.href = '../';
-			//$("#myModal").modal('hide');
-			//$("#boton_crea_registro").removeClass().addClass("btn btn-primary");
-			//$("#span_crea_registro").removeClass();
-		}		
-	});
+	$("#boton_crea_registro").addClass("disabled");
+	$("#span_crea_registro").addClass("glyphicon glyphicon-refresh glyphicon-refresh-animate");
+	
+	//alert(cierra_gasto);
+	
+		$.ajax({
+			type: "GET",
+			url: "../ajax/crea_pago.php",			
+			data: {gasto_id:gasto_id,gastos_pagos_monto:gastos_pagos_monto,gastos_pagos_forma_de_pago_id:gastos_pagos_forma_de_pago_id,gastos_pagos_es_fiscal:gastos_pagos_es_fiscal,gastos_pagos_monto_sin_iva:gastos_pagos_monto_sin_iva,gastos_pagos_iva:gastos_pagos_iva,gastos_pagos_fecha:gastos_pagos_fecha,gastos_pagos_hora:gastos_pagos_hora,gastos_pagos_referencia:gastos_pagos_referencia,cierra_gasto:cierra_gasto},
+			success: function(msg){
+				location.href = '../';
+			}		
+		});
+	
+	
 	
 }
 
@@ -270,9 +281,6 @@ function update_iva(){
 	}
 }
 
-saldo_actual = '<?=($rowGasto["gasto_monto"]-$rowPagos["gastos_pagos_monto"])?>';
-saldo_actual = Number(saldo_actual);
-
 function valida_pago(obj){
 	pago_actual = Number(obj.value);
 	
@@ -280,6 +288,13 @@ function valida_pago(obj){
 		alert("Pago invalido");
 		obj.value = "0";
 	}
+	if( pago_actual == saldo_actual){
+		cierra_gasto = '1';
+	} else {
+		cierra_gasto = '0';
+	}
+	
+	
 	update_iva();
 }
 </script>

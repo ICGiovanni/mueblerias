@@ -38,7 +38,7 @@ $rowsGastosSucursal = $objGasto->getGastosSucursal();
 
 
 $asoccGastoCategoria = array();
-$options_gasto_categoria_id = '';
+$options_gasto_categoria_id = '<option value="0">-- Elige un Categoria --</option>';
 while(list(,$dataGastoCategoria) = each($rowsGastosCategoria)){
 	$selected = '';
 	if(isset($_GET["filtro_categoria_id"]) && $_GET["filtro_categoria_id"] == $dataGastoCategoria["gasto_categoria_id"]){
@@ -49,7 +49,7 @@ while(list(,$dataGastoCategoria) = each($rowsGastosCategoria)){
 }
 
 $asoccGastoStatus = array();
-$options_gasto_status_id = '';
+$options_gasto_status_id = '<option value="0">-- Elige un Status --</option>';
 while(list(,$dataGastoStatus) = each($rowsGastosStatus)){
 	$selected = '';
 	if(isset($_GET["filtro_status_id"]) && $_GET["filtro_status_id"] == $dataGastoStatus["gasto_status_id"]){
@@ -60,7 +60,7 @@ while(list(,$dataGastoStatus) = each($rowsGastosStatus)){
 }
 
 $asoccGastoSucursal = array();
-$options_sucursal_id = '';
+$options_sucursal_id = '<option value="0">-- Elige una Sucursal --</option>';
 while(list(,$dataGastoSucursal) = each($rowsGastosSucursal)){
 	$selected = '';
 	if(isset($_GET["filtro_sucursal_id"]) && $_GET["filtro_sucursal_id"] == $dataGastoSucursal["sucursal_id"]){
