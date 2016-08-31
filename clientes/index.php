@@ -74,13 +74,17 @@
                     foreach($json as $d)
                     {
                     	$id_cliente=$d->id_cliente;
-                    	$cliente=$d->cliente;
+                    	$nombre=$d->nombre;
+                    	$apellidoP=$d->apellidoP;
+                    	$apellidoM=$d->apellidoM;
                     	$rfc=$d->rfc;
                     	$razon_social=$d->razon_social;
                     	$telefono=$d->telefono;
                     	$email=$d->email;
                     	$datos_fiscales="";
                     	$direccion="";
+                    	
+                    	$cliente=$nombre.' '.$apellidoP.' '.$apellidoM;
                     	
                     	if($rfc!='')
                     	{
