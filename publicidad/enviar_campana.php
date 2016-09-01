@@ -73,11 +73,13 @@ span.gray {
                     foreach($json as $d)
                     {
                     	$id_cliente=$d->id_cliente;
-                    	$cliente=$d->cliente;
+                    	$nombre=$d->nombre;
+                    	$apellidoP=$d->apellidoP;
+                    	$apellidoM=$d->apellidoM;
                     	$rating="";
                     	$email=$d->email;
                     	
-                    	
+                    	$cliente=$nombre.' '.$apellidoP.' '.$apellidoM;
                     	
                     	$tr.='<tr class="gradeX">';
                     	$tr.='<td align="center">'.$id_cliente.'</td>';

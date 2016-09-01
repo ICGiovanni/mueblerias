@@ -13,11 +13,13 @@ class Clientes
 	
 	public function InsertarCliente($params)
 	{
-		$sql="INSERT INTO clientes VALUES('',:nombre,:razonS,:rfc,:calle,:noExt,:noInt,:colonia,:codigoPostal,:municipio,:estado,:telefono,:telefonoA,:email)";
+		$sql="INSERT INTO clientes VALUES('',:nombre,:apellidoP,:apellidoM,:razonS,:rfc,:calle,:noExt,:noInt,:colonia,:codigoPostal,:municipio,:estado,:telefono,:telefonoA,:celular,:celularA,:email,:emailA)";
 		
 		$statement=$this->connect->prepare($sql);
 		
 		$statement->bindParam(':nombre', $params['nombre'], PDO::PARAM_STR);
+		$statement->bindParam(':apellidoP', $params['apellidoP'], PDO::PARAM_STR);
+		$statement->bindParam(':apellidoM', $params['apellidoM'], PDO::PARAM_STR);
 		$statement->bindParam(':razonS', $params['razonS'], PDO::PARAM_STR);
 		$statement->bindParam(':rfc', $params['rfc'], PDO::PARAM_STR);
 		$statement->bindParam(':calle', $params['calle'], PDO::PARAM_STR);
@@ -29,7 +31,10 @@ class Clientes
 		$statement->bindParam(':estado', $params['estado'], PDO::PARAM_STR);
 		$statement->bindParam(':telefono', $params['telefono'], PDO::PARAM_STR);
 		$statement->bindParam(':telefonoA', $params['telefonoA'], PDO::PARAM_STR);
+		$statement->bindParam(':celular', $params['celular'], PDO::PARAM_STR);
+		$statement->bindParam(':celularA', $params['celularA'], PDO::PARAM_STR);
 		$statement->bindParam(':email', $params['email'], PDO::PARAM_STR);
+		$statement->bindParam(':emailA', $params['emailA'], PDO::PARAM_STR);
 		
 		$statement->execute();
 		return $this->connect->lastInsertId();		
@@ -37,15 +42,18 @@ class Clientes
 	
 	public function ActualizarCliente($params)
 	{
-		$sql="UPDATE clientes SET cliente=:nombre,razon_social=:razonS,rfc=:rfc,
+		$sql="UPDATE clientes SET nombre=:nombre,apellidoP=:apellidoP,apellidoM=:apellidoM,razon_social=:razonS,rfc=:rfc,
 				calle=:calle,num_exterior=:noExt,num_interior=:noInt,colonia=:colonia,
 				codigo_postal=:codigoPostal,municipio=:municipio,id_estado=:estado,
-				telefono=:telefono,telefono_alterno=:telefonoA,email=:email
+				telefono=:telefono,telefono_alterno=:telefonoA,celular=:celular,celularA=:celularA,email=:email,
+				emailA=:emailA
 				WHERE id_cliente=:id_cliente";
 		
 		$statement=$this->connect->prepare($sql);
 		$statement->bindParam(':id_cliente', $params['id_cliente'], PDO::PARAM_STR);
 		$statement->bindParam(':nombre', $params['nombre'], PDO::PARAM_STR);
+		$statement->bindParam(':apellidoP', $params['apellidoP'], PDO::PARAM_STR);
+		$statement->bindParam(':apellidoM', $params['apellidoM'], PDO::PARAM_STR);
 		$statement->bindParam(':razonS', $params['razonS'], PDO::PARAM_STR);
 		$statement->bindParam(':rfc', $params['rfc'], PDO::PARAM_STR);
 		$statement->bindParam(':calle', $params['calle'], PDO::PARAM_STR);
@@ -57,7 +65,10 @@ class Clientes
 		$statement->bindParam(':estado', $params['estado'], PDO::PARAM_STR);
 		$statement->bindParam(':telefono', $params['telefono'], PDO::PARAM_STR);
 		$statement->bindParam(':telefonoA', $params['telefonoA'], PDO::PARAM_STR);
+		$statement->bindParam(':celular', $params['celular'], PDO::PARAM_STR);
+		$statement->bindParam(':celularA', $params['celularA'], PDO::PARAM_STR);
 		$statement->bindParam(':email', $params['email'], PDO::PARAM_STR);
+		$statement->bindParam(':emailA', $params['emailA'], PDO::PARAM_STR);
 		
 		$statement->execute();
 		return $params['id_cliente'];
@@ -76,9 +87,9 @@ class Clientes
 	
 	public function JsonClientes()
 	{
-		$sql="SELECT c.id_cliente,c.cliente,c.razon_social,c.rfc,c.calle,c.num_exterior,
+		$sql="SELECT c.id_cliente,c.nombre,c.apellidoP,c.apellidoM,c.razon_social,c.rfc,c.calle,c.num_exterior,
 				c.num_interior,c.colonia,c.codigo_postal,c.municipio,
-				e.estado,c.telefono,c.telefono_alterno,c.email
+				e.estado,c.telefono,c.telefono_alterno,c.celular,c.celularA,c.email,c.emailA
 				FROM clientes c
 				INNER JOIN estados e USING(id_estado)
 				ORDER BY c.id_cliente";
@@ -117,9 +128,9 @@ class Clientes
 		}
 		
 		
-		$sql="SELECT c.id_cliente,c.cliente,c.razon_social,c.rfc,c.calle,c.num_exterior,
+		$sql="SELECT c.id_cliente,c.nombre,c.apellidoP,c.apellidoM,c.razon_social,c.rfc,c.calle,c.num_exterior,
 				c.num_interior,c.colonia,c.codigo_postal,c.municipio,
-				e.id_estado,e.estado,c.telefono,c.telefono_alterno,c.email
+				e.estado,c.telefono,c.telefono_alterno,c.celular,c.celularA,c.email,c.emailA
 				FROM clientes c
 				INNER JOIN estados e USING(id_estado)
 				$where

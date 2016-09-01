@@ -30,6 +30,12 @@
 			<div class="form-group"><label class="col-sm-2 control-label">Nombre</label>
 			<div class="col-sm-6" ><input type="text" class="form-control" id="nombre" name="nombre"></div>
             </div>
+            <div class="form-group"><label class="col-sm-2 control-label">Apellido Paterno</label>
+			<div class="col-sm-6" ><input type="text" class="form-control" id="apellidoP" name="apellidoP"></div>
+            </div>
+            <div class="form-group"><label class="col-sm-2 control-label">Apellido Materno</label>
+			<div class="col-sm-6" ><input type="text" class="form-control" id="apellidoM" name="apellidoM"></div>
+            </div>
             <div class="form-group"><label class="col-sm-2 control-label">Raz&oacute;n Social</label>
 			<div class="col-sm-6"><input type="text" class="form-control" id="razonS" name="razonS"></div>
             </div>
@@ -68,8 +74,17 @@
 			<label class="col-sm-2 control-label">Telefono Alterno</label>
 			<div class="col-sm-2"><input type="text" class="form-control" id="telefonoA" name="telefonoA"></div>
             </div>
+            <div class="form-group">
+            <label class="col-sm-2 control-label">Celular</label>
+			<div class="col-sm-2 "><input type="text" class="form-control" id="celular" name="celular"></div>
+			<label class="col-sm-2 control-label">Celular Alterno</label>
+			<div class="col-sm-2"><input type="text" class="form-control" id="celularA" name="celularA"></div>
+            </div>
             <div class="form-group"><label class="col-sm-2 control-label">E-mail</label>
 			<div class="col-sm-6" id="divEmail"><input type="text" class="form-control" id="email" name="email"></div>
+            </div>
+            <div class="form-group"><label class="col-sm-2 control-label">E-mail Alterno</label>
+			<div class="col-sm-6" id="divEmail"><input type="text" class="form-control" id="emailA" name="emailA"></div>
             </div>
             <div class="form-group">
 			<div class="col-sm-4 col-sm-offset-2">
@@ -115,6 +130,18 @@ $(document).ready(function()
 			toastr.error('Debe de agregar un Nombre');
 			$("#nombre").val('');
 			$("#nombre").focus();		
+		}
+		else if($("#apellidoP").val()=='')
+		{
+			toastr.error('Debe de agregar un Apellido Paterno');
+			$("#apellidoP").val('');
+			$("#apellidoP").focus();		
+		}
+		else if($("#apellidoM").val()=='')
+		{
+			toastr.error('Debe de agregar un Apellido Materno');
+			$("#apellidoM").val('');
+			$("#apellidoM").focus();		
 		}
 		else if($("#telefono").val()=='')
 		{

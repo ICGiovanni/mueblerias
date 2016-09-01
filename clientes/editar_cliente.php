@@ -39,7 +39,13 @@ $datos=$clientes->GetClientes($id_cliente);
 			<div class="col-sm-6"><label class="col-sm-2 control-label"><?php echo $datos[0]["id_cliente"]?></label></div>
             </div>
 			<div class="form-group"><label class="col-sm-2 control-label">Nombre</label>
-			<div class="col-sm-6" ><input type="text" class="form-control" id="nombre" name="nombre" value="<?php echo $datos[0]["cliente"]?>"></div>
+			<div class="col-sm-6" ><input type="text" class="form-control" id="nombre" name="nombre" value="<?php echo $datos[0]["nombre"]?>"></div>
+            </div>
+            <div class="form-group"><label class="col-sm-2 control-label">Apellido Paterno</label>
+			<div class="col-sm-6" ><input type="text" class="form-control" id="apellidoP" name="apellidoP" value="<?php echo $datos[0]["apellidoP"]?>"></div>
+            </div>
+            <div class="form-group"><label class="col-sm-2 control-label">Apellido Materno</label>
+			<div class="col-sm-6" ><input type="text" class="form-control" id="apellidoM" name="apellidoM" value="<?php echo $datos[0]["apellidoM"]?>"></div>
             </div>
             <div class="form-group"><label class="col-sm-2 control-label">Raz&oacute;n Social</label>
 			<div class="col-sm-6"><input type="text" class="form-control" id="razonS" name="razonS" value="<?php echo $datos[0]["razon_social"]?>"></div>
@@ -79,8 +85,17 @@ $datos=$clientes->GetClientes($id_cliente);
 			<label class="col-sm-2 control-label">Telefono Alterno</label>
 			<div class="col-sm-2"><input type="text" class="form-control" id="telefonoA" name="telefonoA" value="<?php echo $datos[0]["telefono_alterno"]?>"></div>
             </div>
+            <div class="form-group">
+            <label class="col-sm-2 control-label">Celular</label>
+			<div class="col-sm-2 "><input type="text" class="form-control" id="celular" name="celular" value="<?php echo $datos[0]["celular"]?>"></div>
+			<label class="col-sm-2 control-label">Celular Alterno</label>
+			<div class="col-sm-2"><input type="text" class="form-control" id="celularA" name="celularA" value="<?php echo $datos[0]["celularA"]?>"></div>
+            </div>
             <div class="form-group"><label class="col-sm-2 control-label">E-mail</label>
 			<div class="col-sm-6" id="divEmail"><input type="text" class="form-control" id="email" name="email" value="<?php echo $datos[0]["email"]?>"></div>
+            </div>
+            <div class="form-group"><label class="col-sm-2 control-label">E-mail Alterno</label>
+			<div class="col-sm-6" id="divEmail"><input type="text" class="form-control" id="emailA" name="emailA" value="<?php echo $datos[0]["emailA"]?>"></div>
             </div>
             <div class="form-group">
 			<div class="col-sm-4 col-sm-offset-2">
@@ -124,6 +139,18 @@ $(document).ready(function()
 			toastr.error('Debe de agregar un Nombre');
 			$("#nombre").val('');
 			$("#nombre").focus();		
+		}
+		else if($("#apellidoP").val()=='')
+		{
+			toastr.error('Debe de agregar un Apellido Paterno');
+			$("#apellidoP").val('');
+			$("#apellidoP").focus();		
+		}
+		else if($("#apellidoM").val()=='')
+		{
+			toastr.error('Debe de agregar un Apellido Materno');
+			$("#apellidoM").val('');
+			$("#apellidoM").focus();		
 		}
 		else if($("#telefono").val()=='')
 		{
