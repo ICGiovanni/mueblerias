@@ -190,16 +190,6 @@ while(list(,$dataLogin) = each($rowsLogin)){
 							<tr>
 								<td>Descripción:</td>
 								<td><textarea cols="40" name="gasto_descripcion" id="gasto_descripcion" ><?=$rowGasto["gasto_descripcion"]?></textarea></td>
-								<td colspan="2" align="right">Status:</td>
-								<td>
-									<select name="gasto_status_id" id="gasto_status_id">
-										<?=$options_gasto_status_id?>
-									</select>
-								</td>
-							</tr>
-							<tr>
-								<td>Monto:</td>
-								<td>$ <input type="text" name="gasto_monto" id="gasto_monto" value="<?=$rowGasto["gasto_monto"]?>" size="10"></td>
 								<td colspan="2" align="right">Sucursal:</td>
 								<td>
 									<select name="sucursal_id" id="sucursal_id">
@@ -207,6 +197,36 @@ while(list(,$dataLogin) = each($rowsLogin)){
 									</select>
 								</td>
 							</tr>
+							<tr>
+								<td>Monto:</td>
+								<td>$ <input type="text" name="gasto_monto" id="gasto_monto" value="<?=$rowGasto["gasto_monto"]?>" size="10"></td>
+								<td colspan="2" align="right">Proveedor:</td>
+								<td>
+									<select name="proveedor_id" id="proveedor_id">
+										<?=$options_proveedor_id?>
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td>Beneficiario:</td>
+								<td><input type="text" name="gasto_beneficiario" id="gasto_beneficiario" value="" size="40"></td>
+								<td colspan="2" align="right">Empleado:</td>
+								<td>
+									<select name="login_id" id="login_id">
+										<?=$options_login_id?>
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td></td>
+								<td></td>
+								<td colspan="2" align="right">Status:</td>
+								<td>
+									<select name="gasto_status_id" id="gasto_status_id">
+										<?=$options_gasto_status_id?>
+									</select>
+								</td>
+							<tr>
 					  </table>
 		
                     
@@ -315,8 +335,11 @@ function edita_gasto(gasto_id){
 	gasto_monto=$("#gasto_monto").val();
 	gasto_hora_vencimiento=$("#gasto_hora_vencimiento").val();
 	gasto_hora_recordatorio=$("#gasto_hora_recordatorio").val();
-	gasto_status_id=$("#gasto_status_id").val();
 	sucursal_id=$("#sucursal_id").val();
+	proveedor_id=$("#proveedor_id").val();
+	login_id=$("#login_id").val();
+	gasto_status_id=$("#gasto_status_id").val();
+	gasto_beneficiario=$("#gasto_beneficiario").val();
 	
 	if(gasto_categoria_id == '0'){
 		alert("Es necesario elegir una categoria");
@@ -332,7 +355,7 @@ function edita_gasto(gasto_id){
 		return;
 	}
 	
-	if( (gasto_categoria_id == '13') && login_id == '0' ){ //gasto inputable a empleados
+	if( (gasto_categoria_id == '13' || gasto_categoria_id == '2') && login_id == '0' ){ //gasto inputable a empleados
 		alert("Es necesario elegir un empleado");
 		return;
 	}
@@ -343,7 +366,24 @@ function edita_gasto(gasto_id){
 	$.ajax({
 		type: "GET",
 		url: "../ajax/edita_gasto.php",			
-		data: {gasto_id:gasto_id, gasto_no_documento:gasto_no_documento,gasto_fecha_vencimiento:gasto_fecha_vencimiento,gasto_fecha_recordatorio_activo:gasto_fecha_recordatorio_activo,gasto_fecha_recordatorio:gasto_fecha_recordatorio,gasto_categoria_id:gasto_categoria_id,gasto_concepto:gasto_concepto,gasto_descripcion:gasto_descripcion,gasto_monto:gasto_monto, gasto_hora_vencimiento:gasto_hora_vencimiento, gasto_hora_recordatorio:gasto_hora_recordatorio, gasto_status_id:gasto_status_id, sucursal_id:sucursal_id},
+		data: {
+			gasto_id:gasto_id, 
+			gasto_no_documento:gasto_no_documento,
+			gasto_fecha_vencimiento:gasto_fecha_vencimiento,
+			gasto_fecha_recordatorio_activo:gasto_fecha_recordatorio_activo,
+			gasto_fecha_recordatorio:gasto_fecha_recordatorio,
+			gasto_categoria_id:gasto_categoria_id,
+			gasto_concepto:gasto_concepto,
+			gasto_descripcion:gasto_descripcion,
+			gasto_monto:gasto_monto, 
+			gasto_status_id:gasto_status_id, 
+			gasto_hora_vencimiento:gasto_hora_vencimiento, 
+			gasto_hora_recordatorio:gasto_hora_recordatorio, 
+			sucursal_id:sucursal_id, 
+			proveedor_id:proveedor_id,
+			login_id:login_id,
+			gasto_beneficiario:gasto_beneficiario
+		},
 		success: function(msg){
 			location.href = '../';
 			//$("#myModal").modal('hide');

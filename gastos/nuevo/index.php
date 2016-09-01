@@ -168,8 +168,8 @@ while(list(,$dataLogin) = each($rowsLogin)){
 								</td>
 							</tr>
 							<tr>
-								<td></td>
-								<td></td>
+								<td>Beneficiario:</td>
+								<td><input type="text" name="gasto_beneficiario" id="gasto_beneficiario" value="" size="40"></td>
 								<td colspan="2" align="right">Empleado:</td>
 								<td>
 									<select name="login_id" id="login_id">
@@ -290,6 +290,7 @@ function crea_gasto(){
 	proveedor_id=$("#proveedor_id").val();
 	login_id=$("#login_id").val();
 	gasto_status_id = '1';
+	gasto_beneficiario=$("#gasto_beneficiario").val();
 	
 	if(gasto_categoria_id == '0'){
 		alert("Es necesario elegir una categoria");
@@ -305,7 +306,7 @@ function crea_gasto(){
 		return;
 	}
 	
-	if( (gasto_categoria_id == '13') && login_id == '0' ){ //gasto inputable a empleados
+	if( (gasto_categoria_id == '13' || gasto_categoria_id == '2') && login_id == '0' ){ //gasto inputable a empleados
 		alert("Es necesario elegir un empleado");
 		return;
 	}
@@ -317,21 +318,23 @@ function crea_gasto(){
 		type: "GET",
 		url: "../ajax/crea_gasto.php",			
 		data: {
-				gasto_no_documento:gasto_no_documento,
-				gasto_fecha_vencimiento:gasto_fecha_vencimiento,
-				gasto_fecha_recordatorio_activo:gasto_fecha_recordatorio_activo,
-				gasto_fecha_recordatorio:gasto_fecha_recordatorio,
-				gasto_categoria_id:gasto_categoria_id,
-				gasto_concepto:gasto_concepto,
-				gasto_descripcion:gasto_descripcion,
-				gasto_monto:gasto_monto,
-				gasto_status_id:gasto_status_id, 
-				gasto_hora_vencimiento:gasto_hora_vencimiento, 
-				gasto_hora_recordatorio:gasto_hora_recordatorio, 
-				sucursal_id:sucursal_id, 
-				proveedor_id:proveedor_id,
-				login_id:login_id
-			},
+			
+			gasto_no_documento:gasto_no_documento,
+			gasto_fecha_vencimiento:gasto_fecha_vencimiento,
+			gasto_fecha_recordatorio_activo:gasto_fecha_recordatorio_activo,
+			gasto_fecha_recordatorio:gasto_fecha_recordatorio,
+			gasto_categoria_id:gasto_categoria_id,
+			gasto_concepto:gasto_concepto,
+			gasto_descripcion:gasto_descripcion,
+			gasto_monto:gasto_monto,
+			gasto_status_id:gasto_status_id, 
+			gasto_hora_vencimiento:gasto_hora_vencimiento, 
+			gasto_hora_recordatorio:gasto_hora_recordatorio, 
+			sucursal_id:sucursal_id, 
+			proveedor_id:proveedor_id,
+			login_id:login_id,
+			gasto_beneficiario:gasto_beneficiario
+		},
 		success: function(msg){
 			location.href = '../';
 			//$("#myModal").modal('hide');

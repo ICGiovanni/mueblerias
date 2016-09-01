@@ -21,6 +21,9 @@ $rowPagosDetalle = $objGasto->getPagosDetalle($_GET["gasto_id"]);
 $restan_global = number_format(($rowGasto["gasto_monto"]-$rowPagos["gastos_pagos_monto"]),2);
 $restan_parcial = $restan_global;
 $rowsDataPagoDetalle = '';
+
+$folioInterno = count($rowPagosDetalle);
+
 while( list(,$dataPagoDetalle)=each($rowPagosDetalle) ){
 	
 	if($dataPagoDetalle["gastos_pagos_es_fiscal"] == "1"){
@@ -32,9 +35,10 @@ while( list(,$dataPagoDetalle)=each($rowPagosDetalle) ){
 		$gastos_pagos_monto_sin_iva = 'N/A';
 		$gastos_pagos_iva = 'N/A';
 	}
-	
-	$rowsDataPagoDetalle.='<tr><td align="center">'.$dataPagoDetalle["gastos_pagos_id"].'</td><td align="right">$ '.number_format($dataPagoDetalle["gastos_pagos_monto"],2).'</td><td align="right">'.$gastos_pagos_monto_sin_iva.'</td><td align="right">'.$gastos_pagos_iva.'</td><td align="center">'.$es_fiscal.'</td><td>'.$dataPagoDetalle["gastos_pagos_forma_de_pago_desc"].'</td><td>'.$dataPagoDetalle["gastos_pagos_referencia"].'</td><td align="center">'.$dataPagoDetalle["gastos_pagos_fecha"].'</td><td align="right">$ '.number_format($restan_parcial,2).'</td></tr>';
+	//$dataPagoDetalle["gastos_pagos_id"]
+	$rowsDataPagoDetalle.='<tr><td align="center">'.$_GET["gasto_id"].'.'.$folioInterno.'</td><td >'.$dataPagoDetalle["firstName"].' '.$dataPagoDetalle["lastName"].'</td><td align="right">$ '.number_format($dataPagoDetalle["gastos_pagos_monto"],2).'</td><td align="right">'.$gastos_pagos_monto_sin_iva.'</td><td align="right">'.$gastos_pagos_iva.'</td><td align="center">'.$es_fiscal.'</td><td>'.$dataPagoDetalle["gastos_pagos_forma_de_pago_desc"].'</td><td>'.$dataPagoDetalle["gastos_pagos_referencia"].'</td><td align="center">'.$dataPagoDetalle["gastos_pagos_fecha"].'</td><td align="right">$ '.number_format($restan_parcial,2).'</td></tr>';
 	$restan_parcial+=$dataPagoDetalle["gastos_pagos_monto"];
+	$folioInterno--;
 }
 
 $rowsGastosCategoria = $objGasto->getGastosCategoria();
@@ -99,7 +103,7 @@ while(list(,$dataGastoCategoria) = each($rowsGastosCategoria)){
 						<table class="table">
 							<tr>
 								<td>MONTO A PAGAR: <b>$ <?=number_format($rowGasto["gasto_monto"],2)?></b></td>
-								<td>A CUENTA: <b style="color:green;">$ <?=number_format($rowPagos["gastos_pagos_monto"],2)?></b></td>
+								<td>PAGADO: <b style="color:green;">$ <?=number_format($rowPagos["gastos_pagos_monto"],2)?></b></td>
 								<td>RESTAN: <b style="color:red;">$ <?=$restan_global?></b></td>
 							</tr>
 						</table>
@@ -107,6 +111,7 @@ while(list(,$dataGastoCategoria) = each($rowsGastosCategoria)){
 						<table class="table">
 							<tr>
 								<th style="text-align:center">Folio Pago</th>
+								<th style="text-align:center">Usuario que registró</th>
 								<th style="text-align:center">Monto Pagado</th>
 								<th style="text-align:center">Monto del pago sin IVA</th>
 								<th style="text-align:right">IVA</th>

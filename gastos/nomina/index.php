@@ -6,49 +6,20 @@ require_once($_SERVER["REDIRECT_PATH_CONFIG"].'gastos/models/class.Gastos.php');
 
 $objGasto = new Gasto();
 
-$filtro_fecha_activo_checked = '';
-$filtro_categoria_activo_checked = '';
-$filtro_status_activo_checked = '';
-$filtro_sucursal_activo_checked = '';
-if(isset($_GET) && !empty($_GET)){
-	
-	if(isset($_GET["filtro_fecha_activo"]) && $_GET["filtro_fecha_activo"] == 1){ //add fechas
-		$filtro_fecha_activo_checked = 'checked';
-	}
-	if(isset($_GET["filtro_categoria_activo"]) && $_GET["filtro_categoria_activo"] == 1){ //add fechas
-		$filtro_categoria_activo_checked = 'checked';
-	}
-	if(isset($_GET["filtro_status_activo"]) && $_GET["filtro_status_activo"] == 1){ //add fechas
-		$filtro_status_activo_checked = 'checked';
-	}
-	if(isset($_GET["filtro_sucursal_activo"]) && $_GET["filtro_sucursal_activo"] == 1){ //add fechas
-		$filtro_sucursal_activo_checked = 'checked';
-	}
-	
-	$rows = $objGasto->getFilteredGastos($_GET);
-	
-} else {
-	$rows = $objGasto->getGastos();
+$rows = $objGasto->getGastosNomina();
+
+$rowsPrestamos = $objGasto->getGastosPrestamos();
+while(list(,$dataGasto) = each($rowsPrestamos)){
+	$dataGastoPrestamo[$dataGasto["login_id"]]=$dataGasto["gasto_monto"];
 }
 
-$rowsGastosCategoria = $objGasto->getGastosCategoria();
-$rowsGastosStatus = $objGasto->getGastosStatus();
+$rowsComisiones = $objGasto->getGastosComisiones();
+while(list(,$dataGasto) = each($rowsComisiones)){
+	$dataGastoComisiones[$dataGasto["login_id"]]=$dataGasto["gasto_monto"];
+}
+
 $rowsGastosSucursal = $objGasto->getGastosSucursal();
 
-
-$asoccGastoCategoria = array();
-$options_gasto_categoria_id = '';
-while(list(,$dataGastoCategoria) = each($rowsGastosCategoria)){
-	$asoccGastoCategoria[$dataGastoCategoria["gasto_categoria_id"]]=$dataGastoCategoria["gasto_categoria_desc"];
-	$options_gasto_categoria_id.='<option value="'.$dataGastoCategoria["gasto_categoria_id"].'">'.$dataGastoCategoria["gasto_categoria_desc"].'</option>';
-}
-
-$asoccGastoStatus = array();
-$options_gasto_status_id = '';
-while(list(,$dataGastoStatus) = each($rowsGastosStatus)){
-	$asoccGastoStatus[$dataGastoStatus["gasto_status_id"]]=$dataGastoStatus["gasto_status_desc"];
-	$options_gasto_status_id.='<option value="'.$dataGastoStatus["gasto_status_id"].'">'.$dataGastoStatus["gasto_status_desc"].'</option>';	
-}
 
 $asoccGastoSucursal = array();
 $options_sucursal_id = '';
@@ -58,6 +29,8 @@ while(list(,$dataGastoSucursal) = each($rowsGastosSucursal)){
 }
 
 //print_r($rows);
+//print_r($rowsPrestamos);
+
 $html_rows = '';
 
 
@@ -65,19 +38,35 @@ while(list(,$dataGasto) = each($rows)){
 	$rowPagos = $objGasto->getPagosSum($dataGasto["gasto_id"]);
 	$rowPagos=$rowPagos[0];
 	
-	$dataGasto["gasto_saldo"]=$dataGasto["gasto_monto"] - $rowPagos["gastos_pagos_monto"];
+	$pagado=0;
+	$restanEsteMes=0;
+	
+	
+	$prestamo_activo = 0;
+	$aCuentaEsteMes = 'N/A';
+	
+	if(isset($dataGastoPrestamo[$dataGasto["login_id"]])){
+		$prestamo_activo = $dataGastoPrestamo[$dataGasto["login_id"]];
+		$aCuentaEsteMes = '$ <input type="text" name="aCuentaEsteMes_'.$dataGasto["login_id"].'" id="aCuentaEsteMes_'.$dataGasto["login_id"].'" size="5"/>';
+	}
+	
+	$comision_activa = 0;
+	
+	if(isset($dataGastoComisiones[$dataGasto["login_id"]])){
+		$comision_activa = $dataGastoComisiones[$dataGasto["login_id"]];
+	}
+	
+	$totalPagarEsteMes=$dataGasto["gasto_monto"] + $comision_activa;
+	
 	$html_rows.= '<tr>
-		<td align="center">'.$dataGasto["gasto_id"].'</td>
-		<td>'.$dataGasto["gasto_no_documento"].'</td>
-		<td>'.$dataGasto["gasto_fecha_vencimiento"].'</td>
-		<td>'.$dataGasto["gasto_fecha_vencimiento"].'</td>
-		<td>'.$asoccGastoCategoria[$dataGasto["gasto_categoria_id"]].'</td>
-		<td>'.$dataGasto["gasto_concepto"].'</td>
-		<td>'.$asoccGastoSucursal[$dataGasto["sucursal_id"]].'</td>
-		<td>$'.number_format($dataGasto["gasto_monto"],2).'</td>
-		<td>'.number_format($dataGasto["gasto_saldo"],2).'</td>
-		<td>'.$asoccGastoStatus[$dataGasto["gasto_status_id"]].'</td>
-		<td align="center"><a href="pago_nuevo/?gasto_id='.$dataGasto["gasto_id"].'"><i class="fa fa-dollar" title="Realizar Pago"></i></a> &nbsp;<a href="pagos_lista/?gasto_id='.$dataGasto["gasto_id"].'"><i class="fa fa-list-ul" title="Ver detalle de pagos"></i></a> &nbsp;<a href="editar/?gasto_id='.$dataGasto["gasto_id"].'"><i class="fa fa-edit" title="Editar"></i></a> &nbsp;<i class="fa fa-trash" title="Borrar"></i></td>
+		<td align="left">'.$dataGasto["firstName"].' '.$dataGasto["lastName"].'</td>
+		<td align="right">$ '.number_format($dataGasto["gasto_monto"],2).'</td>
+		<td align="right">$ '.number_format($comision_activa,2).'</td>
+		<td align="right">$ '.number_format($prestamo_activo,2).'</td>
+		<td align="right">$ '.$pagado.'</td>
+		<td style="width:75px; text-align:right;">'.$aCuentaEsteMes.'</td>
+		<td align="right">$ '.number_format($restanEsteMes,2).'</td>
+		<td align="right">$ '.number_format($totalPagarEsteMes,2).'</td>
 	</tr>';
 }
 
@@ -127,74 +116,18 @@ while(list(,$dataGasto) = each($rows)){
                         </div>
                     </div>
                     <div class="ibox-content">
-						<div id="div_search_tools">
-							FILTRAR BUSQUEDA POR 
-						<form>
-							<table class="table-form ">
-								<tr>
-									<td valign="">
-										<input type="checkbox" name="filtro_fecha_activo" id="filtro_fecha_activo" value="1" <?=$filtro_fecha_activo_checked?>/> <b>Rango de fechas</b><br>
-										inicio 
-										<div class="form-group" id="data_rango_inicio" >
-											<div class="input-group date">
-												<span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" class="form-control" id="filtro_fecha_inicio" name="filtro_fecha_inicio" value="">
-											</div>
-										</div>
-									</td>
-									<td valign=""><br>
-										fin
-										<div class="form-group" id="data_rango_fin" >
-											<div class="input-group date">
-												<span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" class="form-control" id="filtro_fecha_fin" name="filtro_fecha_fin" value="">
-											</div>
-										</div>
-									</td>
-									<td valign="top">
-										<input type="checkbox" name="filtro_categoria_activo" id="filtro_categoria_activo" value="1" <?=$filtro_categoria_activo_checked?>/> <b>Categoria</b><br><br>
-										<select name="filtro_categoria_id" id="filtro_categoria_id">
-											<?=$options_gasto_categoria_id?>
-										</select>
-									</td>
-									<td valign="top">
-										<input type="checkbox" name="filtro_status_activo" id="filtro_status_activo" value="1" <?=$filtro_status_activo_checked?>/> <b>Status</b> <br><br>
-										<select name="filtro_status_id" id="filtro_status_id">
-											<?=$options_gasto_status_id?>
-										</select>
-									</td>
-									<td valign="top">
-										<input type="checkbox" name="filtro_sucursal_activo" id="filtro_sucursal_activo" value="1" <?=$filtro_sucursal_activo_checked?>/> <b>Sucursal</b> <br><br>
-										<select name="filtro_sucursal_id" id="filtro_sucursal_id">
-											<?=$options_sucursal_id?>
-										</select>
-									</td>
-									<td><br>
-										<button type="submit" class="btn btn-primary btn-xs"  onclick="" >Filtrar</button> &nbsp;&nbsp;&nbsp;
-										<button type="button" class="btn btn-warning btn-xs"  onclick="location.href = '.';" >Limpiar Filtros</button>
-									</td>
-								</tr>
-							</table>
-						</form>	
-							
-							
-							
-						</div>
-					
 					<div class="table-responsive">
                     <table class="table table-striped table-bordered table-hover dataTables-example" >
                     <thead>
                     <tr>
-						<th>Folio</th>
-                        <th>No Documento</th>
-                        <th>Fecha Vencimiento</th>
-						<th>Ultimo Pago</th>
-						<th>Categoria</th>
-                        <th>Concepto</th>
-						<th>Sucursal</th>
-                        <th>Monto a Pagar</th>
-						<th>Restan</th>
-                        <th>Status</th> 
-						<th style="text-align:center;">Acción</th>
-						
+						<th>Empleado</th>
+                        <th style="text-align:right;">Salario</th>
+                        <th style="text-align:right;">Comision</th>
+						<th style="text-align:right;">Prestamo</th>
+						<th style="text-align:right;">Pagado</th>
+						<th style="text-align:right;">A cuenta</th>
+                        <th style="text-align:right;">Restan</th>
+						<th style="text-align:right;">Total</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -202,17 +135,14 @@ while(list(,$dataGasto) = each($rows)){
                     </tbody>
                     <tfoot>
                     <tr>
-						<th>Folio</th>
-                        <th>No Documento</th>
-                        <th>Fecha Vencimiento</th>
-						<th>Ultimo Pago</th>
-						<th>Categoria</th>
-                        <th>Concepto</th>
-						<th>Sucursal</th>
-                        <th>Monto a Pagar</th>
-						<th>Restan</th>
-                         <th>Status</th> 
-						<th style="text-align:center;">Acción</th>
+						<th>Empleado</th>
+                        <th style="text-align:right;">Salario</th>
+                        <th style="text-align:right;">Comision</th>
+						<th style="text-align:right;">Prestamo</th>
+						<th style="text-align:right;">Pagado</th>
+						<th style="text-align:right;">A cuenta</th>
+                        <th style="text-align:right;">Restan</th>
+						<th style="text-align:right;">Total</th>
                     </tr>
                     </tfoot>
                     </table>

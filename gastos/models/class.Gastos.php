@@ -26,7 +26,8 @@ class Gasto {
 		gasto_status_id,
 		proveedor_id,
 		login_id,
-		sucursal_id )
+		sucursal_id,
+		gasto_beneficiario )
 		VALUES
 		( :gasto_no_documento,
 		:gasto_fecha_vencimiento,
@@ -39,7 +40,8 @@ class Gasto {
 		:gasto_status_id,
 		:proveedor_id,
 		:login_id,
-		:sucursal_id )";
+		:sucursal_id,
+		:gasto_beneficiario )";
 		
 		//print_r($params);
 		//die();
@@ -58,6 +60,7 @@ class Gasto {
 		$statement->bindParam(':proveedor_id', $params['proveedor_id'], PDO::PARAM_STR);
 		$statement->bindParam(':login_id', $params['login_id'], PDO::PARAM_STR);
 		$statement->bindParam(':sucursal_id', $params['sucursal_id'], PDO::PARAM_STR);
+		$statement->bindParam(':gasto_beneficiario', $params['gasto_beneficiario'], PDO::PARAM_STR);
 		
 		
 		$statement->execute();
@@ -268,7 +271,8 @@ class Gasto {
 	public function getGastosSucursal(){
 		$sql="SELECT 
 		sucursal_id,
-		sucursal_name
+		sucursal_name,
+		sucursal_abrev
 		FROM inv_sucursales";
 
 		$statement=$this->connect->prepare($sql);
@@ -347,9 +351,10 @@ class Gasto {
 	public function getPagosDetalle($gasto_id){
 		$sql="SELECT 
 		gastos_pagos_id, gastos_pagos_monto, gastos_pagos_forma_de_pago_id, gastos_pagos_forma_de_pago_desc, gastos_pagos_es_fiscal, 
-		gastos_pagos_monto_sin_iva, gastos_pagos_iva, gastos_pagos_fecha, gastos_pagos_referencia
+		gastos_pagos_monto_sin_iva, gastos_pagos_iva, gastos_pagos_fecha, gastos_pagos_referencia, firstName, lastName
 		FROM ".$this->name_table_gastos_pagos." 
 		INNER JOIN gastos_pagos_forma_de_pago USING (gastos_pagos_forma_de_pago_id)
+		INNER JOIN inv_login USING (login_id)
 		WHERE gasto_id = :gasto_id ORDER BY gastos_pagos_id DESC";
 
 		$statement=$this->connect->prepare($sql);
@@ -378,6 +383,51 @@ class Gasto {
 			$result["gastos_pagos_fecha"] = 'N/A';
 		}
 		
+		return $result;
+	}
+	
+	//////////////////////////////////////////////////////// VISTAS ESPECIALES
+	
+	public function getGastosNomina(){
+		return $this->getGastosOperativo("13");
+	}
+	
+	public function getGastosPrestamos(){
+		return $this->getGastosOperativo("2");
+	}
+	
+	public function getGastosComisiones(){
+		return $this->getGastosOperativo("23");
+	}
+	
+	public function getGastosOperativo($gasto_categoria_id){
+		$sql="SELECT 
+		gasto_id,
+		gasto_no_documento,
+		gasto_fecha_vencimiento,
+		gasto_fecha_recordatorio,
+		gasto_concepto,
+		gasto_descripcion,
+		gasto_monto,
+		gasto_categoria_id,
+		gasto_status_id,
+		proveedor_id,
+		login_id,
+		inv_login.sucursal_id,
+		firstName,
+		lastName
+		FROM ".$this->name_table_gastos."
+		INNER JOIN inv_login USING (login_id)
+		WHERE 
+			gasto_categoria_id = :gasto_categoria_id		
+		ORDER BY gasto_id DESC";
+
+		$statement=$this->connect->prepare($sql);
+		$statement->bindParam(':gasto_categoria_id', $gasto_categoria_id, PDO::PARAM_STR);
+
+		$statement->execute();
+        $result=$statement->fetchAll(PDO::FETCH_ASSOC);
+
 		return $result;
 	}
 }

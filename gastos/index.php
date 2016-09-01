@@ -66,8 +66,8 @@ while(list(,$dataGastoSucursal) = each($rowsGastosSucursal)){
 	if(isset($_GET["filtro_sucursal_id"]) && $_GET["filtro_sucursal_id"] == $dataGastoSucursal["sucursal_id"]){
 		$selected = 'selected';
 	}
-	$asoccGastoSucursal[$dataGastoSucursal["sucursal_id"]]=$dataGastoSucursal["sucursal_name"];
-	$options_sucursal_id.='<option value="'.$dataGastoSucursal["sucursal_id"].'" '.$selected.'>'.$dataGastoSucursal["sucursal_name"].'</option>';	
+	$asoccGastoSucursal[$dataGastoSucursal["sucursal_id"]]=$dataGastoSucursal["sucursal_abrev"];
+	$options_sucursal_id.='<option value="'.$dataGastoSucursal["sucursal_id"].'" '.$selected.'>'.$dataGastoSucursal["sucursal_abrev"].'</option>';	
 }
 
 //print_r($rows);
@@ -97,7 +97,10 @@ while(list(,$dataGasto) = each($rows)){
 			$color_row = "#F5F5F5";
 			break;
 	}
-	
+	$boton_borrar = '';
+	if(1){ // profile_director
+		$boton_borrar = ' &nbsp;<a href="borrar/?gasto_id='.$dataGasto["gasto_id"].'"><i class="fa fa-trash" title="Borrar"></i></a>';
+	}
 	$dataGasto["gasto_saldo"]=$dataGasto["gasto_monto"] - $rowPagos["gastos_pagos_monto"];
 	$html_rows.= '<tr style="background-color:'.$color_row.';">
 		<td align="center">'.$dataGasto["gasto_id"].'</td>
@@ -110,7 +113,7 @@ while(list(,$dataGasto) = each($rows)){
 		<td>$'.number_format($dataGasto["gasto_monto"],2).'</td>
 		<td>'.number_format($dataGasto["gasto_saldo"],2).'</td>
 		<td>'.$asoccGastoStatus[$dataGasto["gasto_status_id"]].'</td>
-		<td align="center"><a href="pago_nuevo/?gasto_id='.$dataGasto["gasto_id"].'"><i class="fa fa-dollar" title="Realizar Pago"></i></a> &nbsp;<a href="pagos_lista/?gasto_id='.$dataGasto["gasto_id"].'"><i class="fa fa-list-ul" title="Ver detalle de pagos"></i></a> &nbsp;<a href="editar/?gasto_id='.$dataGasto["gasto_id"].'"><i class="fa fa-edit" title="Editar"></i></a> &nbsp;<a href="borrar/?gasto_id='.$dataGasto["gasto_id"].'"><i class="fa fa-trash" title="Borrar"></i></a></td>
+		<td align="center"><a href="pago_nuevo/?gasto_id='.$dataGasto["gasto_id"].'"><i class="fa fa-dollar" title="Realizar Pago"></i></a> &nbsp;<a href="pagos_lista/?gasto_id='.$dataGasto["gasto_id"].'"><i class="fa fa-list-ul" title="Ver detalle de pagos"></i></a> &nbsp;<a href="editar/?gasto_id='.$dataGasto["gasto_id"].'"><i class="fa fa-edit" title="Editar"></i></a>'.$boton_borrar.'</td>
 	</tr>';
 }
 
