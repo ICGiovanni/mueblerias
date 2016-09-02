@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: db642823290.db.1and1.com
--- Tiempo de generación: 02-09-2016 a las 11:07:28
+-- Tiempo de generación: 02-09-2016 a las 11:31:23
 -- Versión del servidor: 5.5.50-0+deb7u2-log
 -- Versión de PHP: 5.4.45-0+deb7u4
 
@@ -46,8 +46,9 @@ CREATE TABLE IF NOT EXISTS `clientes` (
   `celularA` varchar(100) NOT NULL,
   `email` varchar(100) NOT NULL,
   `emailA` varchar(100) NOT NULL,
+  `rating` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_cliente`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

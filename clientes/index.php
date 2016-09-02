@@ -6,7 +6,7 @@
     include $pathProy.'/menu.php';
 ?>
 
-
+	<link rel="stylesheet" type="text/css" href="../css/clientes.css">
     <div class="row wrapper border-bottom white-bg page-heading">
         <div class="col-sm-4">
             <h2>Clientes</h2>
@@ -25,12 +25,13 @@
             </div>
         </div>
     </div>
+    
 
     <div class="wrapper wrapper-content animated fadeInRight">
             <div class="row">
                 <div class="col-lg-12">
                 <div class="ibox float-e-margins">
-                    <!--<div class="ibox-title">
+                    <div class="ibox-title">
                         <div class="ibox-tools">
                              <a class="collapse-link">
                                 <i class="fa fa-chevron-up"></i>
@@ -39,16 +40,14 @@
                                 <i class="fa fa-wrench"></i>
                             </a>
                             <ul class="dropdown-menu dropdown-user">
-                                <li><a href="#">Config option 1</a>
-                                </li>
-                                <li><a href="#">Config option 2</a>
+                                <li><a href="#" id="rating" data-toggle="modal" data-target="#ratingModal">Configurar Rating</a>
                                 </li>
                             </ul>
-                            <a class="close-link">
+                            <!-- <a class="close-link">
                                 <i class="fa fa-times"></i>
-                            </a>
+                            </a>-->
                         </div>
-                    </div>-->
+                    </div>
                     <div class="ibox-content">
 
                         <div class="table-responsive">
@@ -135,6 +134,8 @@
                     		$direccion.=' '.$d->estado;
                     	}
                     	
+                    	$rating=$d->rating;
+                    	
                     	$tr.='<tr class="gradeX">';
                     	$tr.='<td align="center">'.$id_cliente.'</td>';
                     	$tr.='<td>'.$cliente.'</td>';
@@ -142,7 +143,7 @@
                     	$tr.='<td>'.$direccion.'</td>';
                     	$tr.='<td>'.$telefono.'</td>';
                     	$tr.='<td align="center">'.$email.'</td>';
-                    	$tr.='<td align="center"><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i></td>';
+                    	$tr.='<td align="center"><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><span class="numero">'.$rating.'</span></td>';
                     	$tr.='<td align="center"><div class="infont col-md-1 col-sm-1"><a href="editar_cliente.php?id='.$id_cliente.'"><i class="fa fa-pencil"></i></a><a href="#" onClick="borrar_cliente('.$id_cliente.');"><i class="fa fa-trash-o"></i></a></div></td>';
                     	$tr.='</tr>';
                     	
@@ -171,6 +172,36 @@
             </div>
             </div>
 	</div>
+	
+	
+	<div class="modal fade" id="ratingModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Configurar Rating</h4>
+        </div>
+        <div class="modal-body">
+        <div class="wrapper wrapper-content animated fadeInRight">
+          <label class="col-sm-2 control-label">Monto</label>
+			<div class="col-sm-4" ><input type="text" class="form-control" id="monto" name="monto" onkeypress="return validateCantidad(event)" onkeyup="run(this)"></div>
+          
+          <label class="col-sm-2 control-label">Compras</label>
+			<div class="col-sm-4" ><input type="text" class="form-control" id="compras" name="compras" onkeypress="return validateNumber(event)" onkeyup="run(this)"></div>
+            
+           </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal" id="guardarRating">Guardar</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+	
     <script src="<?php echo $raizProy?>js/plugins/dataTables/datatables.min.js"></script>
     
 
@@ -200,6 +231,66 @@
                 ]
 
             });
+
+        	$( "#guardarRating" ).click(function()
+        	{
+				var monto=$("#monto").val();
+				var compras=$("#compras").val();
+
+        		if(monto=='' || monto==0)
+        		{
+					alert("El monto debe de ser mayor a 0");
+        		}
+        		else if(compras=='' || compras==0)
+        		{
+					alert("Las compras deben ser mayores a 0");
+        		}
+        		else
+        		{
+            		url="rating.php";
+	        		$.ajax(
+	        		{
+	        			type: "POST",
+	        			url: url,
+	        			data: {monto:monto,compras:compras}, // serializes the form's elements.
+	        			success: function(data)
+	        			{
+	        				alert("Se han actualizado los datos"); // show response from the php script.
+	        			    var url="index.php";
+	        			    $(location).attr("href", url);
+	        			}
+	        		});
+        		}
+        	});
+
+        	$( "#rating" ).click(function()
+            {
+        		$("#monto").focus();
+                
+        		$.getJSON("json/rating.json",function(result)
+        		{
+            		var monto=result[0].monto;
+            		var compras=result[0].compras;
+        			
+        			if(monto!=0)
+        			{
+    					$("#monto").val(monto);
+        			}
+    				else
+    				{
+    					$("#monto").val('');
+    				}
+
+    				if(compras!=0)
+    				{
+    					$("#compras").val(compras);
+    				}
+    				else
+    				{
+    					$("#compras").val('');
+    				}
+        		});        		
+            });
             
         });
 
@@ -224,6 +315,38 @@
 				});
         	}
         }
+
+        
+
+        function validateCantidad(evt)
+    	{
+    		evt = (evt) ? evt : window.event;
+    	    var charCode = (evt.which) ? evt.which : evt.keyCode;
+    		
+    		
+    	    if ((charCode > 31 && (charCode < 48 || charCode > 57) && charCode!=46))
+    		{
+    	        return false;
+    	    }
+    	}
+
+        function validateNumber(evt)
+    	{
+    		evt = (evt) ? evt : window.event;
+    	    var charCode = (evt.which) ? evt.which : evt.keyCode;
+    	    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+    	        return false;
+    	    }
+    	}
+
+    	function run(field)
+    	{
+    	    setTimeout(function()
+    		{
+    	        var regex = /\d*\.?\d?\d?/g;
+    	        field.value = regex.exec(field.value);
+    	    },0);
+    	}
 
     </script>
 
