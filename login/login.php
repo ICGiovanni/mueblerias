@@ -11,9 +11,11 @@ if($_POST){
     if(!empty($email) && !empty($password)){
     
         $login = new Login();
-        $loginInfo = $login->auth($email, $password);
-         
+        $loginInfo = $login->auth($email, $password);        
+        
         if($loginInfo){
+            
+            $login->insertLastLogin($loginInfo['login_id']);
             
             $_SESSION['login_session']=$loginInfo;
             header("Location: profile.php");

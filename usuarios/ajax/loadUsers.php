@@ -6,9 +6,17 @@
     $userLogin = new Login();
 
     $users = $userLogin->getUsers($_POST['type']);
+        
     if($users){
 
         foreach($users as $user){
+            
+            if($user['status_name']!='Activo'){
+                $class = 'fa fa-toggle-off';
+            }
+            else{
+                $class = 'fa fa-toggle-on';
+            }
             echo "<tr>
                     <td>
                         <div class='row'>
@@ -19,14 +27,16 @@
                             </div>
                         </div>    
                     </td>
-                    <td>".date('d/m/Y H:i:s ', $user['created_timestamp'])."</td>
+                    <td>".date('d/m/Y g:i:s A ', $user['created_timestamp'])."</td>
                     <td>".$user['status_name']."</td>                        
                     <td>".$user['email']."</td>
-                    <td class='text-center'>
-                        <a href='editUser.php?id=".  base64_encode($user['login_id'])."' class='btn btn-warning'><i class='fa fa-pencil'></i></a>
-                    </td>
-                    <td class='text-center'>
-                        <button class='btn btn-danger borrar-user' id='".$user['login_id']."' data-name='".$user['firstName']."&nbsp;".$user['lastName']."'><i class='fa fa-times'></i></button>
+                    <td>".date('d/m/Y g:i:s A ', $user['modify_timestamp'])."</td>
+                    <td>
+                        <a href='#'><i class='active-user fa-2x ".$class."' id='".$user['login_id']."' data-status='".$user['status_id']."' aria-hidden='true'></i></a>&nbsp;    
+                    </td>    
+                    <td class='text-center'>                    
+                        <a href='editUser.php?id=".  base64_encode($user['login_id'])."'><i class='fa fa-pencil'></i></a>&nbsp;&nbsp;&nbsp;    
+                        <a href='#' class='borrar-user' id='".$user['login_id']."' data-name='".$user['firstName']."&nbsp;".$user['lastName']."'><i class='fa fa-trash-o'></i></a>
                     </td>
                  </tr>";
         }                                                

@@ -12,12 +12,14 @@
                 header("Location: ".$rutaSend);
                 
             } //para el caso de 2
-            else if ($login_session['profile_id'] == 2) {
-                echo "redirigir pagina Inicial profile_id 2";
+            else {
+                $rutaSend = $ruta.'gastos/';
+                header("Location: ".$rutaSend);
+                //echo "redirigir pagina Inicial profile_id 2";
             } //para el caso 3
-            else if ($login_session['profile_id'] == 3) {
-                echo "redirigir pagina Inicial profile_id 3";
-            }
+            //else if ($login_session['profile_id'] == 3) {
+            //    echo "redirigir pagina Inicial profile_id 3";
+            //}
         }
         else{                    
             header('Location: '. $ruta);
