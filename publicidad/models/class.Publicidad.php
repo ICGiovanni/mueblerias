@@ -145,7 +145,7 @@ class Publicidad
 		$mensaje.='</body>
 					</html>';
 		
-		$mail->MsgHTML(utf8_decode($mensaje));
+		$mail->MsgHTML($mensaje);
 		
 		if(!$mail->Send())
 		{
