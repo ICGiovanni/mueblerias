@@ -111,7 +111,7 @@ class Publicidad
 		$mail->Password = "More1989";
 		//
 		$mail->SetFrom('clientes@globmint.com');
-		$mail->Subject=$nombre;
+		$mail->Subject=utf8_decode($nombre);
 		
 		$id_cliente="";
 		foreach($clientesE as $c)
@@ -145,7 +145,7 @@ class Publicidad
 		$mensaje.='</body>
 					</html>';
 		
-		$mail->MsgHTML($mensaje);
+		$mail->MsgHTML(utf8_decode($mensaje));
 		
 		if(!$mail->Send())
 		{
