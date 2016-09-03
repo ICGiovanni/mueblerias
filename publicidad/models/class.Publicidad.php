@@ -1,7 +1,8 @@
 <?php
 require_once($_SERVER["REDIRECT_PATH_CONFIG"].'models/connection/class.Connection.php');
 require_once($_SERVER["REDIRECT_PATH_CONFIG"].'clientes/models/class.Clientes.php');
-require_once($_SERVER["REDIRECT_PATH_CONFIG"].'models/phpmailer/PHPMailerAutoload.php');
+require_once($_SERVER["REDIRECT_PATH_CONFIG"].'models/phpmailer/class.phpmailer.php');
+
 
 date_default_timezone_set ('America/Mexico_City');
 
@@ -98,9 +99,58 @@ class Publicidad
 		$nombre=$dataP[0]["nombre"];
 		$contenido=$dataP[0]["contenido"];		
 		
+		/*$mensaje='<!DOCTYPE html>
+					<html>
+					<head>
+					<meta>
+					<title></title>
+					</head>
+					<body>';
+		$mensaje.=$contenido;
+		$mensaje.='</body>
+					</html>';
+		
+		$headers = "MIME-Version: 1.0\r\n";
+		$headers .= "Content-type: text/html; charset=iso-8859-1\r\n";
+		$headers .= "From: InfoGlobmint <info@globmint.com>\r\n";
+		$headers .= "Return-path: info@globmint.com\r\n";
+		
+		$id_cliente="";
+		foreach($clientesE as $c)
+		{
+			if(!$id_cliente)
+			{
+				$id_cliente.=$c["id"];
+			}
+			else
+			{
+				$id_cliente.=",".$c["id"];
+			}
+		}
+		
+		$result=$clientes->GetClientes($id_cliente);
+		
+		$email="";
+		foreach($result as $r)
+		{
+			if($r["email"])
+			{
+				if($email=="")
+				{
+					$email=$r["email"];
+				}
+				else
+				{
+					$email.=",".$r["email"];
+				}
+			}
+		}
+		die($email);
+		return mail($email,$nombre,$mensaje,$headers);*/
+		
 		$mail=new PHPMailer();
 		//
-		$mail->isSMTP();
+		/*$mail->isSMTP();
 		$mail->SMTPDebug = 2;
 		$mail->Debugoutput = 'html';
 		$mail->Host = 'smtp.gmail.com';
@@ -108,9 +158,9 @@ class Publicidad
 		$mail->SMTPSecure = 'tls';
 		$mail->SMTPAuth = true;
 		$mail->Username = "umedina86@gmail.com";
-		$mail->Password = "More1989";
+		$mail->Password = "More1989";*/
 		//
-		$mail->SetFrom('clientes@globmint.com');
+		$mail->SetFrom('info@globmint.com','Info Globmint');
 		$mail->Subject=$nombre;
 		
 		$id_cliente="";
