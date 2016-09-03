@@ -246,7 +246,9 @@
     				dataType: "json",
     				complete: function(data)
     				{
-    					
+    					alert("Envio de Campa\u00f1a exitoso");
+    			        var url="enviar_campana.php";
+						$(location).attr("href", url);
     					
     				},
     				failure: function(errMsg)
@@ -255,14 +257,6 @@
     				}
     			});	
             }
-        	
-
-			console.log(json);
-        	
-            alert("Envio de Campa\u00f1a exitoso");
-            location.reload();
-            //var url="index.php";
-            //$(location).attr("href", url);
 		});
 
         $( "#cancelar" ).click(function()
