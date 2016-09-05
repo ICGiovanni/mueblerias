@@ -3,14 +3,17 @@ require_once $_SERVER['REDIRECT_PATH_CONFIG'].'/config.php';
 require_once $pathProy.'/header.php';
 require_once $pathProy.'/menu.php';
 require_once($_SERVER["REDIRECT_PATH_CONFIG"].'gastos/models/class.Gastos.php');
+require_once($_SERVER["REDIRECT_PATH_CONFIG"].'ingresos/models/class.Ingresos.php');
 
 $objGasto = new Gasto();
+$objIngreso = new Ingreso();
 
 $rows = $objGasto->getGastosNomina();
 
 $rowsPrestamos = $objGasto->getGastosPrestamos();
 while(list(,$dataGasto) = each($rowsPrestamos)){
-	$dataGastoPrestamo[$dataGasto["login_id"]]=$dataGasto["gasto_monto"];
+	$dataGastoPrestamo[$dataGasto["login_id"]]["gasto_monto"]=$dataGasto["gasto_monto"];
+	$dataGastoPrestamo[$dataGasto["login_id"]]["gasto_id"]=$dataGasto["gasto_id"];
 }
 
 $rowsComisiones = $objGasto->getGastosComisiones();
@@ -38,16 +41,30 @@ while(list(,$dataGasto) = each($rows)){
 	$rowPagos = $objGasto->getPagosSum($dataGasto["gasto_id"]);
 	$rowPagos=$rowPagos[0];
 	
-	$pagado=0;
-	$restanEsteMes=0;
-	
+	$sumaPagado["ingreso_monto"]=0;
+	if(isset($dataGastoPrestamo[$dataGasto["login_id"]])){
+		$sumaPagado = $objIngreso->getSumIngresosPrestamos($dataGastoPrestamo[$dataGasto["login_id"]]["gasto_id"]);
+		$sumaPagado = $sumaPagado[0];
+		if(empty($sumaPagado["ingreso_monto"])){
+			$sumaPagado["ingreso_monto"] = 0;
+		}
+	}
 	
 	$prestamo_activo = 0;
-	$aCuentaEsteMes = 'N/A';
-	
+	$aCuentaEsteMes = '';
+	$span_total_id = '';
+	$span_restan_id = '';
+	$span_restarian_id = '';
+	$span_total_original_id = '';
+	$boton_aplica_pago_prestamo = '';
 	if(isset($dataGastoPrestamo[$dataGasto["login_id"]])){
-		$prestamo_activo = $dataGastoPrestamo[$dataGasto["login_id"]];
-		$aCuentaEsteMes = '$ <input type="text" name="aCuentaEsteMes_'.$dataGasto["login_id"].'" id="aCuentaEsteMes_'.$dataGasto["login_id"].'" size="5"/>';
+		$boton_aplica_pago_prestamo = '<a href="javascript:void(0);" onclick="aplicaPagoPrestamo(\''.$dataGastoPrestamo[$dataGasto["login_id"]]["gasto_id"].'\');"><i class="fa fa-floppy-o"></i></a>';
+		$prestamo_activo = $dataGastoPrestamo[$dataGasto["login_id"]]["gasto_monto"];
+		$aCuentaEsteMes = '$ <input type="text" name="aCuentaEsteMes_'.$dataGastoPrestamo[$dataGasto["login_id"]]["gasto_id"].'" id="aCuentaEsteMes_'.$dataGastoPrestamo[$dataGasto["login_id"]]["gasto_id"].'" size="5" onchange="updateRestanTotal(this);" value="0" />';
+		$span_total_id = 'span_total_'.$dataGastoPrestamo[$dataGasto["login_id"]]["gasto_id"];
+		$span_total_original_id = 'span_total_original_'.$dataGastoPrestamo[$dataGasto["login_id"]]["gasto_id"];
+		$span_restarian_id = 'span_restarian_'.$dataGastoPrestamo[$dataGasto["login_id"]]["gasto_id"];
+		$span_restan_id = 'span_restan_'.$dataGastoPrestamo[$dataGasto["login_id"]]["gasto_id"];
 	}
 	
 	$comision_activa = 0;
@@ -58,19 +75,25 @@ while(list(,$dataGasto) = each($rows)){
 	
 	$totalPagarEsteMes=$dataGasto["gasto_monto"] + $comision_activa;
 	
+	$restanEsteMes= $prestamo_activo - $sumaPagado["ingreso_monto"];
+	
 	$html_rows.= '<tr>
 		<td align="left">'.$dataGasto["firstName"].' '.$dataGasto["lastName"].'</td>
 		<td align="right">$ '.number_format($dataGasto["gasto_monto"],2).'</td>
 		<td align="right">$ '.number_format($comision_activa,2).'</td>
 		<td align="right">$ '.number_format($prestamo_activo,2).'</td>
-		<td align="right">$ '.$pagado.'</td>
-		<td style="width:75px; text-align:right;">'.$aCuentaEsteMes.'</td>
-		<td align="right">$ '.number_format($restanEsteMes,2).'</td>
-		<td align="right">$ '.number_format($totalPagarEsteMes,2).'</td>
+		<td align="right">$ '.number_format($sumaPagado["ingreso_monto"],2).'</td>
+		<td align="right">$ <span id="'.$span_restan_id.'">'.number_format($restanEsteMes,2).'</span></td>
+		
+		<td style="width:85px; text-align:right;">'.$aCuentaEsteMes.'</td>
+		<td align="right">$ <span id="'.$span_restarian_id.'">'.number_format($restanEsteMes,2).'</span></td>
+		<td align="right">
+			$ <span id="'.$span_total_id.'">'.number_format($totalPagarEsteMes,2).'</span>
+			<span id="'.$span_total_original_id.'" style="display:none;">'.$totalPagarEsteMes.'</span>
+		</td>
+		<td align="right"> '.$boton_aplica_pago_prestamo.'</td>
 	</tr>';
 }
-
-
 
 ?>
 <!-- Data picker -->
@@ -102,10 +125,9 @@ while(list(,$dataGasto) = each($rows)){
                 <div class="col-lg-12">
                 <div class="ibox float-e-margins">
                     <div class="ibox-title">
-                        <h5>Gastos</h5>
+                        <h5>NOMINA</h5>
                         <div class="ibox-tools">
-							
-                            <button type="button" class="btn btn-primary btn-xs"  onclick="location.href = 'nuevo/';" >+ Nuevo Gasto</button>
+
                             <!--<a class="collapse-link">
                                 <i class="fa fa-plus-square-o"></i>
                             </a>
@@ -125,9 +147,11 @@ while(list(,$dataGasto) = each($rows)){
                         <th style="text-align:right;">Comision</th>
 						<th style="text-align:right;">Prestamo</th>
 						<th style="text-align:right;">Pagado</th>
+						<th style="text-align:right;">Restan</th>
 						<th style="text-align:right;">A cuenta</th>
-                        <th style="text-align:right;">Restan</th>
+                        <th style="text-align:right;">Restarian</th>
 						<th style="text-align:right;">Total</th>
+						<th style="text-align:right;"></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -140,9 +164,11 @@ while(list(,$dataGasto) = each($rows)){
                         <th style="text-align:right;">Comision</th>
 						<th style="text-align:right;">Prestamo</th>
 						<th style="text-align:right;">Pagado</th>
-						<th style="text-align:right;">A cuenta</th>
-                        <th style="text-align:right;">Restan</th>
+						<th style="text-align:right;">Restan</th>
+						<th style="text-align:right;">A cuenta</th>                        
+						<th style="text-align:right;">Restarian</th>
 						<th style="text-align:right;">Total</th>
+						<th style="text-align:right;"></th>
                     </tr>
                     </tfoot>
                     </table>
@@ -220,25 +246,44 @@ $(document).ready(function(){
                 ]
 
             });
-	
-	
-     $.fn.datepicker.defaults.language = 'es';
-	
-	$('#data_rango_inicio .input-group.date').datepicker({
-	keyboardNavigation: false,
-	forceParse: false,
-	autoclose: true,
-	language: 'es'
-	}).datepicker("setDate", "0");
-	
-	$('#data_rango_fin .input-group.date').datepicker({
-	keyboardNavigation: false,
-	forceParse: false,
-	autoclose: true,
-	language: 'es'
-	}).datepicker("setDate", "0");
-
 });
+
+function updateRestanTotal(obj){
+	
+	ingreso_monto = Number(obj.value);
+	gasto_id = obj.id.replace("aCuentaEsteMes_",""); //gasto_id del prestamo
+
+	restan_val = Number($('#span_restan_'+gasto_id).html());
+	total_val = Number($('#span_total_original_'+gasto_id).html().replace(",",""));
+	
+	restarian_val = restan_val - ingreso_monto;
+	total_val = total_val - ingreso_monto;
+	
+	$('#span_total_'+gasto_id).html(total_val.toFixed(2));
+	$('#span_restarian_'+gasto_id).html(restarian_val.toFixed(2));	
+
+	
+}
+
+function aplicaPagoPrestamo(gasto_id){
+	
+	ingreso_monto = $('#aCuentaEsteMes_'+gasto_id).val();
+	//alert("se ingresaran "+ingreso_monto+ " al gasto "+gasto_id);
+	
+	$.ajax({
+		type: "GET",
+		url: "ajax/crea_pago_prestamo.php",			
+		data: {ingreso_monto:ingreso_monto,gasto_id:gasto_id},
+		success: function(msg){
+			 $('#aCuentaEsteMes_'+gasto_id).prop('disabled', true);
+			//location.href = '../';
+			//$("#myModal").modal('hide');
+			//$("#boton_crea_registro").removeClass().addClass("btn btn-primary");
+			//$("#span_crea_registro").removeClass();
+		}		
+	});
+	
+}
 </script>
 
 </body>

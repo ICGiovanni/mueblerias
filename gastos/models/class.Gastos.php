@@ -73,14 +73,15 @@ class Gasto {
 		gasto_fecha_vencimiento = :gasto_fecha_vencimiento,
 		gasto_fecha_recordatorio_activo = :gasto_fecha_recordatorio_activo,
 		gasto_fecha_recordatorio = :gasto_fecha_recordatorio,
+		gasto_categoria_id = :gasto_categoria_id,
 		gasto_concepto = :gasto_concepto,
 		gasto_descripcion = :gasto_descripcion,
 		gasto_monto = :gasto_monto,
-		gasto_categoria_id = :gasto_categoria_id,
+		gasto_status_id = :gasto_status_id,
+		sucursal_id = :sucursal_id,
 		proveedor_id = :proveedor_id,
 		login_id = :login_id,
-		gasto_status_id = :gasto_status_id,
-		sucursal_id = :sucursal_id
+		gasto_beneficiario = :gasto_beneficiario
 		WHERE gasto_id = :gasto_id";
 		
 		$statement=$this->connect->prepare($sql);
@@ -89,14 +90,15 @@ class Gasto {
         $statement->bindParam(':gasto_fecha_vencimiento', $params['gasto_fecha_vencimiento'], PDO::PARAM_STR);
 		$statement->bindParam(':gasto_fecha_recordatorio_activo', $params['gasto_fecha_recordatorio_activo'], PDO::PARAM_STR);
 		$statement->bindParam(':gasto_fecha_recordatorio', $params['gasto_fecha_recordatorio'], PDO::PARAM_STR);
+		$statement->bindParam(':gasto_categoria_id', $params['gasto_categoria_id'], PDO::PARAM_STR);
 		$statement->bindParam(':gasto_concepto', $params['gasto_concepto'], PDO::PARAM_STR);
         $statement->bindParam(':gasto_descripcion', $params['gasto_descripcion'], PDO::PARAM_STR);
-		$statement->bindParam(':gasto_monto', $params['gasto_monto'], PDO::PARAM_STR);
-		$statement->bindParam(':gasto_categoria_id', $params['gasto_categoria_id'], PDO::PARAM_STR);
+		$statement->bindParam(':gasto_monto', $params['gasto_monto'], PDO::PARAM_STR);		
 		$statement->bindParam(':gasto_status_id', $params['gasto_status_id'], PDO::PARAM_STR);
 		$statement->bindParam(':proveedor_id', $params['proveedor_id'], PDO::PARAM_STR);
 		$statement->bindParam(':login_id', $params['login_id'], PDO::PARAM_STR);
 		$statement->bindParam(':sucursal_id', $params['sucursal_id'], PDO::PARAM_STR);
+		$statement->bindParam(':gasto_beneficiario', $params['gasto_beneficiario'], PDO::PARAM_STR);
 		
 		$statement->execute();
 		return "updated";
@@ -211,7 +213,8 @@ class Gasto {
 		gasto_status_id,
 		proveedor_id,
 		login_id,
-		sucursal_id	
+		sucursal_id,
+		gasto_beneficiario
 		FROM ".$this->name_table_gastos." WHERE gasto_id = :gasto_id";
 
 		$statement=$this->connect->prepare($sql);

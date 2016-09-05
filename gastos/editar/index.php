@@ -209,7 +209,7 @@ while(list(,$dataLogin) = each($rowsLogin)){
 							</tr>
 							<tr>
 								<td>Beneficiario:</td>
-								<td><input type="text" name="gasto_beneficiario" id="gasto_beneficiario" value="" size="40"></td>
+								<td><input type="text" name="gasto_beneficiario" id="gasto_beneficiario" value="<?=$rowGasto["gasto_beneficiario"]?>" size="40" ></td>
 								<td colspan="2" align="right">Empleado:</td>
 								<td>
 									<select name="login_id" id="login_id">
@@ -375,7 +375,7 @@ function edita_gasto(gasto_id){
 			gasto_categoria_id:gasto_categoria_id,
 			gasto_concepto:gasto_concepto,
 			gasto_descripcion:gasto_descripcion,
-			gasto_monto:gasto_monto, 
+			gasto_monto:gasto_monto,
 			gasto_status_id:gasto_status_id, 
 			gasto_hora_vencimiento:gasto_hora_vencimiento, 
 			gasto_hora_recordatorio:gasto_hora_recordatorio, 
