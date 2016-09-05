@@ -66,7 +66,7 @@ class Login {
         public function getUsers($id = 0){
             $sql = "SELECT * FROM inv_login 
                     INNER JOIN inv_profile USING (profile_id)
-                    INNER JOIN inv_status USING (status_id)
+                    INNER JOIN inv_status USING (status_id)                    
                     WHERE status_id!=99";
             
             if($id!=0){
@@ -83,25 +83,41 @@ class Login {
         }
         
         public function saveUser($data){
-                        
             
-            $sql = "   INSERT INTO inv_login (login_id, firstName, lastName, email, password, profile_id, collaborator, 
+            $sqlDir = " INSERT INTO inv_address (address_id, street, number, int_number, neighborhood, municipality, zip_code, state)"
+                    . " VALUES(0, :calle, :numExt, :numInt, :colonia, :municipio, :cp, :estado)";
+            
+            $statement=$this->connect->prepare($sqlDir);
+            
+            $statement->bindParam(':calle', $data['calle'] ,PDO::PARAM_STR);            
+            $statement->bindParam(':numExt', $data['numExt'] ,PDO::PARAM_STR);            
+            $statement->bindParam(':numInt', $data['numInt'] ,PDO::PARAM_STR);            
+            $statement->bindParam(':colonia', $data['colonia'] ,PDO::PARAM_STR);            
+            $statement->bindParam(':municipio', $data['municipio'] ,PDO::PARAM_STR);            
+            $statement->bindParam(':cp', $data['cp'] ,PDO::PARAM_STR);            
+            $statement->bindParam(':estado', $data['estado'] ,PDO::PARAM_STR);            
+            
+            
+            $statement->execute();            
+            $addressId =  $this->connect->lastInsertId();
+            
+            
+            $sql = "   INSERT INTO inv_login (login_id, firstName, lastName, secondLastName,  email, password, profile_id, collaborator, 
                             sucursal_id, address_id, salary, comision, birthdate, created_timestamp, modify_timestamp) 
-                            VALUES (0, :firstName, :lastName, :email, :password, :profile_id, :collaborator,
+                            VALUES (0, :firstName, :lastName, :secondLastName, :email, :password, :profile_id, :collaborator,
                             :sucursal_id, :address_id, :salary, :comision, :birthdate, :created_timestamp, :modify_timestamp)";
             
             $statement=$this->connect->prepare($sql);
 
-            $timestamp = time();
-            $addressId = '1';            
-            
+            $timestamp = time();                        
             $date = new DateTime($data['fechaNacimiento']);
             $fechaNacimiento = $date->format('Y-m-d');
-            
+            $password = $this->encodePassword($data['password'], $data['email']);
             $statement->bindParam(':firstName', $data['firstName'] ,PDO::PARAM_STR);            
             $statement->bindParam(':lastName',$data['lastName'],PDO::PARAM_STR);
+            $statement->bindParam(':secondLastName',$data['secondLastName'],PDO::PARAM_STR);
             $statement->bindParam(':email',$data['email'],PDO::PARAM_STR);
-            $statement->bindParam(':password',$data['password'],PDO::PARAM_STR);            
+            $statement->bindParam(':password',$password,PDO::PARAM_STR);            
             $statement->bindParam(':profile_id',$data['perfil'],PDO::PARAM_STR);
             $statement->bindParam(':collaborator',$data['colaborador'],PDO::PARAM_INT);
             $statement->bindParam(':sucursal_id',$data['sucursal'],PDO::PARAM_INT);
@@ -114,13 +130,25 @@ class Login {
             
 
             $statement->execute();            
+                
+            $loginId = $this->connect->lastInsertId();
+            $tipos = json_decode($data['tipos']);
+            foreach(json_decode($data['telefonos']) as $key => $value){
+                $sqlDir = " INSERT INTO inv_login_phone_number(login_phone_number_id, login_id, phone_type_id, number)
+                            VALUES(0, ".$loginId.", ".$tipos[$key].", ".$value.")";
+            
+                $statement=$this->connect->prepare($sqlDir);
+                $statement->execute();            
 
-            return $this->connect->lastInsertId();
+                
+            }
+            
+            return $loginId;
         }
         
         public function getProfiles(){
             
-            $sql = "SELECT profile_id, profile_name FROM inv_profile";
+            $sql = "SELECT profile_id, profile_name FROM inv_profile where profile_id!=1";
             $statement = $this->connect->prepare($sql);                   
 
             $statement->execute();
@@ -147,6 +175,50 @@ class Login {
             $statement = $this->connect->prepare($sql);                    
 
             $statement->execute();
+        }
+        
+        public function activeUser($loginId, $status){
+            if($status!=1){
+                $status=1;
+            }
+            else{
+                $status=3;
+            }
+            $sql = "UPDATE inv_login SET status_id=".$status."  WHERE login_id = ".$loginId;
+            $statement = $this->connect->prepare($sql);                    
+
+            $statement->execute();
+        }
+        
+        public function insertLastLogin($loginId){
+            $timestamp = time();
+            $sql = "UPDATE inv_login SET modify_timestamp=".$timestamp."  WHERE login_id = ".$loginId;
+            $statement = $this->connect->prepare($sql);                    
+
+            $statement->execute();
+        }
+        
+        public function getAddress($addressId){
+            
+            $sql = "SELECT * FROM inv_address where address_id = ".$addressId;
+            $statement = $this->connect->prepare($sql);                   
+
+            $statement->execute();
+            $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+            
+            return(!empty($result))?$result[0]:false;
+            
+        }
+        
+        public function getPhones($idUser){
+            $sql = "select phone_type_id, number from inv_login_phone_number where login_id =".$idUser;
+            $statement = $this->connect->prepare($sql);                   
+
+            $statement->execute();
+            $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+            
+            return(!empty($result))?$result:false;
+            
         }
 }
 

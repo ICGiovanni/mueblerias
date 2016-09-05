@@ -2,16 +2,18 @@
 $(document).ready(function(){                        
 
     loadUsers();     
-  
+    
     $('#data_1 .input-group.date').datepicker({
         todayBtn: "linked",
         keyboardNavigation: false,
         forceParse: false,
         calendarWeeks: true,
         autoclose: true
-    });
+    });        
+        
 });
 
+        
 function loadUsers(){
     $.ajax({
         url: "ajax/loadUsers.php",
@@ -25,6 +27,9 @@ function loadUsers(){
                 /* Init DataTables */
                 var oTable = $('#editable').DataTable();
                 
+                $(".active-user").click(function(){
+                   activeUser($(this).attr('id'), $(this).data("status"));                    
+                });
                 
                 $('#loadUsers .borrar-user').click(function () {                            
                     var name = $(this).data("name");
@@ -54,6 +59,32 @@ function loadUsers(){
 
 }
 
+function activeUser(id, status){
+    
+    if(id!=1){
+        $.ajax({
+            url: "ajax/activeUser.php",
+            type: "post",
+            data: {
+                id : id,
+                status :  status
+            },
+            success: function (response) {            
+                loadUsers();
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+               console.log('error al activar los usuarios loadUsers()/index.php');
+            }
+        });
+    }
+    else{
+        swal({
+            title: "No permitido",
+            text: "Este usuario no puede ser desactivado",
+            type: "info"
+        });
+    }
+}
 
 function deleteUser(id){
     

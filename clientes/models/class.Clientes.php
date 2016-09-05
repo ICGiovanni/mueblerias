@@ -13,7 +13,7 @@ class Clientes
 	
 	public function InsertarCliente($params)
 	{
-		$sql="INSERT INTO clientes VALUES('',:nombre,:apellidoP,:apellidoM,:razonS,:rfc,:calle,:noExt,:noInt,:colonia,:codigoPostal,:municipio,:estado,:telefono,:telefonoA,:celular,:celularA,:email,:emailA)";
+		$sql="INSERT INTO clientes VALUES('',:nombre,:apellidoP,:apellidoM,:razonS,:rfc,:calle,:noExt,:noInt,:colonia,:codigoPostal,:municipio,:estado,:telefono,:telefonoA,:celular,:celularA,:email,:emailA,'')";
 		
 		$statement=$this->connect->prepare($sql);
 		
@@ -89,7 +89,7 @@ class Clientes
 	{
 		$sql="SELECT c.id_cliente,c.nombre,c.apellidoP,c.apellidoM,c.razon_social,c.rfc,c.calle,c.num_exterior,
 				c.num_interior,c.colonia,c.codigo_postal,c.municipio,
-				e.estado,c.telefono,c.telefono_alterno,c.celular,c.celularA,c.email,c.emailA
+				e.estado,c.telefono,c.telefono_alterno,c.celular,c.celularA,c.email,c.emailA,c.rating
 				FROM clientes c
 				INNER JOIN estados e USING(id_estado)
 				ORDER BY c.id_cliente";
@@ -101,6 +101,22 @@ class Clientes
 		$json=json_encode($result);
 		
 		$jsonPathFile='json/lista_clientes.json';
+		
+		$handler = fopen($jsonPathFile, "w");
+		fwrite($handler, $json);
+		fclose($handler);
+	}
+	
+	public function JsonRating($params)
+	{
+		$monto=$params['monto'];
+		$compras=$params['compras'];
+		
+		$json=array(array("monto"=>$monto,"compras"=>$compras));
+		
+		$json=json_encode($json);
+		
+		$jsonPathFile='json/rating.json';
 		
 		$handler = fopen($jsonPathFile, "w");
 		fwrite($handler, $json);
@@ -142,5 +158,4 @@ class Clientes
 	
 		return $result;
 	}
-	
 }

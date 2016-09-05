@@ -6,22 +6,7 @@
     include $pathProy.'/header.php';
     include $pathProy.'/menu.php';
 ?>
-<style>
-span.gray {
-  background: #969696;
-  border-radius: 0.8em;
-  -moz-border-radius: 0.8em;
-  -webkit-border-radius: 0.8em;
-  color: #ffffff;
-  display: inline-block;
-  font-weight: bold;
-  line-height: 1.6em;
-  margin-right: 15px;
-  text-align: center;
-  width: 1.6em; 
-  font-size:10px;
-}
-</style>
+<link rel="stylesheet" type="text/css" href="../css/clientes.css">
 
     <div class="row wrapper border-bottom white-bg page-heading">
         <div class="col-sm-4">
@@ -81,11 +66,13 @@ span.gray {
                     	
                     	$cliente=$nombre.' '.$apellidoP.' '.$apellidoM;
                     	
+                    	$rating=$d->rating;
+                    	
                     	$tr.='<tr class="gradeX">';
                     	$tr.='<td align="center">'.$id_cliente.'</td>';
                     	$tr.='<td>'.$cliente.'</td>';
                     	$tr.='<td align="center">'.$email.'</td>';
-                    	$tr.='<td align="center"><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i> <span class="gray">'.$id_cliente.'</span></td>';
+                    	$tr.='<td align="center"><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i> <span class="numero">'.$rating.'</span></td>';
                     	$tr.='<td align="center"><div class="infont col-md-1 col-sm-1"><input type="checkbox" name="cliente_'.$id_cliente.'" id="cliente_'.$id_cliente.'" value="'.$id_cliente.'" class="clientes"></div></td>';
                     	$tr.='</tr>';
                     	
@@ -259,7 +246,9 @@ span.gray {
     				dataType: "json",
     				complete: function(data)
     				{
-    					
+    					alert("Envio de Campa\u00f1a exitoso");
+    			        var url="enviar_campana.php";
+						$(location).attr("href", url);
     					
     				},
     				failure: function(errMsg)
@@ -268,14 +257,6 @@ span.gray {
     				}
     			});	
             }
-        	
-
-			console.log(json);
-        	
-            alert("Envio de Campa\u00f1a exitoso");
-            location.reload();
-            //var url="index.php";
-            //$(location).attr("href", url);
 		});
 
         $( "#cancelar" ).click(function()

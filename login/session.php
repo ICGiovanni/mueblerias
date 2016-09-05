@@ -16,8 +16,9 @@
             foreach($pages as $page){
                 array_push($inArrayPages, $page['page']);
             }
-
+            //print_r($inArrayPages);    
             $pagina = trim($_SERVER['SCRIPT_NAME'],'/');
+            
 
             if(!in_array($pagina, $inArrayPages)){            
                header("Location: ".$ruta."login/profile.php");

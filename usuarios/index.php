@@ -1,10 +1,8 @@
 <?php   include $_SERVER['REDIRECT_PATH_CONFIG'].'/config.php';
         include $pathProy.'login/session.php';
-        include $pathProy.'/header.php';
+        include $pathProy.'/header2.php';
         include $pathProy.'/menu.php';
 ?>
-
-<link href="<?php echo $raizProy?>css/plugins/dataTables/datatables.min.css" rel="stylesheet">
 <style type="text/css">
     .colaboradorForm{ display: none;}
 </style>
@@ -30,8 +28,9 @@
                         <th>Creado</th>
                         <th>Estatus</th>
                         <th>Email</th>
-                        <th class="text-center">Editar</th>  
-                        <th class="text-center">Borrar</th>  
+                        <th>Ultimo Acceso</th>
+                        <th class="text-center">Activación</th>  
+                        <th class="text-center">Acciones</th>  
                     </tr>
                     </thead>
                     <tbody id="loadUsers"></tbody>
@@ -46,14 +45,13 @@
 
 
 <?php
-    include $pathProy.'footer.php';
+    include $pathProy.'footer2.php';
 ?>
-<script src="<?php echo $raizProy?>js/plugins/jeditable/jquery.jeditable.js"></script>
-<script src="<?php echo $raizProy?>js/plugins/dataTables/datatables.min.js"></script>    
+<script src="<?php echo $raizProy?>usuarios/js/usuarios.js"></script>    
 <script src="<?php echo $raizProy?>js/plugins/datapicker/bootstrap-datepicker.js"></script>
+<script src="<?php echo $raizProy?>js/plugins/dataTables/datatables.min.js"></script>
 <script src="<?php echo $raizProy?>js/plugins/sweetalert/sweetalert.min.js"></script>
 
 <link href="<?php echo $raizProy?>css/plugins/datapicker/datepicker3.css" rel="stylesheet">
+<link href="<?php echo $raizProy?>css/plugins/dataTables/datatables.min.css" rel="stylesheet">
 <link href="<?php echo $raizProy?>css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
-  
-<script src="<?php echo $raizProy?>usuarios/js/usuarios.js"></script>    

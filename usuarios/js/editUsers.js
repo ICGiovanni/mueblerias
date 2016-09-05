@@ -30,7 +30,9 @@ $(document).ready(function(){
         });               
     });
     
-    
+    $(".deletePhone").click(function(){            
+        $(this).parent().parent().parent().remove();
+    });      
     
     $("#cancelarUser").click(function(){
         cleanFileds();
@@ -38,15 +40,8 @@ $(document).ready(function(){
     });
     
     $("#saveUser").click(function(){            
-        saveUser();        
-    });
-    
-    $.getJSON("../clientes/json/states_json.php",function(result){        
-        $.each(result, function(i, field){
-            $("#estado").append('<option value="'+field.id_estado+'" >'+field.estado+'</option>');
-        });        
-    });
-
+        //saveUser();        
+    });        
 });
 
 function cleanFileds(){

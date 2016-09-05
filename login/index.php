@@ -1,10 +1,10 @@
 <?php   include $_SERVER['REDIRECT_PATH_CONFIG'].'config.php';    
-        include $pathProy.'header.php';
+        include $pathProy.'header2.php';
 ?>
 
     <div class="middle-box text-center animated fadeInDown">
         <div style="background-color: #FFF; padding: 30px 50px 30px 50px;">
-            <img src="<?php echo $raizProy?>img/logo_globmint2.png" class="img-responsive" style='margin-left: auto; margin-right: auto' />
+            <img src="<?php echo $raizProy?>img/logo_globmint2.png" class="img-responsive" style='margin-left: auto; margin-right: auto; max-height: 300px' />
 
             <div class="clear">&nbsp;</div>
             <div class="clear">&nbsp;</div>

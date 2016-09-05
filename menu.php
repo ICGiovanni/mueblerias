@@ -5,21 +5,10 @@
                 <ul class="nav metismenu" id="side-menu">
                     <li class="nav-header">
                         <div class="dropdown profile-element">
-                            <span><img alt="image" class="img-circle" src="<?php echo $raizProy?>img/profile_small.jpg" /></span>
-                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                                <span class="clear">
-                                    <span class="block m-t-xs"><strong class="font-bold">David Williams</strong></span> 
-                                    <span class="text-muted text-xs block">Art Director <b class="caret"></b></span> 
-                                </span>
-                            </a>
-                            <ul class="dropdown-menu animated fadeInRight m-t-xs">
-                                <li><a href="">Profile</a></li>                                
-                                <li class="divider"></li>
-                                <li><a href="">Logout</a></li>
-                            </ul>
+                            &nbsp;
                         </div>
                         <div class="logo-element">
-                            <img src="<?php echo $raizProy?>img/logo_globmint2.png" class="img-responsive" />
+                            <img src="<?php echo $raizProy?>img/logo_globmint.png" class="img-responsive" />
                         </div>
                     </li>      
                     
@@ -35,7 +24,7 @@
                     
 	<li class="<?php if (stristr($_SERVER['SCRIPT_NAME'],'/gastos/')){ echo 'active';}?>">
                         <a href="<?php echo $ruta.'gastos/'?>">
-                            <i class="fa fa-user"></i> <span class="nav-label">Gastos</span>
+                            <i class=""></i> <span class="nav-label">Gastos</span>
                         </a>
                         <ul class="nav nav-second-level">
                             <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/gastos/index.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'gastos/'?>" >Lista de gastos</a></li>
@@ -57,7 +46,7 @@
                     
                     <li class="<?php if (stristr($_SERVER['SCRIPT_NAME'],'/publicidad/')){ echo 'active';}?>">
                         <a href="<?php echo $ruta.'publicidad/'?>">
-                            <i class="fa fa-user"></i> <span class="nav-label">Campañas</span>
+                            <i class=""></i> <span class="nav-label">Campañas</span>
                         </a>
                         <ul class="nav nav-second-level">
                             <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/publicidad/index.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'publicidad/index.php'?>" >Lista de campañas</a></li>
