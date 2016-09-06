@@ -207,20 +207,26 @@
         	
         	$("input:checkbox[class=publicidad]").each(function ()
 			{
-        		var publicidad={};
-				publicidad.id=$(this).attr("value");
-				publicidadA.push(publicidad);
-				publicidadE++;
+        		if($(this).is(":checked"))
+            	{
+        			var publicidad={};
+    				publicidad.id=$(this).attr("value");
+    				publicidadA.push(publicidad);
+    				publicidadE++;	
+            	}
             });
 
         	elements.publicidad=publicidadA;
 
         	$("input:checkbox[class=clientes]").each(function ()
 			{
-        		var clientes={};
-        		clientes.id=$(this).attr("value");
-        		clientesA.push(clientes);
-        		clientesE++;
+        		if($(this).is(":checked"))
+            	{
+	        		var clientes={};
+	        		clientes.id=$(this).attr("value");
+	        		clientesA.push(clientes);
+	        		clientesE++;
+            	}
             });
 
             elements.clientes=clientesA;

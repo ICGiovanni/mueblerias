@@ -99,6 +99,17 @@ class Publicidad
 		$nombre=$dataP[0]["nombre"];
 		$contenido=$dataP[0]["contenido"];		
 		
+		$mensaje='<!DOCTYPE html>
+					<html>
+					<head>
+					<meta>
+					<title></title>
+					</head>
+					<body>';
+		$mensaje.=$contenido;
+		$mensaje.='</body>
+					</html>';
+		
 		/*$mensaje='<!DOCTYPE html>
 					<html>
 					<head>
@@ -148,7 +159,6 @@ class Publicidad
 		die($email);
 		return mail($email,$nombre,$mensaje,$headers);*/
 		
-		$mail=new PHPMailer();
 		//
 		/*$mail->isSMTP();
 		$mail->SMTPDebug = 2;
@@ -160,9 +170,7 @@ class Publicidad
 		$mail->Username = "umedina86@gmail.com";
 		$mail->Password = "More1989";*/
 		//
-		$mail->SetFrom('info@globmint.com','Info Globmint');
-		$mail->Subject=$nombre;
-		
+				
 		$id_cliente="";
 		foreach($clientesE as $c)
 		{
@@ -181,29 +189,12 @@ class Publicidad
 		
 		foreach($result as $r)
 		{
+			$mail=new PHPMailer();
 			$mail->AddAddress($r["email"], "");
-		}
-		
-		$mensaje='<!DOCTYPE html>
-					<html>
-					<head>
-					<meta>
-					<title></title>
-					</head>
-					<body>';
-		$mensaje.=$contenido;
-		$mensaje.='</body>
-					</html>';
-		
-		$mail->MsgHTML(utf8_decode($mensaje));
-		
-		if(!$mail->Send())
-		{
-			return "Error al enviar el mensaje: " . $mail­>ErrorInfo;
-		}
-		else
-		{
-			return "Mensaje Enviado";
+			$mail->setFrom('info@globmint.com','Info Globmint');
+			$mail->Subject=utf8_decode($nombre);
+			$mail->MsgHTML(utf8_decode($mensaje));
+			$mail->Send();
 		}
 	}
 }
