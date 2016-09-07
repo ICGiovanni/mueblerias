@@ -12,6 +12,6 @@ $_GET["ingreso_fecha"]=$dateNow;
 
 $ingreso_id = $ingreso->insertIngreso($_GET);
 $_GET["ingreso_id"]=$ingreso_id;
-$ingreso_gasto_id = $ingreso->insertIngresoGasto($_GET);
-print_r($_GET);
+$ingreso_gasto_id = $ingreso->insertPagoPrestamo($_GET);
+//print_r($_GET);
 echo $ingreso_gasto_id;

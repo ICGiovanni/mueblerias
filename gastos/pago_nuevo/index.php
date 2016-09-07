@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 if(empty($_GET["gasto_id"])){
 	die("dato insuficiente");
 }
@@ -247,6 +249,7 @@ function crea_pago(){
 	gastos_pagos_hora=$("#gastos_pagos_hora").val();
 	
 	gastos_pagos_referencia=$("textarea#gastos_pagos_referencia").val();
+	login_id = '<?=$_SESSION["login_session"]["login_id"]?>';
 	
 	$("#boton_crea_registro").addClass("disabled");
 	$("#span_crea_registro").addClass("glyphicon glyphicon-refresh glyphicon-refresh-animate");
@@ -256,7 +259,19 @@ function crea_pago(){
 		$.ajax({
 			type: "GET",
 			url: "../ajax/crea_pago.php",			
-			data: {gasto_id:gasto_id,gastos_pagos_monto:gastos_pagos_monto,gastos_pagos_forma_de_pago_id:gastos_pagos_forma_de_pago_id,gastos_pagos_es_fiscal:gastos_pagos_es_fiscal,gastos_pagos_monto_sin_iva:gastos_pagos_monto_sin_iva,gastos_pagos_iva:gastos_pagos_iva,gastos_pagos_fecha:gastos_pagos_fecha,gastos_pagos_hora:gastos_pagos_hora,gastos_pagos_referencia:gastos_pagos_referencia,cierra_gasto:cierra_gasto},
+			data: {
+				gasto_id:gasto_id,
+				gastos_pagos_monto:gastos_pagos_monto,
+				gastos_pagos_forma_de_pago_id:gastos_pagos_forma_de_pago_id,
+				gastos_pagos_es_fiscal:gastos_pagos_es_fiscal,
+				gastos_pagos_monto_sin_iva:gastos_pagos_monto_sin_iva,
+				gastos_pagos_iva:gastos_pagos_iva,
+				gastos_pagos_fecha:gastos_pagos_fecha,
+				gastos_pagos_hora:gastos_pagos_hora,
+				gastos_pagos_referencia:gastos_pagos_referencia,
+				cierra_gasto:cierra_gasto,
+				login_id:login_id
+			},
 			success: function(msg){
 				location.href = '../';
 			}		

@@ -304,23 +304,29 @@ class Gasto {
 	
 	public function insertGastoPago($params){
 		$sql = "INSERT INTO ".$this->name_table_gastos_pagos." 
-		( gasto_id,
+		( 
+		gasto_id,
 		gastos_pagos_monto,
 		gastos_pagos_forma_de_pago_id,
 		gastos_pagos_es_fiscal,
 		gastos_pagos_monto_sin_iva,
 		gastos_pagos_iva,
 		gastos_pagos_fecha,
-		gastos_pagos_referencia )
+		gastos_pagos_referencia,
+		login_id
+		)
 		VALUES
-		( :gasto_id,
+		( 
+		:gasto_id,
 		:gastos_pagos_monto,
 		:gastos_pagos_forma_de_pago_id,
 		:gastos_pagos_es_fiscal,
 		:gastos_pagos_monto_sin_iva,		
 		:gastos_pagos_iva,
 		:gastos_pagos_fecha,
-		:gastos_pagos_referencia )";
+		:gastos_pagos_referencia,
+		:login_id
+		)";
 		
 		//print_r($params);
 		$statement=$this->connect->prepare($sql);
@@ -333,6 +339,7 @@ class Gasto {
 		$statement->bindParam(':gastos_pagos_iva', $params['gastos_pagos_iva'], PDO::PARAM_STR);
         $statement->bindParam(':gastos_pagos_fecha', $params['gastos_pagos_fecha'], PDO::PARAM_STR);
 		$statement->bindParam(':gastos_pagos_referencia', $params['gastos_pagos_referencia'], PDO::PARAM_STR);
+		$statement->bindParam(':login_id', $params['login_id'], PDO::PARAM_STR);
 		
 		$statement->execute();
 		return $this->connect->lastInsertId();
@@ -404,6 +411,13 @@ class Gasto {
 	}
 	
 	public function getGastosOperativo($gasto_categoria_id){
+		$extra_inner = '';
+		$extra_where = '';
+		if($gasto_categoria_id == 2){
+			$extra_inner = 'INNER JOIN prestamos USING (gasto_id)';
+			$extra_where = 'AND prestamo_status_id = 1';
+		}
+		
 		$sql="SELECT 
 		gasto_id,
 		gasto_no_documento,
@@ -421,8 +435,9 @@ class Gasto {
 		lastName
 		FROM ".$this->name_table_gastos."
 		INNER JOIN inv_login USING (login_id)
+		".$extra_inner."
 		WHERE 
-			gasto_categoria_id = :gasto_categoria_id		
+			gasto_categoria_id = :gasto_categoria_id ".$extra_where."
 		ORDER BY gasto_id DESC";
 
 		$statement=$this->connect->prepare($sql);

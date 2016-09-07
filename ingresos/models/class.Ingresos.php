@@ -10,7 +10,8 @@ class Ingreso {
 		$c=new Connection();
 		$this->connect=$c->db;
 		$this->name_table_ingresos = 'ingresos';
-		$this->name_table_ingresos_gastos = 'ingresos_gastos';
+		$this->name_table_prestamos = 'prestamos';
+		$this->name_table_prestamos_pagos = 'prestamos_pagos';
 	}
 	
 	function insertIngreso($params){
@@ -61,8 +62,8 @@ class Ingreso {
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
-	function insertIngresoGasto($params){
-		$sql = "INSERT INTO ".$this->name_table_ingresos_gastos." 
+	function insertPagoPrestamo($params){
+		$sql = "INSERT INTO ".$this->name_table_prestamos_pagos." 
 		( 
 		gasto_id,
 		ingreso_id
@@ -88,9 +89,12 @@ class Ingreso {
 	function getSumIngresosPrestamos($gasto_id){
 		$sql="SELECT		 
 		SUM(ingreso_monto) as ingreso_monto
-		FROM ".$this->name_table_ingresos_gastos."
-		INNER JOIN ingresos USING (ingreso_id)
-		WHERE gasto_id = :gasto_id";
+		FROM ".$this->name_table_prestamos_pagos."
+		INNER JOIN ".$this->name_table_ingresos." USING (ingreso_id)
+		INNER JOIN ".$this->name_table_prestamos." USING (gasto_id)
+		WHERE gasto_id = :gasto_id AND prestamo_status_id = 1"; //prestamo pendiente
+		
+		//echo $sql."---".$gasto_id;die();
 
 		$statement=$this->connect->prepare($sql);
 		$statement->bindParam(':gasto_id', $gasto_id, PDO::PARAM_STR);
