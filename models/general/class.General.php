@@ -6,6 +6,20 @@ class General
 {
 	private $connect;
 	
+	public $month=array(
+			'01'=>'ENE',
+			'02'=>'FEB',
+			'03'=>'MAR',
+			'04'=>'ABR',
+			'05'=>'MAY',
+			'06'=>'JUN',
+			'07'=>'JUL',
+			'08'=>'AGO',
+			'09'=>'SEP',
+			'10'=>'OCT',
+			'11'=>'NOV',
+			'12'=>'DIC');
+	
 	function __construct()
 	{
 		$c=new Connection();
@@ -24,5 +38,21 @@ class General
 		$result=$statement->fetchAll(PDO::FETCH_ASSOC);
 		
 		return $result;
+	}
+	
+	public function getDate($date)
+	{
+		$dateformat= new DateTime($date);
+		$date=$dateformat->format('Y-m-d h:i:s a');
+		
+		$s=explode(' ',$date);
+		$d=$s[0];
+		$h=$s[1];
+		$t=$s[2];
+		
+		$d=explode('-',$d);
+		$date=$d[2].'/'.$this->month[$d[1]].'/'.$d[0].' '.$h.' '.$t;
+		
+		return $date;
 	}
 }
