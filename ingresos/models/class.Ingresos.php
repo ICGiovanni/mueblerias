@@ -104,4 +104,17 @@ class Ingreso {
 
 		return $result;
 	}
+	
+	public function updatePrestamoStatus($gasto_id, $prestamo_status_id){
+		$sql = "UPDATE ".$this->name_table_prestamos." SET 
+		prestamo_status_id = :prestamo_status_id
+		WHERE gasto_id = :gasto_id";
+		
+		$statement=$this->connect->prepare($sql);
+		$statement->bindParam(':gasto_id', $gasto_id, PDO::PARAM_STR);
+		$statement->bindParam(':prestamo_status_id', $prestamo_status_id, PDO::PARAM_STR);
+		
+		$statement->execute();
+		return "updated";
+	}
 }

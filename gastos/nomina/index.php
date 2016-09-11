@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once $_SERVER['REDIRECT_PATH_CONFIG'].'/config.php';
 require_once $pathProy.'/header.php';
 require_once $pathProy.'/menu.php';
@@ -56,16 +57,25 @@ while(list(,$dataGasto) = each($rows)){
 	$span_restan_id = '';
 	$span_restarian_id = '';
 	$span_total_original_id = '';
-	$boton_aplica_pago_prestamo = '';
+	$boton_aplica_nomina = '';
+	$onclick_aplicaPagoPrestamo = '';
 	if(isset($dataGastoPrestamo[$dataGasto["login_id"]])){
-		$boton_aplica_pago_prestamo = '<a href="javascript:void(0);" onclick="aplicaPagoPrestamo(\''.$dataGastoPrestamo[$dataGasto["login_id"]]["gasto_id"].'\'); creaPagoSalario(\''.$dataGasto["gasto_id"].'\'); disable_this_a(this); "><i class="fa fa-floppy-o"></i></a>';
+		$onclick_aplicaPagoPrestamo = 'aplicaPagoPrestamo(\''.$dataGastoPrestamo[$dataGasto["login_id"]]["gasto_id"].'\',\''.$dataGasto["login_id"].'\'); ';
 		$prestamo_activo = $dataGastoPrestamo[$dataGasto["login_id"]]["gasto_monto"];
-		$aCuentaEsteMes = '$ <input type="text" name="aCuentaEsteMes_'.$dataGastoPrestamo[$dataGasto["login_id"]]["gasto_id"].'" id="aCuentaEsteMes_'.$dataGastoPrestamo[$dataGasto["login_id"]]["gasto_id"].'" size="5" onchange="updateRestanTotal(this);" value="0" />';
-		$span_total_id = 'span_total_'.$dataGastoPrestamo[$dataGasto["login_id"]]["gasto_id"];
-		$span_total_original_id = 'span_total_original_'.$dataGastoPrestamo[$dataGasto["login_id"]]["gasto_id"];
+		$aCuentaEsteMes = '$ <input type="text" name="aCuentaEsteMes_'.$dataGasto["login_id"].'" id="aCuentaEsteMes_'.$dataGasto["login_id"].'" size="5" onchange="updateRestanTotal('.$dataGasto["login_id"].');" value="0" data-gasto-id-prestamo="'.$dataGastoPrestamo[$dataGasto["login_id"]]["gasto_id"].'"/>';
+		$span_total_id = 'span_total_'.$dataGasto["login_id"];
+		
 		$span_restarian_id = 'span_restarian_'.$dataGastoPrestamo[$dataGasto["login_id"]]["gasto_id"];
 		$span_restan_id = 'span_restan_'.$dataGastoPrestamo[$dataGasto["login_id"]]["gasto_id"];
 	}
+	$span_total_original_id = 'span_total_original_'.$dataGasto["login_id"];
+	
+	if($dataGasto["gasto_status_id"] == "1"){
+		$boton_aplica_nomina = '<a href="javascript:void(0);" onclick="'.$onclick_aplicaPagoPrestamo.'creaPagoSalario(\''.$dataGasto["gasto_id"].'\',\''.$dataGasto["login_id"].'\'); "><i class="fa fa-floppy-o"></i></a>';
+	} else {
+		$boton_aplica_nomina = '<i class="fa fa-check-square-o"></i>';
+	}
+	
 	
 	$comision_activa = 0;
 	
@@ -80,11 +90,11 @@ while(list(,$dataGasto) = each($rows)){
 	$html_rows.= '<tr id="row_salary_'.$dataGasto["login_id"].'">
 		<td align="left">'.$dataGasto["firstName"].' '.$dataGasto["lastName"].'</td>
 		<td align="right">$ '.number_format($dataGasto["gasto_monto"],2).'</td>
-		<td align="right">$ '.number_format(($dataGasto["gasto_monto"]/7),2).'</td>
+		<td align="right">$ <span id="salario_diario_'.$dataGasto["login_id"].'">'.number_format(($dataGasto["gasto_monto"]/7),2).'</span></td>
 		<td align="right">$ '.number_format($comision_activa,2).'</td>
-		<td align="center"> <input type="checkbox" name="dia_extra_'.$dataGasto["login_id"].'" id="dia_extra_'.$dataGasto["login_id"].'" /> </td>
-		<td align="center"> <input type="checkbox" name="dia_descuento_'.$dataGasto["login_id"].'" id="dia_descuento_'.$dataGasto["login_id"].'" /> </td>
-		<td align="right">$ <input type="text" name="dia_descuento_monto_'.$dataGasto["login_id"].'" id="dia_descuento_monto_'.$dataGasto["login_id"].'" size="5" onchange="updateRestanTotalDescuebto(this);" value="0" disabled /> </td>
+		<td align="center"> <input type="checkbox" name="dia_extra_'.$dataGasto["login_id"].'" id="dia_extra_'.$dataGasto["login_id"].'" onclick="updateRestanTotal('.$dataGasto["login_id"].');" /> </td>
+		<td align="center"> <input type="checkbox" name="dia_descuento_'.$dataGasto["login_id"].'" id="dia_descuento_'.$dataGasto["login_id"].'" onclick="updateRestanTotal('.$dataGasto["login_id"].');" /> </td>
+		<td align="right">$ <input type="text" name="dia_descuento_penalizacion_'.$dataGasto["login_id"].'" id="dia_descuento_penalizacion_'.$dataGasto["login_id"].'" size="5" onchange="updateRestanTotal('.$dataGasto["login_id"].');" value="0" disabled /> </td>
 		<td align="right">$ '.number_format($prestamo_activo,2).'</td>
 		<td align="right">$ '.number_format($sumaPagado["ingreso_monto"],2).'</td>
 		<td align="right">$ <span id="'.$span_restan_id.'">'.number_format($restanEsteMes,2).'</span></td>		
@@ -94,7 +104,7 @@ while(list(,$dataGasto) = each($rows)){
 			$ <span id="'.$span_total_id.'">'.number_format($totalPagarEsteMes,2).'</span>
 			<span id="'.$span_total_original_id.'" style="display:none;">'.$totalPagarEsteMes.'</span>
 		</td>
-		<td align="right"> '.$boton_aplica_pago_prestamo.'</td>
+		<td align="right"> '.$boton_aplica_nomina.'</td>
 	</tr>';
 }
 
@@ -251,34 +261,62 @@ $(document).ready(function(){
 
 });
 
-function updateRestanTotal(obj){
+
+
+function updateRestanTotal(login_id){
 	
-	ingreso_monto = Number(obj.value);
-	gasto_id = obj.id.replace("aCuentaEsteMes_",""); //gasto_id del prestamo
+	ingreso_monto = Number( $('#aCuentaEsteMes_'+login_id).val() );	
+	
+	gasto_id = $('#aCuentaEsteMes_'+login_id).attr("data-gasto-id-prestamo"); //gasto_id del prestamo, no del salario
 
 	restan_val = Number($('#span_restan_'+gasto_id).html());
-	total_val = Number($('#span_total_original_'+gasto_id).html().replace(",",""));
-	
 	restarian_val = restan_val - ingreso_monto;
-	total_val = total_val - ingreso_monto;
+	$('#span_restarian_'+gasto_id).html(restarian_val.toFixed(2));
 	
-	$('#span_total_'+gasto_id).html(total_val.toFixed(2));
-	$('#span_restarian_'+gasto_id).html(restarian_val.toFixed(2));	
+	dia_extra_monto = 0;
+	if($("#dia_extra_"+login_id).is(':checked')){
+		dia_extra_monto = Number($("#salario_diario_"+login_id).html().replace(",",""));
+	}
+	
+	if($("#dia_descuento_"+login_id).is(':checked')){
+		dia_descuento_monto = Number($("#salario_diario_"+login_id).html().replace(",",""));
+		$("#dia_descuento_penalizacion_"+login_id).prop("disabled", false);
+	} else {
+		dia_descuento_monto = 0;
+		$("#dia_descuento_penalizacion_"+login_id).prop("disabled", true);
+		$("#dia_descuento_penalizacion_"+login_id).val("0");
+	}
+	
+	dia_descuento_penalizacion = Number($("#dia_descuento_penalizacion_"+login_id).val());
+	
+	total_val = Number($('#span_total_original_'+login_id).html().replace(",",""));
+	total_val = total_val - ingreso_monto + dia_extra_monto - dia_descuento_monto - dia_descuento_penalizacion;
+	
+	$('#span_total_'+login_id).html(total_val.toFixed(2));
+	
 
 	
 }
 
-function aplicaPagoPrestamo(gasto_id){
+function aplicaPagoPrestamo(gasto_id, login_id){ //gasto_id del prestamo
 	
-	ingreso_monto = $('#aCuentaEsteMes_'+gasto_id).val();
-	//alert("se ingresaran "+ingreso_monto+ " al gasto "+gasto_id);
+	ingreso_monto = $('#aCuentaEsteMes_'+login_id).val();
+	//alert("se ingresaran "+ingreso_monto+ " al gasto "+login_id);
+	
+	restarian_val = Number($('#span_restarian_'+login_id).html());
+	if(restarian_val == 0){
+		cierra_prestamo = '1';
+	} else {
+		cierra_prestamo = '0';
+	}
+	
 	if(ingreso_monto > 0){
 		$.ajax({
 			type: "GET",
 			url: "ajax/crea_pago_prestamo.php",			
-			data: {ingreso_monto:ingreso_monto,gasto_id:gasto_id},
+			data: {ingreso_monto:ingreso_monto,gasto_id:gasto_id, cierra_prestamo:cierra_prestamo},
 			success: function(msg){
-				 $('#aCuentaEsteMes_'+gasto_id).prop('disabled', true);
+				$('#aCuentaEsteMes_'+login_id).prop('disabled', true);
 				//location.href = '../';
 				//$("#myModal").modal('hide');
 				//$("#boton_crea_registro").removeClass().addClass("btn btn-primary");
@@ -290,12 +328,21 @@ function aplicaPagoPrestamo(gasto_id){
 	}
 }
 
-function creaPagoSalario(gasto_id){
+function creaPagoSalario(gasto_id, login_id){
 	
-	gastos_pagos_monto = Number($('#span_total_original_'+gasto_id).html().replace(",",""));
+	var d = new Date();
+	
+	gastos_pagos_monto = Number($('#span_total_original_'+login_id).html().replace(",",""));
 	gastos_pagos_forma_de_pago_id = '1';
+	gastos_pagos_es_fiscal = '0';
+	gastos_pagos_monto_sin_iva= '0';
+	gastos_pagos_iva = '0';
+	gastos_pagos_fecha = '<?=date("d/m/Y")?>';
+	gastos_pagos_hora= d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
 	
-	login_id = '<?=$_SESSION["login_session"]["login_id"]?>';
+	gastos_pagos_referencia = '';
+	cierra_gasto = '1';
+	login_id = '<?=$_SESSION["login_session"]["login_id"]?>'; // de quien registra
 	
 	$.ajax({
 			type: "GET",
@@ -314,15 +361,19 @@ function creaPagoSalario(gasto_id){
 				login_id:login_id
 			},
 			success: function(msg){
-				location.href = '../';
+				location.href = './';
 			}		
 		});
 }
 
-function disable_this_a(obj){
-	obj.className = obj.className + " disabled";
-	obj.style.cursor = "normal";
-	obj.innerHTML = '<i class="fa fa-check-square-o"></i>';	
+function updateRestanTotalB(login_id){
+	
+	
+	
+	
+	
+	
+	
 }
 </script>
 

@@ -13,5 +13,9 @@ $_GET["ingreso_fecha"]=$dateNow;
 $ingreso_id = $ingreso->insertIngreso($_GET);
 $_GET["ingreso_id"]=$ingreso_id;
 $ingreso_gasto_id = $ingreso->insertPagoPrestamo($_GET);
-//print_r($_GET);
+
+if(isset($_GET["cierra_prestamo"]) && $_GET["cierra_prestamo"]=="1"){
+	$ingreso->updatePrestamoStatus($_GET["gasto_id"],"2");
+}
+
 echo $ingreso_gasto_id;
