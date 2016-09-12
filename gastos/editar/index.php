@@ -99,27 +99,31 @@ while(list(,$dataLogin) = each($rowsLogin)){
 	padding: 5px;
 }
 </style>
+<div class="row wrapper border-bottom white-bg page-heading">
+	<div class="col-sm-8">
+		<h2>Editando Gasto <!-- Folio <?=$_GET["gasto_id"]?> --></h2>
+		<ol class="breadcrumb">
+			<li>
+				<a href="">Gastos</a>
+			</li>
+			<li class="active">
+				<strong>Editando Gasto</strong>
+			</li>
+		</ol>
+	</div>
+	<div class="col-sm-4">
+		<div class="title-action">
+			<button type="button" class="btn btn-danger btn-xs" onclick="location.href = '../';">Cancelar</button>&nbsp;&nbsp;
+            <button id="boton_crea_gasto" type="button" class="btn btn-primary btn-xs" onclick="edita_gasto('<?=$rowGasto["gasto_id"]?>');">Guardar Gasto</button> <span id="span_crea_gasto"></span>
+		</div>
+	</div>
+</div>
 		<div class="wrapper wrapper-content animated fadeInRight">
             <div class="row">
                 <div class="col-lg-12">
                 <div class="ibox float-e-margins">
-                    <div class="ibox-title">
-                        <h5>Editando Gasto</h5>
-                        <div class="ibox-tools">
-							<button type="button" class="btn btn-danger btn-xs" onclick="location.href = '../';">Cancelar</button>&nbsp;&nbsp;
-                            <button id="boton_crea_gasto" type="button" class="btn btn-primary btn-xs" onclick="edita_gasto('<?=$rowGasto["gasto_id"]?>');">Guardar Gasto</button> <span id="span_crea_gasto"></span>
-                            <!--<a class="collapse-link">
-                                <i class="fa fa-plus-square-o"></i>
-                            </a>
-                            <a class="collapse-link">
-                                <i class="fa fa-chevron-up"></i>
-                            </a>-->
-							
-                        </div>
-                    </div>
+                    
                     <div class="ibox-content">
-					
-					
 					
 						<div class="table-responsive">
 						

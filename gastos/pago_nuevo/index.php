@@ -56,24 +56,30 @@ while(list(,$dataGastoCategoria) = each($rowsGastosCategoria)){
 	padding: 5px;
 }
 </style>
+<div class="row wrapper border-bottom white-bg page-heading">
+	<div class="col-sm-8">
+		<h2>Registrar Nuevo Pago a Gasto "<?=$rowGasto["gasto_no_documento"]?>"</h2>
+		<ol class="breadcrumb">
+			<li>
+				<a href="">Gastos</a>
+			</li>
+			<li class="active">
+				<strong>Registrar Nuevo Pago a Gasto</strong>
+			</li>
+		</ol>
+	</div>
+	<div class="col-sm-4">
+		<div class="title-action">
+			<button type="button" class="btn btn-danger btn-xs" onclick="location.href = '../';">Cancelar</button>&nbsp;&nbsp;
+            <button id="boton_crea_registro" type="button" class="btn btn-primary btn-xs" onclick="crea_pago();"> Guardar Pago</button> <span id="span_crea_registro"></span>
+		</div>
+	</div>
+</div>
 		<div class="wrapper wrapper-content animated fadeInRight">
             <div class="row">
                 <div class="col-lg-12">
                 <div class="ibox float-e-margins">
-                    <div class="ibox-title">
-                        <h5>Registrar Nuevo Pago a Gasto "<?=$rowGasto["gasto_no_documento"]?>"</h5>
-                        <div class="ibox-tools">
-							<button type="button" class="btn btn-danger btn-xs" onclick="location.href = '../';">Cancelar</button>&nbsp;&nbsp;
-                            <button id="boton_crea_registro" type="button" class="btn btn-primary btn-xs" onclick="crea_pago();"> Guardar Pago</button> <span id="span_crea_registro"></span>
-                            <!--<a class="collapse-link">
-                                <i class="fa fa-plus-square-o"></i>
-                            </a>
-                            <a class="collapse-link">
-                                <i class="fa fa-chevron-up"></i>
-                            </a>-->
-							
-                        </div>
-                    </div>
+                    
                     <div class="ibox-content">
 					
 						<div class="table-responsive">
