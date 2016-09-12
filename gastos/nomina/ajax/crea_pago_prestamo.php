@@ -8,7 +8,8 @@ require_once $_SERVER['REDIRECT_PATH_CONFIG'].'/ingresos/models/class.Ingresos.p
 $ingreso = new Ingreso();
 
 $_GET["ingreso_fecha"]=$dateNow;
-
+$_GET["ingreso_categoria_id"]="1";
+$_GET["ingreso_descripcion"]="Pago al prestamo/gasto folio ".$_GET["gasto_id"];
 
 $ingreso_id = $ingreso->insertIngreso($_GET);
 $_GET["ingreso_id"]=$ingreso_id;

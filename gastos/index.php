@@ -81,16 +81,16 @@ while(list(,$dataGasto) = each($rows)){
 	$rowPagos=$rowPagos[0];
 	
 	switch($dataGasto["gasto_status_id"]){
-		case '1':
+		case '1': //pendiente
 			$color_row = "#FBFEC0";
 			break;
-		case '2':
+		case '2': //pagado
 			$color_row = "#BCF5BD";
 			break;
-		case '3':
-			$color_row = "#F5F5F5";
+		case '3': //cancelado
+			$color_row = "#CCD7FF";
 			break;
-		case '4':
+		case '4': //vencido
 			$color_row = "#FFCACA";
 			break;
 		default:
@@ -144,24 +144,44 @@ while(list(,$dataGasto) = each($rows)){
 	padding: 5px;
 }
 </style>
+
+<div class="row wrapper border-bottom white-bg page-heading">
+	<div class="col-sm-4">
+		<h2>Lista de Gastos</h2>
+		<ol class="breadcrumb">
+			<li>
+				<a href="">Gastos</a>
+			</li>
+			<li class="active">
+				<strong>Lista de Gastos</strong>
+			</li>
+		</ol>
+	</div>
+	<div class="col-sm-8">
+		<div class="title-action">
+			<button type="button" class="btn btn-primary btn-xs"  onclick="location.href = 'nuevo/';" >
+			Nuevo Gasto
+			</button>
+		</div>
+	</div>
+</div>
+
 		<div class="wrapper wrapper-content animated fadeInRight">
             <div class="row">
                 <div class="col-lg-12">
                 <div class="ibox float-e-margins">
+					<!--
                     <div class="ibox-title">
                         <h5>Gastos</h5>
-                        <div class="ibox-tools">
-							
-                            <button type="button" class="btn btn-primary btn-xs"  onclick="location.href = 'nuevo/';" >+ Nuevo Gasto</button>
-                            <!--<a class="collapse-link">
-                                <i class="fa fa-plus-square-o"></i>
-                            </a>
-                            <a class="collapse-link">
-                                <i class="fa fa-chevron-up"></i>
-                            </a>-->
-							
+                        <div class="ibox-tools">							
+                            <button type="button" class="btn btn-primary btn-xs"  onclick="location.href = 'nuevo/';" >
+								Nuevo Gasto
+							</button>
                         </div>
                     </div>
+					-->
+					
+
                     <div class="ibox-content">
 						<div id="div_search_tools">
 							FILTRAR BUSQUEDA POR 

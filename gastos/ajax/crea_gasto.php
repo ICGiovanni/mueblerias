@@ -14,5 +14,10 @@ require_once $_SERVER['REDIRECT_PATH_CONFIG'].'/config.php';
 require_once("../models/class.Gastos.php");
 $gasto = new Gasto();
 
-$return = $gasto->insertGasto($_GET);
-echo $return;
+$gasto_id = $gasto->insertGasto($_GET);
+if(isset($_GET["pago_automatico"]) && $_GET["pago_automatico"] == 1){
+	$_GET["gasto_id"] =  $gasto_id;
+	$_GET["login_id"] = $_GET["login_id_quien_registra"]; // se sobreescribe login del beneficiario por el de quien registra
+	$gasto->insertGastoPago($_GET);
+}
+echo $gasto_id;

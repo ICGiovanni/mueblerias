@@ -90,10 +90,10 @@ while(list(,$dataGastoCategoria) = each($rowsGastosCategoria)){
                             
                             <!--<a class="collapse-link">
                                 <i class="fa fa-plus-square-o"></i>
-                            </a>-->
+                            </a>
                             <a class="collapse-link">
                                 <i class="fa fa-chevron-up"></i>
-                            </a>
+                            </a>-->
 							
                         </div>
                     </div>

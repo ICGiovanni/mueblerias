@@ -15,7 +15,7 @@ if($_SERVER["SERVER_NAME"]=="dev-globmint.com" || $_SERVER["SERVER_NAME"]=="loca
     //ejemplo: $pathProy = C:/Xampp/htdocs/
     $pathProy = dirname(__FILE__).'/';   
     
-    $raizProy = "/globmint.com/";
+    $raizProy = "/";
     //$raizProy = "globmint.com";
 }
 else{

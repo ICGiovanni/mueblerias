@@ -107,13 +107,13 @@ while(list(,$dataLogin) = each($rowsLogin)){
                         <h5>Editando Gasto</h5>
                         <div class="ibox-tools">
 							<button type="button" class="btn btn-danger btn-xs" onclick="location.href = '../';">Cancelar</button>&nbsp;&nbsp;
-                            <button id="boton_crea_gasto" type="button" class="btn btn-primary btn-xs" onclick="edita_gasto('<?=$rowGasto["gasto_id"]?>');"><i class="fa fa-save"></i> Guardar Gasto</button> <span id="span_crea_gasto"></span>
+                            <button id="boton_crea_gasto" type="button" class="btn btn-primary btn-xs" onclick="edita_gasto('<?=$rowGasto["gasto_id"]?>');">Guardar Gasto</button> <span id="span_crea_gasto"></span>
                             <!--<a class="collapse-link">
                                 <i class="fa fa-plus-square-o"></i>
-                            </a>-->
+                            </a>
                             <a class="collapse-link">
                                 <i class="fa fa-chevron-up"></i>
-                            </a>
+                            </a>-->
 							
                         </div>
                     </div>

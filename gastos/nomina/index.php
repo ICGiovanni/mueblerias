@@ -63,12 +63,13 @@ while(list(,$dataGasto) = each($rows)){
 		$onclick_aplicaPagoPrestamo = 'aplicaPagoPrestamo(\''.$dataGastoPrestamo[$dataGasto["login_id"]]["gasto_id"].'\',\''.$dataGasto["login_id"].'\'); ';
 		$prestamo_activo = $dataGastoPrestamo[$dataGasto["login_id"]]["gasto_monto"];
 		$aCuentaEsteMes = '$ <input type="text" name="aCuentaEsteMes_'.$dataGasto["login_id"].'" id="aCuentaEsteMes_'.$dataGasto["login_id"].'" size="5" onchange="updateRestanTotal('.$dataGasto["login_id"].');" value="0" data-gasto-id-prestamo="'.$dataGastoPrestamo[$dataGasto["login_id"]]["gasto_id"].'"/>';
-		$span_total_id = 'span_total_'.$dataGasto["login_id"];
+		
 		
 		$span_restarian_id = 'span_restarian_'.$dataGastoPrestamo[$dataGasto["login_id"]]["gasto_id"];
 		$span_restan_id = 'span_restan_'.$dataGastoPrestamo[$dataGasto["login_id"]]["gasto_id"];
 	}
 	$span_total_original_id = 'span_total_original_'.$dataGasto["login_id"];
+	$span_total_id = 'span_total_'.$dataGasto["login_id"];
 	
 	if($dataGasto["gasto_status_id"] == "1"){
 		$boton_aplica_nomina = '<a href="javascript:void(0);" onclick="'.$onclick_aplicaPagoPrestamo.'creaPagoSalario(\''.$dataGasto["gasto_id"].'\',\''.$dataGasto["login_id"].'\'); "><i class="fa fa-floppy-o"></i></a>';
@@ -89,6 +90,7 @@ while(list(,$dataGasto) = each($rows)){
 	
 	$html_rows.= '<tr id="row_salary_'.$dataGasto["login_id"].'">
 		<td align="left">'.$dataGasto["firstName"].' '.$dataGasto["lastName"].'</td>
+		<td align="left">'.$dataGasto["gasto_id"].'</td>
 		<td align="right">$ '.number_format($dataGasto["gasto_monto"],2).'</td>
 		<td align="right">$ <span id="salario_diario_'.$dataGasto["login_id"].'">'.number_format(($dataGasto["gasto_monto"]/7),2).'</span></td>
 		<td align="right">$ '.number_format($comision_activa,2).'</td>
@@ -134,29 +136,37 @@ while(list(,$dataGasto) = each($rows)){
 	padding: 5px;
 }
 </style>
+<div class="row wrapper border-bottom white-bg page-heading">
+	<div class="col-sm-4">
+		<h2>Nomina</h2>
+		<ol class="breadcrumb">
+			<li>
+				<a href="">Gastos</a>
+			</li>
+			<li class="active">
+				<strong>Nomina</strong>
+			</li>
+		</ol>
+	</div>
+	<div class="col-sm-8">
+		<div class="title-action">
+			
+		</div>
+	</div>
+</div>
+
 		<div class="wrapper wrapper-content animated fadeInRight">
             <div class="row">
                 <div class="col-lg-12">
                 <div class="ibox float-e-margins">
-                    <div class="ibox-title">
-                        <h5>NOMINA</h5>
-                        <div class="ibox-tools">
-
-                            <!--<a class="collapse-link">
-                                <i class="fa fa-plus-square-o"></i>
-                            </a>
-                            <a class="collapse-link">
-                                <i class="fa fa-chevron-up"></i>
-                            </a>-->
-							
-                        </div>
-                    </div>
+                    
                     <div class="ibox-content">
 					<div class="table-responsive">
                     <table class="footable table table-bordered dataTables-example toggle-square" >
                     <thead>
                     <tr>
 						<th>Empleado</th>
+						<th data-hide="all" style="text-align:right;">Gasto Folio Id</th>
                         <th data-hide="all" style="text-align:right;">Salario Semanal</th>
 						<th data-hide="all" style="text-align:right;">Salario Diario</th>
                         <th data-hide="all" style="text-align:right;">Comision</th>
@@ -265,13 +275,16 @@ $(document).ready(function(){
 
 function updateRestanTotal(login_id){
 	
-	ingreso_monto = Number( $('#aCuentaEsteMes_'+login_id).val() );	
-	
-	gasto_id = $('#aCuentaEsteMes_'+login_id).attr("data-gasto-id-prestamo"); //gasto_id del prestamo, no del salario
-
-	restan_val = Number($('#span_restan_'+gasto_id).html());
-	restarian_val = restan_val - ingreso_monto;
-	$('#span_restarian_'+gasto_id).html(restarian_val.toFixed(2));
+	ingreso_monto = 0;
+	//alert();
+	if( typeof($('#aCuentaEsteMes_'+login_id).val()) != 'undefined' ){
+		//alert(ingreso_monto)
+		ingreso_monto = Number( $('#aCuentaEsteMes_'+login_id).val() );
+		gasto_id = $('#aCuentaEsteMes_'+login_id).attr("data-gasto-id-prestamo"); //gasto_id del prestamo, no del salario
+		restan_val = Number($('#span_restan_'+gasto_id).html());
+		restarian_val = restan_val - ingreso_monto;
+		$('#span_restarian_'+gasto_id).html(restarian_val.toFixed(2));
+	}
 	
 	dia_extra_monto = 0;
 	if($("#dia_extra_"+login_id).is(':checked')){
@@ -290,6 +303,8 @@ function updateRestanTotal(login_id){
 	dia_descuento_penalizacion = Number($("#dia_descuento_penalizacion_"+login_id).val());
 	
 	total_val = Number($('#span_total_original_'+login_id).html().replace(",",""));
+	
+	
 	total_val = total_val - ingreso_monto + dia_extra_monto - dia_descuento_monto - dia_descuento_penalizacion;
 	
 	$('#span_total_'+login_id).html(total_val.toFixed(2));
@@ -329,7 +344,7 @@ function aplicaPagoPrestamo(gasto_id, login_id){ //gasto_id del prestamo
 }
 
 function creaPagoSalario(gasto_id, login_id){
-	
+	// login_id login del empleado
 	var d = new Date();
 	
 	gastos_pagos_monto = Number($('#span_total_original_'+login_id).html().replace(",",""));
@@ -342,11 +357,11 @@ function creaPagoSalario(gasto_id, login_id){
 	
 	gastos_pagos_referencia = '';
 	cierra_gasto = '1';
-	login_id = '<?=$_SESSION["login_session"]["login_id"]?>'; // de quien registra
+	login_id_quien_registra = '<?=$_SESSION["login_session"]["login_id"]?>'; // de quien registra el pago
 	
 	$.ajax({
 			type: "GET",
-			url: "../ajax/crea_pago.php",			
+			url: "../ajax/crea_pago.php", // pago del gasto salarial
 			data: {
 				gasto_id:gasto_id,
 				gastos_pagos_monto:gastos_pagos_monto,
@@ -358,12 +373,106 @@ function creaPagoSalario(gasto_id, login_id){
 				gastos_pagos_hora:gastos_pagos_hora,
 				gastos_pagos_referencia:gastos_pagos_referencia,
 				cierra_gasto:cierra_gasto,
-				login_id:login_id
+				login_id:login_id_quien_registra
 			},
 			success: function(msg){
-				location.href = './';
+				//location.href = './';
+			}		
+	});
+		
+	if($("#dia_extra_"+login_id).is(':checked')){
+		
+		gasto_no_documento = "dia extra salario folio "+gasto_id;
+		gasto_fecha_vencimiento = '<?=date("d/m/Y")?>';		
+		gasto_fecha_recordatorio_activo = "0";
+		gasto_fecha_recordatorio = '<?=date("d/m/Y")?>';
+		gasto_categoria_id = '25';
+		gasto_concepto = "dia extra salario folio "+gasto_id;		
+		gasto_descripcion = "dia extra salario folio "+gasto_id;
+		
+		dia_extra_monto = Number($("#salario_diario_"+login_id).html().replace(",",""));		
+		gasto_monto = dia_extra_monto;
+		
+		gasto_hora_vencimiento = d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+		gasto_hora_recordatorio = d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+		
+		sucursal_id = '1'; //oficina central, consultar con JM		
+		proveedor_id = '';
+		gasto_status_id = '2';
+		gasto_beneficiario = login_id; // solo representacion numerica
+		pago_automatico = '1';
+
+		/// DATOS PARA PAGO AUTOMATICO	
+		gastos_pagos_monto = dia_extra_monto;
+		gastos_pagos_forma_de_pago_id = '1';
+		gastos_pagos_es_fiscal = '0';
+		gastos_pagos_monto_sin_iva= '0';
+		gastos_pagos_iva = '0';
+		gastos_pagos_fecha = '<?=date("d/m/Y")?>';
+		gastos_pagos_hora= d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();		
+		gastos_pagos_referencia = '';
+		
+		$.ajax({
+			type: "GET",
+			url: "../ajax/crea_gasto.php", // se crea el gasto del dia extra y se paga en automatico
+			data: {				
+				gasto_no_documento:gasto_no_documento,
+				gasto_fecha_vencimiento:gasto_fecha_vencimiento,
+				gasto_fecha_recordatorio_activo:gasto_fecha_recordatorio_activo,
+				gasto_fecha_recordatorio:gasto_fecha_recordatorio,
+				gasto_categoria_id:gasto_categoria_id,
+				gasto_concepto:gasto_concepto,
+				gasto_descripcion:gasto_descripcion,
+				gasto_monto:gasto_monto,
+				gasto_status_id:gasto_status_id, 
+				gasto_hora_vencimiento:gasto_hora_vencimiento, 
+				gasto_hora_recordatorio:gasto_hora_recordatorio, 
+				sucursal_id:sucursal_id, 
+				proveedor_id:proveedor_id,
+				login_id:login_id, // login_id del empleado beneficiado
+				gasto_beneficiario:gasto_beneficiario,
+				pago_automatico:pago_automatico,
+				
+				gastos_pagos_monto:gastos_pagos_monto,
+				gastos_pagos_forma_de_pago_id:gastos_pagos_forma_de_pago_id,
+				gastos_pagos_es_fiscal:gastos_pagos_es_fiscal,
+				gastos_pagos_monto_sin_iva:gastos_pagos_monto_sin_iva,
+				gastos_pagos_iva:gastos_pagos_iva,
+				gastos_pagos_fecha:gastos_pagos_fecha,
+				gastos_pagos_hora:gastos_pagos_hora,
+				gastos_pagos_referencia:gastos_pagos_referencia,
+				login_id_quien_registra:login_id_quien_registra // login_id de quien registra el pago
+			},
+			success: function(msg){
+				//
 			}		
 		});
+	}
+	if($("#dia_descuento_"+login_id).is(':checked')){
+		
+		dia_descuento_monto = Number($("#salario_diario_"+login_id).html().replace(",",""));
+		dia_descuento_penalizacion = Number($("#dia_descuento_penalizacion_"+login_id).val());		
+		ingreso_monto = dia_descuento_monto + dia_descuento_penalizacion;
+		ingreso_categoria_id = '2'; // Dia Descuento/Penalización
+		ingreso_descripcion = 'Dia Descuento/Penalización salario folio '+gasto_id;
+		
+		if(ingreso_monto > 0){
+			$.ajax({
+				type: "GET",
+				url: "../../ingresos/ajax/crea_ingreso.php",			
+				data: {
+					ingreso_monto:ingreso_monto, 
+					ingreso_categoria_id:ingreso_categoria_id, 
+					ingreso_descripcion:ingreso_descripcion
+				},
+				success: function(msg){
+					//
+				}		
+			});
+		}
+		
+	}
+	location.href = './';
 }
 
 function updateRestanTotalB(login_id){

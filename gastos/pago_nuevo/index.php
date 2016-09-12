@@ -64,13 +64,13 @@ while(list(,$dataGastoCategoria) = each($rowsGastosCategoria)){
                         <h5>Registrar Nuevo Pago a Gasto "<?=$rowGasto["gasto_no_documento"]?>"</h5>
                         <div class="ibox-tools">
 							<button type="button" class="btn btn-danger btn-xs" onclick="location.href = '../';">Cancelar</button>&nbsp;&nbsp;
-                            <button id="boton_crea_registro" type="button" class="btn btn-primary btn-xs" onclick="crea_pago();"><i class="fa fa-save"></i> Guardar Pago</button> <span id="span_crea_registro"></span>
+                            <button id="boton_crea_registro" type="button" class="btn btn-primary btn-xs" onclick="crea_pago();"> Guardar Pago</button> <span id="span_crea_registro"></span>
                             <!--<a class="collapse-link">
                                 <i class="fa fa-plus-square-o"></i>
-                            </a>-->
+                            </a>
                             <a class="collapse-link">
                                 <i class="fa fa-chevron-up"></i>
-                            </a>
+                            </a>-->
 							
                         </div>
                     </div>

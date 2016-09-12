@@ -108,115 +108,33 @@ while(list(,$dataGasto) = each($rows)){
 	padding: 5px;
 }
 </style>
+<div class="row wrapper border-bottom white-bg page-heading">
+	<div class="col-sm-4">
+		<h2>Proveedores</h2>
+		<ol class="breadcrumb">
+			<li>
+				<a href="">Gastos</a>
+			</li>
+			<li class="active">
+				<strong>Proveedores</strong>
+			</li>
+		</ol>
+	</div>
+	<div class="col-sm-8">
+		<div class="title-action">
+			
+		</div>
+	</div>
+</div>
 		<div class="wrapper wrapper-content animated fadeInRight">
             <div class="row">
                 <div class="col-lg-12">
                 <div class="ibox float-e-margins">
-                    <div class="ibox-title">
-                        <h5>Gastos</h5>
-                        <div class="ibox-tools">
-							
-                            <button type="button" class="btn btn-primary btn-xs"  onclick="location.href = 'nuevo/';" >+ Nuevo Gasto</button>
-                            <!--<a class="collapse-link">
-                                <i class="fa fa-plus-square-o"></i>
-                            </a>
-                            <a class="collapse-link">
-                                <i class="fa fa-chevron-up"></i>
-                            </a>-->
-							
-                        </div>
-                    </div>
+                    
                     <div class="ibox-content">
-						<div id="div_search_tools">
-							FILTRAR BUSQUEDA POR 
-						<form>
-							<table class="table-form ">
-								<tr>
-									<td valign="">
-										<input type="checkbox" name="filtro_fecha_activo" id="filtro_fecha_activo" value="1" <?=$filtro_fecha_activo_checked?>/> <b>Rango de fechas</b><br>
-										inicio 
-										<div class="form-group" id="data_rango_inicio" >
-											<div class="input-group date">
-												<span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" class="form-control" id="filtro_fecha_inicio" name="filtro_fecha_inicio" value="">
-											</div>
-										</div>
-									</td>
-									<td valign=""><br>
-										fin
-										<div class="form-group" id="data_rango_fin" >
-											<div class="input-group date">
-												<span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" class="form-control" id="filtro_fecha_fin" name="filtro_fecha_fin" value="">
-											</div>
-										</div>
-									</td>
-									<td valign="top">
-										<input type="checkbox" name="filtro_categoria_activo" id="filtro_categoria_activo" value="1" <?=$filtro_categoria_activo_checked?>/> <b>Categoria</b><br><br>
-										<select name="filtro_categoria_id" id="filtro_categoria_id">
-											<?=$options_gasto_categoria_id?>
-										</select>
-									</td>
-									<td valign="top">
-										<input type="checkbox" name="filtro_status_activo" id="filtro_status_activo" value="1" <?=$filtro_status_activo_checked?>/> <b>Status</b> <br><br>
-										<select name="filtro_status_id" id="filtro_status_id">
-											<?=$options_gasto_status_id?>
-										</select>
-									</td>
-									<td valign="top">
-										<input type="checkbox" name="filtro_sucursal_activo" id="filtro_sucursal_activo" value="1" <?=$filtro_sucursal_activo_checked?>/> <b>Sucursal</b> <br><br>
-										<select name="filtro_sucursal_id" id="filtro_sucursal_id">
-											<?=$options_sucursal_id?>
-										</select>
-									</td>
-									<td><br>
-										<button type="submit" class="btn btn-primary btn-xs"  onclick="" >Filtrar</button> &nbsp;&nbsp;&nbsp;
-										<button type="button" class="btn btn-warning btn-xs"  onclick="location.href = '.';" >Limpiar Filtros</button>
-									</td>
-								</tr>
-							</table>
-						</form>	
-							
-							
-							
-						</div>
-					
-					<div class="table-responsive">
-                    <table class="table table-striped table-bordered table-hover dataTables-example" >
-                    <thead>
-                    <tr>
-						<th>Folio</th>
-                        <th>No Documento</th>
-                        <th>Fecha Vencimiento</th>
-						<th>Ultimo Pago</th>
-						<th>Categoria</th>
-                        <th>Concepto</th>
-						<th>Sucursal</th>
-                        <th>Monto a Pagar</th>
-						<th>Restan</th>
-                        <th>Status</th> 
-						<th style="text-align:center;">Acción</th>
 						
-                    </tr>
-                    </thead>
-                    <tbody>
-						<?=$html_rows?>
-                    </tbody>
-                    <tfoot>
-                    <tr>
-						<th>Folio</th>
-                        <th>No Documento</th>
-                        <th>Fecha Vencimiento</th>
-						<th>Ultimo Pago</th>
-						<th>Categoria</th>
-                        <th>Concepto</th>
-						<th>Sucursal</th>
-                        <th>Monto a Pagar</th>
-						<th>Restan</th>
-                         <th>Status</th> 
-						<th style="text-align:center;">Acción</th>
-                    </tr>
-                    </tfoot>
-                    </table>
-                        </div>
+					
+					Proximamente
 
                     </div>
                 </div>

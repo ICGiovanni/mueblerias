@@ -18,12 +18,16 @@ class Ingreso {
 		$sql = "INSERT INTO ".$this->name_table_ingresos." 
 		( 
 		ingreso_monto,
-		ingreso_fecha
+		ingreso_fecha,
+		ingreso_categoria_id,
+		ingreso_descripcion
 		)
 		VALUES
 		( 
 		:ingreso_monto,
-		:ingreso_fecha
+		:ingreso_fecha,
+		:ingreso_categoria_id,
+		:ingreso_descripcion
 		)";
 		
 		//print_r($params);
@@ -33,6 +37,8 @@ class Ingreso {
 		
 		$statement->bindParam(':ingreso_monto', $params['ingreso_monto'], PDO::PARAM_STR);
         $statement->bindParam(':ingreso_fecha', $params['ingreso_fecha'], PDO::PARAM_STR);
+		$statement->bindParam(':ingreso_categoria_id', $params['ingreso_categoria_id'], PDO::PARAM_STR);
+		$statement->bindParam(':ingreso_descripcion', $params['ingreso_descripcion'], PDO::PARAM_STR);
 		
 		$statement->execute();
 		return $this->connect->lastInsertId();
