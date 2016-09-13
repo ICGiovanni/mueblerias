@@ -20,7 +20,7 @@
         </div>
         <div class="col-sm-8">
             <div class="title-action">
-                <a href="./index.php" class="btn btn-primary">Lista de Clientes</a>
+                <a href="./index.php" class="btn btn-danger btn-xs"><i class="fa fa-arrow-left"></i> Regresar a listado</a>
             </div>
         </div>
     </div>
@@ -87,9 +87,9 @@
 			<div class="col-sm-6" id="divEmail"><input type="text" class="form-control" id="emailA" name="emailA"></div>
             </div>
             <div class="form-group">
-			<div class="col-sm-4 col-sm-offset-2">
-			<button class="btn btn-white" id="cancelar" type="button">Cancelar</button>
-			<button class="btn btn-primary" id="guardar" type="button">Guardar</button>
+			<div class="col-sm-6 col-sm-offset-2" align="right"><br>
+			<button class="btn btn-danger btn-xs" id="cancelar" type="button">Cancelar</button>&nbsp;&nbsp;&nbsp;&nbsp;
+			<button class="btn btn-primary btn-xs" id="guardar" type="button">Guardar Cliente</button>
 			</div>
 			</div>
         

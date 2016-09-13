@@ -21,7 +21,7 @@
         </div>
         <div class="col-sm-8">
             <div class="title-action">
-                <a href="./nuevo_cliente.php" class="btn btn-primary">Agregar Cliente</a>
+                <a href="./nuevo_cliente.php" class="btn btn-primary btn-xs">Nuevo Cliente</a>
             </div>
         </div>
     </div>

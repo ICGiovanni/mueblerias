@@ -20,7 +20,7 @@
         </div>
         <div class="col-sm-8">
             <div class="title-action">
-                <a href="./index.php" class="btn btn-primary">Campa&ntilde;as</a>
+                <button class="btn btn-danger btn-xs" id="cancelar" type="button">Cancelar</button>&nbsp;&nbsp; <button class="btn btn-primary btn-xs" id="guardar" type="button">Guardar Campaña</button>
             </div>
         </div>
     </div>
@@ -40,12 +40,7 @@
 
                     </div>
                 </div>
-                <div class="form-group">
-			<div class="col-sm-4 col-sm-offset-10">
-			<button class="btn btn-white" id="cancelar" type="button">Cancelar</button>
-			<button class="btn btn-primary" id="guardar" type="button">Guardar</button>
-			</div>
-			</div>
+                
             </div>
             </div>
            </div>

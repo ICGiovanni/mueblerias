@@ -22,7 +22,8 @@
         </div>
         <div class="col-sm-8">
             <div class="title-action">
-                <a href="./nueva_campana.php" class="btn btn-primary">Agregar Campa&ntilde;as</a>
+                <button class="btn btn-danger btn-xs" id="cancelar" type="button">Cancelar</button>&nbsp;&nbsp;
+				<button class="btn btn-primary btn-xs" id="enviar" type="button">Enviar Ahora</button>
             </div>
         </div>
     </div>
@@ -162,14 +163,7 @@
             </div>
 	
 		
-    <div class="row">
-	<div class="col-lg-12">
-            <div class="col-sm-3 col-sm-offset-5">
-            <button class="btn btn-white" id="cancelar" type="button">Cancelar</button>
-			<button class="btn btn-primary" id="enviar" type="button">Enviar Campa&ntilde;a</button>
-			</div>
-			</div>
-	</div>
+    
     <script src="<?php echo $raizProy?>js/plugins/dataTables/datatables.min.js"></script>
     
 

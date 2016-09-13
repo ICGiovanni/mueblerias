@@ -10,15 +10,27 @@
         include $pathProy.'/header.php';
         include $pathProy.'/menu.php';
 ?>
-
-<div class="clear">&nbsp;</div>      
+<div class="row wrapper border-bottom white-bg page-heading">
+	<div class="col-sm-4">
+		<h2>Nuevo Usuario</h2>
+		<ol class="breadcrumb">
+			<li>
+				<a href="">Usuarios</a>
+			</li>
+			<li class="active">
+				<strong>Nuevo Usuario</strong>
+			</li>
+		</ol>
+	</div>
+	<div class="col-sm-8">
+		<div class="title-action">
+			
+		</div>
+	</div>
+</div>   
 <div class="row">    
     <div class="col-lg-12">
-        <div class="ibox-title">
-            <div class="row">
-                <div class="col-lg-10"><h4>Nuevo Usuario<small>&nbsp;</small></h4></div>                                
-            </div>            
-        </div>    
+           
         <div class="ibox-content animated fadeInRightBig">                                    
                      
                     <div class="row">
@@ -224,10 +236,10 @@
                     <div class="row colaboradorForm">  
                         <div class="col-lg-4">&nbsp;</div>
                         <div class="col-lg-2 text-right">
-                            <button class='btn btn-danger' id='cancelarUser'>Cancelar</button>
+                            <button class='btn btn-danger btn-xs' id='cancelarUser'>Cancelar</button>
                         </div>   
-                        <div class="col-md-2 text-right">&nbsp;        
-                            <button class='btn btn-primary' id='saveUser'>Agregar usuario</button>
+                        <div class="col-md-2 text-right">        
+                            <button class='btn btn-primary btn-xs' id='saveUser'>Guardar Usuario</button>
                         </div>
                     </div>  
              
