@@ -16,7 +16,7 @@ if($_SERVER["SERVER_NAME"]=="dev-globmint.com" || $_SERVER["SERVER_NAME"]=="loca
     $pathProy = dirname(__FILE__).'/';   
     
     $raizProy = "/";
-    //$raizProy = "globmint.com";
+    $raizProy = "/globmint.com/";
 }
 else{
     define("DATA_BASE_HOST","db642823290.db.1and1.com");
