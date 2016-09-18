@@ -16,6 +16,8 @@ $general = new General();
 if(isset($_GET["semana"])){
 	$semana = $_GET["semana"];
 	$semana_act = date("W");
+	$diaSemana = date("w");
+	//if($diaSemana > 5){ $semana++; }
 	//echo $semana_act."----";
 	if( $semana > $semana_act ){
 		echo "Semana invalida. Semana a futuro"; die();
@@ -40,7 +42,7 @@ if(isset($_GET["semana"])){
 	//echo $diaSemana;
 	if($diaSemana==0)
 		$diaSemana=7;
-	if($diaSemana > 5){ $semana++; }
+	//if($diaSemana > 5){ $semana++; }
 }
 
 //Obtenemos el día de la semana de la fecha dada
