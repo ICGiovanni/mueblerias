@@ -1,15 +1,71 @@
 <?php
 session_start();
+date_default_timezone_set ("America/Mexico_City");
 require_once $_SERVER['REDIRECT_PATH_CONFIG'].'/config.php';
 require_once $pathProy.'/header.php';
 require_once $pathProy.'/menu.php';
 require_once($_SERVER["REDIRECT_PATH_CONFIG"].'gastos/models/class.Gastos.php');
 require_once($_SERVER["REDIRECT_PATH_CONFIG"].'ingresos/models/class.Ingresos.php');
+require_once($_SERVER["REDIRECT_PATH_CONFIG"].'models/general/class.General.php');
+$general = new General();
+
+/////
+
+
+// Obtenemos el numero de la semana
+if(isset($_GET["semana"])){
+	$semana = $_GET["semana"];
+	$semana_act = date("W");
+	//echo $semana_act."----";
+	if( $semana > $semana_act ){
+		echo "Semana invalida. Semana a futuro"; die();
+	} else {
+		$semanas_atras = $semana_act - $semana;
+		$sec_en_una_semana = "604800";
+		echo $semanas_atras." semanas atras";
+		$sec_atras = $semanas_atras * $sec_en_una_semana;
+		$back_in_time = time() - $sec_atras;
+		$month = date("m",$back_in_time);
+		$day = date("d",$back_in_time);
+		$year = date("Y",$back_in_time);
+		$diaSemana = date("w",$back_in_time);
+	}
+
+} else {
+	$month = date("m");
+	$day = date("d");
+	$year = date("Y");
+	$semana = date("W");
+	$diaSemana = date("w");
+	//echo $diaSemana;
+	if($diaSemana==0)
+		$diaSemana=7;
+	if($diaSemana > 5){ $semana++; }
+}
+
+//Obtenemos el día de la semana de la fecha dada
+
+//el 0 equivale al domingo...
+
+$array_dias_a_recorrer = array("0"=>"1","1"=>"2","2"=>"3","3"=>"4","4"=>"5","5"=>"6","6"=>"0","7"=>"1"); //0 es domingo, 6 es sabado
+$array_dias_a_recorrer_2 = array("0"=>"5","1"=>"4","2"=>"3","3"=>"2","4"=>"1","5"=>"0","6"=>"6","7"=>"5");
+
+// A la fecha recibida, le restamos el dia de la semana y obtendremos el lunes
+//if($diaSemana)
+$primerDia=date("Y/m/d",mktime(0,0,0,$month,$day-$array_dias_a_recorrer[$diaSemana],$year));
+
+// A la fecha recibida, le sumamos el dia de la semana menos siete y obtendremos el domingo
+$ultimoDia=date("Y/m/d",mktime(0,0,0,$month,$day+$array_dias_a_recorrer_2[$diaSemana],$year));
+
+//echo "<br>Semana: ".$semana." - Año: ".$year;
+//echo "<br>Primer día ".$primerDia;
+//echo "<br>Ultimo día ".$ultimoDia;
+/////
 
 $objGasto = new Gasto();
 $objIngreso = new Ingreso();
 
-$rows = $objGasto->getGastosNomina();
+$rows = $objGasto->getGastosNomina($primerDia,$ultimoDia);
 
 $rowsPrestamos = $objGasto->getGastosPrestamos();
 while(list(,$dataGasto) = each($rowsPrestamos)){
@@ -59,11 +115,11 @@ while(list(,$dataGasto) = each($rows)){
 	$span_total_original_id = '';
 	$boton_aplica_nomina = '';
 	$onclick_aplicaPagoPrestamo = '';
+	$css_tr = '';
 	if(isset($dataGastoPrestamo[$dataGasto["login_id"]])){
 		$onclick_aplicaPagoPrestamo = 'aplicaPagoPrestamo(\''.$dataGastoPrestamo[$dataGasto["login_id"]]["gasto_id"].'\',\''.$dataGasto["login_id"].'\'); ';
 		$prestamo_activo = $dataGastoPrestamo[$dataGasto["login_id"]]["gasto_monto"];
 		$aCuentaEsteMes = '$ <input type="text" name="aCuentaEsteMes_'.$dataGasto["login_id"].'" id="aCuentaEsteMes_'.$dataGasto["login_id"].'" size="5" onchange="updateRestanTotal('.$dataGasto["login_id"].');" value="0" data-gasto-id-prestamo="'.$dataGastoPrestamo[$dataGasto["login_id"]]["gasto_id"].'"/>';
-		
 		
 		$span_restarian_id = 'span_restarian_'.$dataGastoPrestamo[$dataGasto["login_id"]]["gasto_id"];
 		$span_restan_id = 'span_restan_'.$dataGastoPrestamo[$dataGasto["login_id"]]["gasto_id"];
@@ -71,37 +127,73 @@ while(list(,$dataGasto) = each($rows)){
 	$span_total_original_id = 'span_total_original_'.$dataGasto["login_id"];
 	$span_total_id = 'span_total_'.$dataGasto["login_id"];
 	
-	if($dataGasto["gasto_status_id"] == "1"){
-		$boton_aplica_nomina = '<a href="javascript:void(0);" onclick="'.$onclick_aplicaPagoPrestamo.'creaPagoSalario(\''.$dataGasto["gasto_id"].'\',\''.$dataGasto["login_id"].'\'); "><i class="fa fa-floppy-o"></i></a>';
-	} else {
-		$boton_aplica_nomina = '<i class="fa fa-check-square-o"></i>';
-	}
-	
-	
 	$comision_activa = 0;
 	
 	if(isset($dataGastoComisiones[$dataGasto["login_id"]])){
 		$comision_activa = $dataGastoComisiones[$dataGasto["login_id"]];
 	}
 	
-	$totalPagarEsteMes=$dataGasto["gasto_monto"] + $comision_activa;
+	$totalPagarEsteMes= $dataGasto["gasto_monto"] + $comision_activa;
 	
 	$restanEsteMes= $prestamo_activo - $sumaPagado["ingreso_monto"];
 	
-	$html_rows.= '<tr id="row_salary_'.$dataGasto["login_id"].'">
+	if($dataGasto["gasto_status_id"] == "1"){
+		$ckeckbox_dia_extra = '<input type="checkbox" name="dia_extra_'.$dataGasto["login_id"].'" id="dia_extra_'.$dataGasto["login_id"].'" onclick="updateRestanTotal('.$dataGasto["login_id"].');" />';
+		$ckeckbox_dia_descuento = '<input type="checkbox" name="dia_descuento_'.$dataGasto["login_id"].'" id="dia_descuento_'.$dataGasto["login_id"].'" onclick="updateRestanTotal('.$dataGasto["login_id"].');" />';
+		$ckeckbox_dia_descuento_penalizacion = '$ <input type="text" name="dia_descuento_penalizacion_'.$dataGasto["login_id"].'" id="dia_descuento_penalizacion_'.$dataGasto["login_id"].'" size="5" onchange="updateRestanTotal('.$dataGasto["login_id"].');" value="0" disabled />';
+		$boton_aplica_nomina = '<a href="javascript:void(0);" onclick="'.$onclick_aplicaPagoPrestamo.'creaPagoSalario(\''.$dataGasto["gasto_id"].'\',\''.$dataGasto["login_id"].'\'); "><i class="fa fa-floppy-o"></i></a>';
+		$td_restarian = '$ <span id="'.$span_restarian_id.'">'.number_format($restanEsteMes,2).'</span>';
+	} else {
+		$css_tr = 'style="background-color:#BCF5BD;"';
+		$td_restarian = '';
+		
+		$ckeckbox_dia_extra = '<i class="fa fa-square-o"></i>';
+		$res_dia_extra = $objGasto->huboPagoExtra($dataGasto["login_id"],$primerDia,$ultimoDia);
+		$monto_dia_extra = 0;
+		if(isset($res_dia_extra[0])){
+			$ckeckbox_dia_extra = '<i class="fa fa-check-square-o"></i>';
+			$monto_dia_extra = ($dataGasto["gasto_monto"]/7);
+		}
+		
+		$res_dia_descuento = $objIngreso->huboDescuentoPenalizacion($dataGasto["login_id"],$primerDia,$ultimoDia, $dataGasto["gasto_id"]);
+		$ckeckbox_dia_descuento = '<i class="fa fa-square-o"></i>';
+		$ckeckbox_dia_descuento_penalizacion = '';
+		$monto_dia_descuento_penalizacion = 0;
+		if(isset($res_dia_descuento[0])){
+			$ckeckbox_dia_descuento = '<i class="fa fa-check-square-o"></i>';
+			$ckeckbox_dia_descuento_penalizacion = '$'.$res_dia_descuento[0]["ingreso_monto"];
+			$monto_dia_descuento_penalizacion = $res_dia_descuento[0]["ingreso_monto"];
+		}
+		$boton_aplica_nomina = '<i class="fa fa-check-square-o"></i>';
+		
+		$aCuentaEsteMes = '';
+		$monto_este_mes = 0;
+		if(isset($dataGastoPrestamo[$dataGasto["login_id"]])){
+			$res_pago_prestamo = $objIngreso->huboPagoPrestamo($dataGasto["login_id"],$primerDia,$ultimoDia, $dataGastoPrestamo[$dataGasto["login_id"]]["gasto_id"]);
+		
+			if(isset($res_pago_prestamo[0])){
+				$aCuentaEsteMes = '$ '.$res_pago_prestamo[0]["ingreso_monto"];
+				$monto_este_mes = $res_pago_prestamo[0]["ingreso_monto"];
+			}
+		}
+		
+		$totalPagarEsteMes = $dataGasto["gasto_monto"] + $comision_activa - $monto_este_mes - $monto_dia_descuento_penalizacion +  $monto_dia_extra;
+	}	
+	
+	$html_rows.= '<tr id="row_salary_'.$dataGasto["login_id"].'" '.$css_tr.'>
 		<td align="left">'.$dataGasto["firstName"].' '.$dataGasto["lastName"].'</td>
 		<td align="left">'.$dataGasto["gasto_id"].'</td>
 		<td align="right">$ '.number_format($dataGasto["gasto_monto"],2).'</td>
 		<td align="right">$ <span id="salario_diario_'.$dataGasto["login_id"].'">'.number_format(($dataGasto["gasto_monto"]/7),2).'</span></td>
 		<td align="right">$ '.number_format($comision_activa,2).'</td>
-		<td align="center"> <input type="checkbox" name="dia_extra_'.$dataGasto["login_id"].'" id="dia_extra_'.$dataGasto["login_id"].'" onclick="updateRestanTotal('.$dataGasto["login_id"].');" /> </td>
-		<td align="center"> <input type="checkbox" name="dia_descuento_'.$dataGasto["login_id"].'" id="dia_descuento_'.$dataGasto["login_id"].'" onclick="updateRestanTotal('.$dataGasto["login_id"].');" /> </td>
-		<td align="right">$ <input type="text" name="dia_descuento_penalizacion_'.$dataGasto["login_id"].'" id="dia_descuento_penalizacion_'.$dataGasto["login_id"].'" size="5" onchange="updateRestanTotal('.$dataGasto["login_id"].');" value="0" disabled /> </td>
+		<td align="center"> '.$ckeckbox_dia_extra.' </td>
+		<td align="center"> '.$ckeckbox_dia_descuento.' </td>
+		<td align="right"> '.$ckeckbox_dia_descuento_penalizacion.'</td>
 		<td align="right">$ '.number_format($prestamo_activo,2).'</td>
 		<td align="right">$ '.number_format($sumaPagado["ingreso_monto"],2).'</td>
 		<td align="right">$ <span id="'.$span_restan_id.'">'.number_format($restanEsteMes,2).'</span></td>		
 		<td style="width:85px; text-align:right;">'.$aCuentaEsteMes.'</td>
-		<td align="right">$ <span id="'.$span_restarian_id.'">'.number_format($restanEsteMes,2).'</span></td>
+		<td align="right"> '.$td_restarian.' </td>
 		<td align="right">
 			$ <span id="'.$span_total_id.'">'.number_format($totalPagarEsteMes,2).'</span>
 			<span id="'.$span_total_original_id.'" style="display:none;">'.$totalPagarEsteMes.'</span>
@@ -137,8 +229,8 @@ while(list(,$dataGasto) = each($rows)){
 }
 </style>
 <div class="row wrapper border-bottom white-bg page-heading">
-	<div class="col-sm-4">
-		<h2>Nomina</h2>
+	<div class="col-sm-8">
+		<h2>Nomina Semana <?=$semana?> - <i>Del <?="Sab"?> <?=$general->getOnlyDate($primerDia)?> al <?="Vie"?> <?=$general->getOnlyDate($ultimoDia)?></i></h2>
 		<ol class="breadcrumb">
 			<li>
 				<a href="">Gastos</a>
@@ -148,9 +240,20 @@ while(list(,$dataGasto) = each($rows)){
 			</li>
 		</ol>
 	</div>
-	<div class="col-sm-8">
+	<div class="col-sm-4">
 		<div class="title-action">
-			
+			<button type="button" class="btn btn-primary btn-xs"  onclick="location.href = './?semana=<?=($semana-1)?>';" >
+			1 semana atras
+			</button>
+			<?php
+			if($semana < date("W")){
+			?>
+			<button type="button" class="btn btn-primary btn-xs"  onclick="location.href = './';" >
+			semana actual
+			</button>
+			<?php
+			}
+			?>
 		</div>
 	</div>
 </div>
@@ -475,15 +578,6 @@ function creaPagoSalario(gasto_id, login_id){
 	location.href = './';
 }
 
-function updateRestanTotalB(login_id){
-	
-	
-	
-	
-	
-	
-	
-}
 </script>
 
 </body>

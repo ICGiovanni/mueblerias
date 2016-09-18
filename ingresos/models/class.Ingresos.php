@@ -11,7 +11,7 @@ class Ingreso {
 		$this->connect=$c->db;
 		$this->name_table_ingresos = 'ingresos';
 		$this->name_table_prestamos = 'prestamos';
-		$this->name_table_prestamos_pagos = 'prestamos_pagos';
+		$this->name_table_ingreso_gasto = 'ingreso_gasto';
 	}
 	
 	function insertIngreso($params){
@@ -69,7 +69,7 @@ class Ingreso {
 ///////////////////////////////////////////////////////////////////////////////////////
 
 	function insertPagoPrestamo($params){
-		$sql = "INSERT INTO ".$this->name_table_prestamos_pagos." 
+		$sql = "INSERT INTO ".$this->name_table_ingreso_gasto." 
 		( 
 		gasto_id,
 		ingreso_id
@@ -95,10 +95,10 @@ class Ingreso {
 	function getSumIngresosPrestamos($gasto_id){
 		$sql="SELECT		 
 		SUM(ingreso_monto) as ingreso_monto
-		FROM ".$this->name_table_prestamos_pagos."
+		FROM ".$this->name_table_ingreso_gasto."
 		INNER JOIN ".$this->name_table_ingresos." USING (ingreso_id)
 		INNER JOIN ".$this->name_table_prestamos." USING (gasto_id)
-		WHERE gasto_id = :gasto_id AND prestamo_status_id = 1"; //prestamo pendiente
+		WHERE gasto_id = :gasto_id AND prestamo_status_id = 1"; //prestamo activo o pendiente
 		
 		//echo $sql."---".$gasto_id;die();
 
@@ -122,5 +122,48 @@ class Ingreso {
 		
 		$statement->execute();
 		return "updated";
+	}
+	
+	public function huboDescuentoPenalizacion($login_id,$primerDia,$ultimoDia,$gasto_id){
+		$sql = 'SELECT 
+		ingreso_id,
+		ingreso_monto
+		FROM ingresos
+		WHERE 
+			ingreso_categoria_id = 2 
+		AND 
+			ingreso_fecha BETWEEN "'.$primerDia.' 00:00:00" AND "'.$ultimoDia.' 23:59:59"
+		AND	
+			ingreso_descripcion = "Dia Descuento/Penalización salario folio '.$gasto_id.'"';
+			
+		$statement=$this->connect->prepare($sql);
+		$statement->bindParam(':gasto_id', $gasto_id, PDO::PARAM_STR);
+
+		$statement->execute();
+        $result=$statement->fetchAll(PDO::FETCH_ASSOC);
+
+		return $result;
+	}
+	
+	public function huboPagoPrestamo($login_id,$primerDia,$ultimoDia,$gasto_id){
+		$sql = 'SELECT 
+		ingreso_id,
+		ingreso_monto
+		FROM ingresos
+		INNER JOIN '.$this->name_table_ingreso_gasto.' USING (ingreso_id)
+		WHERE 
+			ingreso_categoria_id = 1 
+		AND 
+			ingreso_fecha BETWEEN "'.$primerDia.' 00:00:00" AND "'.$ultimoDia.' 23:59:59"
+		AND	
+			gasto_id = :gasto_id';
+			
+		$statement=$this->connect->prepare($sql);
+		$statement->bindParam(':gasto_id', $gasto_id, PDO::PARAM_STR);
+
+		$statement->execute();
+        $result=$statement->fetchAll(PDO::FETCH_ASSOC);
+
+		return $result;
 	}
 }

@@ -1,5 +1,5 @@
 <?php
-session_start();
+@session_start();
 require_once($_SERVER["REDIRECT_PATH_CONFIG"].'models/connection/class.Connection.php');
 
 class General
@@ -7,18 +7,18 @@ class General
 	private $connect;
 	
 	public $month=array(
-			'01'=>'ENE',
-			'02'=>'FEB',
-			'03'=>'MAR',
-			'04'=>'ABR',
-			'05'=>'MAY',
-			'06'=>'JUN',
-			'07'=>'JUL',
-			'08'=>'AGO',
-			'09'=>'SEP',
-			'10'=>'OCT',
-			'11'=>'NOV',
-			'12'=>'DIC');
+			'01'=>'Ene',
+			'02'=>'Feb',
+			'03'=>'Maz',
+			'04'=>'Abr',
+			'05'=>'May',
+			'06'=>'Jun',
+			'07'=>'Jul',
+			'08'=>'Ago',
+			'09'=>'Sep',
+			'10'=>'Oct',
+			'11'=>'Nov',
+			'12'=>'Dic');
 	
 	function __construct()
 	{
@@ -52,6 +52,17 @@ class General
 		
 		$d=explode('-',$d);
 		$date=$d[2].'/'.$this->month[$d[1]].'/'.$d[0].' '.$h.' '.$t;
+		
+		return $date;
+	}
+	
+	public function getOnlyDate($date)
+	{
+		$dateformat= new DateTime($date);
+		$date=$dateformat->format('Y-m-d');
+		
+		$d=explode('-',$date);
+		$date=$d[2].'/'.$this->month[$d[1]].'/'.$d[0];
 		
 		return $date;
 	}
