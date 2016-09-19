@@ -33,28 +33,36 @@ CREATE TABLE IF NOT EXISTS productos
 	PRIMARY KEY (id_producto)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-CREATE TABLE IF NOT EXISTS producto_colores
+CREATE TABLE IF NOT EXISTS colores_producto
 (
-	id_producto INT NOT NULL,
 	id_color INT NOT NULL,
-	FOREIGN KEY (id_producto) REFERENCES productos(id_producto),
-	FOREIGN KEY (id_color) REFERENCES colores(id_color)
+	id_producto INT NOT NULL,
+	FOREIGN KEY (id_color) REFERENCES colores(id_color),
+	FOREIGN KEY (id_producto) REFERENCES productos(id_producto)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-CREATE TABLE IF NOT EXISTS producto_materiales
+CREATE TABLE IF NOT EXISTS materiales_producto
 (
-	id_producto INT NOT NULL,
 	id_material INT NOT NULL,
-	FOREIGN KEY (id_producto) REFERENCES productos(id_producto),
-	FOREIGN KEY (id_material) REFERENCES materiales(id_material)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-CREATE TABLE IF NOT EXISTS producto_categorias
-(
 	id_producto INT NOT NULL,
-	id_categoria INT NOT NULL,
-	FOREIGN KEY (id_producto) REFERENCES productos(id_producto),
-	FOREIGN KEY (id_categoria) REFERENCES categorias(id_categoria)
+	FOREIGN KEY (id_material) REFERENCES materiales(id_material),
+	FOREIGN KEY (id_producto) REFERENCES productos(id_producto)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+CREATE TABLE IF NOT EXISTS categorias_producto
+(
+	id_categoria INT NOT NULL,
+	id_producto INT NOT NULL,
+	FOREIGN KEY (id_categoria) REFERENCES categorias(id_categoria),
+	FOREIGN KEY (id_producto) REFERENCES productos(id_producto)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE IF NOT EXISTS imagenes_producto
+(
+	id_imagen INT NOT NULL AUTO_INCREMENT,
+	id_producto INT NOT NULL,
+	ruta VARCHAR(100),
+	PRIMARY KEY (id_imagen),
+	FOREIGN KEY (id_producto) REFERENCES productos(id_producto)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
