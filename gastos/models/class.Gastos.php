@@ -43,7 +43,7 @@ class Gasto {
 		:sucursal_id,
 		:gasto_beneficiario )";
 		
-		//print_r($params);
+		print_r($params);
 		//die();
 		
 		$statement=$this->connect->prepare($sql);
@@ -398,8 +398,8 @@ class Gasto {
 	
 	//////////////////////////////////////////////////////// VISTAS ESPECIALES
 	
-	public function getGastosNomina(){
-		return $this->getGastosOperativo("13");
+	public function getGastosNomina($primerDia,$ultimoDia){
+		return $this->getGastosOperativo("13",$primerDia,$ultimoDia);
 	}
 	
 	public function getGastosPrestamos(){
@@ -410,7 +410,7 @@ class Gasto {
 		return $this->getGastosOperativo("23");
 	}
 	
-	public function getGastosOperativo($gasto_categoria_id){
+	public function getGastosOperativo($gasto_categoria_id,$primerDia='',$ultimoDia=''){
 		$extra_inner = '';
 		$extra_where = '';
 		if($gasto_categoria_id == 2){
@@ -418,7 +418,11 @@ class Gasto {
 			$extra_where = 'AND prestamo_status_id = 1';
 		}
 		
-		$sql="SELECT 
+		if($gasto_categoria_id == 13){
+			$extra_where = 'AND gasto_fecha_vencimiento BETWEEN "'.$primerDia.' 00:00:00" AND "'.$ultimoDia.' 23:59:59"';
+		}
+		
+		$sql='SELECT 
 		gasto_id,
 		gasto_no_documento,
 		gasto_fecha_vencimiento,
@@ -433,15 +437,37 @@ class Gasto {
 		inv_login.sucursal_id,
 		firstName,
 		lastName
-		FROM ".$this->name_table_gastos."
+		FROM '.$this->name_table_gastos.'
 		INNER JOIN inv_login USING (login_id)
-		".$extra_inner."
+		'.$extra_inner.'
 		WHERE 
-			gasto_categoria_id = :gasto_categoria_id ".$extra_where."
-		ORDER BY gasto_id DESC";
+			gasto_categoria_id = :gasto_categoria_id '.$extra_where.'
+		ORDER BY gasto_id DESC';
+		
+		//echo $sql;
 
 		$statement=$this->connect->prepare($sql);
 		$statement->bindParam(':gasto_categoria_id', $gasto_categoria_id, PDO::PARAM_STR);
+
+		$statement->execute();
+        $result=$statement->fetchAll(PDO::FETCH_ASSOC);
+
+		return $result;
+	}
+	
+	function huboPagoExtra($login_id,$primerDia,$ultimoDia){
+		$sql = 'SELECT 
+		gasto_id
+		FROM '.$this->name_table_gastos.'
+		WHERE 
+			gasto_categoria_id = 25 
+		AND 
+			login_id = :login_id
+		AND	
+			gasto_fecha_vencimiento BETWEEN "'.$primerDia.' 00:00:00" AND "'.$ultimoDia.' 23:59:59"';
+			
+		$statement=$this->connect->prepare($sql);
+		$statement->bindParam(':login_id', $login_id, PDO::PARAM_STR);
 
 		$statement->execute();
         $result=$statement->fetchAll(PDO::FETCH_ASSOC);
