@@ -148,11 +148,5 @@ class Productos
 				
 			$statement->execute();
 		}
-		
-		
-		
-		echo "<pre>";
-		print_r($params);
-		echo "</pre>";
 	}
 }
