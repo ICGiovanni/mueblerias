@@ -23,4 +23,30 @@ class Productos
 		
 		return $result;
 	}
+	
+	public function GetMaterials()
+	{
+		$sql="SELECT m.id_material,m.material
+				FROM materiales m
+				ORDER BY m.material";
+	
+		$statement=$this->connect->prepare($sql);
+		$statement->execute();
+		$result=$statement->fetchAll(PDO::FETCH_ASSOC);
+	
+		return $result;
+	}
+	
+	public function GetCategories()
+	{
+		$sql="SELECT c.id_categoria,c.categoria
+				FROM categorias c
+				ORDER BY c.categoria";
+		
+		$statement=$this->connect->prepare($sql);
+		$statement->execute();
+		$result=$statement->fetchAll(PDO::FETCH_ASSOC);
+	
+		return $result;
+	}
 }
