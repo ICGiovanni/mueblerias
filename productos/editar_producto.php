@@ -196,6 +196,7 @@ $(document).ready(function()
 		$.getJSON("images.php?t=g&id="+id_producto,function(result)
 		{
 			var img='<div id="blueimp-gallery" class="blueimp-gallery">	            <div class="slides"></div><h3 class="title"></h3><a class="prev">Prev.</a>	            <a class="next">Sig.</a><a class="close">x</a><a class="play-pause"></a>	            <ol class="indicator"></ol></div>';
+			
 	        $.each(result, function(i, field)
 			{
 	    		img+='<div class="infont col-md-3 col-sm-4"><a data-gallery="" title="Image from Unsplash" href="'+field.ruta+'"><img src="'+field.ruta+'" width="75" height="75"></a><a href="#" data-img="'+field.id_imagen+'" class="img_delete"><i class="fa fa-trash-o"></i></a></div>';
