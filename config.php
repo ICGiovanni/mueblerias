@@ -7,7 +7,7 @@ if($_SERVER["SERVER_NAME"]=="dev-globmint.com" || $_SERVER["SERVER_NAME"]=="loca
     define("DATA_BASE_USER","root");
     define("DATA_BASE_PWD","");
 	
-    define("FINAL_URL",$_SERVER["REQUEST_SCHEME"].'://'.$_SERVER["SERVER_NAME"].'/');
+    define("FINAL_URL",$_SERVER["REQUEST_SCHEME"].'://'.$_SERVER["SERVER_NAME"].'/'.'globmint.com/');
 
     $ruta = 'http://dev-globmint.com/';
 
