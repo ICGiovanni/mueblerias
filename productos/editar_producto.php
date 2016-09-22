@@ -217,12 +217,13 @@ $(document).ready(function()
     	if(r==true)
     	{
 			var id_img=$(this).attr('data-img');
+			var id_producto=$("#id_producto").val();
 
 			$.ajax
 			({
 				type: "POST",
 				url: "images.php",
-				data: {t:'d',id:id_img},
+				data: {t:'d',id:id_producto,id_i:id_img},
 				dataType: "text/html",
 				complete: function(data)
 				{
@@ -314,7 +315,7 @@ $(document).ready(function()
 		}
 		else
 		{
-			var url="guardar_producto.php";
+			var url="actualizar_producto.php";
 	
 			var formData = new FormData($("#form_productos")[0]);
 	

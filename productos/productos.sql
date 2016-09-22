@@ -42,46 +42,46 @@ ALTER TABLE `materiales`
 
 CREATE TABLE IF NOT EXISTS productos
 (
-	id_producto INT NOT NULL AUTO_INCREMENT,
-	nombre VARCHAR(100) NOT NULL,
-	sku VARCHAR(30) NOT NULL,
-	descripcion TEXT NOT NULL,
-	precio_utilitario FLOAT,
-	precio_publico FLOAT,
-	PRIMARY KEY (id_producto)
+	producto_id INT NOT NULL AUTO_INCREMENT,
+	producto_nombre VARCHAR(100) NOT NULL,
+	producto_sku VARCHAR(30) NOT NULL,
+	producto_description TEXT NOT NULL,
+	producto_precio_utilitario FLOAT,
+	producto_precio_publico FLOAT,
+	PRIMARY KEY (producto_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE IF NOT EXISTS productos_colores
 (
-	id_producto INT NOT NULL,
+	producto_id INT NOT NULL,
 	color_id INT NOT NULL,
-	FOREIGN KEY (id_producto) REFERENCES productos(id_producto),
+	FOREIGN KEY (producto_id) REFERENCES productos(producto_id),
 	FOREIGN KEY (color_id) REFERENCES colores(color_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE IF NOT EXISTS productos_materiales
 (
-	id_producto INT NOT NULL,
+	producto_id INT NOT NULL,
 	material_id INT NOT NULL,
-	FOREIGN KEY (id_producto) REFERENCES productos(id_producto),
+	FOREIGN KEY (id_producto) REFERENCES productos(producto_id),
 	FOREIGN KEY (material_id) REFERENCES materiales(material_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE IF NOT EXISTS productos_categorias
 (
-	id_producto INT NOT NULL,
+	producto_id INT NOT NULL,
 	categoria_id INT NOT NULL,
-	FOREIGN KEY (id_producto) REFERENCES productos(id_producto),
+	FOREIGN KEY (id_producto) REFERENCES productos(producto_id),
 	FOREIGN KEY (categoria_id) REFERENCES categorias(categoria_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE IF NOT EXISTS imagenes_productos
 (
-	id_imagen INT NOT NULL AUTO_INCREMENT,
-	id_producto INT NOT NULL,
-	name VARCHAR(100),
-	ruta VARCHAR(100),
-	PRIMARY KEY (id_imagen),
-	FOREIGN KEY (id_producto) REFERENCES productos(id_producto)
+	imagen_id INT NOT NULL AUTO_INCREMENT,
+	producto_id INT NOT NULL,
+	imagen_name VARCHAR(100),
+	imagen_route VARCHAR(100),
+	PRIMARY KEY (imagen_id),
+	FOREIGN KEY (producto_id) REFERENCES productos(id_producto)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 

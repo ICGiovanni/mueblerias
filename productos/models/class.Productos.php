@@ -66,46 +66,18 @@ class Productos
 		
 		$id_producto=$this->connect->lastInsertId();
 		
-		foreach($params['color'] as $c)
-		{
-			$sql="INSERT INTO productos_colores VALUES(:producto,:color)";
-			
-			$statement=$this->connect->prepare($sql);
-			
-			$statement->bindParam(':producto', $id_producto, PDO::PARAM_STR);
-			$statement->bindParam(':color', $c, PDO::PARAM_STR);
-			
-			$statement->execute();
-		}
+		$this->InsertColorsProduct($id_producto, $params['color']);
 		
-		foreach($params['material'] as $m)
-		{
-			$sql="INSERT INTO productos_materiales VALUES(:producto,:material)";
-				
-			$statement=$this->connect->prepare($sql);
-				
-			$statement->bindParam(':producto', $id_producto, PDO::PARAM_STR);
-			$statement->bindParam(':material', $m, PDO::PARAM_STR);
-			
-			$statement->execute();
-		}
+		$this->InsertMaterialsProduct($id_producto, $params['material']);
 		
-		foreach($params['categoria'] as $c)
-		{
-			$sql="INSERT INTO productos_categorias VALUES(:producto,:categoria)";
-				
-			$statement=$this->connect->prepare($sql);
-				
-			$statement->bindParam(':producto', $id_producto, PDO::PARAM_STR);
-			$statement->bindParam(':categoria', $c, PDO::PARAM_STR);
-			
-			$statement->execute();
-		}
+		$this->InsertCategoriesProduct($id_producto, $params['categoria']);
+		
+		return $id_producto;
 	}
 	
 	public function GetNextImageNumber($id_producto)
 	{
-		$sql="SELECT COUNT(*) AS images
+		$sql="SELECT MAX(id_imagen) AS images
 				FROM imagenes_productos
 				WHERE id_producto=:producto";
 		
@@ -241,12 +213,19 @@ class Productos
 		return $categorias;
 	}
 	
-	public function GetImagesProduct($id_producto)
+	public function GetImagesProduct($id_producto,$id_imagen='')
 	{
+		$where="";
+		if($id_imagen!='')
+		{
+			$where=" AND ip.id_imagen=$id_imagen ";
+		}
+		
 		$sql="SELECT ip.id_imagen,ip.name,ip.ruta
 				FROM imagenes_productos ip
-				WHERE ip.id_producto=:producto
-				ORDER BY ip.id_imagen ASC";
+				WHERE ip.id_producto=$id_producto ".
+				$where.
+				"ORDER BY ip.id_imagen ASC";
 		
 		$statement=$this->connect->prepare($sql);
 		
@@ -258,8 +237,13 @@ class Productos
 		return $result;
 	}
 	
-	public function DeleteImg($id_imagen)
+	public function DeleteImg($id_producto,$id_imagen)
 	{
+		$data_image=$this->GetImagesProduct($id_producto,$id_imagen);
+		$name=$data_image[0]['name'];
+		
+		unlink(DIR_UPLOAD."productos/".$name);
+		
 		$sql="DELETE FROM imagenes_productos WHERE id_imagen=:id_imagen";
 	
 		$statement=$this->connect->prepare($sql);
@@ -268,5 +252,100 @@ class Productos
 		$statement->execute();
 		
 		return $id_imagen;
+	}
+	
+	public function InsertColorsProduct($id_producto,$colores)
+	{
+		
+		$sql="DELETE FROM productos_colores WHERE id_producto=:producto";
+		
+		$statement=$this->connect->prepare($sql);
+		$statement->bindParam(':producto', $id_producto, PDO::PARAM_STR);
+		
+		$statement->execute();
+		
+		foreach($colores as $c)
+		{
+			$sql="INSERT INTO productos_colores VALUES(:producto,:color)";
+				
+			$statement=$this->connect->prepare($sql);
+				
+			$statement->bindParam(':producto', $id_producto, PDO::PARAM_STR);
+			$statement->bindParam(':color', $c, PDO::PARAM_STR);
+				
+			$statement->execute();
+		}
+	}
+	
+	public function InsertMaterialsProduct($id_producto,$materiales)
+	{
+		$sql="DELETE FROM productos_materiales WHERE id_producto=:producto";
+		
+		$statement=$this->connect->prepare($sql);
+		$statement->bindParam(':producto', $id_producto, PDO::PARAM_STR);
+		
+		$statement->execute();
+		
+		foreach($materiales as $m)
+		{
+			$sql="INSERT INTO productos_materiales VALUES(:producto,:material)";
+		
+			$statement=$this->connect->prepare($sql);
+		
+			$statement->bindParam(':producto', $id_producto, PDO::PARAM_STR);
+			$statement->bindParam(':material', $m, PDO::PARAM_STR);
+				
+			$statement->execute();
+		}
+	}
+	
+	public function InsertCategoriesProduct($id_producto,$categorias)
+	{
+		$sql="DELETE FROM productos_categorias WHERE id_producto=:producto";
+		
+		$statement=$this->connect->prepare($sql);
+		$statement->bindParam(':producto', $id_producto, PDO::PARAM_STR);
+		
+		$statement->execute();
+		
+		foreach($categorias as $c)
+		{
+			$sql="INSERT INTO productos_categorias VALUES(:producto,:categoria)";
+		
+			$statement=$this->connect->prepare($sql);
+		
+			$statement->bindParam(':producto', $id_producto, PDO::PARAM_STR);
+			$statement->bindParam(':categoria', $c, PDO::PARAM_STR);
+				
+			$statement->execute();
+		}
+	}
+	
+	public function ActualizarProducto($params)
+	{
+		$sql="UPDATE productos SET nombre=:nombre,sku=:sku,descripcion=:descripcion,precio_utilitario=:precio_utilitario,precio_publico=:precio_publico
+				WHERE id_producto=:producto";
+		
+		
+		$statement=$this->connect->prepare($sql);
+		
+		$statement->bindParam(':nombre', $params['nombre'], PDO::PARAM_STR);
+		$statement->bindParam(':sku', $params['sku'], PDO::PARAM_STR);
+		$statement->bindParam(':descripcion', $params['descripcion'], PDO::PARAM_STR);
+		$statement->bindParam(':precio_utilitario', $params['precioU'], PDO::PARAM_STR);
+		$statement->bindParam(':precio_publico', $params['precioP'], PDO::PARAM_STR);
+		$statement->bindParam(':producto', $params['id_producto'], PDO::PARAM_STR);
+		
+		$statement->execute();
+		
+		$id_producto=$params['id_producto'];
+		
+		$this->InsertColorsProduct($id_producto, $params['color']);
+		
+		$this->InsertMaterialsProduct($id_producto, $params['material']);
+		
+		$this->InsertCategoriesProduct($id_producto, $params['categoria']);
+		
+		return $id_producto;
 	}
 }
