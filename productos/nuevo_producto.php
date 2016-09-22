@@ -52,7 +52,7 @@
 	            $list="";
 	            foreach($result as $r)
 	            {
-	            	$list.='<option value="'.$r['id_color'].'">'.$r['color'].'</option>';
+	            	$list.='<option value="'.$r['color_id'].'">'.$r['color_name'].'</option>';
 	            }
 	            
 	            echo $list;
@@ -75,7 +75,7 @@
 	            $list="";
 	            foreach($result as $r)
 	            {
-	            	$list.='<option value="'.$r['id_material'].'">'.$r['material'].'</option>';
+	            	$list.='<option value="'.$r['material_id'].'">'.$r['material_name'].'</option>';
 	            }
 	            
 	            echo $list;
@@ -98,7 +98,7 @@
 	            $list="";
 	            foreach($result as $r)
 	            {
-	            	$list.='<option value="'.$r['id_categoria'].'">'.$r['categoria'].'</option>';
+	            	$list.='<option value="'.$r['categoria_id'].'">'.$r['categoria_name'].'</option>';
 	            }
 	            
 	            echo $list;
