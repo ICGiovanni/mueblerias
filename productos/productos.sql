@@ -1,25 +1,43 @@
-CREATE TABLE IF NOT EXISTS colores
-(
-	id_color int(11) NOT NULL AUTO_INCREMENT,
-	color varchar(100) NOT NULL,
-	PRIMARY KEY (id_color)
+DROP TABLE IF EXISTS `colores`;
+CREATE TABLE IF NOT EXISTS `colores` (
+  `color_id` int(11) NOT NULL,
+  `color_name` varchar(64) DEFAULT NULL,
+  `color_abrev` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+ALTER TABLE `colores`
+  ADD PRIMARY KEY (`color_id`);
 
-CREATE TABLE IF NOT EXISTS categorias
-(
-	id_categoria int(11) NOT NULL AUTO_INCREMENT,
-	categoria varchar(100) NOT NULL,
-	PRIMARY KEY (id_categoria)
+ALTER TABLE `colores`
+  MODIFY `color_id` int(11) NOT NULL AUTO_INCREMENT;
+
+
+DROP TABLE IF EXISTS `categorias`;
+CREATE TABLE IF NOT EXISTS `categorias` (
+  `categoria_id` int(11) NOT NULL,
+  `categoria_name` varchar(64) DEFAULT NULL,
+  `categoria_abrev` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+ALTER TABLE `categorias`
+  ADD PRIMARY KEY (`categoria_id`);
 
-CREATE TABLE IF NOT EXISTS materiales
-(
-	id_material int(11) NOT NULL AUTO_INCREMENT,
-	material varchar(100) NOT NULL,
-	PRIMARY KEY (id_material)
+ALTER TABLE `categorias`
+  MODIFY `categoria_id` int(11) NOT NULL AUTO_INCREMENT;
+
+
+DROP TABLE IF EXISTS `materiales`;
+CREATE TABLE IF NOT EXISTS `materiales` (
+  `material_id` int(11) NOT NULL,
+  `material_name` varchar(64) DEFAULT NULL,
+  `material_abrev` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+ALTER TABLE `materiales`
+  ADD PRIMARY KEY (`material_id`);
+
+ALTER TABLE `materiales`
+  MODIFY `material_id` int(11) NOT NULL AUTO_INCREMENT;
 
 
 CREATE TABLE IF NOT EXISTS productos
@@ -36,25 +54,25 @@ CREATE TABLE IF NOT EXISTS productos
 CREATE TABLE IF NOT EXISTS productos_colores
 (
 	id_producto INT NOT NULL,
-	id_color INT NOT NULL,
+	color_id INT NOT NULL,
 	FOREIGN KEY (id_producto) REFERENCES productos(id_producto),
-	FOREIGN KEY (id_color) REFERENCES colores(id_color)
+	FOREIGN KEY (color_id) REFERENCES colores(color_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE IF NOT EXISTS productos_materiales
 (
 	id_producto INT NOT NULL,
-	id_material INT NOT NULL,
+	material_id INT NOT NULL,
 	FOREIGN KEY (id_producto) REFERENCES productos(id_producto),
-	FOREIGN KEY (id_material) REFERENCES materiales(id_material)
+	FOREIGN KEY (material_id) REFERENCES materiales(material_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE IF NOT EXISTS productos_categorias
 (
 	id_producto INT NOT NULL,
-	id_categoria INT NOT NULL,
+	categoria_id INT NOT NULL,
 	FOREIGN KEY (id_producto) REFERENCES productos(id_producto),
-	FOREIGN KEY (id_categoria) REFERENCES categorias(id_categoria)
+	FOREIGN KEY (categoria_id) REFERENCES categorias(categoria_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE IF NOT EXISTS imagenes_productos
