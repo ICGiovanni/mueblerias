@@ -35,11 +35,9 @@ while(list(,$dataGeneric) = each($rows) ){
 		<h2>Lista de <?=$administracion_p?></h2>
 		<ol class="breadcrumb">
 			<li>
-				<a href="">Inventario</a>
+				<a href="">Productos</a>
 			</li>
-			<li>
-				<a href="">Administracion</a>
-			</li>
+			
 			<li class="active">
 				<strong>Lista de <?=$administracion_p?></strong>
 			</li>

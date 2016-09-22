@@ -1,7 +1,7 @@
 ﻿<?php
 session_start();
-$administracion = "Material";
-$administracion_p = "Materiales";
+$administracion = "Categoria";
+$administracion_p = "Categorias";
 require_once $_SERVER['REDIRECT_PATH_CONFIG'].'/config.php';
 require_once $pathProy.'/header.php';
 require_once $pathProy.'/menu.php';

@@ -34,11 +34,9 @@ while(list(,$dataSucursal) = each($rows) ){
 		<h2>Lista de Sucursales</h2>
 		<ol class="breadcrumb">
 			<li>
-				<a href="">Inventario</a>
+				<a href="">Inventarios</a>
 			</li>
-			<li>
-				<a href="">Administracion</a>
-			</li>
+			
 			<li class="active">
 				<strong>Lista de Sucursales</strong>
 			</li>
