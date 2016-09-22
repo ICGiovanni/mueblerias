@@ -127,26 +127,146 @@ class Productos
 		
 		for($i=0;$i<$images;$i++)
 		{
-			$n=explode('.',$params['name'][$i]);
-			$ext=$n[count($n)-1];
-			$next_image=$this->GetNextImageNumber($id_producto);
-			$name=$params['name'][$i];
-			$name='producto_'.$id_producto.'_'.$next_image.'.'.$ext;
-			$rute=$_SERVER["REDIRECT_PATH_CONFIG"].'uploads/productos/'.$name;
-			$shortrute=FINAL_URL.'uploads/productos/'.$name;
-			echo $shortrute;
-						
-			move_uploaded_file($params['tmp_name'][$i], $rute);
-			
-			$sql="INSERT INTO imagenes_productos VALUES('',:producto,:name,:rute)";
-			
-			$statement=$this->connect->prepare($sql);
-			
-			$statement->bindParam(':producto', $id_producto, PDO::PARAM_STR);
-			$statement->bindParam(':name', $name, PDO::PARAM_STR);
-			$statement->bindParam(':rute', $shortrute, PDO::PARAM_STR);
+			if($params['name'][$i])
+			{
+				$n=explode('.',$params['name'][$i]);
+				$ext=$n[count($n)-1];
+				$next_image=$this->GetNextImageNumber($id_producto);
+				$name=$params['name'][$i];
+				$name='producto_'.$id_producto.'_'.$next_image.'.'.$ext;
+				$rute=$_SERVER["REDIRECT_PATH_CONFIG"].'uploads/productos/'.$name;
+				$shortrute=FINAL_URL.'uploads/productos/'.$name;
+											
+				move_uploaded_file($params['tmp_name'][$i], $rute);
 				
-			$statement->execute();
+				$sql="INSERT INTO imagenes_productos VALUES('',:producto,:name,:rute)";
+				
+				$statement=$this->connect->prepare($sql);
+				
+				$statement->bindParam(':producto', $id_producto, PDO::PARAM_STR);
+				$statement->bindParam(':name', $name, PDO::PARAM_STR);
+				$statement->bindParam(':rute', $shortrute, PDO::PARAM_STR);
+					
+				$statement->execute();
+			}
 		}
+	}
+	
+	public function GetDataProduct($id_producto)
+	{
+		$sql="SELECT p.id_producto,p.nombre,p.sku,
+				p.descripcion,p.precio_utilitario,p.precio_publico
+				FROM productos p
+				WHERE p.id_producto=:producto";
+		
+		$statement=$this->connect->prepare($sql);
+		
+		$statement->bindParam(':producto', $id_producto, PDO::PARAM_STR);
+		
+		$statement->execute();
+		$result=$statement->fetchAll(PDO::FETCH_ASSOC);
+		
+		return $result; 
+	}
+	
+	public function GetProductColor($id_producto)
+	{
+		$colores=array();
+		
+		$sql="SELECT c.id_color,c.color
+				FROM colores c
+				INNER JOIN productos_colores pc USING(id_color)
+				WHERE pc.id_producto=:producto
+				ORDER BY c.color";
+		$statement=$this->connect->prepare($sql);
+		
+		$statement->bindParam(':producto', $id_producto, PDO::PARAM_STR);
+		
+		$statement->execute();
+		$result=$statement->fetchAll(PDO::FETCH_ASSOC);
+		
+		foreach($result as $r)
+		{
+			$colores[$r['id_color']]=$r['color'];	
+		}
+		
+		return $colores;
+	}
+	
+	public function GetProductMaterial($id_producto)
+	{
+		$materiales=array();
+	
+		$sql="SELECT m.id_material,m.material
+				FROM materiales m
+				INNER JOIN productos_materiales pm USING(id_material)
+				WHERE pm.id_producto=:producto
+				ORDER BY m.material";
+		$statement=$this->connect->prepare($sql);
+	
+		$statement->bindParam(':producto', $id_producto, PDO::PARAM_STR);
+	
+		$statement->execute();
+		$result=$statement->fetchAll(PDO::FETCH_ASSOC);
+	
+		foreach($result as $r)
+		{
+			$materiales[$r['id_material']]=$r['material'];
+		}
+	
+		return $materiales;
+	}
+	
+	public function GetProductCategory($id_producto)
+	{
+		$categorias=array();
+	
+		$sql="SELECT c.id_categoria,c.categoria
+				FROM categorias c
+				INNER JOIN productos_categorias pm USING(id_categoria)
+				WHERE pm.id_producto=:producto
+				ORDER BY c.categoria";
+		$statement=$this->connect->prepare($sql);
+	
+		$statement->bindParam(':producto', $id_producto, PDO::PARAM_STR);
+	
+		$statement->execute();
+		$result=$statement->fetchAll(PDO::FETCH_ASSOC);
+	
+		foreach($result as $r)
+		{
+			$categorias[$r['id_categoria']]=$r['categoria'];
+		}
+	
+		return $categorias;
+	}
+	
+	public function GetImagesProduct($id_producto)
+	{
+		$sql="SELECT ip.id_imagen,ip.name,ip.ruta
+				FROM imagenes_productos ip
+				WHERE ip.id_producto=:producto
+				ORDER BY ip.id_imagen ASC";
+		
+		$statement=$this->connect->prepare($sql);
+		
+		$statement->bindParam(':producto', $id_producto, PDO::PARAM_STR);
+		
+		$statement->execute();
+		$result=$statement->fetchAll(PDO::FETCH_ASSOC);
+		
+		return $result;
+	}
+	
+	public function DeleteImg($id_imagen)
+	{
+		$sql="DELETE FROM imagenes_productos WHERE id_imagen=:id_imagen";
+	
+		$statement=$this->connect->prepare($sql);
+		$statement->bindParam(':id_imagen', $id_imagen, PDO::PARAM_STR);
+	
+		$statement->execute();
+		
+		return $id_imagen;
 	}
 }

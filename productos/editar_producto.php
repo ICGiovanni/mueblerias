@@ -6,16 +6,19 @@
     include $pathProy.'/menu.php';
 ?>
 <link href="<?php echo $raizProy?>css/plugins/chosen/chosen.css" rel="stylesheet">
+<link href="<?php echo $raizProy?>font-awesome/css/font-awesome.css" rel="stylesheet">
+<link href="<?php echo $raizProy?>css/plugins/blueimp/css/blueimp-gallery.min.css" rel="stylesheet">
+<link href="<?php echo $raizProy?>css/animate.css" rel="stylesheet">
 
     <div class="row wrapper border-bottom white-bg page-heading">
         <div class="col-sm-4">
-            <h2>Agregar Producto</h2>
+            <h2>Editar Producto</h2>
             <ol class="breadcrumb">
                 <li>
                     <a href="">Productos</a>
                 </li>
                 <li class="active">
-                    <strong>Agregar Producto</strong>
+                    <strong>Editar Producto</strong>
                 </li>
             </ol>
         </div>
@@ -25,18 +28,31 @@
             </div>
         </div>
     </div>
+<?php
+$productos=new Productos();
+$id_producto=$_REQUEST["id"];
+$datos=$productos->GetDataProduct($id_producto);
+$colores=$productos->GetProductColor($id_producto);
+$materiales=$productos->GetProductMaterial($id_producto);
+$categorias=$productos->GetProductCategory($id_producto);
 
+?>
     <div class="wrapper wrapper-content animated fadeInRight">
 		<form method="post" class="form-horizontal" action="/" id="form_productos" enctype="multipart/form-data">
+			<input type="hidden" class="form-control" id="id_producto" name="id_producto" value="<?php echo $datos[0]["id_producto"]?>">
+			
+			<div class="form-group"><label class="col-sm-2 control-label">ID</label>
+			<div class="col-sm-6"><label class="col-sm-2 control-label"><?php echo $datos[0]["id_producto"]?></label></div>
+            </div>
 			<div class="form-group">
             <label class="col-sm-2 control-label">SKU</label>
-			<div class="col-sm-2 "><input type="text" class="form-control" id="sku" name="sku"></div>
+			<div class="col-sm-2 "><input type="text" class="form-control" id="sku" name="sku" value="<?php echo $datos[0]['sku'];?>"></div>
             </div>
 			<div class="form-group"><label class="col-sm-2 control-label">Nombre</label>
-			<div class="col-sm-6" ><input type="text" class="form-control" id="nombre" name="nombre"></div>
+			<div class="col-sm-6" ><input type="text" class="form-control" id="nombre" name="nombre" value="<?php echo $datos[0]['nombre'];?>"></div>
             </div>
             <div class="form-group"><label class="col-sm-2 control-label">Descripci&oacute;n</label>
-			<div class="col-sm-6" ><textarea class="form-control" id="descripcion" name="descripcion"></textarea></div>
+			<div class="col-sm-6" ><textarea class="form-control" id="descripcion" name="descripcion"><?php echo $datos[0]['descripcion'];?></textarea></div>
             </div>
             
             <div class="form-group">
@@ -52,7 +68,14 @@
 	            $list="";
 	            foreach($result as $r)
 	            {
-	            	$list.='<option value="'.$r['id_color'].'">'.$r['color'].'</option>';
+	            	if(isset($colores[$r['id_color']]))
+	            	{
+	            		$list.='<option value="'.$r['id_color'].'" selected="">'.$r['color'].'</option>';
+	            	}
+	            	else
+	            	{
+	            		$list.='<option value="'.$r['id_color'].'">'.$r['color'].'</option>';
+	            	}
 	            }
 	            
 	            echo $list;
@@ -75,7 +98,14 @@
 	            $list="";
 	            foreach($result as $r)
 	            {
-	            	$list.='<option value="'.$r['id_material'].'">'.$r['material'].'</option>';
+	            	if(isset($materiales[$r['id_material']]))
+	            	{
+	            		$list.='<option value="'.$r['id_material'].'" selected="">'.$r['material'].'</option>';
+	            	}
+	            	else
+	            	{
+	            		$list.='<option value="'.$r['id_material'].'">'.$r['material'].'</option>';
+	            	}
 	            }
 	            
 	            echo $list;
@@ -98,7 +128,14 @@
 	            $list="";
 	            foreach($result as $r)
 	            {
-	            	$list.='<option value="'.$r['id_categoria'].'">'.$r['categoria'].'</option>';
+	            	if(isset($categorias[$r['id_categoria']]))
+	            	{
+	            		$list.='<option value="'.$r['id_categoria'].'" selected="">'.$r['categoria'].'</option>';
+	            	}
+	            	else
+	            	{
+	            		$list.='<option value="'.$r['id_categoria'].'">'.$r['categoria'].'</option>';
+	            	}
 	            }
 	            
 	            echo $list;
@@ -116,13 +153,21 @@
             </div>
             
             <div class="form-group">
+            <label class="col-sm-2 control-label"></label>
+			<div class="col-sm-6" >
+			<div class="lightBoxGallery" id="gallery">
+			</div>
+			</div>
+            </div>
+            
+            <div class="form-group">
             <label class="col-sm-2 control-label">Pecio Utilitario</label>
-			<div class="col-sm-2 "><input type="text" class="form-control" id="precioU" name="precioU" onkeypress="return validateNumber(event)"></div>
+			<div class="col-sm-2 "><input type="text" class="form-control" id="precioU" name="precioU" onkeypress="return validateNumber(event)" value="<?php echo $datos[0]['precio_utilitario'];?>"></div>
             </div>
             
             <div class="form-group">
             <label class="col-sm-2 control-label">Precio P&uacute;blico</label>
-			<div class="col-sm-2 "><input type="text" class="form-control" id="precioP" name="precioP" onkeypress="return validateNumber(event)"></div>
+			<div class="col-sm-2 "><input type="text" class="form-control" id="precioP" name="precioP" onkeypress="return validateNumber(event)" value="<?php echo $datos[0]['precio_publico'];?>"></div>
             </div>
             
             <div class="form-group">
@@ -138,10 +183,60 @@
 <script src="<?php echo $raizProy?>js/plugins/toastr/toastr.min.js"></script>
 
 <script src="<?php echo $raizProy?>js/plugins/chosen/chosen.jquery.js"></script>
+<script src="<?php echo $raizProy?>js/plugins/blueimp/jquery.blueimp-gallery.min.js"></script>
+
 <script>
+
 $(document).ready(function()
 {
+	var loadimg=function()
+	{
+		var id_producto=$("#id_producto").val();	
+		
+		$.getJSON("images.php?t=g&id="+id_producto,function(result)
+		{
+			var img='<div id="blueimp-gallery" class="blueimp-gallery">	            <div class="slides"></div><h3 class="title"></h3><a class="prev">Prev.</a>	            <a class="next">Sig.</a><a class="close">x</a><a class="play-pause"></a>	            <ol class="indicator"></ol></div>';
+			
+	        $.each(result, function(i, field)
+			{
+	    		img+='<div class="infont col-md-3 col-sm-4"><a data-gallery="" title="Image from Unsplash" href="'+field.ruta+'"><img src="'+field.ruta+'" width="75" height="75"></a><a href="#" data-img="'+field.id_imagen+'" class="img_delete"><i class="fa fa-trash-o"></i></a></div>';
+	        	
+	        });
+	        
+        	$("#gallery").html(img);
 
+	    });
+	}
+	
+	loadimg();
+
+	$(document).on('click', "a.img_delete", function()
+	{
+		var r=confirm("\u00BFDesea continuar?");
+
+    	if(r==true)
+    	{
+			var id_img=$(this).attr('data-img');
+
+			$.ajax
+			({
+				type: "POST",
+				url: "images.php",
+				data: {t:'d',id:id_img},
+				dataType: "text/html",
+				complete: function(data)
+				{
+					loadimg();
+				},
+				failure: function(errMsg)
+				{
+					alert(errMsg);
+				}
+			});
+    	}
+	});
+	
+	
 	$('.add_more').click(function(e){
         e.preventDefault();
         $(this).before('<input name="upload[]" type="file" id="upload" accept="image/*"/>');
@@ -246,7 +341,6 @@ $(document).ready(function()
 		$(location).attr("href", url);
 	});
 
-	
 	$('#sku').keyup(function()
 	{
     	this.value = $.trim(this.value.toLocaleUpperCase());
@@ -255,8 +349,6 @@ $(document).ready(function()
 	$("#color").chosen();
 	$("#material").chosen();
 	$("#categoria").chosen();
-
-	
 
 });
 
@@ -267,6 +359,11 @@ function validateNumber(evt)
     if (charCode > 31 && (charCode < 48 || charCode > 57)) {
         return false;
     }
+}
+
+function delete_img(id_imagen)
+{
+	
 }
 </script>
 
