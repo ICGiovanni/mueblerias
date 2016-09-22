@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once $_SERVER['REDIRECT_PATH_CONFIG'].'/config.php';
 require_once $pathProy.'/header.php';
 require_once $pathProy.'/menu.php';
@@ -98,7 +99,7 @@ while(list(,$dataGasto) = each($rows)){
 			break;
 	}
 	$boton_borrar = '';
-	if(1){ // profile_director
+	if($_SESSION["login_session"]["profile_id"] == "1"){ // profile_director
 		$boton_borrar = ' &nbsp;<a href="borrar/?gasto_id='.$dataGasto["gasto_id"].'"><i class="fa fa-trash" title="Borrar"></i></a>';
 	}
 	$dataGasto["gasto_saldo"]=$dataGasto["gasto_monto"] - $rowPagos["gastos_pagos_monto"];

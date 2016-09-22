@@ -63,7 +63,7 @@ class Ingreso {
 		$statement->bindParam(':ingreso_id', $params['ingreso_id'], PDO::PARAM_STR);
 		
 		$statement->execute();
-		return $this->connect->lastInsertId();
+		return "updated";
 	}
 
 ///////////////////////////////////////////////////////////////////////////////////////
