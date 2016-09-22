@@ -8,8 +8,8 @@ $type=$_REQUEST['t'];
 
 if($type=='g')
 {
-	$id_producto=$_REQUEST['id'];
-	echo json_encode($productos->GetImagesProduct($id_producto));
+	$producto_id=$_REQUEST['id'];
+	echo json_encode($productos->GetImagesProduct($producto_id));
 }
 else if($type=='d')
 {

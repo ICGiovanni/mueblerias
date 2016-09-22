@@ -4,9 +4,9 @@ require_once($_SERVER["REDIRECT_PATH_CONFIG"].'productos/models/class.Productos.
 
 $productos=new Productos();
 
-$id_producto=$productos->ActualizarProducto($_REQUEST);
+$producto_id=$productos->ActualizarProducto($_REQUEST);
 
 if(count($_FILES['upload']['name']))
 {
-	$productos->InsertImagesProduct($id_producto, $_FILES['upload']);
+	$productos->InsertImagesProduct($producto_id, $_FILES['upload']);
 }

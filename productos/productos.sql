@@ -43,11 +43,11 @@ ALTER TABLE `materiales`
 CREATE TABLE IF NOT EXISTS productos
 (
 	producto_id INT NOT NULL AUTO_INCREMENT,
-	producto_nombre VARCHAR(100) NOT NULL,
+	producto_name VARCHAR(100) NOT NULL,
 	producto_sku VARCHAR(30) NOT NULL,
 	producto_description TEXT NOT NULL,
-	producto_precio_utilitario FLOAT,
-	producto_precio_publico FLOAT,
+	producto_price_utilitarian FLOAT,
+	producto_price_public FLOAT,
 	PRIMARY KEY (producto_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS productos_materiales
 (
 	producto_id INT NOT NULL,
 	material_id INT NOT NULL,
-	FOREIGN KEY (id_producto) REFERENCES productos(producto_id),
+	FOREIGN KEY (producto_id) REFERENCES productos(producto_id),
 	FOREIGN KEY (material_id) REFERENCES materiales(material_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -71,7 +71,7 @@ CREATE TABLE IF NOT EXISTS productos_categorias
 (
 	producto_id INT NOT NULL,
 	categoria_id INT NOT NULL,
-	FOREIGN KEY (id_producto) REFERENCES productos(producto_id),
+	FOREIGN KEY (producto_id) REFERENCES productos(producto_id),
 	FOREIGN KEY (categoria_id) REFERENCES categorias(categoria_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -82,6 +82,6 @@ CREATE TABLE IF NOT EXISTS imagenes_productos
 	imagen_name VARCHAR(100),
 	imagen_route VARCHAR(100),
 	PRIMARY KEY (imagen_id),
-	FOREIGN KEY (producto_id) REFERENCES productos(id_producto)
+	FOREIGN KEY (producto_id) REFERENCES productos(producto_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
