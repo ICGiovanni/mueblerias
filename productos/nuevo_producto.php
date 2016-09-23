@@ -117,12 +117,12 @@
             
             <div class="form-group">
             <label class="col-sm-2 control-label">Pecio Utilitario</label>
-			<div class="col-sm-2 "><input type="text" class="form-control" id="precioU" name="precioU" onkeypress="return validateNumber(event)"></div>
+			<div class="col-sm-2 "><input type="text" class="form-control" id="precioU" name="precioU" onkeypress="return validateCantidad(event)"></div>
             </div>
             
             <div class="form-group">
             <label class="col-sm-2 control-label">Precio P&uacute;blico</label>
-			<div class="col-sm-2 "><input type="text" class="form-control" id="precioP" name="precioP" onkeypress="return validateNumber(event)"></div>
+			<div class="col-sm-2 "><input type="text" class="form-control" id="precioP" name="precioP" onkeypress="return validateCantidad(event)"></div>
             </div>
             
             <div class="form-group">
@@ -258,15 +258,16 @@ $(document).ready(function()
 	$("#material").chosen();
 	$("#categoria").chosen();
 
-	
-
 });
 
-function validateNumber(evt)
+function validateCantidad(evt)
 {
 	evt = (evt) ? evt : window.event;
     var charCode = (evt.which) ? evt.which : evt.keyCode;
-    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+	
+	
+    if ((charCode > 31 && (charCode < 48 || charCode > 57) && charCode!=46))
+	{
         return false;
     }
 }
