@@ -326,7 +326,9 @@ $(document).ready(function()
 		        async: false,
 		        success: function (data)
 		        {
-		            alert(data)
+		        	alert("El Producto ha sido actualizado");
+		            var url="index.php";
+		    		$(location).attr("href", url);
 		        },
 		        cache: false,
 		        contentType: false,

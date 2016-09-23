@@ -55,12 +55,14 @@ class Productos
 		$sql="INSERT INTO productos VALUES('',:nombre,:sku,:descripcion,:precio_utilitario,:precio_publico)";
 		
 		$statement=$this->connect->prepare($sql);
+		$price_utilitarian=number_format($params['precioU'], 2, '.', '');
+		$price_public=number_format($params['precioP'], 2, '.', '');
 		
 		$statement->bindParam(':nombre', $params['nombre'], PDO::PARAM_STR);
 		$statement->bindParam(':sku', $params['sku'], PDO::PARAM_STR);
 		$statement->bindParam(':descripcion', $params['descripcion'], PDO::PARAM_STR);
-		$statement->bindParam(':precio_utilitario', $params['precioU'], PDO::PARAM_STR);
-		$statement->bindParam(':precio_publico', $params['precioP'], PDO::PARAM_STR);
+		$statement->bindParam(':precio_utilitario', $price_utilitarian, PDO::PARAM_STR);
+		$statement->bindParam(':precio_publico', $price_public, PDO::PARAM_STR);
 		
 		$statement->execute();
 		
@@ -124,16 +126,21 @@ class Productos
 		}
 	}
 	
-	public function GetDataProduct($producto_id)
+	public function GetDataProduct($producto_id='')
 	{
+		$where="";
+		if($producto_id!='')
+		{
+			$where=" WHERE p.producto_id='$producto_id'";
+		}
+		
 		$sql="SELECT p.producto_id,p.producto_name,p.producto_sku,
 				p.producto_description,p.producto_price_utilitarian,p.producto_price_public
-				FROM productos p
-				WHERE p.producto_id=:producto";
+				FROM productos p".
+				$where.
+				" ORDER BY p.producto_id";
 		
 		$statement=$this->connect->prepare($sql);
-		
-		$statement->bindParam(':producto', $producto_id, PDO::PARAM_STR);
 		
 		$statement->execute();
 		$result=$statement->fetchAll(PDO::FETCH_ASSOC);
@@ -327,11 +334,14 @@ class Productos
 		
 		$statement=$this->connect->prepare($sql);
 		
+		$price_utilitarian=number_format($params['precioU'], 2, '.', '');
+		$price_public=number_format($params['precioP'], 2, '.', '');
+		
 		$statement->bindParam(':nombre', $params['nombre'], PDO::PARAM_STR);
 		$statement->bindParam(':sku', $params['sku'], PDO::PARAM_STR);
 		$statement->bindParam(':descripcion', $params['descripcion'], PDO::PARAM_STR);
-		$statement->bindParam(':precio_utilitario', $params['precioU'], PDO::PARAM_STR);
-		$statement->bindParam(':precio_publico', $params['precioP'], PDO::PARAM_STR);
+		$statement->bindParam(':precio_utilitario', $price_utilitarian, PDO::PARAM_STR);
+		$statement->bindParam(':precio_publico', $price_public, PDO::PARAM_STR);
 		$statement->bindParam(':producto', $params['id_producto'], PDO::PARAM_STR);
 		
 		$statement->execute();
@@ -345,5 +355,38 @@ class Productos
 		$this->InsertCategoriesProduct($producto_id, $params['categoria']);
 		
 		return $producto_id;
+	}
+	
+	public function DeleteProduct($producto_id)
+	{
+		$sql="DELETE FROM productos_colores WHERE producto_id=:producto";
+		$statement=$this->connect->prepare($sql);
+		$statement->bindParam(':producto', $producto_id, PDO::PARAM_STR);
+		$statement->execute();
+		
+		
+		$sql="DELETE FROM productos_materiales WHERE producto_id=:producto";
+		$statement=$this->connect->prepare($sql);
+		$statement->bindParam(':producto', $producto_id, PDO::PARAM_STR);
+		$statement->execute();
+		
+		$sql="DELETE FROM productos_categorias WHERE producto_id=:producto";
+		$statement=$this->connect->prepare($sql);
+		$statement->bindParam(':producto', $producto_id, PDO::PARAM_STR);
+		$statement->execute();
+		
+		$images=$this->GetImagesProduct($producto_id);
+		
+		foreach($images as $img)
+		{
+			$imagen_id=$img['imagen_id'];
+			
+			$this->DeleteImg($producto_id, $imagen_id);
+		}
+		
+		$sql="DELETE FROM productos WHERE producto_id=:producto";
+		$statement=$this->connect->prepare($sql);
+		$statement->bindParam(':producto', $producto_id, PDO::PARAM_STR);
+		$statement->execute();
 	}
 }

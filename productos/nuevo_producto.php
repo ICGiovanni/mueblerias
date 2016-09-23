@@ -230,7 +230,9 @@ $(document).ready(function()
 		        async: false,
 		        success: function (data)
 		        {
-		            alert(data)
+		            alert("El Producto ha sido agregado");
+		            var url="index.php";
+		    		$(location).attr("href", url);
 		        },
 		        cache: false,
 		        contentType: false,
