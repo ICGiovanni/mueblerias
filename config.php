@@ -26,7 +26,7 @@ else{
     define("DATA_BASE_PWD","Gl0bm1nt2016!");
     define("DIR_UPLOAD",'/kunden/homepages/1/d642566705/htdocs/uploads/');
 
-    define("FINAL_URL",$_SERVER["REQUEST_SCHEME"].'://'.$_SERVER["SERVER_NAME"]);
+    define("FINAL_URL",$_SERVER["REQUEST_SCHEME"].'://'.$_SERVER["SERVER_NAME"].'/');
 
     $ruta = 'http://globmint.com/';
     $pathProy = '/kunden/homepages/1/d642566705/htdocs/';
