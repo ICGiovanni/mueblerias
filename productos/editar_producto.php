@@ -162,12 +162,12 @@ $categorias=$productos->GetProductCategory($producto_id);
             
             <div class="form-group">
             <label class="col-sm-2 control-label">Pecio Utilitario</label>
-			<div class="col-sm-2 "><input type="text" class="form-control" id="precioU" name="precioU" onkeypress="return validateNumber(event)" value="<?php echo $datos[0]['producto_price_utilitarian'];?>"></div>
+			<div class="col-sm-2 "><input type="text" class="form-control" id="precioU" name="precioU" onkeypress="return validateCantidad(event)" value="<?php echo $datos[0]['producto_price_utilitarian'];?>"></div>
             </div>
             
             <div class="form-group">
             <label class="col-sm-2 control-label">Precio P&uacute;blico</label>
-			<div class="col-sm-2 "><input type="text" class="form-control" id="precioP" name="precioP" onkeypress="return validateNumber(event)" value="<?php echo $datos[0]['producto_price_public'];?>"></div>
+			<div class="col-sm-2 "><input type="text" class="form-control" id="precioP" name="precioP" onkeypress="return validateCantidad(event)" value="<?php echo $datos[0]['producto_price_public'];?>"></div>
             </div>
             
             <div class="form-group">
@@ -328,7 +328,7 @@ $(document).ready(function()
 		        {
 		        	alert("El Producto ha sido actualizado");
 		            var url="index.php";
-		    		$(location).attr("href", url);
+		    		//$(location).attr("href", url);
 		        },
 		        cache: false,
 		        contentType: false,
@@ -355,11 +355,14 @@ $(document).ready(function()
 
 });
 
-function validateNumber(evt)
+function validateCantidad(evt)
 {
 	evt = (evt) ? evt : window.event;
     var charCode = (evt.which) ? evt.which : evt.keyCode;
-    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+	
+	
+    if ((charCode > 31 && (charCode < 48 || charCode > 57) && charCode!=46))
+	{
         return false;
     }
 }
