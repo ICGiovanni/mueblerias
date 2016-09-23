@@ -98,6 +98,11 @@ class Productos
 	public function InsertImagesProduct($producto_id,$params)
 	{
 		$images=count($params['name']);
+
+		if (!file_exists(DIR_UPLOAD."productos/"))
+		{
+			mkdir(DIR_UPLOAD."productos/", 0777, true);
+		}
 		
 		for($i=0;$i<$images;$i++)
 		{
@@ -246,7 +251,7 @@ class Productos
 	{
 		$data_image=$this->GetImagesProduct($producto_id,$imagen_id);
 		$name=$data_image[0]['imagen_name'];
-		
+	
 		unlink(DIR_UPLOAD."productos/".$name);
 		
 		$sql="DELETE FROM imagenes_productos WHERE imagen_id=:imagen_id";

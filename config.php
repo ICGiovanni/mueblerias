@@ -24,12 +24,12 @@ else{
     define("DATA_BASE_NAME","db642823290");
     define("DATA_BASE_USER","dbo642823290");
     define("DATA_BASE_PWD","Gl0bm1nt2016!");
-    define("DIR_UPLOAD",'/kunden/homepages/1/d642566705/htdocs/');
+    define("DIR_UPLOAD",'/kunden/homepages/1/d642566705/htdocs/uploads/');
 
     define("FINAL_URL",$_SERVER["REQUEST_SCHEME"].'://'.$_SERVER["SERVER_NAME"].'/globmint.com/');
 
     $ruta = 'http://globmint.com/';
-    $pathProy = '/kunden/homepages/1/d642566705/htdocs/uploads/';
+    $pathProy = '/kunden/homepages/1/d642566705/htdocs/';
     $raizProy = "/";
 }
 
