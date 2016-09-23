@@ -113,7 +113,7 @@ class Productos
 				$next_image=$this->GetNextImageNumber($producto_id);
 				$name=$params['name'][$i];
 				$name='producto_'.$producto_id.'_'.$next_image.'.'.$ext;
-				$rute=$_SERVER["REDIRECT_PATH_CONFIG"].'uploads/productos/'.$name;
+				$rute=FINAL_URL.'uploads/productos/'.$name;
 				$shortrute=FINAL_URL.'uploads/productos/'.$name;
 											
 				move_uploaded_file($params['tmp_name'][$i], $rute);
