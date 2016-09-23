@@ -328,7 +328,7 @@ $(document).ready(function()
 		        {
 		        	alert("El Producto ha sido actualizado");
 		            var url="index.php";
-		    		//$(location).attr("href", url);
+		    		$(location).attr("href", url);
 		        },
 		        cache: false,
 		        contentType: false,
