@@ -48,7 +48,9 @@ CREATE TABLE IF NOT EXISTS productos
 	producto_description TEXT NOT NULL,
 	producto_price_utilitarian FLOAT,
 	producto_price_public FLOAT,
-	PRIMARY KEY (producto_id)
+	proveedor_id INT,
+	PRIMARY KEY (producto_id),
+	FOREIGN KEY (proveedor_id) REFERENCES proveedores(proveedor_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE IF NOT EXISTS productos_colores

@@ -2,6 +2,7 @@
     include $_SERVER['REDIRECT_PATH_CONFIG'].'/config.php';
     //include $pathProy.'login/session.php';
     require_once($_SERVER["REDIRECT_PATH_CONFIG"].'productos/models/class.Productos.php');
+    require_once($_SERVER["REDIRECT_PATH_CONFIG"].'proveedores/models/class.Proveedores.php');
     include $pathProy.'/header.php';
     include $pathProy.'/menu.php';
 ?>
@@ -99,6 +100,29 @@
 	            foreach($result as $r)
 	            {
 	            	$list.='<option value="'.$r['categoria_id'].'">'.$r['categoria_name'].'</option>';
+	            }
+	            
+	            echo $list;
+	            
+	            ?>
+				</select>
+			</div>
+            </div>
+            
+            <div class="form-group">
+            <label class="col-sm-2 control-label">Proveedor</label>
+			<div class="col-sm-6" >
+				<select data-placeholder="Selecciona un proveedor" class="chosen-select" style="width:300px;" tabindex="4" id="proveedor" name="proveedor">
+	            <option value=""></option>
+	            <?php 
+	            $proveedor=new Proveedor();
+	            
+	            $result=$proveedor->getProveedores();
+	            
+	            $list="";
+	            foreach($result as $r)
+	            {
+	            	$list.='<option value="'.$r['proveedor_id'].'">'.$r['proveedor_nombre'].'</option>';
 	            }
 	            
 	            echo $list;
@@ -257,6 +281,7 @@ $(document).ready(function()
 	$("#color").chosen();
 	$("#material").chosen();
 	$("#categoria").chosen();
+	$("#proveedor").chosen();
 
 });
 
