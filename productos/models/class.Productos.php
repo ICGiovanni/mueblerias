@@ -52,7 +52,7 @@ class Productos
 	
 	public function InsertarProducto($params)
 	{
-		$sql="INSERT INTO productos VALUES('',:nombre,:sku,:descripcion,:precio_utilitario,:precio_publico)";
+		$sql="INSERT INTO productos VALUES('',:nombre,:sku,:descripcion,:precio_utilitario,:precio_publico,:proveedor)";
 		
 		$statement=$this->connect->prepare($sql);
 		$price_utilitarian=number_format($params['precioU'], 2, '.', '');
@@ -63,6 +63,7 @@ class Productos
 		$statement->bindParam(':descripcion', $params['descripcion'], PDO::PARAM_STR);
 		$statement->bindParam(':precio_utilitario', $price_utilitarian, PDO::PARAM_STR);
 		$statement->bindParam(':precio_publico', $price_public, PDO::PARAM_STR);
+		$statement->bindParam(':proveedor', $params['proveedor'], PDO::PARAM_STR);
 		
 		$statement->execute();
 		
@@ -140,7 +141,7 @@ class Productos
 		}
 		
 		$sql="SELECT p.producto_id,p.producto_name,p.producto_sku,
-				p.producto_description,p.producto_price_utilitarian,p.producto_price_public
+				p.producto_description,p.producto_price_utilitarian,p.producto_price_public,p.proveedor_id
 				FROM productos p".
 				$where.
 				" ORDER BY p.producto_id";
@@ -333,7 +334,7 @@ class Productos
 	
 	public function ActualizarProducto($params)
 	{
-		$sql="UPDATE productos SET producto_name=:nombre,producto_sku=:sku,producto_description=:descripcion,producto_price_utilitarian=:precio_utilitario,producto_price_public=:precio_publico
+		$sql="UPDATE productos SET producto_name=:nombre,producto_sku=:sku,producto_description=:descripcion,producto_price_utilitarian=:precio_utilitario,producto_price_public=:precio_publico,proveedor_id=:proveedor
 				WHERE producto_id=:producto";
 		
 		
@@ -347,6 +348,7 @@ class Productos
 		$statement->bindParam(':descripcion', $params['descripcion'], PDO::PARAM_STR);
 		$statement->bindParam(':precio_utilitario', $price_utilitarian, PDO::PARAM_STR);
 		$statement->bindParam(':precio_publico', $price_public, PDO::PARAM_STR);
+		$statement->bindParam(':proveedor', $params['proveedor'], PDO::PARAM_STR);
 		$statement->bindParam(':producto', $params['id_producto'], PDO::PARAM_STR);
 		
 		$statement->execute();
