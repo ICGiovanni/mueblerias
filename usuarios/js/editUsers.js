@@ -39,8 +39,8 @@ $(document).ready(function(){
         window.location.href = 'index.php';
     });
     
-    $("#saveUser").click(function(){            
-        //saveUser();        
+    $("#updateUser").click(function(){            
+        window.location.href = 'index.php';
     });        
 });
 

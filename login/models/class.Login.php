@@ -13,7 +13,9 @@ class Login {
         public function auth($email, $password){
             
 
-            $sql = "SELECT login_id, profile_id, email, firstName, lastName FROM inv_login WHERE email = :email AND password = :password AND status_id = 1";
+            $sql = "SELECT login_id, profile_id, email, firstName, lastName, url_image ,profile_name FROM inv_login 
+                    INNER JOIN inv_profile USING (profile_id)
+                    WHERE email = :email AND password = :password AND status_id = 1";
 
             $statement = $this->connect->prepare($sql);
 

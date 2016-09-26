@@ -20,7 +20,7 @@
             echo "<tr>
                     <td>
                         <div class='row'>
-                            <div class='col-md-3'>".$user['url_image']."</div>
+                            <div class='col-md-3'><img class='img-circle' src='".$raizProy.$user['url_image']."' height='40px'/></div>
                             <div class='col-md-9'>
                                 <div>".$user['firstName']."&nbsp;".$user['lastName']."</div>
                                 <div> <small>".$user['profile_name']."</small></div>    
@@ -30,8 +30,8 @@
                     <td>".date('d/m/Y g:i:s A ', $user['created_timestamp'])."</td>
                     <td>".$user['status_name']."</td>                        
                     <td>".$user['email']."</td>
-                    <td>".date('d/m/Y g:i:s A ', $user['modify_timestamp'])."</td>
-                    <td>
+                    <td>".date('d/n/Y g:i:s A ', $user['modify_timestamp'])."</td>
+                    <td class='text-center'>
                         <a href='#'><i class='active-user fa-2x ".$class."' id='".$user['login_id']."' data-status='".$user['status_id']."' aria-hidden='true'></i></a>&nbsp;    
                     </td>    
                     <td class='text-center'>                    
