@@ -78,6 +78,84 @@ class Productos
 		return $producto_id;
 	}
 	
+	public function GetProductSearch($params)
+	{
+		$where="WHERE 1 ";
+		if($params["nombre"])
+		{
+			$where.="AND producto_name LIKE '%".$params["nombre"]."%' ";
+		}
+		
+		if($params["sku"])
+		{
+			$where.="AND producto_sku LIKE '%".$params["sku"]."%' ";
+		}
+		
+		$colores="";
+		if(isset($params["color"]))
+		{
+			$i=0;
+			foreach($params["color"] as $c)
+			{
+				if($i==0)
+				{
+					$colores=$c;
+				}
+				else
+				{
+					$colores.=','.$c;
+				}
+				
+				$i++;
+			}
+		}
+		
+		if($colores)
+		{
+			$where.="AND producto_id IN(SELECT producto_id
+										FROM productos_colores
+										WHERE color_id IN(".$colores.")) ";
+		}
+		
+		$sql="SELECT p.producto_id,p.producto_name,p.producto_sku,
+				p.producto_description,p.producto_price_utilitarian,p.producto_price_public,p.proveedor_id
+				FROM productos p ".
+				$where.
+				" ORDER BY p.producto_id";
+		
+		$statement=$this->connect->prepare($sql);
+		
+		$statement->execute();
+		$result=$statement->fetchAll(PDO::FETCH_ASSOC);
+		
+		foreach($result as $key=>$r)
+		{
+			$producto_id=$r['producto_id'];
+			$i=0;
+			foreach($this->GetProductColor($producto_id) as $c)
+			{
+				$result[$key]["color"][$i]=$c;
+				$i++;
+			}
+			
+			$i=0;
+			foreach($this->GetProductMaterial($producto_id) as $m)
+			{
+				$result[$key]["material"][$i]=$m;
+				$i++;
+			}
+			
+			$i=0;
+			foreach($this->GetProductCategory($producto_id) as $c)
+			{
+				$result[$key]["categoria"][$i]=$c;
+				$i++;
+			}
+		}
+				
+		return $result;
+	}
+	
 	public function GetNextImageNumber($producto_id)
 	{
 		$sql="SELECT MAX(imagen_id) AS images

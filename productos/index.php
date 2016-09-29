@@ -4,11 +4,34 @@
    // include $pathProy.'login/session.php';
     include $pathProy.'/header.php';
     include $pathProy.'/menu.php';
+    
+    $productos=new Productos();
 ?>
-<<style>
+<link href="<?php echo $raizProy?>css/plugins/chosen/chosen.css" rel="stylesheet">
+<style>
 a.href_colores{
 pointer-events: none;
 cursor: default;
+}
+
+#table_search td
+{
+	padding: 5px;
+}
+
+#color_chosen
+{
+	display:block;
+}
+
+#material_chosen
+{
+	display:block;
+}
+
+#categoria_chosen
+{
+	display:block;
 }
 </style>
 
@@ -26,7 +49,7 @@ cursor: default;
         </div>
         <div class="col-sm-8">
             <div class="title-action">
-                <a href="./nuevo_producto.php" class="btn btn-primary btn-xs">Nuevo Producto</a>
+                <a href="./nuevo_producto.php" class="btn btn-primary btn-xs">+ Nuevo Producto</a>
             </div>
         </div>
     </div>
@@ -55,7 +78,98 @@ cursor: default;
                         </div>
                     </div>-->
                     <div class="ibox-content">
-
+					<div id="div_search_tools">
+					FILTRAR BUSQUEDA POR
+					<form method="post" action="/" id="form_filtro" enctype="multipart/form-data">
+					
+					<table class="table-form" id="table_search">
+					<tr>
+						<td>
+							<div class="form-group" id="data_sku" >
+								SKU<input type="text" id="sku" name="sku" class="form-control"> 
+							</div>
+						</td>
+						<td>
+							<div class="form-group" id="data_nombre" >
+								Nombre<input type="text" id="nombre" name="nombre" class="form-control"> 
+							</div>
+						</td>
+						<td>
+							<div class="form-group" id="data_color" >
+								Color
+								<select data-placeholder="Selecciona un color" class="chosen-select form-control" multiple style="width:200px;" tabindex="4" id="color" name="color[]">
+					            <option value=""></option>
+					            <?php 
+					            					            
+					            $result=$productos->GetColors();
+					            
+					            $list="";
+					            foreach($result as $r)
+					            {
+					            	$list.='<option value="'.$r['color_id'].'">'.$r['color_name'].'</option>';
+					            }
+					            
+					            echo $list;
+					            
+					            ?>
+								</select> 
+							</div>
+						</td>
+						<td>
+							<div class="form-group" id="data_material" >
+								Material
+								<select data-placeholder="Selecciona un material" class="chosen-select" multiple style="width:200px;" tabindex="4" id="material" name="material[]">
+					            <option value=""></option>
+					            <?php 
+					            $result=$productos->GetMaterials();
+					            
+					            $list="";
+					            foreach($result as $r)
+					            {
+					            	$list.='<option value="'.$r['material_id'].'">'.$r['material_name'].'</option>';
+					            }
+					            
+					            echo $list;
+					            
+					            ?>
+								</select>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						
+						<td>
+						<div class="form-group" id="data_material">
+								Categoria
+								<select data-placeholder="Selecciona una categoria" class="chosen-select" multiple style="width:200px;" tabindex="4" id="categoria" name="categoria[]">
+	            <option value=""></option>
+	            <?php 
+	           $result=$productos->GetCategories();
+	            
+	            $list="";
+	            foreach($result as $r)
+	            {
+	            	$list.='<option value="'.$r['categoria_id'].'">'.$r['categoria_name'].'</option>';
+	            }
+	            
+	            echo $list;
+	            
+	            ?>
+				</select>
+							</div>
+							</td>
+							<td colspan="4">
+							<button type="button" class="btn btn-primary btn-xs" id="filtar">Filtrar</button> &nbsp;&nbsp;&nbsp;
+										<button type="button" class="btn btn-warning btn-xs"  onclick="location.href = '.';" >Limpiar</button>
+							</td>
+					</tr>
+					</table>
+					
+					</form>
+					
+					</div>
+					
+					
                         <div class="table-responsive">
                     <table class="table table-striped table-bordered table-hover dataTables-example" id="tabla_productos">
                     <thead>
@@ -149,13 +263,13 @@ cursor: default;
 	</div>
     <script src="<?php echo $raizProy?>js/plugins/dataTables/datatables.min.js"></script>
     
-
+	<script src="<?php echo $raizProy?>js/plugins/chosen/chosen.jquery.js"></script>
 
     <!-- Page-Level Scripts -->
     <script>
         $(document).ready(function(){
 
-        	$('.dataTables-example').DataTable({
+        	var table=$('.dataTables-example').DataTable({
                 dom: '<"html5buttons"B>lTfgitp',
                 buttons: [
                     { extend: 'copy'},
@@ -178,6 +292,95 @@ cursor: default;
             	}
 
             });
+
+            $("#filtar").click(function()
+			{
+            	var url="product_search.php";
+   			 
+    			$.ajax(
+    			{
+    		    	type: "POST",
+    		        url: url,
+    		        data: $("#form_filtro").serialize(), // serializes the form's elements.
+    		        success: function(data)
+    		        {
+    		        	var filas="";
+    		        	table.destroy();
+    		        	$("#productos tr").remove();
+    		        	var data=jQuery.parseJSON(data);
+    		        	$.each( data, function( key, item )
+    	    		    {
+    		        		filas+='<tr>';
+							filas+='<td>'+item.producto_sku+'</td>';
+							filas+='<td>'+item.producto_name+'</td>';
+
+							filas+='<td>';
+							filas+='<ul style="padding: 0" class="tag-list">';
+							$.each( item.color, function( key, item )
+			    	    	{
+								filas+='<li><a href="" class="href_colores"><i class="fa fa-tag"></i> '+item+'</a></li>';
+			    	    	});
+			    	    	filas+='</ul>';
+			    	    	filas+='</td>';
+
+			    	    	filas+='<td>';
+							filas+='<ul style="padding: 0" class="tag-list">';
+							$.each( item.material, function( key, item )
+			    	    	{
+								filas+='<li><a href="" class="href_colores"><i class="fa fa-tag"></i> '+item+'</a></li>';
+			    	    	});
+			    	    	filas+='</ul>';
+			    	    	filas+='</td>';
+
+			    	    	filas+='<td>';
+							filas+='<ul style="padding: 0" class="tag-list">';
+							$.each( item.categoria, function( key, item )
+			    	    	{
+								filas+='<li><a href="" class="href_colores"><i class="fa fa-tag"></i> '+item+'</a></li>';
+			    	    	});
+			    	    	filas+='</ul>';
+			    	    	filas+='</td>';
+							
+							filas+='<td>$ '+item.producto_price_public+'</td>';
+							filas+='<td><div class="infont col-md-1 col-sm-1"><a href="editar_producto.php?id='+item.producto_id+'"><i class="fa fa-pencil"></i></a></div><div class="infont col-md-1 col-sm-1"><a href="#" onClick="borrar_producto('+item.producto_id+');"><i class="fa fa-trash-o"></i></a></div></td>';
+    		        		filas+='</tr>';
+
+    		        		
+    		        	});
+    		        	$("#productos").append(filas);
+    		        	
+    		        	setTimeout(function(){
+	    		        	$('.dataTables-example').DataTable({
+	    		                dom: '<"html5buttons"B>lTfgitp',
+	    		                buttons: [
+	    		                    { extend: 'copy'},
+	    		                    {extend: 'csv'},
+	    		                    {extend: 'excel', title: 'ExampleFile'},
+	    		                    {extend: 'pdf', title: 'ExampleFile'},
+	
+	    		                    {extend: 'print',
+	    		                     customize: function (win){
+	    		                            $(win.document.body).addClass('white-bg');
+	    		                            $(win.document.body).css('font-size', '10px');
+	
+	    		                            $(win.document.body).find('table')
+	    		                                    .addClass('compact')
+	    		                                    .css('font-size', 'inherit');
+	    		                    }
+	    		                    }
+	    		                ],"language": {
+	    		                    "url": "../js/plugins/dataTables/Spanish.json"
+	    		            	}
+	
+	    		            });
+    		        	}, 1000);
+    				}
+    			});            		
+            });
+
+        	$("#color").chosen();
+        	$("#material").chosen();
+        	$("#categoria").chosen();
             
         });
 
