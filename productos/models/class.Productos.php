@@ -112,9 +112,61 @@ class Productos
 		
 		if($colores)
 		{
-			$where.="AND producto_id IN(SELECT producto_id
+			$where.="OR producto_id IN(SELECT producto_id
 										FROM productos_colores
 										WHERE color_id IN(".$colores.")) ";
+		}
+		
+		$materiales="";
+		if(isset($params["material"]))
+		{
+			$i=0;
+			foreach($params["material"] as $m)
+			{
+				if($i==0)
+				{
+					$materiales=$m;
+				}
+				else
+				{
+					$materiales.=','.$m;
+				}
+		
+				$i++;
+			}
+		}
+		
+		if($materiales)
+		{
+			$where.="OR producto_id IN(SELECT producto_id
+										FROM productos_materiales
+										WHERE material_id IN(".$colores.")) ";
+		}
+		
+		$categorias="";
+		if(isset($params["material"]))
+		{
+			$i=0;
+			foreach($params["material"] as $c)
+			{
+				if($i==0)
+				{
+					$categorias=$c;
+				}
+				else
+				{
+					$categorias.=','.$c;
+				}
+		
+				$i++;
+			}
+		}
+		
+		if($categorias)
+		{
+			$where.="OR producto_id IN(SELECT producto_id
+										FROM productos_categorias
+										WHERE categoria_id IN(".$categorias.")) ";
 		}
 		
 		$sql="SELECT p.producto_id,p.producto_name,p.producto_sku,
