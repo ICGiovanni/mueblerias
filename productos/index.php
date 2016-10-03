@@ -33,6 +33,10 @@ cursor: default;
 {
 	display:block;
 }
+#tipo_chosen
+{
+	display:block;
+}
 </style>
 
     <div class="row wrapper border-bottom white-bg page-heading">
@@ -92,6 +96,16 @@ cursor: default;
 						<td>
 							<div class="form-group" id="data_nombre" >
 								Nombre<input type="text" id="nombre" name="nombre" class="form-control"> 
+							</div>
+						</td>
+						<td>
+							<div class="form-group" id="data_color" >
+								Tipo
+								<select data-placeholder="Selecciona un tipo" class="chosen-select form-control" style="width:200px;" tabindex="4" id="tipo" name="tipo">
+					            <option value=""></option>
+					            <option value="U">&Uacute;nico</option>
+					            <option value="C">Conjunto</option>
+					            </select> 
 							</div>
 						</td>
 						<td>
@@ -176,6 +190,7 @@ cursor: default;
                     <tr>
                     	<th>SKU</th>
                         <th>Producto</th>
+                        <th>Tipo</th>
                         <th>Color</th>
                         <th>Material</th>
                         <th>Categoria</th>
@@ -193,6 +208,7 @@ cursor: default;
                     {
                     	$producto_id=$p["producto_id"];
                     	$nombre=$p["producto_name"];
+                    	$tipo=$p["producto_type"];
                     	$sku=$p['producto_sku'];
                     	$description=$p['producto_description'];
                     	$price_utilitarian=$p['producto_price_utilitarian'];
@@ -229,6 +245,7 @@ cursor: default;
                     	$tr.='<tr class="gradeX">';
                     	$tr.='<td>'.$sku.'</td>';
                     	$tr.='<td>'.$nombre.'</td>';
+                    	$tr.='<td>'.$tipo.'</td>';
                     	$tr.='<td>'.$color.'</td>';
                     	$tr.='<td>'.$material.'</td>';
                     	$tr.='<td>'.$categoria.'</td>';
@@ -246,6 +263,7 @@ cursor: default;
                     <tr>
                     	<th>SKU</th>
                         <th>Producto</th>
+                        <th>Tipo</th>
                         <th>Color</th>
                         <th>Material</th>
                         <th>Categoria</th>
@@ -269,7 +287,7 @@ cursor: default;
     <script>
         $(document).ready(function(){
 
-        	var table=$('.dataTables-example').DataTable({
+        	var table=$('#tabla_productos').DataTable({
                 dom: '<"html5buttons"B>lTfgitp',
                 buttons: [
                     { extend: 'copy'},
@@ -306,51 +324,59 @@ cursor: default;
     		        {
     		        	var filas="";
     		        	table.destroy();
+    		        	
     		        	$("#productos tr").remove();
-    		        	var data=jQuery.parseJSON(data);
-    		        	$.each( data, function( key, item )
-    	    		    {
-    		        		filas+='<tr>';
+        		        $.each( data, function( key, item )
+            	    	{
+        		        	filas+='<tr>';
 							filas+='<td>'+item.producto_sku+'</td>';
 							filas+='<td>'+item.producto_name+'</td>';
+							filas+='<td>'+item.producto_type+'</td>';
 
 							filas+='<td>';
 							filas+='<ul style="padding: 0" class="tag-list">';
-							$.each( item.color, function( key, item )
-			    	    	{
-								filas+='<li><a href="" class="href_colores"><i class="fa fa-tag"></i> '+item+'</a></li>';
-			    	    	});
+							if(item.color!=undefined)
+							{
+								$.each( item.color, function( key, item )
+				    	    	{
+									filas+='<li><a href="" class="href_colores"><i class="fa fa-tag"></i> '+item+'</a></li>';
+				    	    	});
+							}
 			    	    	filas+='</ul>';
 			    	    	filas+='</td>';
 
 			    	    	filas+='<td>';
 							filas+='<ul style="padding: 0" class="tag-list">';
-							$.each( item.material, function( key, item )
-			    	    	{
-								filas+='<li><a href="" class="href_colores"><i class="fa fa-tag"></i> '+item+'</a></li>';
-			    	    	});
+							if(item.color!=undefined)
+							{
+								$.each( item.material, function( key, item )
+				    	    	{
+									filas+='<li><a href="" class="href_colores"><i class="fa fa-tag"></i> '+item+'</a></li>';
+				    	    	});
+							}
 			    	    	filas+='</ul>';
 			    	    	filas+='</td>';
 
 			    	    	filas+='<td>';
 							filas+='<ul style="padding: 0" class="tag-list">';
-							$.each( item.categoria, function( key, item )
-			    	    	{
-								filas+='<li><a href="" class="href_colores"><i class="fa fa-tag"></i> '+item+'</a></li>';
-			    	    	});
+							if(item.color!=undefined)
+							{
+								$.each( item.categoria, function( key, item )
+				    	    	{
+									filas+='<li><a href="" class="href_colores"><i class="fa fa-tag"></i> '+item+'</a></li>';
+				    	    	});
+							}
 			    	    	filas+='</ul>';
 			    	    	filas+='</td>';
 							
 							filas+='<td>$ '+item.producto_price_public+'</td>';
 							filas+='<td><div class="infont col-md-1 col-sm-1"><a href="editar_producto.php?id='+item.producto_id+'"><i class="fa fa-pencil"></i></a></div><div class="infont col-md-1 col-sm-1"><a href="#" onClick="borrar_producto('+item.producto_id+');"><i class="fa fa-trash-o"></i></a></div></td>';
     		        		filas+='</tr>';
-
-    		        		
-    		        	});
-    		        	$("#productos").append(filas);
+            	    	});
+        		        $("#productos").append(filas);
     		        	
     		        	setTimeout(function(){
-	    		        	$('.dataTables-example').DataTable({
+    		        		table=$('#tabla_productos').DataTable({
 	    		                dom: '<"html5buttons"B>lTfgitp',
 	    		                buttons: [
 	    		                    { extend: 'copy'},
@@ -379,6 +405,7 @@ cursor: default;
             });
 
         	$("#color").chosen();
+        	$("#tipo").chosen();
         	$("#material").chosen();
         	$("#categoria").chosen();
             

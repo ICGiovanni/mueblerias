@@ -7,7 +7,17 @@
     include $pathProy.'/menu.php';
 ?>
 <link href="<?php echo $raizProy?>css/plugins/chosen/chosen.css" rel="stylesheet">
-
+<link href="<?php echo $raizProy?>css/plugins/easy-autocomplete/easy-autocomplete.min.css" rel="stylesheet">
+<style>
+#product_list
+{
+	display:none;
+}
+#div_conjunto
+{
+	display:none;
+}
+</style>
     <div class="row wrapper border-bottom white-bg page-heading">
         <div class="col-sm-4">
             <h2>Agregar Producto</h2>
@@ -150,18 +160,54 @@
             </div>
             
             <div class="form-group">
+            <label class="col-sm-2 control-label">Conjunto</label>
+			<div class="col-sm-2 ">
+				<input type="checkbox" name="conjunto" id="conjunto" value="activo">
+			</div>
+            </div>
+			<div id="div_conjunto" style="display:none;">
+	           	<div class="form-group">
+	           	<label class="col-sm-2 control-label">Productos</label>
+	           	<div class="col-sm-6" ><input type="text" class="form-control" id="producto" name="producto"></div>
+	           	</div>
+	           	
+	           	<div class="form-group">
+	           	<div class="col-sm-2" ></div>
+	           	<div class="col-sm-6" >
+	           	<div id="product_list" class="ibox-content">
+	           	
+	           	<table class="table table-striped">
+	           	<thead>
+					<tr>
+						<td></td>
+						<td>SKU</td>
+						<td>Nombre</td>
+						<td></td>
+					</tr>
+				</thead>
+	           	<tbody id="products_table">
+	           	
+	           	</tbody>
+	           	</table>
+	           </div>
+	           </div>
+	           </div>
+            </div>
+            
+            <div class="form-group">
 			<div class="col-sm-6 col-sm-offset-2" align="right"><br>
 			<button class="btn btn-danger btn-xs" id="cancelar" type="button">Cancelar</button>&nbsp;&nbsp;&nbsp;&nbsp;
 			<button class="btn btn-primary btn-xs" id="guardar" type="button">Guardar Cliente</button>
 			</div>
 			</div>
-        
-		</form>
+        </form>
 	</div>
 
 <script src="<?php echo $raizProy?>js/plugins/toastr/toastr.min.js"></script>
 
 <script src="<?php echo $raizProy?>js/plugins/chosen/chosen.jquery.js"></script>
+<script src="<?php echo $raizProy?>js/plugins/easy-autocomplete/jquery.easy-autocomplete.min.js"></script>
+
 <script>
 $(document).ready(function()
 {
@@ -193,6 +239,13 @@ $(document).ready(function()
 
 	$( "#guardar" ).click(function()
 	{
+		var bandera=false;
+    	$.each($('.products'), function (index, value)
+    	{
+    		var id=$(value).val();
+    		bandera=true;
+    	});	
+		
 		if($("#sku").val()=='')
 		{
 			toastr.error('Debe de agregar el SKU del producto');
@@ -211,23 +264,29 @@ $(document).ready(function()
 			$("#descripcion").val('');
 			$("#descripcion").focus();
 		}
-		else if($("#colores").val()=='')
+		else if($("#color").val()==undefined)
 		{
 			toastr.error('Debe de agregar un Color');
 			$("#color").val('');
 			$("#color").focus();		
 		}
-		else if($("#material").val()=='')
+		else if($("#material").val()==undefined)
 		{
 			toastr.error('Debe de agregar un tipo de Material');
 			$("#material").val('');
 			$("#material").focus();		
 		}
-		else if($("#categoria").val()=='')
+		else if($("#categoria").val()==undefined)
 		{
 			toastr.error('Debe de agregar un tipo de Categoria');
 			$("#categoria").val('');
 			$("#categoria").focus();		
+		}
+		else if($("#proveedor").val()=='')
+		{
+			toastr.error('Debe de agregar un Proveedor');
+			$("#proveedor").val('');
+			$("#proveedor").focus();
 		}
 		else if($("#precioU").val()=='')
 		{
@@ -241,6 +300,12 @@ $(document).ready(function()
 			$("#precioU").val('');
 			$("#precioU").focus();		
 		}
+		else if($('#conjunto').is(":checked") && bandera==false)
+        {
+			toastr.error('Debe de agregar un producto para armar el Conjunto');
+			$("#producto").val('');
+			$("#producto").focus();
+        }
 		else
 		{
 			var url="guardar_producto.php";
@@ -254,9 +319,46 @@ $(document).ready(function()
 		        async: false,
 		        success: function (data)
 		        {
-		            alert("El Producto ha sido agregado");
-		            var url="index.php";
-		    		$(location).attr("href", url);
+			        var producto_id=data;
+			        if($('#conjunto').is(":checked"))
+			        {
+				        var url="guardar_conjunto.php?id="+producto_id;
+				        var products=new Array();
+				        var p={};
+				        $.each($('.products'), function (index, value)
+		            	{
+				        	var id=$(value).val();
+				        	p.id=id;
+				        	products.push(p);
+		            	});	
+
+				        var jsonProducts=JSON.stringify(products);
+				        
+			        	$.ajax({
+					        url: url,
+					        type: 'POST',
+					        data:  jsonProducts,
+					        contentType: "application/json; charset=utf-8",
+					        async: false,
+					        dataType: "json",
+					        success: function (data)
+					        {
+					            alert("El Producto ha sido agregado");
+					            var url="index.php";
+					    		$(location).attr("href", url);
+					        },
+					        cache: false,
+					        contentType: false,
+					        processData: false
+					    });
+			        }
+			        else
+			        {
+			        	alert("El Producto ha sido agregado");
+			            var url="index.php";
+			    		$(location).attr("href", url);
+			        }
+		            
 		        },
 		        cache: false,
 		        contentType: false,
@@ -278,6 +380,103 @@ $(document).ready(function()
     	this.value = $.trim(this.value.toLocaleUpperCase());
     });
 
+	$('#conjunto').change(function()
+	{
+		$(".easy-autocomplete").css("width","auto");
+        if($(this).is(":checked"))
+        {
+        	$("#div_conjunto").fadeIn();
+        	$("#producto").focus();
+        }
+        else
+        {
+        	$("#div_conjunto").fadeOut();
+        }
+    });
+
+	var options=
+	{
+		url: "http://localhost/globmint.com/productos/get_products_unique.php",
+		getValue: function(element)
+		{
+			var name=element.producto_sku+' '+element.producto_name;
+			
+			return name;
+		},
+		template: {
+			type: "custom",
+			method: function(value, item) {
+				return "<img src='" + item.imagen + "' height='50' width='50'/>"+ value;
+			}
+		},
+		list:
+		{
+			match:
+			{
+				enabled: true
+			},
+			showAnimation:
+			{
+				type: "fade", //normal|slide|fade
+				time: 400,
+				callback: function() {}
+			},
+			hideAnimation: {
+				type: "slide", //normal|slide|fade
+				time: 400,
+				callback: function() {}
+			},
+			onChooseEvent:function()
+			{
+				var id=$("#producto").getSelectedItemData().producto_id;
+				var sku=$("#producto").getSelectedItemData().producto_sku;
+				var name=$("#producto").getSelectedItemData().producto_name;
+				var imagen=$("#producto").getSelectedItemData().imagen;
+				
+				SelectedItemData(id,sku,name,imagen);
+			}
+		}
+	};
+
+	var SelectedItemData=function(id,sku,name,imagen)
+	{
+		var table='';
+
+		var product=$("#product_"+id).val();
+
+		if(product==undefined)
+		{
+			table+='<tr>';
+			table+='<input type="hidden" id="product_'+id+'" name="product_'+id+'" value="'+id+'" class="products">';
+			
+			if(imagen!='')
+			{
+				imagen='<img src="'+imagen+'" height="50" width="50">';
+			}
+			
+			table+='<td>'+imagen+'</td>';
+			table+='<td>'+sku+'</td>';
+			table+='<td>'+name+'</td>';
+			table+='<td class="text-left"><a id="delete_'+id+'" href="#" onCLick="deleteRow(this.id);"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>';
+			table+='</tr>';
+			table+='</tr>';
+	
+			$('#products_table').append(table);
+	
+			$("#producto").focus();
+			$("#producto").val('');
+			$("#product_list").fadeIn();
+		}
+		else
+		{
+			$("#producto").focus();
+			$("#producto").val('');
+			alert("El producto ya ha sido agregado");
+		}
+	}
+
+	$("#producto").easyAutocomplete(options);
+
 	$("#color").chosen();
 	$("#material").chosen();
 	$("#categoria").chosen();
@@ -296,6 +495,27 @@ function validateCantidad(evt)
         return false;
     }
 }
+
+function deleteRow(td)
+{
+	$("#"+td).parent().parent().remove();
+
+	var bandera=false;
+	$.each($('.products'), function (index, value)
+	{
+		var id=$(value).val();
+		bandera=true;
+	});
+	
+	if(bandera==false)
+	{
+		$("#product_list").fadeOut();
+	}
+	
+	$("#producto").val('');
+	$("#producto").focus();
+}
+
 </script>
 
 

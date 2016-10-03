@@ -49,6 +49,7 @@ CREATE TABLE IF NOT EXISTS productos
 	producto_price_utilitarian FLOAT,
 	producto_price_public FLOAT,
 	proveedor_id INT,
+	producto_type ENUM('U','C') NOT NULL DEFAULT 'U',
 	PRIMARY KEY (producto_id),
 	FOREIGN KEY (proveedor_id) REFERENCES proveedores(proveedor_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -87,3 +88,10 @@ CREATE TABLE IF NOT EXISTS imagenes_productos
 	FOREIGN KEY (producto_id) REFERENCES productos(producto_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+CREATE TABLE IF NOT EXISTS productos_conjunto
+(
+	producto_id INT NOT NULL,
+	producto_conjunto_id INT NOT NULL,
+	FOREIGN KEY (producto_id) REFERENCES productos(producto_id),
+	FOREIGN KEY (producto_conjunto_id) REFERENCES productos(producto_id)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;

@@ -52,7 +52,13 @@ class Productos
 	
 	public function InsertarProducto($params)
 	{
-		$sql="INSERT INTO productos VALUES('',:nombre,:sku,:descripcion,:precio_utilitario,:precio_publico,:proveedor)";
+		$type="U";
+		if(isset($params['conjunto']))
+		{
+			$type="C";
+		}
+		
+		$sql="INSERT INTO productos VALUES('',:nombre,:sku,:descripcion,:precio_utilitario,:precio_publico,:proveedor,:type)";
 		
 		$statement=$this->connect->prepare($sql);
 		$price_utilitarian=number_format($params['precioU'], 2, '.', '');
@@ -64,6 +70,7 @@ class Productos
 		$statement->bindParam(':precio_utilitario', $price_utilitarian, PDO::PARAM_STR);
 		$statement->bindParam(':precio_publico', $price_public, PDO::PARAM_STR);
 		$statement->bindParam(':proveedor', $params['proveedor'], PDO::PARAM_STR);
+		$statement->bindParam(':type', $type, PDO::PARAM_STR);
 		
 		$statement->execute();
 		
@@ -80,6 +87,7 @@ class Productos
 	
 	public function GetProductSearch($params)
 	{
+		$producto=array();
 		$where="WHERE 1 ";
 		if($params["nombre"])
 		{
@@ -89,6 +97,11 @@ class Productos
 		if($params["sku"])
 		{
 			$where.="AND producto_sku LIKE '%".$params["sku"]."%' ";
+		}
+		
+		if($params["tipo"])
+		{
+			$where.="AND producto_type='".$params["tipo"]."' ";
 		}
 		
 		$colores="";
@@ -112,9 +125,21 @@ class Productos
 		
 		if($colores)
 		{
-			$where.="OR producto_id IN(SELECT producto_id
-										FROM productos_colores
-										WHERE color_id IN(".$colores.")) ";
+			$sql="SELECT producto_id
+					FROM productos_colores
+					WHERE color_id IN(".$colores.")";
+			
+			$statement=$this->connect->prepare($sql);
+			$statement->execute();
+			$result=$statement->fetchAll(PDO::FETCH_ASSOC);
+			
+			foreach($result as $res)
+			{
+				foreach($res as $r)
+				{
+					$producto[$r]=$r;
+				}
+			}
 		}
 		
 		$materiales="";
@@ -138,16 +163,28 @@ class Productos
 		
 		if($materiales)
 		{
-			$where.="OR producto_id IN(SELECT producto_id
-										FROM productos_materiales
-										WHERE material_id IN(".$colores.")) ";
+			$sql="SELECT producto_id
+					FROM productos_materiales
+					WHERE material_id IN(".$materiales.")";
+				
+			$statement=$this->connect->prepare($sql);
+			$statement->execute();
+			$result=$statement->fetchAll(PDO::FETCH_ASSOC);
+				
+			foreach($result as $res)
+			{
+				foreach($res as $r)
+				{
+					$producto[$r]=$r;
+				}
+			}
 		}
 		
 		$categorias="";
-		if(isset($params["material"]))
+		if(isset($params["categoria"]))
 		{
 			$i=0;
-			foreach($params["material"] as $c)
+			foreach($params["categoria"] as $c)
 			{
 				if($i==0)
 				{
@@ -164,13 +201,45 @@ class Productos
 		
 		if($categorias)
 		{
-			$where.="OR producto_id IN(SELECT producto_id
-										FROM productos_categorias
-										WHERE categoria_id IN(".$categorias.")) ";
+			$sql="SELECT producto_id
+					FROM productos_categorias
+					WHERE categoria_id IN(".$categorias.")";
+			
+			$statement=$this->connect->prepare($sql);
+			$statement->execute();
+			$result=$statement->fetchAll(PDO::FETCH_ASSOC);
+			
+			foreach($result as $res)
+			{
+				foreach($res as $r)
+				{
+					$producto[$r]=$r;
+				}
+			}
+		}
+		
+		if(count($producto))
+		{
+			$productoB="";
+			$i=0;
+			foreach($producto as $p)
+			{
+				if($i==0)
+				{
+					$productoB.=$p;
+				}
+				else 
+				{
+					$productoB.=','.$p;
+				}
+				$i++;
+			}
+			
+			$where.=' AND producto_id IN('.$productoB.')';
 		}
 		
 		$sql="SELECT p.producto_id,p.producto_name,p.producto_sku,
-				p.producto_description,p.producto_price_utilitarian,p.producto_price_public,p.proveedor_id
+				p.producto_description,p.producto_price_utilitarian,p.producto_price_public,p.proveedor_id,IF(p.producto_type='U','&Uacute;nico','Conjunto') AS producto_type
 				FROM productos p ".
 				$where.
 				" ORDER BY p.producto_id";
@@ -271,7 +340,7 @@ class Productos
 		}
 		
 		$sql="SELECT p.producto_id,p.producto_name,p.producto_sku,
-				p.producto_description,p.producto_price_utilitarian,p.producto_price_public,p.proveedor_id
+				p.producto_description,p.producto_price_utilitarian,p.producto_price_public,p.proveedor_id,IF(p.producto_type='U','&Uacute;nico','Conjunto') AS producto_type
 				FROM productos p".
 				$where.
 				" ORDER BY p.producto_id";
@@ -525,5 +594,41 @@ class Productos
 		$statement=$this->connect->prepare($sql);
 		$statement->bindParam(':producto', $producto_id, PDO::PARAM_STR);
 		$statement->execute();
+	}
+	
+	public function GetProductsUnique()
+	{
+		$sql="SELECT p.producto_id,p.producto_sku,p.producto_name,
+				(SELECT imagen_route
+				FROM imagenes_productos ip
+				WHERE ip.producto_id=p.producto_id
+				ORDER BY imagen_id ASC
+				limit 0,1) AS imagen
+				FROM productos p
+				INNER JOIN proveedores pr USING(proveedor_id)
+				WHERE producto_type='U'
+				ORDER BY p.producto_name ASC";
+		$statement=$this->connect->prepare($sql);
+		$statement->execute();
+		$result=$statement->fetchAll(PDO::FETCH_ASSOC);
+		
+		return $result;
+	}
+	
+	public function InsertProductoGroup($producto_id,$data)
+	{
+		
+		foreach($data as $d)
+		{
+			
+			$sql="INSERT INTO productos_conjunto VALUES(:producto,:producto_conjunto)";
+		
+			$statement=$this->connect->prepare($sql);
+		
+			$statement->bindParam(':producto', $producto_id, PDO::PARAM_STR);
+			$statement->bindParam(':producto_conjunto', $d['id'], PDO::PARAM_STR);
+				
+			$statement->execute();
+		}
 	}
 }
