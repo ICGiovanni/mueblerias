@@ -92,6 +92,7 @@ CREATE TABLE IF NOT EXISTS productos_conjunto
 (
 	producto_id INT NOT NULL,
 	producto_conjunto_id INT NOT NULL,
+	cantidad INT NOT NULL,
 	FOREIGN KEY (producto_id) REFERENCES productos(producto_id),
 	FOREIGN KEY (producto_conjunto_id) REFERENCES productos(producto_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;

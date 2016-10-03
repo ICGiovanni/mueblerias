@@ -10,3 +10,5 @@ if(count($_FILES['upload']['name']))
 {
 	$productos->InsertImagesProduct($producto_id, $_FILES['upload']);
 }
+
+echo $producto_id;

@@ -8,6 +8,7 @@
 ?>
 <link href="<?php echo $raizProy?>css/plugins/chosen/chosen.css" rel="stylesheet">
 <link href="<?php echo $raizProy?>css/plugins/easy-autocomplete/easy-autocomplete.min.css" rel="stylesheet">
+
 <style>
 #product_list
 {
@@ -180,6 +181,7 @@
 	           	<thead>
 					<tr>
 						<td></td>
+						<td>Cantidad</td>
 						<td>SKU</td>
 						<td>Nombre</td>
 						<td></td>
@@ -324,11 +326,14 @@ $(document).ready(function()
 			        {
 				        var url="guardar_conjunto.php?id="+producto_id;
 				        var products=new Array();
-				        var p={};
+				        
 				        $.each($('.products'), function (index, value)
 		            	{
+				        	var p={};
 				        	var id=$(value).val();
+				        	var cantidad=$("#cantidad_"+id).val();
 				        	p.id=id;
+				        	p.cantidad=cantidad;
 				        	products.push(p);
 		            	});	
 
@@ -455,11 +460,11 @@ $(document).ready(function()
 			}
 			
 			table+='<td>'+imagen+'</td>';
+			table+='<td><input id="cantidad_'+id+'" value="1" size="3" onkeypress="return validateNumber(event)"></td>';
 			table+='<td>'+sku+'</td>';
 			table+='<td>'+name+'</td>';
 			table+='<td class="text-left"><a id="delete_'+id+'" href="#" onCLick="deleteRow(this.id);"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>';
-			table+='</tr>';
-			table+='</tr>';
+			table+='</tr>';			
 	
 			$('#products_table').append(table);
 	
@@ -514,6 +519,15 @@ function deleteRow(td)
 	
 	$("#producto").val('');
 	$("#producto").focus();
+}
+
+function validateNumber(evt)
+{
+	evt = (evt) ? evt : window.event;
+    var charCode = (evt.which) ? evt.which : evt.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+        return false;
+    }
 }
 
 </script>
