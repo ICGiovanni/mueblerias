@@ -215,7 +215,20 @@ if($datos[0]["type"]=='C')
 				<input type="checkbox" name="conjunto" id="conjunto" value="activo" <?php echo $checked;?>>
 			</div>
             </div>
-			<div id="div_conjunto" <?php $checked=='U' ? 'style="display:none;"' : ""?>>
+            
+            <?php 
+            
+            if($checked)
+            {
+            	$visible="";
+            }
+            else
+            {
+            	$visible='style="display:none;"';	
+            }
+            ?>
+            
+			<div id="div_conjunto" <?php echo $visible;?>>
 	           	<div class="form-group">
 	           	<label class="col-sm-2 control-label">Productos</label>
 	           	<div class="col-sm-6" ><input type="text" class="form-control" id="producto" name="producto"></div>
