@@ -50,6 +50,9 @@ CREATE TABLE IF NOT EXISTS productos
 	producto_price_public FLOAT,
 	proveedor_id INT,
 	producto_type ENUM('U','C') NOT NULL DEFAULT 'U',
+	producto_version VARCHAR(30) NOT NULL,
+	producto_medida VARCHAR(30) NOT NULL,
+	producto_piso VARCHAR(30) NOT NULL,
 	PRIMARY KEY (producto_id),
 	FOREIGN KEY (proveedor_id) REFERENCES proveedores(proveedor_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
