@@ -340,7 +340,7 @@ class Productos
 		}
 		
 		$sql="SELECT p.producto_id,p.producto_name,p.producto_sku,
-				p.producto_description,p.producto_price_utilitarian,p.producto_price_public,p.proveedor_id,IF(p.producto_type='U','&Uacute;nico','Conjunto') AS producto_type
+				p.producto_description,p.producto_price_utilitarian,p.producto_price_public,p.proveedor_id,IF(p.producto_type='U','&Uacute;nico','Conjunto') AS producto_type,p.producto_type AS type
 				FROM productos p".
 				$where.
 				" ORDER BY p.producto_id";
@@ -531,9 +531,31 @@ class Productos
 		}
 	}
 	
+	public function DeleteProductGroup($producto_id)
+	{
+		$sql="DELETE FROM productos_conjunto WHERE producto_id=:producto_id";
+		
+		$statement=$this->connect->prepare($sql);
+		$statement->bindParam(':producto_id', $producto_id, PDO::PARAM_STR);
+		
+		$statement->execute();
+	}
+	
 	public function ActualizarProducto($params)
 	{
-		$sql="UPDATE productos SET producto_name=:nombre,producto_sku=:sku,producto_description=:descripcion,producto_price_utilitarian=:precio_utilitario,producto_price_public=:precio_publico,proveedor_id=:proveedor
+		if(isset($params['conjunto']))
+		{
+			$type="C";
+		}
+		else
+		{
+			$type="U";
+			
+		}
+		
+		$this->DeleteProductGroup($params['id_producto']);
+		
+		$sql="UPDATE productos SET producto_name=:nombre,producto_sku=:sku,producto_description=:descripcion,producto_price_utilitarian=:precio_utilitario,producto_price_public=:precio_publico,proveedor_id=:proveedor,producto_type=:type
 				WHERE producto_id=:producto";
 		
 		
@@ -548,6 +570,7 @@ class Productos
 		$statement->bindParam(':precio_utilitario', $price_utilitarian, PDO::PARAM_STR);
 		$statement->bindParam(':precio_publico', $price_public, PDO::PARAM_STR);
 		$statement->bindParam(':proveedor', $params['proveedor'], PDO::PARAM_STR);
+		$statement->bindParam(':type', $type, PDO::PARAM_STR);
 		$statement->bindParam(':producto', $params['id_producto'], PDO::PARAM_STR);
 		
 		$statement->execute();
@@ -599,11 +622,16 @@ class Productos
 	public function GetProductsUnique()
 	{
 		$sql="SELECT p.producto_id,p.producto_sku,p.producto_name,
+				IF((SELECT imagen_route
+				FROM imagenes_productos ip
+				WHERE ip.producto_id=p.producto_id
+				ORDER BY imagen_id ASC
+				limit 0,1)!='',
 				(SELECT imagen_route
 				FROM imagenes_productos ip
 				WHERE ip.producto_id=p.producto_id
 				ORDER BY imagen_id ASC
-				limit 0,1) AS imagen
+				limit 0,1),'".FINAL_URL."img/imagen-no.png') AS imagen
 				FROM productos p
 				INNER JOIN proveedores pr USING(proveedor_id)
 				WHERE producto_type='U'
@@ -616,19 +644,46 @@ class Productos
 	}
 	
 	public function InsertProductoGroup($producto_id,$data)
-	{
-		
+	{		
 		foreach($data as $d)
 		{
 			
-			$sql="INSERT INTO productos_conjunto VALUES(:producto,:producto_conjunto)";
+			$sql="INSERT INTO productos_conjunto VALUES(:producto,:producto_conjunto,:cantidad)";
 		
 			$statement=$this->connect->prepare($sql);
 		
 			$statement->bindParam(':producto', $producto_id, PDO::PARAM_STR);
 			$statement->bindParam(':producto_conjunto', $d['id'], PDO::PARAM_STR);
+			$statement->bindParam(':cantidad', $d['cantidad'], PDO::PARAM_STR);
 				
 			$statement->execute();
 		}
+	}
+	
+	public function GetProductsGroup($producto_id)
+	{
+		$sql="SELECT p.producto_id,p.producto_sku,p.producto_name,
+				IF((SELECT imagen_route
+				FROM imagenes_productos ip
+				WHERE ip.producto_id=p.producto_id
+				ORDER BY imagen_id ASC
+				limit 0,1)!='',
+				(SELECT imagen_route
+				FROM imagenes_productos ip
+				WHERE ip.producto_id=p.producto_id
+				ORDER BY imagen_id ASC
+				limit 0,1),'".FINAL_URL."img/imagen-no.png') AS imagen,pc.cantidad,pc.producto_conjunto_id
+				FROM productos p
+				INNER JOIN proveedores pr USING(proveedor_id)
+				INNER JOIN productos_conjunto pc ON pc.producto_conjunto_id=p.producto_id
+				WHERE producto_type='U'
+				AND pc.producto_id='$producto_id'
+				ORDER BY p.producto_name ASC";
+		
+		$statement=$this->connect->prepare($sql);
+		$statement->execute();
+		$result=$statement->fetchAll(PDO::FETCH_ASSOC);
+		
+		return $result;
 	}
 }
