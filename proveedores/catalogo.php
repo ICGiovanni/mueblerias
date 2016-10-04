@@ -11,8 +11,14 @@ $proveedorId = base64_decode($_GET['id']);
 $proveedores = new Proveedor();
 $productos = new Productos();
 
+$infoProv = $proveedores->getProveedor($proveedorId);
+$infoProv = end($infoProv);
 $list = $proveedores->GetDataProductProveedor($proveedorId);
-
+/*
+echo "<pre>";
+    print_r($infoProv);
+echo "</pre>";  
+*/
 foreach($list as $key => $value){
     $productId = $value['producto_id'];
     $categoria = $productos->GetProductCategory($productId);
@@ -35,7 +41,7 @@ foreach($list as $key => $value){
                 <a href="">Proveedores</a>
             </li>
             <li class="active">
-                <strong>Productos por proveedor</strong>
+                <strong>Productos por proveedor <?php echo $infoProv['proveedor_nombre']?></strong>
             </li>
         </ol>
     </div>
@@ -80,15 +86,21 @@ foreach($list as $key => $value){
                                         <td>".$item['material']."</td>
                                         <td>".$item['producto_price_utilitarian']."</td>
                                         <td>".$item['producto_price_public']."</td>
-                                        <td>galeria</td>    
+                                        <td><a href='galeria.php' target='_blank'>galeria</a></td>    
                                         <td>
                                             <a href='".$raizProy."productos/editar_producto.php?id=".$item['producto_id']."'><i class='fa fa-edit' title='Editar'></i></a>
-                                            <a href='#'><i class='fa fa-trash deleteProv' title='Editar'></i></a>
-                                            <a href='#'>Pedido</a>
+                                            <a href='#'><i class='fa fa-trash deleteProv' title='Borrar'></i></a>
+                                            <a href='#' data-toggle='modal' data-target='#myModal3' 
+                                                    data-proveedor='".$infoProv['proveedor_nombre']."'
+                                                    data-telefono='".$infoProv['telefono']."'
+                                                    data-producto='".$item['producto_id']."'
+                                                    data-categoria = '".$item['categoria']."'   
+                                                    data-color = '".$item['color']."'   
+                                                    data-material = '".$item['material']."'   
+                                                    class='nuevoPedido'>Pedido</a>
                                         </td>    
                                     </tr>";
                         }
-                            
                         ?>    
                         </tbody>
                     </table>
@@ -137,6 +149,27 @@ foreach($list as $key => $value){
     </div>
 </div>
 
+<div class="modal inmodal fade" id="myModal3" tabindex="-1" role="dialog"  aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header" style="padding: 15px">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Cerrar</span></button>
+                <h3 class="modal-title">Nuevo Pedido </h3>
+            </div>
+            <div class="modal-body" style="padding-bottom: 0px !important; margin-bottom: -15px !important">                    
+                <input type="hidden" id="proveedor_id_update" value='<?php echo $proveedorId;?>' />      
+                <input type="hidden" id="producto_id" value='' />      
+                <?php include 'pedidoTemplate.php' ?>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger btn-xs" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary btn-xs" id="btn_guardar_pedido" >Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 
 <?php 
     require_once $pathProy.'/footer2.php';
@@ -148,5 +181,4 @@ foreach($list as $key => $value){
 <link href="<?php echo $raizProy?>css/plugins/dataTables/datatables.min.css" rel="stylesheet">
 <link href="<?php echo $raizProy?>css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
 
-
-
+<script src="js/catalogo.js"></script>

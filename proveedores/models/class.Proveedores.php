@@ -89,7 +89,10 @@ class Proveedor {
     {
         $sql="SELECT 
         proveedor_id,
-        proveedor_nombre
+        proveedor_nombre, 
+        telefono, 
+        email,
+        address_id
         FROM ".$this->name_table." WHERE proveedor_id = :proveedor_id";
 
         $statement=$this->connect->prepare($sql);

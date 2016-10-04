@@ -93,6 +93,7 @@
                         </a>
                         <ul class="nav nav-second-level">
                             <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/proveedores/index.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'proveedores/index.php'?>" >Lista de proveedores</a></li>                            
+                            <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/proveedores/pedidos.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'proveedores/pedidos.php'?>" >Lista de pedidos</a></li>                            
                         </ul>
                     </li>
                 </ul>
