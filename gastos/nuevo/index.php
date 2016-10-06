@@ -229,7 +229,7 @@ while(list(,$dataLogin) = each($rowsLogin)){
 <script>
 
 $(document).ready(function(){
-	
+	/*
 	$('.dataTables-example').DataTable({
 				searching: false,
 				ordering:  false,
@@ -253,7 +253,7 @@ $(document).ready(function(){
                 ]
 
             });
-	
+	*/
      $.fn.datepicker.defaults.language = 'es';
 	 $('.clockpicker').clockpicker();
 });
