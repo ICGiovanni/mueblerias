@@ -325,7 +325,7 @@ while(list(,$dataGasto) = each($rows)){
 	<script src="<?=$raizProy?>js/plugins/datapicker/bootstrap-datepicker.es.js"></script>
 	<script src="<?=$raizProy?>js/plugins/clockpicker/clockpicker.js"></script>
 	
-	 <!-- FooTable -->
+	<!-- FooTable -->
     <script src="<?=$raizProy?>js/plugins/footable/footable.all.min.js"></script>
 
     <!-- Custom and plugin javascript -->
