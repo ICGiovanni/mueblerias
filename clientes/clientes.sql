@@ -40,16 +40,39 @@ CREATE TABLE IF NOT EXISTS `clientes` (
   `codigo_postal` varchar(10) NOT NULL,
   `municipio` varchar(100) NOT NULL,
   `id_estado` int(11) NOT NULL,
-  `telefono` varchar(50) NOT NULL,
-  `telefono_alterno` varchar(50) NOT NULL,
-  `celular` varchar(100) NOT NULL,
-  `celularA` varchar(100) NOT NULL,
   `email` varchar(100) NOT NULL,
   `emailA` varchar(100) NOT NULL,
   `rating` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_cliente`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
+
+CREATE TABLE IF NOT EXISTS `inv_phone_type` (
+  `phone_type_id` int(11) NOT NULL AUTO_INCREMENT,
+  `type` varchar(45) NOT NULL,
+  PRIMARY KEY (`phone_type_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+
+--
+-- Volcado de datos para la tabla `inv_phone_type`
+--
+
+INSERT INTO `inv_phone_type` (`phone_type_id`, `type`) VALUES
+(1, 'Celular'),
+(2, 'Casa'),
+(3, 'Oficina'),
+(4, 'Otro');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+CREATE TABLE IF NOT EXISTS cliente_telefono
+(
+	id_telefono INT NOT NULL AUTO_INCREMENT,
+	id_cliente INT NOT NULL,
+	phone_type_id INT NOT NULL,
+	number VARCHAR(45),
+	PRIMARY KEY(id_telefono),
+	FOREIGN KEY (id_cliente) REFERENCES clientes(id_cliente),
+	FOREIGN KEY (phone_type_id) REFERENCES inv_phone_type(phone_type_id)
+)ENGINE=InnoDB  DEFAULT CHARSET=latin1;

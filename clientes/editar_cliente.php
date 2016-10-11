@@ -80,17 +80,64 @@ $datos=$clientes->GetClientes($id_cliente);
 			</div>
 			</div>
             <div class="form-group">
-            <label class="col-sm-2 control-label">Telefono</label>
-			<div class="col-sm-2 "><input type="text" class="form-control" id="telefono" name="telefono" value="<?php echo $datos[0]["telefono"]?>"></div>
-			<label class="col-sm-2 control-label">Telefono Alterno</label>
-			<div class="col-sm-2"><input type="text" class="form-control" id="telefonoA" name="telefonoA" value="<?php echo $datos[0]["telefono_alterno"]?>"></div>
-            </div>
-            <div class="form-group">
-            <label class="col-sm-2 control-label">Celular</label>
-			<div class="col-sm-2 "><input type="text" class="form-control" id="celular" name="celular" value="<?php echo $datos[0]["celular"]?>"></div>
-			<label class="col-sm-2 control-label">Celular Alterno</label>
-			<div class="col-sm-2"><input type="text" class="form-control" id="celularA" name="celularA" value="<?php echo $datos[0]["celularA"]?>"></div>
-            </div>
+            <?php
+           	$phones=$clientes->GetPhonesClient($id_cliente);
+           	
+           	$phonesC="";
+           	$i=0;
+           	foreach($phones as $p)
+           	{
+           		$phone=$p['number'];
+           		$type=$p['phone_type_id'];
+           		
+           		$phonesC.='<div class="form-group">';
+           		
+           		if($i==0)
+           		{
+           			$phonesC.='<label class="col-sm-2 control-label">Telefono</label>';
+           		}
+           		else
+           		{
+           			$phonesC.='<label class="col-sm-2 control-label"></label>';
+           		}
+           		$phonesC.='<div class="col-sm-3 "><input class="form-control" id="telefono" name="telefono[]" value="'.$phone.'" type="text"></div>
+           	<div class="col-md-2">
+                            <select id="phoneType" name="phoneType[]" class="form-control">';
+           		
+           		foreach($clientes->GetTypesPhones() as $t)
+           		{
+           			if($t['phone_type_id']==$type)
+           			{
+           				$phonesC.='<option value="'.$t['phone_type_id'].'" selected>'.$t['type'].'</option>';
+           			}
+           			else
+           			{
+           				$phonesC.='<option value="'.$t['phone_type_id'].'">'.$t['type'].'</option>';
+           			}
+           		}
+           		
+           		$phonesC.='</select></div>';
+           		
+           		
+           		
+           		if($i==0)
+           		{
+           			$phonesC.='<div class="col-md-1">
+                            <button class="form-control" id="agregarTelefono" value="" placeholder="Telefono" type="button"><i class="fa fa-plus"></i></button></div>';
+           		}
+           		else
+           		{
+           			$phonesC.='<div class="col-md-1"><button class="form-control deletePhone" id="agregarTelefono" value="" placeholder="Telefono" type="button"><i class="fa fa-times"></i></button></div>';
+           		}
+           		
+           		$phonesC.='</div>';
+           		
+           		$i++;
+           	}
+            
+            echo $phonesC;
+            ?>
+            <div id="newPhone"></div>
             <div class="form-group"><label class="col-sm-2 control-label">E-mail</label>
 			<div class="col-sm-6" id="divEmail"><input type="text" class="form-control" id="email" name="email" value="<?php echo $datos[0]["email"]?>"></div>
             </div>
@@ -206,6 +253,14 @@ $(document).ready(function()
         	
         });
     });
+
+	$("#agregarTelefono").click(function(){
+        $("#newPhone").append('<div class="form-group"><label class="col-sm-2 control-label"></label><div class="col-sm-3 "><input class="form-control" id="telefono" name="telefono[]" value="" type="text"></div><div class="col-md-2">                                <select id="phoneType" name="phoneType[]" class="form-control"><option value="1">Celular</option><option value="2">Casa</option>                                    <option value="3">Oficina</option><option value="4">Otro</option>                                </select></div><div class="col-md-1"><button class="form-control deletePhone" id="agregarTelefono" value="" placeholder="Telefono" type="button"><i class="fa fa-times"></i></button></div></div>');
+
+        $(".deletePhone").click(function(){            
+            $(this).parent().parent().remove();
+        });  
+     });
 	
 });
 </script>

@@ -69,17 +69,21 @@
 			</div>
 			</div>
             <div class="form-group">
-            <label class="col-sm-2 control-label">Telefono</label>
-			<div class="col-sm-2 "><input type="text" class="form-control" id="telefono" name="telefono"></div>
-			<label class="col-sm-2 control-label">Telefono Alterno</label>
-			<div class="col-sm-2"><input type="text" class="form-control" id="telefonoA" name="telefonoA"></div>
+           	<label class="col-sm-2 control-label">Telefono</label>
+           	<div class="col-sm-3 "><input class="form-control" id="telefono" name="telefono[]" value="" type="text"></div>
+           	<div class="col-md-2">
+                            <select id="phoneType" name="phoneType[]" class="form-control">
+                                <option value="1">Celular</option>
+                                <option value="2">Casa</option>
+                                <option value="3">Oficina</option>
+                                <option value="4">Otro</option>
+                            </select>
+                        </div>
+			<div class="col-md-1">                            
+                            <button class="form-control" id="agregarTelefono" value="" placeholder="Telefono" type="button"><i class="fa fa-plus"></i></button>
+                        </div>    
             </div>
-            <div class="form-group">
-            <label class="col-sm-2 control-label">Celular</label>
-			<div class="col-sm-2 "><input type="text" class="form-control" id="celular" name="celular"></div>
-			<label class="col-sm-2 control-label">Celular Alterno</label>
-			<div class="col-sm-2"><input type="text" class="form-control" id="celularA" name="celularA"></div>
-            </div>
+            <div id="newPhone"></div>
             <div class="form-group"><label class="col-sm-2 control-label">E-mail</label>
 			<div class="col-sm-6" id="divEmail"><input type="text" class="form-control" id="email" name="email"></div>
             </div>
@@ -189,6 +193,16 @@ $(document).ready(function()
         	$("#estado").append('<option value="'+field.id_estado+'" >'+field.estado+'</option>');
         });
     });
+
+	$("#agregarTelefono").click(function(){
+        $("#newPhone").append('<div class="form-group"><label class="col-sm-2 control-label"></label><div class="col-sm-3 "><input class="form-control" id="telefono" name="telefono[]" value="" type="text"></div><div class="col-md-2">                                <select id="phoneType" name="phoneType[]" class="form-control"><option value="1">Celular</option><option value="2">Casa</option>                                    <option value="3">Oficina</option><option value="4">Otro</option>                                </select></div><div class="col-md-1"><button class="form-control deletePhone" id="agregarTelefono" value="" placeholder="Telefono" type="button"><i class="fa fa-times"></i></button></div></div>');
+
+        $(".deletePhone").click(function(){            
+            $(this).parent().parent().remove();
+        });  
+     });
+
+	
 	
 });
 </script>
