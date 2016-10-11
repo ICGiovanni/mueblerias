@@ -58,7 +58,7 @@ class Productos
 			$type="C";
 		}
 		
-		$sql="INSERT INTO productos VALUES('',:nombre,:sku,:descripcion,:precio_utilitario,:precio_publico,:proveedor,:type)";
+		$sql="INSERT INTO productos VALUES('',:nombre,:sku,:descripcion,:precio_utilitario,:precio_publico,:proveedor,:type,:version,:medida,:piso)";
 		
 		$statement=$this->connect->prepare($sql);
 		$price_utilitarian=number_format($params['precioU'], 2, '.', '');
@@ -71,6 +71,9 @@ class Productos
 		$statement->bindParam(':precio_publico', $price_public, PDO::PARAM_STR);
 		$statement->bindParam(':proveedor', $params['proveedor'], PDO::PARAM_STR);
 		$statement->bindParam(':type', $type, PDO::PARAM_STR);
+		$statement->bindParam(':version', $params['version'], PDO::PARAM_STR);
+		$statement->bindParam(':medida', $params['medida'], PDO::PARAM_STR);
+		$statement->bindParam(':piso', $params['piso'], PDO::PARAM_STR);
 		
 		$statement->execute();
 		
@@ -340,7 +343,7 @@ class Productos
 		}
 		
 		$sql="SELECT p.producto_id,p.producto_name,p.producto_sku,
-				p.producto_description,p.producto_price_utilitarian,p.producto_price_public,p.proveedor_id,IF(p.producto_type='U','&Uacute;nico','Conjunto') AS producto_type,p.producto_type AS type
+				p.producto_description,p.producto_price_utilitarian,p.producto_price_public,p.proveedor_id,IF(p.producto_type='U','&Uacute;nico','Conjunto') AS producto_type,p.producto_type AS type,p.producto_version,p.producto_medida,p.producto_piso
 				FROM productos p".
 				$where.
 				" ORDER BY p.producto_id";
@@ -555,7 +558,7 @@ class Productos
 		
 		$this->DeleteProductGroup($params['id_producto']);
 		
-		$sql="UPDATE productos SET producto_name=:nombre,producto_sku=:sku,producto_description=:descripcion,producto_price_utilitarian=:precio_utilitario,producto_price_public=:precio_publico,proveedor_id=:proveedor,producto_type=:type
+		$sql="UPDATE productos SET producto_name=:nombre,producto_sku=:sku,producto_description=:descripcion,producto_price_utilitarian=:precio_utilitario,producto_price_public=:precio_publico,proveedor_id=:proveedor,producto_type=:type,producto_version=:version,	producto_medida=:medida,producto_piso=:piso
 				WHERE producto_id=:producto";
 		
 		
@@ -571,6 +574,9 @@ class Productos
 		$statement->bindParam(':precio_publico', $price_public, PDO::PARAM_STR);
 		$statement->bindParam(':proveedor', $params['proveedor'], PDO::PARAM_STR);
 		$statement->bindParam(':type', $type, PDO::PARAM_STR);
+		$statement->bindParam(':version', $params['version'], PDO::PARAM_STR);
+		$statement->bindParam(':medida', $params['medida'], PDO::PARAM_STR);
+		$statement->bindParam(':piso', $params['piso'], PDO::PARAM_STR);
 		$statement->bindParam(':producto', $params['id_producto'], PDO::PARAM_STR);
 		
 		$statement->execute();

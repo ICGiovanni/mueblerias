@@ -22,7 +22,9 @@
         <div class="col-sm-8">
             <div class="title-action">
                 <a href="./nuevo_cliente.php" class="btn btn-primary btn-xs">Nuevo Cliente</a>
+                <a href="#" id="rating" data-toggle="modal" data-target="#ratingModal" class="btn btn-primary btn-xs">Configurar Rating</a>
             </div>
+            
         </div>
     </div>
     

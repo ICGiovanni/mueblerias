@@ -161,6 +161,21 @@
             </div>
             
             <div class="form-group">
+            <label class="col-sm-2 control-label">Version</label>
+			<div class="col-sm-2 "><input type="text" class="form-control" id="version" name="version"></div>
+			</div>
+			
+			<div class="form-group">
+            <label class="col-sm-2 control-label">Medida</label>
+			<div class="col-sm-2 "><input type="text" class="form-control" id="medida" name="medida"></div>
+			</div>
+			
+			<div class="form-group">
+            <label class="col-sm-2 control-label">Piso</label>
+			<div class="col-sm-2 "><input type="text" class="form-control" id="piso" name="piso"></div>
+			</div>
+            
+            <div class="form-group">
             <label class="col-sm-2 control-label">Conjunto</label>
 			<div class="col-sm-2 ">
 				<input type="checkbox" name="conjunto" id="conjunto" value="activo">
@@ -401,7 +416,7 @@ $(document).ready(function()
 
 	var options=
 	{
-		url: "http://localhost/globmint.com/productos/get_products_unique.php",
+		url: "get_products_unique.php",
 		getValue: function(element)
 		{
 			var name=element.producto_sku+' '+element.producto_name;
