@@ -47,4 +47,27 @@ class Calendario {
 		$statement->execute();
 		return $this->connect->lastInsertId();
 	}
+	
+	public function getEventos($login_id){
+		$sql="SELECT 
+			evento_nombre,
+			evento_fecha,
+			evento_desc,
+			evento_recordatorio_activo,
+			evento_recordatorio_fecha
+		FROM 
+			".$this->name_table_eventos."
+		WHERE
+			login_id = :login_id
+		";
+
+		$statement=$this->connect->prepare($sql);
+		$statement->bindParam(':login_id', $login_id, PDO::PARAM_STR);
+
+		$statement->execute();
+        $result=$statement->fetchAll(PDO::FETCH_ASSOC);
+
+		return $result;
+		
+	}
 }

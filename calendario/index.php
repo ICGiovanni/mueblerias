@@ -6,11 +6,22 @@ require_once $pathProy.'/menu.php';
 require_once($_SERVER["REDIRECT_PATH_CONFIG"].'calendario/models/class.Calendario.php');
 
 $objCalendario = new Calendario();
-
+$rowEventos = $objCalendario->getEventos($_SESSION["login_session"]["login_id"]);
+$jsonEventos = array();
+while(list(,$dataEventos) = each($rowEventos)){
+	list($evento_fecha, $evento_hora) = explode(" ",$dataEventos["evento_fecha"]);
+	list($evento_fecha_ano, $evento_fecha_mes, $evento_fecha_dia) = explode("-",$evento_fecha);
+	list($evento_hora_hora, $evento_hora_minuto, $evento_hora_segundo) = explode(":",$evento_hora);
+	$jsonEventos[]="{                    
+				title: '".$dataEventos["evento_nombre"]."',
+				start: new Date(".$evento_fecha_ano.", ".(intval($evento_fecha_mes)-1).", ".$evento_fecha_dia.", ".$evento_hora_hora.", ".$evento_hora_minuto."),
+				allDay: false
+			}";
+}
 ?>
 <link href="<?=$raizProy?>css/plugins/iCheck/custom.css" rel="stylesheet">
-<link href="<?=$raizProy?>css/plugins/fullcalendar/fullcalendar.css" rel="stylesheet">
-<link href="<?=$raizProy?>css/plugins/fullcalendar/fullcalendar.print.css" rel='stylesheet' media='print'>
+<link href="<?=$raizProy?>css/plugins/fullcalendar/fullcalendar-3.0.1.css" rel="stylesheet">
+<link href="<?=$raizProy?>css/plugins/fullcalendar/fullcalendar.print-3.0.1.css" rel='stylesheet' media='print'>
 <link href="<?=$raizProy?>css/style.css" rel="stylesheet">
 
 <div class="row wrapper border-bottom white-bg page-heading">
@@ -74,7 +85,7 @@ $objCalendario = new Calendario();
         </div>
         </div>
 	<!-- Mainly scripts -->
-<script src="<?=$raizProy?>js/plugins/fullcalendar/moment.min.js"></script>
+<script src="<?=$raizProy?>js/plugins/fullcalendar/moment-2.14.1.min.js"></script>
 <script src="<?=$raizProy?>js/jquery-3.1.0.js"></script>
 <script src="<?=$raizProy?>js/bootstrap-3.3.7.min.js"></script>
 <script src="<?=$raizProy?>js/plugins/metisMenu/jquery.metisMenu.js"></script>
@@ -91,13 +102,13 @@ $objCalendario = new Calendario();
 <script src="<?=$raizProy?>js/plugins/iCheck/icheck.min.js"></script>
 
 <!-- Full Calendar -->
-<script src="<?=$raizProy?>js/plugins/fullcalendar/fullcalendar.min.js"></script>
-<script src="<?=$raizProy?>js/plugins/fullcalendar/locale-all.js"></script>
+<script src="<?=$raizProy?>js/plugins/fullcalendar/fullcalendar-3.0.1.min.js"></script>
+<script src="<?=$raizProy?>js/plugins/fullcalendar/es.js"></script>
 <script>
 
 	$(document).ready(function() {
 		
-
+		
 
         $('#external-events div.external-event').each(function() {
 
@@ -117,7 +128,7 @@ $objCalendario = new Calendario();
             header: {
                 left: 'prev,next today',
                 center: 'title',
-                right: 'month,agendaWeek,agendaDay'
+                right: 'month,agendaWeek,agendaDay,listMonth'
             },
 			locale: initialLocaleCode,
             editable: false,
@@ -131,50 +142,7 @@ $objCalendario = new Calendario();
                 }*/
             },
             events: [
-                {
-                    title: 'All Day Event',
-                    start: new Date(y, m, 1)
-                },
-                {
-                    title: 'Long Event',
-                    start: new Date(y, m, d-5),
-                    end: new Date(y, m, d-2)
-                },
-                {
-                    id: 999,
-                    title: 'Repeating Event',
-                    start: new Date(y, m, d-3, 16, 0),
-                    allDay: false
-                },
-                {
-                    id: 999,
-                    title: 'Repeating Event',
-                    start: new Date(y, m, d+4, 16, 0),
-                    allDay: false
-                },
-                {
-                    title: 'Meeting',
-                    start: new Date(y, m, d, 10, 30),
-                    allDay: false
-                },
-                {
-                    title: 'Lunch',
-                    start: new Date(y, m, d, 12, 0),
-                    end: new Date(y, m, d, 14, 0),
-                    allDay: false
-                },
-                {
-                    title: 'Birthday Party',
-                    start: new Date(y, m, d+1, 19, 0),
-                    end: new Date(y, m, d+1, 22, 30),
-                    allDay: false
-                },
-                {
-                    title: 'Click for Google',
-                    start: new Date(y, m, 28),
-                    end: new Date(y, m, 29),
-                    url: 'http://google.com/'
-                }
+               <?=implode(",",$jsonEventos)?>
             ]
         });
 
