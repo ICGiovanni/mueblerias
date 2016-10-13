@@ -13,11 +13,11 @@ require_once $_SERVER['REDIRECT_PATH_CONFIG'].'/config.php';
 require_once($_SERVER['REDIRECT_PATH_CONFIG'].'/calendario/models/class.Calendario.php');
 $objCalendario = new Calendario();
 
-$evento_id = $objCalendario->insertEvento($_GET);
+$return = $objCalendario->editEvento($_GET);
 
-echo $evento_id;
+echo $return;
 
-/* meter evento
+/* editar evento
 require_once($_SERVER['REDIRECT_PATH_CONFIG'].'/calendario/models/class.Calendario.php');
 $objCalendario = new Calendario();
 $params = array(
@@ -26,7 +26,7 @@ $params = array(
 					"evento_desc"=>"Veremos detalles para catalogo 2018",
 					"evento_recordatorio_activo"=>"1",
 					"evento_recordatorio_fecha"=>"2016-10-28 06:00:00",
-					"login_id"=>"1"
+					"evento_id"=>"1"
 				)
-$evento_id = $objCalendario->insertEvento($params);
+$return = $objCalendario->editEvento($params);
 */

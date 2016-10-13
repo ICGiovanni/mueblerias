@@ -8,6 +8,8 @@ require_once($_SERVER["REDIRECT_PATH_CONFIG"].'calendario/models/class.Calendari
 $objCalendario = new Calendario();
 $rowEventos = $objCalendario->getEventos($_SESSION["login_session"]["login_id"]);
 $jsonEventos = array();
+$proximos = array();
+
 while(list(,$dataEventos) = each($rowEventos)){
 	list($evento_fecha, $evento_hora) = explode(" ",$dataEventos["evento_fecha"]);
 	list($evento_fecha_ano, $evento_fecha_mes, $evento_fecha_dia) = explode("-",$evento_fecha);
@@ -15,8 +17,12 @@ while(list(,$dataEventos) = each($rowEventos)){
 	$jsonEventos[]="{                    
 				title: '".$dataEventos["evento_nombre"]."',
 				start: new Date(".$evento_fecha_ano.", ".(intval($evento_fecha_mes)-1).", ".$evento_fecha_dia.", ".$evento_hora_hora.", ".$evento_hora_minuto."),
-				allDay: false
+				allDay: false,
+				url: 'editar/?evento_id=".$dataEventos["evento_id"]."'
 			}";
+	if( $evento_fecha_dia == date("d") ){
+		$proximos[]="<div class='external-event navy-bg'><a href='editar/?evento_id=".$dataEventos["evento_id"]."' style='color:#FFF;'>".$evento_hora_hora.":".$evento_hora_minuto." ".$dataEventos["evento_nombre"]."</a></div>";
+	}
 }
 ?>
 <link href="<?=$raizProy?>css/plugins/iCheck/custom.css" rel="stylesheet">
@@ -51,12 +57,8 @@ while(list(,$dataEventos) = each($rowEventos)){
                 </div>
                 <div class="ibox-content">
                     <div id='external-events'>
-                        <p></p>
-                        <div class='external-event navy-bg'>Go to shop and buy some products.</div>
-                        <div class='external-event navy-bg'>Check the new CI from Corporation.</div>
-                        <div class='external-event navy-bg'>Send documents to John.</div>
-                        <div class='external-event navy-bg'>Phone to Sandra.</div>
-                        <div class='external-event navy-bg'>Chat with Michael.</div>
+                        <!-- <p></p> -->
+                        <?=implode("",$proximos)?>
                         <p class="m-t">
                             <!-- <input type='checkbox' id='drop-remove' class="i-checks" checked /> <label for='drop-remove'>remove after drop</label> -->
                         </p>
