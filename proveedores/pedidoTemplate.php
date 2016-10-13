@@ -13,14 +13,12 @@
                 <div>
                     <table class="table table-striped table-bordered table-hover">
                         <thead>
-                            <tr>
-                                <td>Categoria</td>
+                            <tr>                                
                                 <td>Color</td>
                                 <td>Material</td>                            
                             </tr>
                         </thead>    
-                        <tr>
-                            <td id="categoria_mueble">1</td>
+                        <tr>                            
                             <td id="color_mueble">2</td>
                             <td id="material_mueble">3</td>
                         </tr>

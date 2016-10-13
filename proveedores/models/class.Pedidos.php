@@ -19,7 +19,7 @@ class Pedidos {
                 inner join productos using(producto_id) 
                 inner join proveedores on pedidos.proveedor_id = proveedores.proveedor_id
                 where pedidos.status = 1
-                order by fecha_entrega ASC";
+                order by pedidos.fecha_entrega ASC";
 
         $statement=$this->connect->prepare($sql);
         //$statement->bindParam(':gasto_id', $idGasto, PDO::PARAM_STR);

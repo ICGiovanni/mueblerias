@@ -39,7 +39,7 @@ require_once $pathProy.'/menu.php';
                             <th>Nombre</th>
                             <th>Telefono</th>
                             <th>E-mail</th>
-                            <th width='120px'><center>Ir a catalogo</center></th>
+                            <th width='120px'><center>Dirección</center></th>
                             <th width='120px'><center>Accion</center></th>                            
                         </tr>
                         </thead>

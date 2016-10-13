@@ -12,6 +12,8 @@ $productos = new Productos();
 $pedidos = new Pedidos();
 $general = new General();
 $listaPedidos = $pedidos->getPedidos();
+
+
 ?>
 
 <div class="row wrapper border-bottom white-bg page-heading">
@@ -39,16 +41,20 @@ $listaPedidos = $pedidos->getPedidos();
         <div class="col-lg-12">
             <div class="ibox-content">
                 <div class="">
+                    
+                        
+                    
                     <table id="tablaPedidos" class="table table-striped table-bordered table-hover dataTables-example" >
                         <thead>
                         <tr>                            
                             <th>Pedido</th>
                             <th>Proveedor</th>
-                            <th>Producto</th>
-                            <th>Categoria</th>                            
+                            <th>Producto</th>                                                     
                             <th>Color</th>                            
                             <th>Material</th>
-                            <th>Fecha de entrega</th>                            
+                            <th>Cantidad</th>
+                            <th>Fecha de entrega</th> 
+                            <th>Telefono</th>
                             <th>Acciones</th>                            
                         </tr>
                         </thead>
@@ -56,23 +62,39 @@ $listaPedidos = $pedidos->getPedidos();
                         <?php                                 
                         
                         foreach($listaPedidos as $item){
-                            $productId = $item['producto_id'];
-                            $categoria = $productos->GetProductCategory($productId);
+                            $productId = $item['producto_id'];                            
                             $material = $productos->GetProductMaterial($productId);
-                            $color = $productos->GetProductColor($productId);        
-                            echo "  <tr>
+                            $color = $productos->GetProductColor($productId);
+                            
+                            $date1=date_create(date('Y-m-d'));
+                            $date2=date_create($item['fecha_entrega']);
+                            $diff=date_diff($date1,$date2);
+                            $colorRow = '';
+                            
+                            if($diff->format("%R%a")<4 && $diff->format("%R%a")>0){
+                                $colorRow = 'warning';
+                            }                            
+                            if($diff->format("%R%a")<=0){
+                                $colorRow = 'danger';
+                            }
+                            if($diff->format("%R%a")>=4){
+                                $colorRow = 'success';
+                            }
+                            
+                            echo "  <tr class='".$colorRow."'>
                                         <td>".$item['pedido_id']."</td>
                                         <td>".$item['proveedor_nombre']."</td>
-                                        <td>".$item['producto_name']."</td>                                        
-                                        <td>".implode(",", $categoria)."</td>
+                                        <td>".$item['producto_name']."</td>                                                                                
                                         <td>".implode(",", $color)."</td>
                                         <td>".implode(",", $material)."</td> 
+                                        <td>".$item['stock']."</td> 
+                                            
                                         <td>".$general->getDate($item['fecha_entrega'])."</td> 
+                                        <td>".$item['telefono']."</td>    
                                         <td>
                                             <a href='#' data-toggle='modal' data-target='#myModal'>
                                                 <i class='fa fa-edit editPedido'
-                                                    data-proveedor='".$item['proveedor_nombre']."'
-                                                    data-categorias='".implode(",", $categoria)."'
+                                                    data-proveedor='".$item['proveedor_nombre']."'                                                    
                                                     data-colores='".implode(",", $color)."'
                                                     data-materiales='".implode(",", $material)."'
                                                     data-telefono='".$item['telefono']."'
