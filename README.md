@@ -14,3 +14,31 @@ user_name: dbo642823290
 password: Gl0bm1nt2016!
 
 
+/* meter evento
+require_once($_SERVER['REDIRECT_PATH_CONFIG'].'/calendario/models/class.Calendario.php');
+$objCalendario = new Calendario();
+$params = array(
+					"evento_nombre"=>"Cita Proveedor",
+					"evento_fecha"=>"2016-10-28 06:30:00",
+					"evento_desc"=>"Veremos detalles para catalogo 2018",
+					"evento_recordatorio_activo"=>"1",
+					"evento_recordatorio_fecha"=>"2016-10-28 06:00:00",
+					"login_id"=>"1"
+				)
+$evento_id = $objCalendario->insertEvento($params);
+*/
+
+/* editar evento
+require_once($_SERVER['REDIRECT_PATH_CONFIG'].'/calendario/models/class.Calendario.php');
+$objCalendario = new Calendario();
+$params = array(
+					"evento_nombre"=>"Cita Proveedor",
+					"evento_fecha"=>"2016-10-28 06:30:00",
+					"evento_desc"=>"Veremos detalles para catalogo 2018",
+					"evento_recordatorio_activo"=>"1",
+					"evento_recordatorio_fecha"=>"2016-10-28 06:00:00",
+					"evento_id"=>"1"
+				)
+$return = $objCalendario->editEvento($params);
+*/
+
