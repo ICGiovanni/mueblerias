@@ -6,14 +6,19 @@ require_once $pathProy.'/menu.php';
 require_once($_SERVER["REDIRECT_PATH_CONFIG"].'proveedores/models/class.Proveedores.php');
 require_once($_SERVER["REDIRECT_PATH_CONFIG"].'productos/models/class.Productos.php');
 
-$proveedorId = base64_decode($_GET['id']);
 
+$proveedorId = '';
+if(isset($_GET['id'])){
+    $proveedorId = base64_decode($_GET['id']);
+}
 $proveedores = new Proveedor();
 $productos = new Productos();
 
 $infoProv = $proveedores->getProveedor($proveedorId);
 $infoProv = end($infoProv);
 $list = $proveedores->GetDataProductProveedor($proveedorId);
+
+$proveedoresList = $proveedores->getProveedores(); 
 /*
 echo "<pre>";
     print_r($infoProv);
@@ -41,15 +46,15 @@ foreach($list as $key => $value){
                 <a href="">Proveedores</a>
             </li>
             <li class="active">
-                <strong>Productos por proveedor <?php echo $infoProv['proveedor_nombre']?></strong>
+                <strong>Productos <?php echo $infoProv['proveedor_nombre']?></strong>
             </li>
         </ol>
     </div>
     <div class="col-sm-8">
         <div class="title-action">
-                <button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myModal" >
+                <a href='<?php echo $ruta.'productos/nuevo_producto.php'?>' class="btn btn-primary btn-xs" >
                 + Nuevo Producto 
-                </button>
+                </a>
         </div>
     </div>
 </div>
@@ -61,16 +66,31 @@ foreach($list as $key => $value){
         <div class="col-lg-12">
             <div class="ibox-content">
                 <div class="">
+                    <div class="form-group" id="data_color" >
+                        <form>
+                        Proveedor
+                        <select data-placeholder="Selecciona un proveedor" class="chosen-select form-control" style="width:200px;" tabindex="4" id="proveedor" name="id">                            
+                            <option value='0'>&nbsp;</option>
+                            <?php 
+                                foreach($proveedoresList as $itemProv){
+                                    echo "<option value='".base64_encode($itemProv['proveedor_id'])."'>".$itemProv['proveedor_nombre']."</option>";
+                                }
+                            ?>
+                        </select> 
+                        <button type="submit" class="btn btn-primary btn-xs" style='display: inline'>Filtrar</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="">
                     <table id="tablaProductosProveedor" class="table table-striped table-bordered table-hover dataTables-example" >
                         <thead>
                         <tr>                            
                             <th>SKU</th>
-                            <th>Nombre</th>
+                            <th>Modelo</th>
                             <th>Categoria</th>                            
                             <th>Color</th>
-                            <th>Material</th>                            
-                            <th>Costo compra</th>
-                            <th>Costo publico</th>
+                            <th>Material</th>                                                        
+                            <th>Precio</th>
                             <th>Galeria</th>
                             <th>Acciones</th>                            
                         </tr>
@@ -78,21 +98,23 @@ foreach($list as $key => $value){
                         <tbody id='catalogoProductos'>
                         <?php                                                
                         foreach($list as $item){
+                            
+                            $infoProvItem = $proveedores->getProveedor($item['proveedor_id']);
+                            $infoProvItem = end($infoProvItem);
                             echo "  <tr>
                                         <td>".$item['producto_sku']."</td>
                                         <td>".$item['producto_name']."</td>
                                         <td>".$item['categoria']."</td>
                                         <td>".$item['color']."</td>
-                                        <td>".$item['material']."</td>
-                                        <td>".$item['producto_price_utilitarian']."</td>
+                                        <td>".$item['material']."</td>                                        
                                         <td>".$item['producto_price_public']."</td>
-                                        <td><a href='galeria.php' target='_blank'>galeria</a></td>    
+                                        <td><a href='#' data-toggle='modal' data-target='#myModal4' data-galeria='".json_encode($item['galeria'])."' class='linkGalery'>galeria</a></td>    
                                         <td>
                                             <a href='".$raizProy."productos/editar_producto.php?id=".$item['producto_id']."'><i class='fa fa-edit' title='Editar'></i></a>
                                             <a href='#'><i class='fa fa-trash deleteProv' title='Borrar'></i></a>
                                             <a href='#' data-toggle='modal' data-target='#myModal3' 
-                                                    data-proveedor='".$infoProv['proveedor_nombre']."'
-                                                    data-telefono='".$infoProv['telefono']."'
+                                                    data-proveedor='".$infoProvItem['proveedor_nombre']."'
+                                                    data-telefono='".$infoProvItem['telefono']."'
                                                     data-producto='".$item['producto_id']."'
                                                     data-categoria = '".$item['categoria']."'   
                                                     data-color = '".$item['color']."'   
@@ -169,6 +191,31 @@ foreach($list as $key => $value){
     </div>
 </div>
 
+<div class="modal inmodal fade" id="myModal4" tabindex="-1" role="dialog"  aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header" style="padding: 5px">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Cerrar</span></button>                
+            </div>
+            <div class="" style="padding-top: 15px !important; padding-bottom: 25px !important">                    
+                <div class="lightBoxGallery">
+                    <div id='image_src'></div>                   
+                </div>
+                <!-- The Gallery as lightbox dialog, should be a child element of the document body -->
+                <div id="blueimp-gallery" class="blueimp-gallery">
+                    <div class="slides"></div>
+                    <h3 class="title"></h3>
+                    <a class="prev">‹</a>
+                    <a class="next">›</a>
+                    <a class="close">×</a>
+                    <a class="play-pause"></a>
+                    <ol class="indicator"></ol>
+                </div>
+            </div>           
+        </div>
+    </div>
+</div>
+
 
 
 <?php 
@@ -177,8 +224,32 @@ foreach($list as $key => $value){
 
 <script src="<?php echo $raizProy?>js/plugins/dataTables/datatables.min.js"></script>
 <script src="<?php echo $raizProy?>js/plugins/sweetalert/sweetalert.min.js"></script>
+<script src="<?php echo $raizProy?>js/plugins/blueimp/jquery.blueimp-gallery.min.js"></script>
+<script src="<?php echo $raizProy?>js/plugins/chosen/chosen.jquery.js"></script>
+<script src="<?php echo $raizProy?>js/plugins/datapicker/bootstrap-datepicker.js"></script>
 
 <link href="<?php echo $raizProy?>css/plugins/dataTables/datatables.min.css" rel="stylesheet">
 <link href="<?php echo $raizProy?>css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+<link href="<?php echo $raizProy?>css/plugins/blueimp/css/blueimp-gallery.min.css" rel="stylesheet">
+<link href="<?php echo $raizProy?>css/plugins/chosen/chosen.css" rel="stylesheet">
+<link href="<?php echo $raizProy?>css/plugins/datapicker/datepicker3.css" rel="stylesheet">
 
 <script src="js/catalogo.js"></script>
+<script>
+$(document).ready(function(){  
+    
+    $("#proveedor").chosen();
+    
+    $(".linkGalery").click(function(){    
+        
+        $("#image_src").html('');    
+        
+        $.each( $(this).data('galeria'), function( key, value ) {
+            $("#image_src").append('<a href="'+value.imagen_route+'" title="'+value.imagen_name+'" data-gallery=""><img src="'+value.imagen_route+'" width="120px"></a>');
+        });   
+        
+        $(".slide-content").click();
+        
+    });
+});    
+</script>

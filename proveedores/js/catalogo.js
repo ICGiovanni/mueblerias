@@ -1,4 +1,12 @@
-$(document).ready(function(){                        
+$(document).ready(function(){   
+    
+    $('#data_1 .input-group .date').datepicker({
+        todayBtn: "linked",
+        keyboardNavigation: false,
+        forceParse: false,
+        calendarWeeks: true,
+        autoclose: true
+    }); 
     
     $("#catalogoProductos .nuevoPedido").click(function(){
         var producto_id = $(this).data('producto');
@@ -12,7 +20,7 @@ $(document).ready(function(){
         $("#color_mueble").html(colores);
         $("#material_mueble").html(materiales);
         $("#nombre_proveedor").html(proveedor);        
-        $("#telefono").html(telefono);
+        $("#myModal3 #telefono").html(telefono);
         
         $("#producto_id").val(producto_id);
     });
@@ -51,6 +59,19 @@ $(document).ready(function(){
             }
         });
     });
-
+    
+    $('.dataTables-example').DataTable({
+        "oLanguage": {
+                            "sSearch": "Buscar: ",
+                            "sLengthMenu": "Mostrar _MENU_ registros por página",
+                            "sInfo": "Mostrando pagina _PAGE_ de _PAGES_",
+                            "sZeroRecords": "No existen registros",
+                            "sInfoEmpty": "",                        
+                            "oPaginate": {
+                                "sPrevious": "Anterior",
+                                "sNext": "Siguiente"
+                              }
+                          }
+    });
 });
 

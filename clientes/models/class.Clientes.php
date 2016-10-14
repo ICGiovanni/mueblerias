@@ -13,7 +13,7 @@ class Clientes
 	
 	public function InsertarCliente($params)
 	{
-		$sql="INSERT INTO clientes VALUES('',:nombre,:apellidoP,:apellidoM,:razonS,:rfc,:calle,:noExt,:noInt,:colonia,:codigoPostal,:municipio,:estado,:telefono,:telefonoA,:celular,:celularA,:email,:emailA,'')";
+		$sql="INSERT INTO clientes VALUES('',:nombre,:apellidoP,:apellidoM,:razonS,:rfc,:calle,:noExt,:noInt,:colonia,:codigoPostal,:municipio,:estado,:email,:emailA,'')";
 		
 		$statement=$this->connect->prepare($sql);
 		
@@ -28,16 +28,33 @@ class Clientes
 		$statement->bindParam(':colonia', $params['colonia'], PDO::PARAM_STR);
 		$statement->bindParam(':codigoPostal', $params['codigoPostal'], PDO::PARAM_STR);
 		$statement->bindParam(':municipio', $params['municipio'], PDO::PARAM_STR);
-		$statement->bindParam(':estado', $params['estado'], PDO::PARAM_STR);
-		$statement->bindParam(':telefono', $params['telefono'], PDO::PARAM_STR);
-		$statement->bindParam(':telefonoA', $params['telefonoA'], PDO::PARAM_STR);
-		$statement->bindParam(':celular', $params['celular'], PDO::PARAM_STR);
-		$statement->bindParam(':celularA', $params['celularA'], PDO::PARAM_STR);
+		$statement->bindParam(':estado', $params['estado'], PDO::PARAM_STR);		
 		$statement->bindParam(':email', $params['email'], PDO::PARAM_STR);
 		$statement->bindParam(':emailA', $params['emailA'], PDO::PARAM_STR);
 		
 		$statement->execute();
-		return $this->connect->lastInsertId();		
+		$cliente_id=$this->connect->lastInsertId();
+		
+		$phone=$_REQUEST['telefono'];
+		$phone_type=$_REQUEST['phoneType'];
+		
+		foreach($phone as $k=>$p)
+		{
+			$type=$phone_type[$k];
+			
+			if($p!='')
+			{
+				$sql="INSERT INTO cliente_telefono VALUES('',:id_cliente,:type,:phone)";
+				$statement=$this->connect->prepare($sql);
+				$statement->bindParam(':id_cliente', $cliente_id, PDO::PARAM_STR);
+				$statement->bindParam(':type', $type, PDO::PARAM_STR);
+				$statement->bindParam(':phone', $p, PDO::PARAM_STR);
+				
+				$statement->execute();
+			}
+		}
+		
+		return $cliente_id;
 	}
 	
 	public function ActualizarCliente($params)
@@ -45,7 +62,7 @@ class Clientes
 		$sql="UPDATE clientes SET nombre=:nombre,apellidoP=:apellidoP,apellidoM=:apellidoM,razon_social=:razonS,rfc=:rfc,
 				calle=:calle,num_exterior=:noExt,num_interior=:noInt,colonia=:colonia,
 				codigo_postal=:codigoPostal,municipio=:municipio,id_estado=:estado,
-				telefono=:telefono,telefono_alterno=:telefonoA,celular=:celular,celularA=:celularA,email=:email,
+				email=:email,
 				emailA=:emailA
 				WHERE id_cliente=:id_cliente";
 		
@@ -63,19 +80,52 @@ class Clientes
 		$statement->bindParam(':codigoPostal', $params['codigoPostal'], PDO::PARAM_STR);
 		$statement->bindParam(':municipio', $params['municipio'], PDO::PARAM_STR);
 		$statement->bindParam(':estado', $params['estado'], PDO::PARAM_STR);
-		$statement->bindParam(':telefono', $params['telefono'], PDO::PARAM_STR);
-		$statement->bindParam(':telefonoA', $params['telefonoA'], PDO::PARAM_STR);
-		$statement->bindParam(':celular', $params['celular'], PDO::PARAM_STR);
-		$statement->bindParam(':celularA', $params['celularA'], PDO::PARAM_STR);
 		$statement->bindParam(':email', $params['email'], PDO::PARAM_STR);
 		$statement->bindParam(':emailA', $params['emailA'], PDO::PARAM_STR);
 		
 		$statement->execute();
-		return $params['id_cliente'];
+		
+		$cliente_id=$params['id_cliente'];
+		
+		$this->BorrarTelefonos($cliente_id);
+		
+		$phone=$_REQUEST['telefono'];
+		$phone_type=$_REQUEST['phoneType'];
+		
+		foreach($phone as $k=>$p)
+		{
+			$type=$phone_type[$k];
+				
+			if($p!='')
+			{
+				$sql="INSERT INTO cliente_telefono VALUES('',:id_cliente,:type,:phone)";
+				$statement=$this->connect->prepare($sql);
+				$statement->bindParam(':id_cliente', $cliente_id, PDO::PARAM_STR);
+				$statement->bindParam(':type', $type, PDO::PARAM_STR);
+				$statement->bindParam(':phone', $p, PDO::PARAM_STR);
+		
+				$statement->execute();
+			}
+		}
+		
+		return $cliente_id;
+	}
+	
+	public function BorrarTelefonos($id_cliente)
+	{
+		$sql="DELETE FROM cliente_telefono WHERE id_cliente=:id_cliente";
+		
+		$statement=$this->connect->prepare($sql);
+		$statement->bindParam(':id_cliente', $id_cliente, PDO::PARAM_STR);
+		
+		$statement->execute();
+		return $id_cliente;
 	}
 	
 	public function BorrarCliente($id_cliente)
 	{
+		$this->BorrarTelefonos($id_cliente);
+		
 		$sql="DELETE FROM clientes WHERE id_cliente=:id_cliente";
 		
 		$statement=$this->connect->prepare($sql);
@@ -89,7 +139,17 @@ class Clientes
 	{
 		$sql="SELECT c.id_cliente,c.nombre,c.apellidoP,c.apellidoM,c.razon_social,c.rfc,c.calle,c.num_exterior,
 				c.num_interior,c.colonia,c.codigo_postal,c.municipio,
-				e.estado,c.telefono,c.telefono_alterno,c.celular,c.celularA,c.email,c.emailA,c.rating
+				e.estado,c.email,c.emailA,c.rating,
+				IF((SELECT ct.number
+				FROM cliente_telefono ct
+				WHERE ct.id_cliente=c.id_cliente
+				ORDER BY id_telefono ASC
+				LIMIT 0,1)!='',
+				(SELECT ct.number
+				FROM cliente_telefono ct
+				WHERE ct.id_cliente=c.id_cliente
+				ORDER BY id_telefono ASC
+				LIMIT 0,1),'') AS telefono
 				FROM clientes c
 				INNER JOIN estados e USING(id_estado)
 				ORDER BY c.id_cliente";
@@ -146,7 +206,7 @@ class Clientes
 		
 		$sql="SELECT c.id_cliente,c.nombre,c.apellidoP,c.apellidoM,c.razon_social,c.rfc,c.calle,c.num_exterior,
 				c.num_interior,c.colonia,c.codigo_postal,c.municipio,
-				e.estado,c.telefono,c.telefono_alterno,c.celular,c.celularA,c.email,c.emailA
+				e.estado,c.email,c.emailA
 				FROM clientes c
 				INNER JOIN estados e USING(id_estado)
 				$where
@@ -156,6 +216,34 @@ class Clientes
 		$statement->execute();
 		$result=$statement->fetchAll(PDO::FETCH_ASSOC);
 	
+		return $result;
+	}
+	
+	public function GetTypesPhones()
+	{
+		$sql="SELECT phone_type_id,type
+				FROM inv_phone_type";
+		
+		$statement=$this->connect->prepare($sql);
+		$statement->execute();
+		$result=$statement->fetchAll(PDO::FETCH_ASSOC);
+		
+		return $result;
+	}
+	
+	public function GetPhonesClient($id_cliente)
+	{
+		$sql="SELECT ct.number,pt.phone_type_id
+				FROM cliente_telefono ct
+				INNER JOIN inv_phone_type pt USING(phone_type_id)
+				WHERE ct.id_cliente=:id_cliente";
+		
+		$statement=$this->connect->prepare($sql);
+		$statement->bindParam(':id_cliente', $id_cliente, PDO::PARAM_STR);
+		
+		$statement->execute();
+		$result=$statement->fetchAll(PDO::FETCH_ASSOC);
+		
 		return $result;
 	}
 }

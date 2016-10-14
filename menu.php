@@ -89,13 +89,24 @@
 					
                     <li class="<?php if (stristr($_SERVER['SCRIPT_NAME'],'/proveedores/')){ echo 'active';}?>">
                         <a href="<?php echo $ruta.'proveedores/'?>">
-                            <i class="fa fa-user"></i> <span class="nav-label">Proveedores</span>
+                            <i class="fa fa-user"></i> <span class="nav-label">Catalogos</span>
                         </a>
                         <ul class="nav nav-second-level">
                             <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/proveedores/index.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'proveedores/index.php'?>" >Lista de proveedores</a></li>                            
+                            <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/proveedores/catalogo.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'proveedores/catalogo.php'?>" >Lista de productos</a></li>                            
                             <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/proveedores/pedidos.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'proveedores/pedidos.php'?>" >Lista de pedidos</a></li>                            
                         </ul>
                     </li>
+                    
+                    <li class="<?php if (stristr($_SERVER['SCRIPT_NAME'],'/calendario/')){ echo 'active';}?>">
+                        <a href="<?php echo $ruta.'calendario/'?>">
+                            <i class="fa fa-user"></i> <span class="nav-label">Calendario</span>
+                        </a>
+                        <ul class="nav nav-second-level">
+                            <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/calendario/index.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'calendario/index.php'?>" >Principal</a></li>                                                        
+                        </ul>
+                    </li>
+                    
                 </ul>
             </div>
         </nav>

@@ -11,9 +11,7 @@ require_once($_SERVER["REDIRECT_PATH_CONFIG"].'proveedores/models/class.Proveedo
                         <td>".$prov['proveedor_nombre']."</td>
                         <td>".$prov['telefono']."</td>
                         <td>".$prov['email']."</td>
-                        <td align='center'>
-                            <a href='catalogo.php?id=".  base64_encode($prov['proveedor_id'])."'><i class='fa fa-info-circle' title='Editar'></i></a>
-                        </td>
+                        <td align='center'>".$prov['street']."&nbsp;".$prov['number']."&nbsp;".$prov['int_number']."&nbsp;".$prov['neighborhood']."</td>
                         <td align='center'>
                             <a href='#' data-toggle='modal' data-target='#myModal2'>
                                 <i class='fa fa-edit editProv' title='Editar' 

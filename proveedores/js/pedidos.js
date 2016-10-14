@@ -73,9 +73,7 @@ function updatePedido(){
 function loadDataUpdate(element){
     var proveedor = $(element).data("proveedor");
     $("#nombre_proveedor").html(proveedor);
-    
-    var categorias = $(element).data("categorias");
-    $("#categoria_mueble").html(categorias);
+        
     var colores = $(element).data("colores");
     $("#color_mueble").html(colores);
     var materiales = $(element).data("materiales");

@@ -5,33 +5,31 @@ require_once $pathProy.'/menu.php';
 ?>
 
 <div class="ibox-content">
+    
+    <div class="lightBoxGallery">
+        <a href="<?php echo $raizProy?>img/gallery/1.jpg" title="Image from Unsplash" data-gallery=""><img src="<?php echo $raizProy?>img/gallery/1s.jpg"></a>
+        <a href="<?php echo $raizProy?>img/gallery/2.jpg" title="Image from Unsplash" data-gallery=""><img src="<?php echo $raizProy?>img/gallery/2s.jpg"></a>
+        <a href="<?php echo $raizProy?>img/gallery/3.jpg" title="Image from Unsplash" data-gallery=""><img src="<?php echo $raizProy?>img/gallery/3s.jpg"></a>
+        <a href="<?php echo $raizProy?>img/gallery/4.jpg" title="Image from Unsplash" data-gallery=""><img src="<?php echo $raizProy?>img/gallery/4s.jpg"></a>
+        <a href="<?php echo $raizProy?>img/gallery/5.jpg" title="Image from Unsplash" data-gallery=""><img src="<?php echo $raizProy?>img/gallery/5s.jpg"></a>
+        <a href="<?php echo $raizProy?>img/gallery/6.jpg" title="Image from Unsplash" data-gallery=""><img src="<?php echo $raizProy?>img/gallery/6s.jpg"></a>
+        <a href="<?php echo $raizProy?>img/gallery/7.jpg" title="Image from Unsplash" data-gallery=""><img src="<?php echo $raizProy?>img/gallery/7s.jpg"></a>
+        <a href="<?php echo $raizProy?>img/gallery/8.jpg" title="Image from Unsplash" data-gallery=""><img src="<?php echo $raizProy?>img/gallery/8s.jpg"></a>
+        <a href="<?php echo $raizProy?>img/gallery/9.jpg" title="Image from Unsplash" data-gallery=""><img src="<?php echo $raizProy?>img/gallery/9s.jpg"></a>
 
-                        
 
-                        <div class="lightBoxGallery">
-                            <a href="<?php echo $raizProy?>img/gallery/1.jpg" title="Image from Unsplash" data-gallery=""><img src="<?php echo $raizProy?>img/gallery/1s.jpg"></a>
-                            <a href="<?php echo $raizProy?>img/gallery/2.jpg" title="Image from Unsplash" data-gallery=""><img src="<?php echo $raizProy?>img/gallery/2s.jpg"></a>
-                            <a href="<?php echo $raizProy?>img/gallery/3.jpg" title="Image from Unsplash" data-gallery=""><img src="<?php echo $raizProy?>img/gallery/3s.jpg"></a>
-                            <a href="<?php echo $raizProy?>img/gallery/4.jpg" title="Image from Unsplash" data-gallery=""><img src="<?php echo $raizProy?>img/gallery/4s.jpg"></a>
-                            <a href="<?php echo $raizProy?>img/gallery/5.jpg" title="Image from Unsplash" data-gallery=""><img src="<?php echo $raizProy?>img/gallery/5s.jpg"></a>
-                            <a href="<?php echo $raizProy?>img/gallery/6.jpg" title="Image from Unsplash" data-gallery=""><img src="<?php echo $raizProy?>img/gallery/6s.jpg"></a>
-                            <a href="<?php echo $raizProy?>img/gallery/7.jpg" title="Image from Unsplash" data-gallery=""><img src="<?php echo $raizProy?>img/gallery/7s.jpg"></a>
-                            <a href="<?php echo $raizProy?>img/gallery/8.jpg" title="Image from Unsplash" data-gallery=""><img src="<?php echo $raizProy?>img/gallery/8s.jpg"></a>
-                            <a href="<?php echo $raizProy?>img/gallery/9.jpg" title="Image from Unsplash" data-gallery=""><img src="<?php echo $raizProy?>img/gallery/9s.jpg"></a>
-                            
+        <!-- The Gallery as lightbox dialog, should be a child element of the document body -->
+        <div id="blueimp-gallery" class="blueimp-gallery">
+            <div class="slides"></div>
+            <h3 class="title"></h3>
+            <a class="prev">‹</a>
+            <a class="next">›</a>
+            <a class="close">×</a>
+            <a class="play-pause"></a>
+            <ol class="indicator"></ol>
+        </div>
 
-                            <!-- The Gallery as lightbox dialog, should be a child element of the document body -->
-                            <div id="blueimp-gallery" class="blueimp-gallery">
-                                <div class="slides"></div>
-                                <h3 class="title"></h3>
-                                <a class="prev">‹</a>
-                                <a class="next">›</a>
-                                <a class="close">×</a>
-                                <a class="play-pause"></a>
-                                <ol class="indicator"></ol>
-                            </div>
-
-                        </div>
+    </div>
                  
     
     

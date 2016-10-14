@@ -30,7 +30,7 @@
 <div class="row">    
     <div class="col-lg-12">
            
-        <div class="ibox-content animated fadeInRightBig">
+        <div class="ibox-content animated fadeInRight">
             <div class="table-responsive">
                 <table class="table table-striped table-bordered table-hover dataTables-example" >
                     <thead>

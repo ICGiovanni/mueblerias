@@ -248,11 +248,14 @@ class Proveedor {
     
     public function GetDataProductProveedor($proveedor_id='')
     {
-
+        $where = '';
+        if($proveedor_id!=''){
+            $where = " WHERE p.proveedor_id='$proveedor_id'";
+        }
         $sql="SELECT p.producto_id,p.producto_name,p.producto_sku,
                         p.producto_price_utilitarian,p.producto_price_public,p.proveedor_id
                         FROM productos p".
-                        " WHERE p.proveedor_id='$proveedor_id'".
+                        $where.
                         " ORDER BY p.producto_id";
 
         $statement=$this->connect->prepare($sql);
