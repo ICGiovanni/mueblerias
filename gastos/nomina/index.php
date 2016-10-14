@@ -24,7 +24,7 @@ if(isset($_GET["semana"])){
 	} else {
 		$semanas_atras = $semana_act - $semana;
 		$sec_en_una_semana = "604800";
-		echo $semanas_atras." semanas atras";
+		//echo $semanas_atras." semanas atras";
 		$sec_atras = $semanas_atras * $sec_en_una_semana;
 		$back_in_time = time() - $sec_atras;
 		$month = date("m",$back_in_time);
@@ -139,18 +139,25 @@ while(list(,$dataGasto) = each($rows)){
 	
 	$restanEsteMes= $prestamo_activo - $sumaPagado["ingreso_monto"];
 	
-	if($dataGasto["gasto_status_id"] == "1"){
+	if($dataGasto["gasto_status_id"] == "1"){ 
+	// si la nomina de esta semana esta pendiente por pagar
 		$ckeckbox_dia_extra = '<input type="checkbox" name="dia_extra_'.$dataGasto["login_id"].'" id="dia_extra_'.$dataGasto["login_id"].'" onclick="updateRestanTotal('.$dataGasto["login_id"].');" />';
+		$ckeckbox_dia_extra_bono = '$ <input type="text" name="dia_extra_bono_'.$dataGasto["login_id"].'" id="dia_extra_bono_'.$dataGasto["login_id"].'" size="5" onchange="updateRestanTotal('.$dataGasto["login_id"].');" value="0" disabled />';
 		$ckeckbox_dia_descuento = '<input type="checkbox" name="dia_descuento_'.$dataGasto["login_id"].'" id="dia_descuento_'.$dataGasto["login_id"].'" onclick="updateRestanTotal('.$dataGasto["login_id"].');" />';
 		$ckeckbox_dia_descuento_penalizacion = '$ <input type="text" name="dia_descuento_penalizacion_'.$dataGasto["login_id"].'" id="dia_descuento_penalizacion_'.$dataGasto["login_id"].'" size="5" onchange="updateRestanTotal('.$dataGasto["login_id"].');" value="0" disabled />';
 		$boton_aplica_nomina = '<a href="javascript:void(0);" onclick="'.$onclick_aplicaPagoPrestamo.'creaPagoSalario(\''.$dataGasto["gasto_id"].'\',\''.$dataGasto["login_id"].'\'); "><i class="fa fa-floppy-o"></i></a>';
 		$td_restarian = '$ <span id="'.$span_restarian_id.'">'.number_format($restanEsteMes,2).'</span>';
-	} else {
+	} else { 
+	//si la nomina de esta semana ya fue pagada para el empleado $dataGasto["login_id"]
+	// la regla para sacar el total pagado es:
+	// salario semanal + pago dia extra esa semana - monto dia descuento esa semana - lo que dejo a cuenta por pago a prestamo
 		$css_tr = 'style="background-color:#BCF5BD;"';
 		$td_restarian = '';
 		
 		$ckeckbox_dia_extra = '<i class="fa fa-square-o"></i>';
+		$ckeckbox_dia_extra_bono = '';
 		$res_dia_extra = $objGasto->huboPagoExtra($dataGasto["login_id"],$primerDia,$ultimoDia);
+		
 		$monto_dia_extra = 0;
 		if(isset($res_dia_extra[0])){
 			$ckeckbox_dia_extra = '<i class="fa fa-check-square-o"></i>';
@@ -160,6 +167,7 @@ while(list(,$dataGasto) = each($rows)){
 		$res_dia_descuento = $objIngreso->huboDescuentoPenalizacion($dataGasto["login_id"],$primerDia,$ultimoDia, $dataGasto["gasto_id"]);
 		$ckeckbox_dia_descuento = '<i class="fa fa-square-o"></i>';
 		$ckeckbox_dia_descuento_penalizacion = '';
+		
 		$monto_dia_descuento_penalizacion = 0;
 		if(isset($res_dia_descuento[0])){
 			$ckeckbox_dia_descuento = '<i class="fa fa-check-square-o"></i>';
@@ -188,9 +196,9 @@ while(list(,$dataGasto) = each($rows)){
 		<td align="right">$ '.number_format($dataGasto["gasto_monto"],2).'</td>
 		<td align="right">$ <span id="salario_diario_'.$dataGasto["login_id"].'">'.number_format(($dataGasto["gasto_monto"]/7),2).'</span></td>
 		<td align="right">$ '.number_format($comision_activa,2).'</td>
-		<td align="center"> '.$ckeckbox_dia_extra.' </td>
-		<td align="center"> '.$ckeckbox_dia_descuento.' </td>
-		<td align="right"> '.$ckeckbox_dia_descuento_penalizacion.'</td>
+		<td align="center"> '.$ckeckbox_dia_extra.' '.$ckeckbox_dia_extra_bono.'</td>
+		<td align="center"> '.$ckeckbox_dia_descuento.' '.$ckeckbox_dia_descuento_penalizacion.'</td>
+		
 		<td align="right">$ '.number_format($prestamo_activo,2).'</td>
 		<td align="right">$ '.number_format($sumaPagado["ingreso_monto"],2).'</td>
 		<td align="right">$ <span id="'.$span_restan_id.'">'.number_format($restanEsteMes,2).'</span></td>		
@@ -245,11 +253,14 @@ while(list(,$dataGasto) = each($rows)){
 	<div class="col-sm-4">
 		<div class="title-action">
 			<button type="button" class="btn btn-primary btn-xs"  onclick="location.href = './?semana=<?=($semana-1)?>';" >
-			1 semana atras
+			<i class="fa fa-arrow-left"></i> semana atras 
 			</button>
 			<?php
 			if($semana < date("W")){
 			?>
+			<button type="button" class="btn btn-primary btn-xs"  onclick="location.href = './?semana=<?=($semana+1)?>';" >
+			semana adelante <i class="fa fa-arrow-right"></i>
+			</button>
 			<button type="button" class="btn btn-primary btn-xs"  onclick="location.href = './';" >
 			semana actual
 			</button>
@@ -277,7 +288,7 @@ while(list(,$dataGasto) = each($rows)){
                         <th data-hide="all" style="text-align:right;">Comision</th>
 						<th style="text-align:right;">Día Extra</th>
 						<th style="text-align:right;">Día Descuento</th>
-						<th style="text-align:right;">Penalización</th>
+						
 						<th style="text-align:right;">Prestamo</th>
 						<th style="text-align:right;">Pagado</th>
 						<th style="text-align:right;">Restan</th>
@@ -394,23 +405,39 @@ function updateRestanTotal(login_id){
 	dia_extra_monto = 0;
 	if($("#dia_extra_"+login_id).is(':checked')){
 		dia_extra_monto = Number($("#salario_diario_"+login_id).html().replace(",",""));
-	}
+		$("#dia_extra_bono_"+login_id).prop("disabled", false);
+		
+		actual_dia_extra_monto = $("#dia_extra_bono_"+login_id).val();
+		if(actual_dia_extra_monto == '0'){
+			$("#dia_extra_bono_"+login_id).val(dia_extra_monto);
+		} else {
+			dia_extra_monto = Number(actual_dia_extra_monto);
+		}
+	} 
 	
 	if($("#dia_descuento_"+login_id).is(':checked')){
 		dia_descuento_monto = Number($("#salario_diario_"+login_id).html().replace(",",""));
 		$("#dia_descuento_penalizacion_"+login_id).prop("disabled", false);
+		
+		actual_dia_descuento_monto = $("#dia_descuento_penalizacion_"+login_id).val();
+		if(actual_dia_descuento_monto == '0'){
+			$("#dia_descuento_penalizacion_"+login_id).val(dia_descuento_monto);
+		} else {
+			dia_descuento_monto = actual_dia_descuento_monto;
+		}
+		
 	} else {
 		dia_descuento_monto = 0;
 		$("#dia_descuento_penalizacion_"+login_id).prop("disabled", true);
 		$("#dia_descuento_penalizacion_"+login_id).val("0");
 	}
 	
-	dia_descuento_penalizacion = Number($("#dia_descuento_penalizacion_"+login_id).val());
+	//dia_descuento_penalizacion = Number($("#dia_descuento_penalizacion_"+login_id).val());
 	
 	total_val = Number($('#span_total_original_'+login_id).html().replace(",",""));
 	
 	
-	total_val = total_val - ingreso_monto + dia_extra_monto - dia_descuento_monto - dia_descuento_penalizacion;
+	total_val = total_val - ingreso_monto + dia_extra_monto - dia_descuento_monto; // - dia_descuento_penalizacion;
 	
 	$('#span_total_'+login_id).html(total_val.toFixed(2));
 	
@@ -484,9 +511,9 @@ function creaPagoSalario(gasto_id, login_id){
 				//location.href = './';
 			}		
 	});
-		
+	
 	if($("#dia_extra_"+login_id).is(':checked')){
-		
+	//si esta checado dia extra se inserta el gasto y el pago automatico del gasto
 		gasto_no_documento = "dia extra salario folio "+gasto_id;
 		gasto_fecha_vencimiento = '<?=date("d/m/Y")?>';		
 		gasto_fecha_recordatorio_activo = "0";
@@ -495,7 +522,7 @@ function creaPagoSalario(gasto_id, login_id){
 		gasto_concepto = "dia extra salario folio "+gasto_id;		
 		gasto_descripcion = "dia extra salario folio "+gasto_id;
 		
-		dia_extra_monto = Number($("#salario_diario_"+login_id).html().replace(",",""));		
+		dia_extra_monto = Number($("#dia_extra_bono_"+login_id).val());		
 		gasto_monto = dia_extra_monto;
 		
 		gasto_hora_vencimiento = d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
@@ -554,10 +581,10 @@ function creaPagoSalario(gasto_id, login_id){
 		});
 	}
 	if($("#dia_descuento_"+login_id).is(':checked')){
-		
-		dia_descuento_monto = Number($("#salario_diario_"+login_id).html().replace(",",""));
-		dia_descuento_penalizacion = Number($("#dia_descuento_penalizacion_"+login_id).val());		
-		ingreso_monto = dia_descuento_monto + dia_descuento_penalizacion;
+	//si esta checado el dia descuento se crea el registro del ingreso
+		//dia_descuento_monto = Number($("#salario_diario_"+login_id).html().replace(",",""));
+		//dia_descuento_penalizacion = Number($("#dia_descuento_penalizacion_"+login_id).val());		
+		ingreso_monto = Number($("#dia_descuento_penalizacion_"+login_id).val());
 		ingreso_categoria_id = '2'; // Dia Descuento/Penalización
 		ingreso_descripcion = 'Dia Descuento/Penalización salario folio '+gasto_id;
 		

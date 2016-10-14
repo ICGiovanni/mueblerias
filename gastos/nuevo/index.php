@@ -89,7 +89,7 @@ while(list(,$dataLogin) = each($rowsLogin)){
                 <div class="col-lg-12">
                 <div class="ibox float-e-margins">
                    
-                    <div class="ibox-content">
+                 <!--   <div class="ibox-content"> -->
 					
 					
 					
@@ -189,7 +189,7 @@ while(list(,$dataLogin) = each($rowsLogin)){
                     
                         </div>
 
-                    </div>
+                   <!-- </div> -->
                 </div>
             </div>
             </div>

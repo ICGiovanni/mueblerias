@@ -88,7 +88,7 @@ class Calendario {
 		AND
 			evento_fecha BETWEEN '".date("Y")."-01-01' AND '".date("Y")."-12-31'
 		";
-echo $sql;
+//echo $sql;
 		$statement=$this->connect->prepare($sql);
 		$statement->bindParam(':login_id', $login_id, PDO::PARAM_STR);
 

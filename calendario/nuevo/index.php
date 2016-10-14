@@ -41,7 +41,7 @@ $objCalendario = new Calendario();
                 <div class="col-lg-12">
                 <div class="ibox float-e-margins">
                    
-                    <div class="ibox-content">
+                <!--    <div class="ibox-content"> -->
 					
 					
 					
@@ -101,7 +101,7 @@ $objCalendario = new Calendario();
                     
                         </div>
 
-                    </div>
+                   <!-- </div> -->
                 </div>
             </div>
             </div>
