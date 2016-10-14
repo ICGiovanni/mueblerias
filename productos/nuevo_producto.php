@@ -44,9 +44,18 @@
             <label class="col-sm-2 control-label">SKU</label>
 			<div class="col-sm-2 "><input type="text" class="form-control" id="sku" name="sku"></div>
             </div>
-			<div class="form-group"><label class="col-sm-2 control-label">Nombre</label>
+			<div class="form-group"><label class="col-sm-2 control-label">Modelo</label>
 			<div class="col-sm-6" ><input type="text" class="form-control" id="nombre" name="nombre"></div>
             </div>
+            <div class="form-group">
+            <label class="col-sm-2 control-label">Version</label>
+			<div class="col-sm-2 "><input type="text" class="form-control" id="version" name="version"></div>
+			</div>
+			
+			<div class="form-group">
+            <label class="col-sm-2 control-label">Medida</label>
+			<div class="col-sm-2 "><input type="text" class="form-control" id="medida" name="medida"></div>
+			</div>
             <div class="form-group"><label class="col-sm-2 control-label">Descripci&oacute;n</label>
 			<div class="col-sm-6" ><textarea class="form-control" id="descripcion" name="descripcion"></textarea></div>
             </div>
@@ -159,21 +168,6 @@
             <label class="col-sm-2 control-label">Precio P&uacute;blico</label>
 			<div class="col-sm-2 "><input type="text" class="form-control" id="precioP" name="precioP" onkeypress="return validateCantidad(event)"></div>
             </div>
-            
-            <div class="form-group">
-            <label class="col-sm-2 control-label">Version</label>
-			<div class="col-sm-2 "><input type="text" class="form-control" id="version" name="version"></div>
-			</div>
-			
-			<div class="form-group">
-            <label class="col-sm-2 control-label">Medida</label>
-			<div class="col-sm-2 "><input type="text" class="form-control" id="medida" name="medida"></div>
-			</div>
-			
-			<div class="form-group">
-            <label class="col-sm-2 control-label">Piso</label>
-			<div class="col-sm-2 "><input type="text" class="form-control" id="piso" name="piso"></div>
-			</div>
             
             <div class="form-group">
             <label class="col-sm-2 control-label">Conjunto</label>
