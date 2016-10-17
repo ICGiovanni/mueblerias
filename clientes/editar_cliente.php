@@ -123,11 +123,11 @@ $datos=$clientes->GetClientes($id_cliente);
            		if($i==0)
            		{
            			$phonesC.='<div class="col-md-1">
-                            <button class="form-control" id="agregarTelefono" value="" placeholder="Telefono" type="button"><i class="fa fa-plus"></i></button></div>';
+                            <button class="btn btn-primary btn-xs" id="agregarTelefono" value="" placeholder="Telefono" type="button"><i class="fa fa-plus"></i></button></div>';
            		}
            		else
            		{
-           			$phonesC.='<div class="col-md-1"><button class="form-control deletePhone" id="agregarTelefono" value="" placeholder="Telefono" type="button"><i class="fa fa-times"></i></button></div>';
+           			$phonesC.='<div class="col-md-1"><button class="btn btn-danger btn-xs deletePhone" id="agregarTelefono" value="" placeholder="Telefono" type="button"><i class="fa fa-times"></i></button></div>';
            		}
            		
            		$phonesC.='</div>';
@@ -261,7 +261,10 @@ $(document).ready(function()
             $(this).parent().parent().remove();
         });  
      });
-	
+
+	$(".deletePhone").click(function(){            
+        $(this).parent().parent().remove();
+    }); 
 });
 </script>
 

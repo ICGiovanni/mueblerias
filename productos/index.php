@@ -213,23 +213,13 @@ cursor: default;
                     	$description=$p['producto_description'];
                     	$price_utilitarian=$p['producto_price_utilitarian'];
                     	$price_public=$p['producto_price_public'];
-                    	
-                    	$colores=$producto->GetProductColor($producto_id);
-                    	
+                    	                    	
                     	$color='<ul style="padding: 0" class="tag-list">';
-                    	foreach($colores as $c)
-                    	{
-                    		$color.='<li><a href="" class="href_colores"><i class="fa fa-tag"></i> '.$c.'</a></li>';
-                    	}
+                    	$color.='<li><a href="" class="href_colores"><i class="fa fa-tag"></i> '.$p['color_name'].'</a></li>';
                     	$color.='</ul>';
-                    	
-                    	$materiales=$producto->GetProductMaterial($producto_id);
-                    	
+                    	                    	
                     	$material='<ul style="padding: 0" class="tag-list">';
-                    	foreach($materiales as $m)
-                    	{
-                    		$material.='<li><a href="" class="href_colores"><i class="fa fa-tag"></i> '.$m.'</a></li>';
-                    	}
+                    	$material.='<li><a href="" class="href_colores"><i class="fa fa-tag"></i> '.$p['material_name'].'</a></li>';
                     	$material.='</ul>';
                     	
                     	$categorias=$producto->GetProductCategory($producto_id);
@@ -335,31 +325,19 @@ cursor: default;
 
 							filas+='<td>';
 							filas+='<ul style="padding: 0" class="tag-list">';
-							if(item.color!=undefined)
-							{
-								$.each( item.color, function( key, item )
-				    	    	{
-									filas+='<li><a href="" class="href_colores"><i class="fa fa-tag"></i> '+item+'</a></li>';
-				    	    	});
-							}
+							filas+='<li><a href="" class="href_colores"><i class="fa fa-tag"></i> '+item.color_name+'</a></li>';
 			    	    	filas+='</ul>';
 			    	    	filas+='</td>';
 
 			    	    	filas+='<td>';
 							filas+='<ul style="padding: 0" class="tag-list">';
-							if(item.color!=undefined)
-							{
-								$.each( item.material, function( key, item )
-				    	    	{
-									filas+='<li><a href="" class="href_colores"><i class="fa fa-tag"></i> '+item+'</a></li>';
-				    	    	});
-							}
+							filas+='<li><a href="" class="href_colores"><i class="fa fa-tag"></i> '+item.material_name+'</a></li>';
 			    	    	filas+='</ul>';
 			    	    	filas+='</td>';
 
 			    	    	filas+='<td>';
 							filas+='<ul style="padding: 0" class="tag-list">';
-							if(item.color!=undefined)
+							if(item.categoria!=undefined)
 							{
 								$.each( item.categoria, function( key, item )
 				    	    	{

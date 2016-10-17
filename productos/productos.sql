@@ -47,29 +47,17 @@ CREATE TABLE IF NOT EXISTS productos
 	producto_sku VARCHAR(30) NOT NULL,
 	producto_description TEXT NOT NULL,
 	producto_price_utilitarian FLOAT,
+	producto_price_utilitarian_discount FLOAT,
 	producto_price_public FLOAT,
+	color_id INT,
+	material_id INT,
 	proveedor_id INT,
 	producto_type ENUM('U','C') NOT NULL DEFAULT 'U',
 	producto_version VARCHAR(30) NOT NULL,
 	producto_medida VARCHAR(30) NOT NULL,
-	producto_piso VARCHAR(30) NOT NULL,
 	PRIMARY KEY (producto_id),
-	FOREIGN KEY (proveedor_id) REFERENCES proveedores(proveedor_id)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-CREATE TABLE IF NOT EXISTS productos_colores
-(
-	producto_id INT NOT NULL,
-	color_id INT NOT NULL,
-	FOREIGN KEY (producto_id) REFERENCES productos(producto_id),
-	FOREIGN KEY (color_id) REFERENCES colores(color_id)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-CREATE TABLE IF NOT EXISTS productos_materiales
-(
-	producto_id INT NOT NULL,
-	material_id INT NOT NULL,
-	FOREIGN KEY (producto_id) REFERENCES productos(producto_id),
+	FOREIGN KEY (proveedor_id) REFERENCES proveedores(proveedor_id),
+	FOREIGN KEY (color_id) REFERENCES colores(color_id),
 	FOREIGN KEY (material_id) REFERENCES materiales(material_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -98,4 +86,13 @@ CREATE TABLE IF NOT EXISTS productos_conjunto
 	cantidad INT NOT NULL,
 	FOREIGN KEY (producto_id) REFERENCES productos(producto_id),
 	FOREIGN KEY (producto_conjunto_id) REFERENCES productos(producto_id)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE IF NOT EXISTS productos_descuentos
+(
+	descuento_id INT NOT NULL AUTO_INCREMENT,
+	producto_id INT NOT NULL,
+	producto_descuento FLOAT,
+	PRIMARY KEY (descuento_id),
+	FOREIGN KEY (producto_id) REFERENCES productos(producto_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;

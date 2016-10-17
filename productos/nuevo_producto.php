@@ -63,7 +63,7 @@
             <div class="form-group">
             <label class="col-sm-2 control-label">Colores</label>
 			<div class="col-sm-6" >
-				<select data-placeholder="Selecciona un color" class="chosen-select" multiple style="width:300px;" tabindex="4" id="color" name="color[]">
+				<select data-placeholder="Selecciona un color" class="chosen-select" style="width:300px;" tabindex="4" id="color" name="color">
 	            <option value=""></option>
 	            <?php 
 	            $productos=new Productos();
@@ -86,7 +86,7 @@
             <div class="form-group">
             <label class="col-sm-2 control-label">Materiales</label>
 			<div class="col-sm-6" >
-				<select data-placeholder="Selecciona un material" class="chosen-select" multiple style="width:300px;" tabindex="4" id="material" name="material[]">
+				<select data-placeholder="Selecciona un material" class="chosen-select" style="width:300px;" tabindex="4" id="material" name="material">
 	            <option value=""></option>
 	            <?php 
 	            $productos=new Productos();
@@ -161,7 +161,22 @@
             
             <div class="form-group">
             <label class="col-sm-2 control-label">Pecio Utilitario</label>
-			<div class="col-sm-2 "><input type="text" class="form-control" id="precioU" name="precioU" onkeypress="return validateCantidad(event)"></div>
+			<div class="col-sm-2 "><input type="text" class="form-control" id="precioU" name="precioU" onkeypress="return validateNumber(event)"></div>
+            </div>
+            
+            <div class="form-group">
+           	<label class="col-sm-2 control-label">Descuento</label>
+           	<div class="col-sm-2 "><input class="form-control discount" id="descuento" name="descuento[]" value="" type="text" onkeypress="return validateNumber(event)"></div>
+			<div class="col-md-1">                            
+                            <button class="btn btn-primary btn-xs" id="agregarDescuento" value="" placeholder="Descuento" type="button"><i class="fa fa-plus"></i></button>
+                        </div>    
+            </div>
+            
+            <div id="newDiscount"></div>
+            
+            <div class="form-group">
+            <label class="col-sm-2 control-label">Pecio Utilitario con Descuento</label>
+			<div class="col-sm-2 "><input type="text" class="form-control" id="precioUD" name="precioUD" readonly="readonly"></div>
             </div>
             
             <div class="form-group">
@@ -208,7 +223,7 @@
             <div class="form-group">
 			<div class="col-sm-6 col-sm-offset-2" align="right"><br>
 			<button class="btn btn-danger btn-xs" id="cancelar" type="button">Cancelar</button>&nbsp;&nbsp;&nbsp;&nbsp;
-			<button class="btn btn-primary btn-xs" id="guardar" type="button">Guardar Cliente</button>
+			<button class="btn btn-primary btn-xs" id="guardar" type="button">Guardar Producto</button>
 			</div>
 			</div>
         </form>
@@ -495,6 +510,101 @@ $(document).ready(function()
 	$("#material").chosen();
 	$("#categoria").chosen();
 	$("#proveedor").chosen();
+
+	var calculateDiscount=function()
+	{
+		var precio_utilitario=$("#precioU").val();
+		precio_utilitario=parseFloat(precio_utilitario);
+		precio_utilitario=precio_utilitario.toFixed(2);
+		
+		var precioUD=precio_utilitario;
+		var bandera=0;
+		
+		$("input[name='descuento[]']").each(function()
+		{        
+			if($(this).val()!='' || $(this).val()!=0)
+			{
+				var discount=$(this).val()/100;
+				discount=parseFloat(discount);
+				discount=discount.toFixed(2);
+				precioUD=parseFloat(precioUD-(discount*precioUD));
+				bandera=1;
+			}
+		}); 
+
+		if(bandera==0)
+		{
+			$("#precioUD").val($("#precioU").val());
+		}
+		else
+		{
+			precioUD=parseFloat(precioUD);
+			precioUD=precioUD.toFixed(2);
+			
+			$("#precioUD").val(precioUD);
+		}
+	};
+	
+	
+	var validateDiscount=function(discount)
+	{
+		if($("#precioU").val()=='' || $("#precioU").val()==0)
+		{
+			discount.val('');
+			$("#precioU").val('');
+			$("#precioUD").val('');
+			$("#precioU").focus();
+			alert("Debe de agregar primero el Precio Unitario");
+		}
+		else if(discount.val()>=100)
+		{
+			discount.val('');
+			discount.focus();
+			alert("Descuento Invalido");
+			$("#precioUD").val($("#precioU").val());
+			calculateDiscount();
+		}
+		else
+		{
+			calculateDiscount();
+		}
+	};
+	
+	$("#agregarDescuento").click(function()
+	{
+		if($("#descuento").val()!='')
+		{
+	        $("#newDiscount").append('<div class="form-group"><label class="col-sm-2 control-label"></label><div class="col-sm-2 "><input class="form-control discount" id="descuento" name="descuento[]" value="" type="text" onkeypress="return validateNumber(event)"></div><div class="col-md-1">                                <button class="btn btn-danger btn-xs deleteDiscount" id="agregarDescuento" value="" placeholder="Descuento" type="button"><i class="fa fa-times"></i></button></div></div>');
+	
+	        $(".deleteDiscount").click(function(){            
+	            $(this).parent().parent().remove();
+	            calculateDiscount();
+	        });
+	        
+	        $(".discount").keyup(function()
+	        {
+	        	validateDiscount($(this));
+	        });  
+		}
+		else
+		{
+			$("#descuento").val('');
+			$("#descuento").focus();
+			alert("Debe de agregar primero un Descuento");
+		}
+     });
+
+	$(".discount").keyup(function()
+	{
+		validateDiscount($(this));    	
+    });
+
+	$("#precioU").keyup(function()
+	{
+		$("#precioUD").val($(this).val());
+		calculateDiscount();    	
+    });
+
 
 });
 

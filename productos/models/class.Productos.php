@@ -58,34 +58,58 @@ class Productos
 			$type="C";
 		}
 		
-		$sql="INSERT INTO productos VALUES('',:nombre,:sku,:descripcion,:precio_utilitario,:precio_publico,:proveedor,:type,:version,:medida,:piso)";
+		$sql="INSERT INTO productos VALUES('',:nombre,:sku,:descripcion,:precio_utilitario,:precio_utilitario_descuento,:precio_publico,:color,:material,:proveedor,:type,:version,:medida)";
 		
 		$statement=$this->connect->prepare($sql);
 		$price_utilitarian=number_format($params['precioU'], 2, '.', '');
+		$price_utilitarian_descuento=number_format($params['precioUD'], 2, '.', '');
 		$price_public=number_format($params['precioP'], 2, '.', '');
 		
 		$statement->bindParam(':nombre', $params['nombre'], PDO::PARAM_STR);
 		$statement->bindParam(':sku', $params['sku'], PDO::PARAM_STR);
 		$statement->bindParam(':descripcion', $params['descripcion'], PDO::PARAM_STR);
 		$statement->bindParam(':precio_utilitario', $price_utilitarian, PDO::PARAM_STR);
+		$statement->bindParam(':precio_utilitario_descuento', $price_utilitarian_descuento, PDO::PARAM_STR);
 		$statement->bindParam(':precio_publico', $price_public, PDO::PARAM_STR);
+		$statement->bindParam(':color', $params['color'], PDO::PARAM_STR);
+		$statement->bindParam(':material', $params['material'], PDO::PARAM_STR);
 		$statement->bindParam(':proveedor', $params['proveedor'], PDO::PARAM_STR);
 		$statement->bindParam(':type', $type, PDO::PARAM_STR);
 		$statement->bindParam(':version', $params['version'], PDO::PARAM_STR);
 		$statement->bindParam(':medida', $params['medida'], PDO::PARAM_STR);
-		$statement->bindParam(':piso', $params['piso'], PDO::PARAM_STR);
 		
 		$statement->execute();
 		
 		$producto_id=$this->connect->lastInsertId();
 		
-		$this->InsertColorsProduct($producto_id, $params['color']);
-		
-		$this->InsertMaterialsProduct($producto_id, $params['material']);
-		
 		$this->InsertCategoriesProduct($producto_id, $params['categoria']);
 		
+		$this->InsertDiscount($producto_id,$params['descuento']);
+		
 		return $producto_id;
+	}
+	
+	public function InsertDiscount($producto_id,$descuentos)
+	{
+		$sql="DELETE FROM productos_descuentos WHERE producto_id=:producto";
+		
+		$statement=$this->connect->prepare($sql);
+		$statement->bindParam(':producto', $producto_id, PDO::PARAM_STR);
+		
+		$statement->execute();
+		
+		foreach($descuentos as $d)
+		{
+			$sql="INSERT INTO productos_descuentos VALUES('',:producto,:descuento)";
+		
+			$statement=$this->connect->prepare($sql);
+		
+			$statement->bindParam(':producto', $producto_id, PDO::PARAM_STR);
+			$statement->bindParam(':descuento', $d, PDO::PARAM_STR);
+		
+			$statement->execute();
+		}
+		
 	}
 	
 	public function GetProductSearch($params)
@@ -128,21 +152,7 @@ class Productos
 		
 		if($colores)
 		{
-			$sql="SELECT producto_id
-					FROM productos_colores
-					WHERE color_id IN(".$colores.")";
-			
-			$statement=$this->connect->prepare($sql);
-			$statement->execute();
-			$result=$statement->fetchAll(PDO::FETCH_ASSOC);
-			
-			foreach($result as $res)
-			{
-				foreach($res as $r)
-				{
-					$producto[$r]=$r;
-				}
-			}
+			$where.=" AND color_id IN(".$colores.")";
 		}
 		
 		$materiales="";
@@ -166,21 +176,7 @@ class Productos
 		
 		if($materiales)
 		{
-			$sql="SELECT producto_id
-					FROM productos_materiales
-					WHERE material_id IN(".$materiales.")";
-				
-			$statement=$this->connect->prepare($sql);
-			$statement->execute();
-			$result=$statement->fetchAll(PDO::FETCH_ASSOC);
-				
-			foreach($result as $res)
-			{
-				foreach($res as $r)
-				{
-					$producto[$r]=$r;
-				}
-			}
+			$where.=" AND material_id IN(".$materiales.")";
 		}
 		
 		$categorias="";
@@ -242,11 +238,13 @@ class Productos
 		}
 		
 		$sql="SELECT p.producto_id,p.producto_name,p.producto_sku,
-				p.producto_description,p.producto_price_utilitarian,p.producto_price_public,p.proveedor_id,IF(p.producto_type='U','&Uacute;nico','Conjunto') AS producto_type
-				FROM productos p ".
+				p.producto_description,p.producto_price_utilitarian,p.producto_price_public,p.proveedor_id,IF(p.producto_type='U','&Uacute;nico','Conjunto') AS producto_type,c.color_name,m.material_name
+				FROM productos p 
+				INNER JOIN colores c USING(color_id)
+				INNER JOIN materiales m USING(material_id)
+				INNER JOIN proveedores pr USING(proveedor_id)".
 				$where.
 				" ORDER BY p.producto_id";
-		
 		$statement=$this->connect->prepare($sql);
 		
 		$statement->execute();
@@ -255,20 +253,6 @@ class Productos
 		foreach($result as $key=>$r)
 		{
 			$producto_id=$r['producto_id'];
-			$i=0;
-			foreach($this->GetProductColor($producto_id) as $c)
-			{
-				$result[$key]["color"][$i]=$c;
-				$i++;
-			}
-			
-			$i=0;
-			foreach($this->GetProductMaterial($producto_id) as $m)
-			{
-				$result[$key]["material"][$i]=$m;
-				$i++;
-			}
-			
 			$i=0;
 			foreach($this->GetProductCategory($producto_id) as $c)
 			{
@@ -343,8 +327,13 @@ class Productos
 		}
 		
 		$sql="SELECT p.producto_id,p.producto_name,p.producto_sku,
-				p.producto_description,p.producto_price_utilitarian,p.producto_price_public,p.proveedor_id,IF(p.producto_type='U','&Uacute;nico','Conjunto') AS producto_type,p.producto_type AS type,p.producto_version,p.producto_medida,p.producto_piso
-				FROM productos p".
+				p.producto_description,p.producto_price_utilitarian,p.producto_price_public,
+				p.proveedor_id,IF(p.producto_type='U','&Uacute;nico','Conjunto') AS producto_type,
+				p.producto_type AS type,p.producto_version,p.producto_medida,c.color_name,m.material_name,c.color_id,m.material_id,producto_price_utilitarian_discount
+				FROM productos p
+				INNER JOIN colores c USING(color_id)
+				INNER JOIN materiales m USING(material_id)
+				INNER JOIN proveedores pr USING(proveedor_id)".
 				$where.
 				" ORDER BY p.producto_id";
 		
@@ -354,54 +343,6 @@ class Productos
 		$result=$statement->fetchAll(PDO::FETCH_ASSOC);
 		
 		return $result; 
-	}
-	
-	public function GetProductColor($producto_id)
-	{
-		$colores=array();
-		
-		$sql="SELECT c.color_id,c.color_name
-				FROM colores c
-				INNER JOIN productos_colores pc USING(color_id)
-				WHERE pc.producto_id=:producto
-				ORDER BY c.color_name";
-		$statement=$this->connect->prepare($sql);
-		
-		$statement->bindParam(':producto', $producto_id, PDO::PARAM_STR);
-		
-		$statement->execute();
-		$result=$statement->fetchAll(PDO::FETCH_ASSOC);
-		
-		foreach($result as $r)
-		{
-			$colores[$r['color_id']]=$r['color_name'];	
-		}
-		
-		return $colores;
-	}
-	
-	public function GetProductMaterial($producto_id)
-	{
-		$materiales=array();
-	
-		$sql="SELECT m.material_id,m.material_name
-				FROM materiales m
-				INNER JOIN productos_materiales pm USING(material_id)
-				WHERE pm.producto_id=:producto
-				ORDER BY m.material_name";
-		$statement=$this->connect->prepare($sql);
-	
-		$statement->bindParam(':producto', $producto_id, PDO::PARAM_STR);
-	
-		$statement->execute();
-		$result=$statement->fetchAll(PDO::FETCH_ASSOC);
-	
-		foreach($result as $r)
-		{
-			$materiales[$r['material_id']]=$r['material_name'];
-		}
-		
-		return $materiales;
 	}
 	
 	public function GetProductCategory($producto_id)
@@ -558,7 +499,7 @@ class Productos
 		
 		$this->DeleteProductGroup($params['id_producto']);
 		
-		$sql="UPDATE productos SET producto_name=:nombre,producto_sku=:sku,producto_description=:descripcion,producto_price_utilitarian=:precio_utilitario,producto_price_public=:precio_publico,proveedor_id=:proveedor,producto_type=:type,producto_version=:version,	producto_medida=:medida,producto_piso=:piso
+		$sql="UPDATE productos SET producto_name=:nombre,producto_sku=:sku,producto_description=:descripcion,producto_price_utilitarian=:precio_utilitario,producto_price_public=:precio_publico,proveedor_id=:proveedor,color_id=:color,material_id=:material,producto_type=:type,producto_version=:version,	producto_medida=:medida,producto_price_utilitarian_discount=:precio_utilitario_descuento
 				WHERE producto_id=:producto";
 		
 		
@@ -566,45 +507,35 @@ class Productos
 		
 		$price_utilitarian=number_format($params['precioU'], 2, '.', '');
 		$price_public=number_format($params['precioP'], 2, '.', '');
+		$price_utilitarian_descuento=number_format($params['precioUD'], 2, '.', '');
 		
 		$statement->bindParam(':nombre', $params['nombre'], PDO::PARAM_STR);
 		$statement->bindParam(':sku', $params['sku'], PDO::PARAM_STR);
 		$statement->bindParam(':descripcion', $params['descripcion'], PDO::PARAM_STR);
 		$statement->bindParam(':precio_utilitario', $price_utilitarian, PDO::PARAM_STR);
+		$statement->bindParam(':precio_utilitario_descuento', $price_utilitarian_descuento, PDO::PARAM_STR);
 		$statement->bindParam(':precio_publico', $price_public, PDO::PARAM_STR);
 		$statement->bindParam(':proveedor', $params['proveedor'], PDO::PARAM_STR);
+		$statement->bindParam(':color', $params['color'], PDO::PARAM_STR);
+		$statement->bindParam(':material', $params['material'], PDO::PARAM_STR);
 		$statement->bindParam(':type', $type, PDO::PARAM_STR);
 		$statement->bindParam(':version', $params['version'], PDO::PARAM_STR);
 		$statement->bindParam(':medida', $params['medida'], PDO::PARAM_STR);
-		$statement->bindParam(':piso', $params['piso'], PDO::PARAM_STR);
 		$statement->bindParam(':producto', $params['id_producto'], PDO::PARAM_STR);
 		
 		$statement->execute();
 		
 		$producto_id=$params['id_producto'];
 		
-		$this->InsertColorsProduct($producto_id, $params['color']);
-		
-		$this->InsertMaterialsProduct($producto_id, $params['material']);
-		
 		$this->InsertCategoriesProduct($producto_id, $params['categoria']);
+		
+		$this->InsertDiscount($producto_id,$params['descuento']);
 		
 		return $producto_id;
 	}
 	
 	public function DeleteProduct($producto_id)
 	{
-		$sql="DELETE FROM productos_colores WHERE producto_id=:producto";
-		$statement=$this->connect->prepare($sql);
-		$statement->bindParam(':producto', $producto_id, PDO::PARAM_STR);
-		$statement->execute();
-		
-		
-		$sql="DELETE FROM productos_materiales WHERE producto_id=:producto";
-		$statement=$this->connect->prepare($sql);
-		$statement->bindParam(':producto', $producto_id, PDO::PARAM_STR);
-		$statement->execute();
-		
 		$sql="DELETE FROM productos_categorias WHERE producto_id=:producto";
 		$statement=$this->connect->prepare($sql);
 		$statement->bindParam(':producto', $producto_id, PDO::PARAM_STR);
@@ -686,6 +617,20 @@ class Productos
 				AND pc.producto_id='$producto_id'
 				ORDER BY p.producto_name ASC";
 		
+		$statement=$this->connect->prepare($sql);
+		$statement->execute();
+		$result=$statement->fetchAll(PDO::FETCH_ASSOC);
+		
+		return $result;
+	}
+	
+	public function GetDiscountProduct($producto_id)
+	{
+		$sql="SELECT producto_descuento
+				FROM productos_descuentos
+				WHERE producto_id='$producto_id'
+				ORDER BY descuento_id ASC";
+				
 		$statement=$this->connect->prepare($sql);
 		$statement->execute();
 		$result=$statement->fetchAll(PDO::FETCH_ASSOC);
