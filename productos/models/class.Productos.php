@@ -13,7 +13,7 @@ class Productos
 	
 	public function GetColors()
 	{
-		$sql="SELECT c.color_id,c.color_name
+		$sql="SELECT c.color_id,c.color_name,color_abrev
 				FROM colores c
 				ORDER BY c.color_name";
 		
@@ -26,7 +26,7 @@ class Productos
 	
 	public function GetMaterials()
 	{
-		$sql="SELECT m.material_id,m.material_name
+		$sql="SELECT m.material_id,m.material_name,material_abrev
 				FROM materiales m
 				ORDER BY m.material_name";
 	
