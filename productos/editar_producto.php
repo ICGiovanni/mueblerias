@@ -48,17 +48,33 @@ if($datos[0]["type"]=='C')
     <div class="wrapper wrapper-content animated fadeInRight">
 		<form method="post" class="form-horizontal" action="/" id="form_productos" enctype="multipart/form-data">
 			<input type="hidden" class="form-control" id="id_producto" name="id_producto" value="<?php echo $datos[0]["producto_id"]?>">
-			
+			<input type="hidden" id="code" name="code" value="">
 			<div class="form-group"><label class="col-sm-2 control-label">ID</label>
 			<div class="col-sm-6"><label class="col-sm-2 control-label"><?php echo $datos[0]["producto_id"]?></label></div>
             </div>
-			<div class="form-group">
-            <label class="col-sm-2 control-label">SKU</label>
-			<div class="col-sm-2 "><input type="text" class="form-control" id="sku" name="sku" value="<?php echo $datos[0]['producto_sku'];?>"></div>
-            </div>
-			<div class="form-group"><label class="col-sm-2 control-label">Nombre</label>
+			<div class="form-group"><label class="col-sm-2 control-label">Modelo</label>
 			<div class="col-sm-6" ><input type="text" class="form-control" id="nombre" name="nombre" value="<?php echo $datos[0]['producto_name'];?>"></div>
             </div>
+            <div class="form-group">
+            <label class="col-sm-2 control-label">SKU</label>
+			<div class="col-sm-2 ">
+			<input type="text" class="form-control" id="sku" name="sku" value="<?php echo $datos[0]['producto_sku'];?>" readonly>
+			</div>
+			<label class="col-sm-1 control-label">Manual</label>
+			<div class="col-sm-1 ">
+			<input type="checkbox" name="manual" id="manual" value="">
+			</div>
+            </div>
+            <div class="form-group">
+            <label class="col-sm-2 control-label">Version</label>
+			<div class="col-sm-2 "><input type="text" class="form-control" id="version" name="version" value="<?php echo $datos[0]['producto_version'];?>"></div>
+			</div>
+			
+			<div class="form-group">
+            <label class="col-sm-2 control-label">Medida</label>
+			<div class="col-sm-2 "><input type="text" class="form-control" id="medida" name="medida" value="<?php echo $datos[0]['producto_medida'];?>"></div>
+			</div>
+            
             <div class="form-group"><label class="col-sm-2 control-label">Descripci&oacute;n</label>
 			<div class="col-sm-6" ><textarea class="form-control" id="descripcion" name="descripcion"><?php echo $datos[0]['producto_description'];?></textarea></div>
             </div>
@@ -67,7 +83,7 @@ if($datos[0]["type"]=='C')
             <label class="col-sm-2 control-label">Colores</label>
 			<div class="col-sm-6" >
 				<select data-placeholder="Selecciona un color" class="chosen-select" style="width:300px;" tabindex="4" id="color" name="color">
-	            <option value=""></option>
+	            <option value="" data-abrev=""></option>
 	            <?php 
 	            $productos=new Productos();
 	            
@@ -78,11 +94,11 @@ if($datos[0]["type"]=='C')
 	            {
 	            	if($datos[0]['color_id']==$r['color_id'])
 	            	{
-	            		$list.='<option value="'.$r['color_id'].'" selected="">'.$r['color_name'].'</option>';
+	            		$list.='<option value="'.$r['color_id'].'" selected="" data-abrev="'.$r['color_abrev'].'">'.$r['color_name'].'</option>';
 	            	}
 	            	else
 	            	{
-	            		$list.='<option value="'.$r['color_id'].'">'.$r['color_name'].'</option>';
+	            		$list.='<option value="'.$r['color_id'].'" data-abrev="'.$r['color_abrev'].'">'.$r['color_name'].'</option>';
 	            	}
 	            }
 	            
@@ -97,7 +113,7 @@ if($datos[0]["type"]=='C')
             <label class="col-sm-2 control-label">Materiales</label>
 			<div class="col-sm-6" >
 				<select data-placeholder="Selecciona un material" class="chosen-select" style="width:300px;" tabindex="4" id="material" name="material">
-	            <option value=""></option>
+	            <option value="" data-abrev=""></option>
 	            <?php 
 	            $productos=new Productos();
 	            
@@ -108,11 +124,11 @@ if($datos[0]["type"]=='C')
 	            {
 	            	if($datos[0]['material_id']==$r['material_id'])
 	            	{
-	            		$list.='<option value="'.$r['material_id'].'" selected="">'.$r['material_name'].'</option>';
+	            		$list.='<option value="'.$r['material_id'].'" selected="" data-abrev="'.$r['material_abrev'].'">'.$r['material_name'].'</option>';
 	            	}
 	            	else
 	            	{
-	            		$list.='<option value="'.$r['material_id'].'">'.$r['material_name'].'</option>';
+	            		$list.='<option value="'.$r['material_id'].'" data-abrev="'.$r['material_abrev'].'">'.$r['material_name'].'</option>';
 	            	}
 	            }
 	            
@@ -357,6 +373,7 @@ $(document).ready(function()
 	}
 	
 	loadimg();
+	
 
 	$(document).on('click', "a.img_delete", function()
 	{
@@ -409,7 +426,7 @@ $(document).ready(function()
 		  "hideMethod": "fadeOut"
 	}
 	
-	$("#sku").focus();
+	$("#nombre").focus();
 
 	$( "#guardar" ).click(function()
 	{
@@ -758,6 +775,159 @@ $(document).ready(function()
 		$("#precioUD").val($(this).val());
 		calculateDiscount();    	
     });
+
+	var remove_accent=function(str)
+    {
+    	var map={'À':'A','Á':'A','Â':'A','Ã':'A','Ä':'A','Å':'A','Æ':'AE','Ç':'C','È':'E','É':'E','Ê':'E','Ë':'E','Ì':'I','Í':'I','Î':'I','Ï':'I','Ð':'D','Ñ':'N','Ò':'O','Ó':'O','Ô':'O','Õ':'O','Ö':'O','Ø':'O','Ù':'U','Ú':'U','Û':'U','Ü':'U','Ý':'Y','ß':'s','à':'a','á':'a','â':'a','ã':'a','ä':'a','å':'a','æ':'ae','ç':'c','è':'e','é':'e','ê':'e','ë':'e','ì':'i','í':'i','î':'i','ï':'i','ñ':'n','ò':'o','ó':'o','ô':'o','õ':'o','ö':'o','ø':'o','ù':'u','ú':'u','û':'u','ü':'u','ý':'y','ÿ':'y','Ā':'A','ā':'a','Ă':'A','ă':'a','Ą':'A','ą':'a','Ć':'C','ć':'c','Ĉ':'C','ĉ':'c','Ċ':'C','ċ':'c','Č':'C','č':'c','Ď':'D','ď':'d','Đ':'D','đ':'d','Ē':'E','ē':'e','Ĕ':'E','ĕ':'e','Ė':'E','ė':'e','Ę':'E','ę':'e','Ě':'E','ě':'e','Ĝ':'G','ĝ':'g','Ğ':'G','ğ':'g','Ġ':'G','ġ':'g','Ģ':'G','ģ':'g','Ĥ':'H','ĥ':'h','Ħ':'H','ħ':'h','Ĩ':'I','ĩ':'i','Ī':'I','ī':'i','Ĭ':'I','ĭ':'i','Į':'I','į':'i','İ':'I','ı':'i','Ĳ':'IJ','ĳ':'ij','Ĵ':'J','ĵ':'j','Ķ':'K','ķ':'k','Ĺ':'L','ĺ':'l','Ļ':'L','ļ':'l','Ľ':'L','ľ':'l','Ŀ':'L','ŀ':'l','Ł':'L','ł':'l','Ń':'N','ń':'n','Ņ':'N','ņ':'n','Ň':'N','ň':'n','ŉ':'n','Ō':'O','ō':'o','Ŏ':'O','ŏ':'o','Ő':'O','ő':'o','Œ':'OE','œ':'oe','Ŕ':'R','ŕ':'r','Ŗ':'R','ŗ':'r','Ř':'R','ř':'r','Ś':'S','ś':'s','Ŝ':'S','ŝ':'s','Ş':'S','ş':'s','Š':'S','š':'s','Ţ':'T','ţ':'t','Ť':'T','ť':'t','Ŧ':'T','ŧ':'t','Ũ':'U','ũ':'u','Ū':'U','ū':'u','Ŭ':'U','ŭ':'u','Ů':'U','ů':'u','Ű':'U','ű':'u','Ų':'U','ų':'u','Ŵ':'W','ŵ':'w','Ŷ':'Y','ŷ':'y','Ÿ':'Y','Ź':'Z','ź':'z','Ż':'Z','ż':'z','Ž':'Z','ž':'z','ſ':'s','ƒ':'f','Ơ':'O','ơ':'o','Ư':'U','ư':'u','Ǎ':'A','ǎ':'a','Ǐ':'I','ǐ':'i','Ǒ':'O','ǒ':'o','Ǔ':'U','ǔ':'u','Ǖ':'U','ǖ':'u','Ǘ':'U','ǘ':'u','Ǚ':'U','ǚ':'u','Ǜ':'U','ǜ':'u','Ǻ':'A','ǻ':'a','Ǽ':'AE','ǽ':'ae','Ǿ':'O','ǿ':'o'};
+    	var res='';
+    	for(var i=0;i<str.length;i++)
+        {
+            c=str.charAt(i);
+            res+=map[c]||c;
+		}
+
+		return res;
+    };
+
+	var getCode=function()
+	{
+		var letter=['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','X','Y','Z'];
+		var num=Math.floor(Math.random()*9)+1;
+		var letter_code=letter[Math.floor(Math.random()*9)+1];
+
+		var code=letter_code+num;
+
+		return code;
+	};
+    
+	var get_sku=function()
+	{
+		var mod=$("#nombre").val().toUpperCase().split(' ');
+		var modelo='';
+		var sku='';
+		
+		for(var i=0;i<mod.length;i++)
+		{
+	    	if(mod[i]!='')
+	    	{
+				modelo=mod[i];
+	    	}
+	    }
+				
+		modelo=$.trim(modelo);
+		modelo=modelo.substring(3,0);
+				
+		sku=modelo;
+
+		var selected=$("#color").find('option:selected');
+    	var color_abrev=selected.data('abrev');
+		
+    	if(color_abrev!='')
+    	{
+        	if(sku=='')
+        	{
+    			sku+=color_abrev;
+        	}
+        	else
+        	{
+        		sku+='-'+color_abrev;
+        	}
+    	}
+
+    	var selected=$("#material").find('option:selected');
+    	var material_abrev=selected.data('abrev');
+		
+    	if(material_abrev!='')
+    	{
+        	if(sku=='')
+        	{
+    			sku+=material_abrev;
+        	}
+        	else
+        	{
+        		sku+='-'+material_abrev;
+        	}
+    	}
+
+    	code=$("#code").val();
+
+		if(code=='')
+		{
+			code=getCode();
+			$("#code").val(code);		
+		}
+
+		if(sku=='')
+		{
+			sku=code;
+		}
+		else
+		{
+			sku+='-'+code;
+		}
+		$("#sku").val(sku);
+    	/*if(abrev!='')
+    	{
+	    	if(sku=='')
+	    	{
+				sku+=abrev;
+	    	}
+	    	else
+	    	{
+				sku+='-'.abrev;
+	    	}
+    	}
+
+    	var selected=$("#material").find('option:selected');
+    	var abrev=selected.data('abrev');
+		
+    	if(abrev!=undefined)
+    	{
+	    	if(sku=='')
+	    	{
+				sku+=abrev;
+	    	}
+	    	else
+	    	{
+				sku+='-'.abrev;
+	    	}
+    	}
+    	
+	    
+
+	    $("#sku").val(sku);*/
+	};
+
+    $("#color").change(function()
+    {
+    	get_sku();
+    });
+
+    $("#material").change(function()
+	{
+    	get_sku();
+    });
+
+	$('#nombre').keyup(function()
+	{
+		get_sku();
+    });
+
+	$('#manual').change(function()
+	{
+		if($(this).is(":checked"))
+		{
+			$("#sku").val('');
+			$("#sku").prop('readonly',false);
+			$("#sku").focus();			
+		}
+		else
+		{
+			$("#sku").prop('readonly',true);
+			get_sku();
+		}
+	});
+    
 
 });
 
