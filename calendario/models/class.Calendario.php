@@ -86,7 +86,7 @@ class Calendario {
 		WHERE
 			login_id = :login_id
 		AND
-			evento_fecha BETWEEN '".date("Y")."-01-01' AND '".date("Y")."-12-31'
+			evento_fecha BETWEEN '".(date("Y")-1)."-".date("m")."-".date("d")."' AND '".(date("Y")+1)."-".date("m")."-".date("d")."'
 		";
 //echo $sql;
 		$statement=$this->connect->prepare($sql);
@@ -121,5 +121,55 @@ class Calendario {
 
 		return $result;
 		
+	}
+	
+	public function getRecordatorios(){
+		$sql="SELECT 
+			evento_id,
+			evento_nombre,
+			evento_fecha,
+			evento_desc,
+			evento_recordatorio_activo,
+			evento_recordatorio_fecha,
+			login_id,
+			email
+		FROM 
+			".$this->name_table_eventos."
+		INNER JOIN 
+			inv_login USING(login_id)
+		WHERE
+			evento_recordatorio_activo = 1
+		AND
+			'".date("Y-m-d H:i:s")."' > evento_recordatorio_fecha
+		AND	
+			evento_recordatorio_enviado = 0
+		";
+//echo $sql;
+		$statement=$this->connect->prepare($sql);
+		$statement->bindParam(':login_id', $login_id, PDO::PARAM_STR);
+
+		$statement->execute();
+        $result=$statement->fetchAll(PDO::FETCH_ASSOC);
+
+		return $result;
+	}
+	
+	public function changeOnlyStatus($evento_id, $evento_recordatorio_enviado){
+		$sql = "UPDATE 
+		".$this->name_table_eventos."
+		SET
+			evento_recordatorio_enviado = :evento_recordatorio_enviado
+		WHERE
+			evento_id = :evento_id
+		LIMIT 1";
+		
+		$statement=$this->connect->prepare($sql);
+		
+		$statement->bindParam(':evento_id', $evento_id, PDO::PARAM_STR);
+		$statement->bindParam(':evento_recordatorio_enviado', $evento_recordatorio_enviado, PDO::PARAM_STR);
+
+		$statement->execute();
+		
+		return "updated";
 	}
 }
