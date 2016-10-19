@@ -28,16 +28,18 @@ while ( list (,$dataRecordatorio) = each ($rowRecordatorios)){
 		$mail->Subject=$subject;
 		
 		$msj = "<html>
-			<body style='background-color: #fff'>
-				<p style='text-align: center; width: 300px'>
-					<img src='http://globmint.com/img/logo_globmint2.png' width='200px' alt='Globmint'/>
-				</p>
-				<div style='background-color: #D71921'>&nbsp;</div>
+			<body style='background-color: #E7EAEC'>				
+				<div style='background-color: #127AAE;'>&nbsp;</div>
 				<div>	
 					<br><br>					
 					<table align='center'>
+					<tr>
+						<td rowspan='5' >
+							<img src='http://globmint.com/img/logo_globmint2.png' width='100px' alt='Globmint' style='margin:10px;'/>
+						</td>
+					</tr>
 						<tr>
-							<td><b>".$msjContent."</b></td>
+							<td><b>".$msjContent."</b><br><br></td>
 						</tr>
 						<tr>
 							<td><b>NOMBRE DEL EVENTO:</b> ".$dataRecordatorio["evento_nombre"]." </td>
@@ -48,13 +50,16 @@ while ( list (,$dataRecordatorio) = each ($rowRecordatorios)){
 						<tr>
 							<td><b>DESCRIPCION:</b> ".$dataRecordatorio["evento_desc"]." <br></td>
 						</tr>
+						<tr>
+							<td colspan='2'><b>-----------------------------------------------------------------------------------------------------------</b></td>
+						</tr>
 					</table>
-					--------------------------------------------------------------------------------------------------------
+					
 					<br>
 				</div>
-				<div style='background-color: #D71921'>
-				<p style='text-align: center; padding:16px 0px; color:#fff;'>
-					   <b>http://globmint.com/ <- Ir al Administrador </b>
+				<div style='background-color: #154A76;'>
+				<p style='text-align: center; padding:16px 0px; '>
+					   <b><a href='http://globmint.com/' target='_blank' style='color:#fff;'>http://globmint.com/ - Ir al Administrador</a></b>
 				</p>
 				</div>
 			</body>
@@ -65,11 +70,13 @@ while ( list (,$dataRecordatorio) = each ($rowRecordatorios)){
 		
 	
 		if(!$mail->Send()){
-			echo "El recordatorio: '".$dataRecordatorio["evento_nombre"]."' no pudo ser enviado al correo ".$to." - Mailer Error: ".$mail->ErrorInfo;
+			
+			inLogSent(date('l jS \of F Y h:i:s A')." El recordatorio: '".$dataRecordatorio["evento_nombre"]."' no pudo ser enviado al correo ".$to." - Mailer Error: ".$mail->ErrorInfo);
 			$objCalendario->changeOnlyStatus($dataRecordatorio["evento_id"], 2); //marca como recordatorio enviado pero no entregado...
 		}
-		else{			
-			echo "El recordatorio: '".$dataRecordatorio["evento_nombre"]."' ha sido enviado al correo ".$to." exitosamente <br>";
+		else{
+			
+			inLogSent(date('l jS \of F Y h:i:s A')." El recordatorio: '".$dataRecordatorio["evento_nombre"]."' ha sido enviado al correo ".$to." exitosamente <br>");
 			$objCalendario->changeOnlyStatus($dataRecordatorio["evento_id"], 1); //marca como recordatorio entregado...
 		}
 
@@ -78,4 +85,14 @@ while ( list (,$dataRecordatorio) = each ($rowRecordatorios)){
 		//}
 
 	/*email*/
+}
+
+function inLogSent($newLine){
+	$file_log = $_SERVER["REDIRECT_PATH_CONFIG"]."calendario/envia_recordatorio/log_envia_".date("Y_m").".html";
+	if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+		$file_log = "C:".str_replace("/","\\",$file_log);
+	}
+	$actual = file_get_contents($file_log);
+	$actual .= $newLine;
+	file_put_contents($file_log, $actual);
 }

@@ -20,6 +20,7 @@ class Calendario {
 		evento_desc,
 		evento_recordatorio_activo,
 		evento_recordatorio_fecha,
+		evento_recordatorio_enviado,
 		login_id
 		)
 		VALUES
@@ -29,6 +30,7 @@ class Calendario {
 		:evento_desc,
 		:evento_recordatorio_activo,
 		:evento_recordatorio_fecha,
+		0,
 		:login_id
 		)";
 		
