@@ -1,7 +1,7 @@
 <?php
-session_start();
+require_once $_SERVER['REDIRECT_PATH_CONFIG'].'config.php';
+require_once($_SERVER["REDIRECT_PATH_CONFIG"].'login/session.php');
 date_default_timezone_set ("America/Mexico_City");
-require_once $_SERVER['REDIRECT_PATH_CONFIG'].'/config.php';
 require_once $pathProy.'/header.php';
 require_once $pathProy.'/menu.php';
 require_once($_SERVER["REDIRECT_PATH_CONFIG"].'gastos/models/class.Gastos.php');
