@@ -7,9 +7,9 @@ $inventarios=new Inventarios();
 	<form method="post" class="form-horizontal" action="/" id="form_productos" enctype="multipart/form-data">
 
 	<div class="form-group">
-        <label class="col-sm-2 control-label">Entrada</label>
+        <label class="col-sm-2 control-label">Origen</label>
 		<div class="col-sm-6" >
-			<select data-placeholder="Selecciona una entrada" class="chosen-select" style="width:300px;" tabindex="4" id="entrada" name="entrada">
+			<select data-placeholder="Selecciona una entrada" class="chosen-select" style="width:300px;" tabindex="4" id="origen" name="origen">
 	        <option value=""></option>
 	        <option value="0">Proveedor</option>
 	        <?php 
@@ -168,7 +168,7 @@ $(document).ready(function()
 	
 	$('#modal_nuevo_inventario').on('shown.bs.modal', function () {
 		$("#products_table").html('');
-		$("#entrada").chosen();
+		$("#origen").chosen();
 		$("#destino").chosen();
 		$('.chosen-select', this).chosen('destroy').chosen();
 		$("#producto").easyAutocomplete(options);
