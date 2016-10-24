@@ -42,3 +42,5 @@ $params = array(
 $return = $objCalendario->editEvento($params);
 */
 
+// variable de inicio de sesión
+  $_SESSION['login_session']
