@@ -10,7 +10,7 @@ $gasto_fecha_recordatorio = $gasto_fecha_recordatorio_ano."-".$gasto_fecha_recor
 $_GET["gasto_fecha_vencimiento"]=$gasto_fecha_vencimiento." ".$_GET["gasto_hora_vencimiento"];
 $_GET["gasto_fecha_recordatorio"]=$gasto_fecha_recordatorio." ".$_GET["gasto_hora_recordatorio"];
 
-require_once $_SERVER['REDIRECT_PATH_CONFIG'].'/config.php';
+require_once $_SERVER['REDIRECT_PATH_CONFIG'].'config.php';
 require_once("../models/class.Gastos.php");
 $gasto = new Gasto();
 

@@ -155,36 +155,7 @@ while(list(,$dataGastoStatus) = each($rowsGastosStatus)){
 
 $(document).ready(function(){
 	
-	$('.dataTables-example').DataTable({
-				searching: false,
-				ordering:  false,
-				paging: false,
-                dom: '<"html5buttons"B>lTfgitp',
-                buttons: [
-                    { extend: 'copy'},
-                    {extend: 'csv'},
-                    {extend: 'excel', title: 'ExampleFile'},
-                    {extend: 'pdf', title: 'ExampleFile'},
-                    {extend: 'print',
-                     customize: function (win){
-                            $(win.document.body).addClass('white-bg');
-                            $(win.document.body).css('font-size', '10px');
-
-                            $(win.document.body).find('table')
-                                    .addClass('compact')
-                                    .css('font-size', 'inherit');
-                    }
-                    }
-                ]
-
-            });
-	
-     $.fn.datepicker.defaults.language = 'es';
-	 $('.clockpicker').clockpicker();
 });
-
-
-
 
 function borrar_gasto(gasto_id){
 	$("#boton_crea_gasto").addClass("disabled");
@@ -196,9 +167,6 @@ function borrar_gasto(gasto_id){
 		data: {gasto_id:gasto_id},
 		success: function(msg){
 			location.href = '../';
-			//$("#myModal").modal('hide');
-			//$("#boton_crea_gasto").removeClass().addClass("btn btn-primary");
-			//$("#span_crea_gasto").removeClass();
 		}		
 	});
 }

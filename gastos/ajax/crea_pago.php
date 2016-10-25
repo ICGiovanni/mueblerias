@@ -5,7 +5,7 @@ $gastos_pagos_fecha = $gastos_pagos_fecha_ano."-".$gastos_pagos_fecha_mes."-".$g
 
 $_GET["gastos_pagos_fecha"]=$gastos_pagos_fecha." ".$_GET["gastos_pagos_hora"];
 
-require_once $_SERVER['REDIRECT_PATH_CONFIG'].'/config.php';
+require_once $_SERVER['REDIRECT_PATH_CONFIG'].'config.php';
 require_once("../models/class.Gastos.php");
 $gasto = new Gasto();
 

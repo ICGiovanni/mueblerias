@@ -34,8 +34,6 @@ class Calendario {
 		:login_id
 		)";
 		
-		//print_r($params);
-		//die();
 		
 		$statement=$this->connect->prepare($sql);
 		
@@ -173,5 +171,16 @@ class Calendario {
 		$statement->execute();
 		
 		return "updated";
+	}
+	
+	public function deleteEvento($evento_id){
+		$sql = "DELETE FROM ".$this->name_table_eventos." 
+		WHERE evento_id = :evento_id LIMIT 1";
+		
+		$statement=$this->connect->prepare($sql);
+		$statement->bindParam(':evento_id', $evento_id, PDO::PARAM_STR);
+		
+		$statement->execute();
+		return "deleted";
 	}
 }

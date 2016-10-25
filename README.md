@@ -24,7 +24,7 @@ $params = array(
 					"evento_recordatorio_activo"=>"1",
 					"evento_recordatorio_fecha"=>"2016-10-28 06:00:00",
 					"login_id"=>"1"
-				)
+				);
 $evento_id = $objCalendario->insertEvento($params);
 */
 
@@ -38,7 +38,7 @@ $params = array(
 					"evento_recordatorio_activo"=>"1",
 					"evento_recordatorio_fecha"=>"2016-10-28 06:00:00",
 					"evento_id"=>"1"
-				)
+				);
 $return = $objCalendario->editEvento($params);
 */
 
