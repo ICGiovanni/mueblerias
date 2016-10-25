@@ -31,6 +31,8 @@ while(list(,$dataGeneric) = each($rows) ){
 //print_r($rows);
 ?>
 <!-- FooTable -->
+<link href="<?php echo $raizProy?>css/plugins/chosen/chosen.css" rel="stylesheet">
+<link href="<?php echo $raizProy?>css/plugins/easy-autocomplete/easy-autocomplete.min.css" rel="stylesheet">
 <link href="<?=$raizProy?>css/plugins/footable/footable.core.css" rel="stylesheet">
 <div class="row wrapper border-bottom white-bg page-heading">
 	<div class="col-sm-4">
@@ -47,7 +49,7 @@ while(list(,$dataGeneric) = each($rows) ){
 	</div>
 	<div class="col-sm-8">
 		<div class="title-action">
-			<button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myModal6" >
+			<button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#modal_nuevo_inventario" >
 			+ Nuevo <?=$administracion?>
 			</button>
 		</div>
@@ -65,7 +67,8 @@ while(list(,$dataGeneric) = each($rows) ){
 		<div class="col-lg-12">
 			<div class="ibox-content">
 				<div class="">
-                    <table class="footable table table-bordered dataTables-example toggle-square" >
+				<input class="form-control input-sm m-b-xs" id="filter" placeholder="Buscar producto" type="text">
+                    <table class="footable table table-bordered dataTables-example toggle-square" data-filter="#filter">
 						<thead>
 						<tr>
 							<th>SKU</th>
@@ -119,8 +122,20 @@ while(list(,$dataGeneric) = each($rows) ){
 	
 	<script>
 $(document).ready(function(){
-	$('.footable').footable({
+	/*$('.footable').footable({
 		sorting:  false
+	});*/
+
+	$('.footable').footable({
+		"paging": {
+			"enabled": true
+		},
+		"filtering": {
+			"enabled": true
+		},
+		"sorting": {
+			"enabled": true
+		}
 	});
 });
 	</script>
@@ -176,42 +191,36 @@ $(document).ready(function(){
 						</tr>
 					</table>
 				
-			</div>
-			<div class="modal-footer">
+			</div>			<div class="modal-footer">
 				<button type="button" class="btn btn-danger btn-xs" data-dismiss="modal">Cancelar</button>
 				<button type="button" class="btn btn-primary btn-xs" onclick="editar_<?=strtolower($administracion)?>();" id="btn_editar_<?=$administracion?>" >Guardar <?=$administracion?></button>
 			</div>
 		</div>
 	</div>
 </div>
+<script src="<?php echo $raizProy?>js/plugins/toastr/toastr.min.js"></script>
 
-<div class="modal inmodal fade" id="myModal8" tabindex="-1" role="dialog"  aria-hidden="true">
-	<div class="modal-dialog modal-sm">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Cerrar</span></button>
-				<h4 class="modal-title">Confirmar Borrar <?=$administracion?></h4>
-			</div>
-			<div class="modal-body">
-				
-					<table class="table">
-						<tr>
-							<td>¿Estas seguro de querer borrar la <?=strtolower($administracion)?>?</td>
-							<td><span name="d_<?=strtolower($administracion)?>_name" id="d_<?=strtolower($administracion)?>_name"></span></td>
-						</tr>
-						<tr>
-							<td>Abreviacion o Clave:</td>
-							<td><span name="d_<?=strtolower($administracion)?>_abrev" id="d_<?=strtolower($administracion)?>_abrev"></span></td>
-						</tr>
-					</table>
-				
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-danger btn-xs" data-dismiss="modal">Cancelar</button>
-				<button type="button" class="btn btn-primary btn-xs" onclick="borrar_<?=strtolower($administracion)?>();" id="btn_borrar_<?=$administracion?>" >Borrar <?=$administracion?></button>
-			</div>
-		</div>
-	</div>
+<script src="<?php echo $raizProy?>js/plugins/chosen/chosen.jquery.js"></script>
+<script src="<?php echo $raizProy?>js/plugins/easy-autocomplete/jquery.easy-autocomplete.min.js"></script>
+
+<div class="modal inmodal fade" id="modal_nuevo_inventario" tabindex="-1" role="dialog"  aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header" style="padding: 15px">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Cerrar</span></button>
+                <h3 class="modal-title">Inventario</h3>
+            </div>
+            <div class="modal-body" style="padding-bottom: 0px !important; margin-bottom: -15px !important">    
+                <?php include_once 'nueva_solicitud.php' ?>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger btn-xs" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary btn-xs" id="btn_guardar_proveedor" >Guardar</button>
+            </div>
+        </div>
+    </div>
 </div>
+
+
 
 </html>
