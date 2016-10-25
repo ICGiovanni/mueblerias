@@ -43,7 +43,7 @@ class Gasto {
 		:sucursal_id,
 		:gasto_beneficiario )";
 		
-		print_r($params);
+		//print_r($params);
 		//die();
 		
 		$statement=$this->connect->prepare($sql);
@@ -107,8 +107,6 @@ class Gasto {
 	public function deleteGasto($gasto_id){
 		$sql = "DELETE FROM ".$this->name_table_gastos." 
 		WHERE gasto_id = :gasto_id LIMIT 1";
-		
-		echo $sql;
 		
 		$statement=$this->connect->prepare($sql);
 		$statement->bindParam(':gasto_id', $gasto_id, PDO::PARAM_STR);

@@ -52,7 +52,8 @@ if($rowEvento["evento_recordatorio_activo"]==1){
 	</div>
 	<div class="col-sm-8">
 		<div class="title-action">
-			<button type="button" class="btn btn-danger btn-xs" onclick="location.href = '../';">Cancelar</button>&nbsp;&nbsp;
+			<button type="button" class="btn btn-danger btn-xs" onclick="location.href = '../';"><i class="fa fa-arrow-left"></i> Regresar a Calendario</button>&nbsp;&nbsp;
+			<button type="button" class="btn btn-danger btn-xs" onclick="location.href = '../borrar/?evento_id=<?=$rowEvento["evento_id"]?>';">BORRAR EVENTO</button>&nbsp;&nbsp;
             <button id="boton_crea_evento" type="button" class="btn btn-primary btn-xs" onclick="edita_evento();">Guardar Evento</button> <span id="span_crea_evento"></span>
 		</div>
 	</div>
