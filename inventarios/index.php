@@ -215,7 +215,7 @@ $(document).ready(function(){
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger btn-xs" data-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary btn-xs" id="btn_guardar_proveedor" >Guardar</button>
+                <button type="button" class="btn btn-primary btn-xs" id="guardar_inventario" >Guardar</button>
             </div>
         </div>
     </div>

@@ -4,7 +4,7 @@ $inventarios=new Inventarios();
 ?>
 
 <div class="wrapper wrapper-content animated fadeInRight">
-	<form method="post" class="form-horizontal" action="/" id="form_productos" enctype="multipart/form-data">
+	<form method="post" class="form-horizontal" action="/" id="form_inventario" enctype="multipart/form-data">
 
 	<div class="form-group">
         <label class="col-sm-2 control-label">Origen</label>
@@ -166,13 +166,97 @@ $(document).ready(function()
 	};
 
 	
-	$('#modal_nuevo_inventario').on('shown.bs.modal', function () {
+	$('#modal_nuevo_inventario').on('shown.bs.modal', function ()
+	{
 		$("#products_table").html('');
 		$("#origen").chosen();
 		$("#destino").chosen();
 		$('.chosen-select', this).chosen('destroy').chosen();
 		$("#producto").easyAutocomplete(options);
 	});
+
+	$("#guardar_inventario").click(function()
+	{
+		var bandera=false;
+    	$.each($('.products'), function (index, value)
+    	{
+    		var id=$(value).val();
+    		bandera=true;
+    	});	
+		
+		if($("#origen").val()=='')
+		{
+			toastr.error('Debe de agregar el origen del stock');
+			$("#sku").val('');
+			$("#sku").focus();		
+		}
+		else if($("#destino").val()=='')
+		{
+			toastr.error('Debe de agregar destino del stock');
+			$("#nombre").val('');
+			$("#nombre").focus();		
+		}
+		else if(bandera==false)
+		{
+			toastr.error('Debe de agregar un producto');
+			$("#producto").val('');
+			$("#producto").focus();
+		}
+		else
+		{
+			var url="inventario.php?t=n";
+	
+			var formData = new FormData($("#form_inventario")[0]);
+	
+		    $.ajax({
+		        url: url,
+		        type: 'POST',
+		        data: formData,
+		        async: false,
+		        success: function (data)
+		        {
+			        var producto_id=data;
+			        var url="guardar_conjunto.php?id="+producto_id;
+				    var products=new Array();
+				        
+				    $.each($('.products'), function (index, value)
+		            {
+			        	var p={};
+			        	var id=$(value).val();
+			        	var cantidad=$("#cantidad_"+id).val();
+			        	p.id=id;
+			        	p.cantidad=cantidad;
+			        	products.push(p);
+	            	});	
+	
+			        var jsonProducts=JSON.stringify(products);
+			        
+		        	$.ajax({
+				        url: url,
+				        type: 'POST',
+				        data:  jsonProducts,
+				        contentType: "application/json; charset=utf-8",
+				        async: false,
+				        dataType: "json",
+				        success: function (data)
+				        {
+				            alert("El Producto ha sido agregado");
+				            var url="index.php";
+				    		$(location).attr("href", url);
+				        },
+				        cache: false,
+				        contentType: false,
+				        processData: false
+				    });
+		        },
+		        cache: false,
+		        contentType: false,
+		        processData: false
+		    });
+		}
+		
+	});
+	
 });
 
 function deleteRow(td)
