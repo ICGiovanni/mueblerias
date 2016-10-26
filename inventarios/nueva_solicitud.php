@@ -215,8 +215,8 @@ $(document).ready(function()
 		        async: false,
 		        success: function (data)
 		        {
-			        var producto_id=data;
-			        var url="guardar_conjunto.php?id="+producto_id;
+			        var movimiento_id=data;
+			        var url="inventario.php?t=p&id="+movimiento_id;
 				    var products=new Array();
 				        
 				    $.each($('.products'), function (index, value)
@@ -231,7 +231,8 @@ $(document).ready(function()
 	
 			        var jsonProducts=JSON.stringify(products);
 			        
-		        	$.ajax({
+		        	$.ajax(
+					{
 				        url: url,
 				        type: 'POST',
 				        data:  jsonProducts,
@@ -240,8 +241,8 @@ $(document).ready(function()
 				        dataType: "json",
 				        success: function (data)
 				        {
-				            alert("El Producto ha sido agregado");
-				            var url="index.php";
+				            alert("El Movimiento ha sido agregado");
+				            var url="movimientos.php";
 				    		$(location).attr("href", url);
 				        },
 				        cache: false,
