@@ -70,11 +70,11 @@
                             <i class="fa fa-user"></i> <span class="nav-label">Productos</span>
                         </a>
                         <ul class="nav nav-second-level">
-							<li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/productos/index.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'productos/index.php'?>" >Lista de productos</a></li>
+							<li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/productos/index.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'productos/'?>" >Lista de productos</a></li>
 							<li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/productos/nuevo_producto.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'productos/nuevo_producto.php'?>" >Nuevo producto</a></li>
-                            <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/productos/materiales/index.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'productos/materiales/index.php'?>" >Materiales</a></li>
-                            <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/productos/colores/index.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'productos/colores/index.php'?>" >Colores</a></li>                                                                                                                                
-                            <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/productos/categorias/index.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'productos/categorias/index.php'?>" >Categorias</a></li>    
+                            <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/productos/materiales/index.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'productos/materiales/'?>" >Materiales</a></li>
+                            <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/productos/colores/index.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'productos/colores/'?>" >Colores</a></li>                                                                                                                                
+                            <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/productos/categorias/index.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'productos/categorias/'?>" >Categorias</a></li>    
                         </ul>
                     </li>
 					
@@ -92,7 +92,7 @@
                             <i class="fa fa-user"></i> <span class="nav-label">Catalogos</span>
                         </a>
                         <ul class="nav nav-second-level">
-                            <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/proveedores/index.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'proveedores/index.php'?>" >Lista de proveedores</a></li>                            
+                            <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/proveedores/index.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'proveedores/'?>" >Lista de proveedores</a></li>                            
                             <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/proveedores/catalogo.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'proveedores/catalogo.php'?>" >Lista de productos</a></li>                            
                             <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/proveedores/pedidos.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'proveedores/pedidos.php'?>" >Lista de pedidos</a></li>                            
                         </ul>
@@ -103,7 +103,8 @@
                             <i class="fa fa-user"></i> <span class="nav-label">Calendario</span>
                         </a>
                         <ul class="nav nav-second-level">
-                            <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/calendario/index.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'calendario/index.php'?>" >Principal</a></li>                                                        
+                            <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/calendario/index.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'calendario/index.php'?>" >Vista Mensual</a></li>                                                        
+                            <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/calendario/nuevo/index.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'calendario/nuevo/'?>" >Nuevo Evento</a></li>                                                        
                         </ul>
                     </li>
                     
