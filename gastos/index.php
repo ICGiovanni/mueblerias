@@ -4,8 +4,12 @@ require_once($_SERVER["REDIRECT_PATH_CONFIG"].'login/session.php');
 require_once $pathProy.'/header.php';
 require_once $pathProy.'/menu.php';
 require_once($_SERVER["REDIRECT_PATH_CONFIG"].'gastos/models/class.Gastos.php');
+require_once($_SERVER["REDIRECT_PATH_CONFIG"].'models/general/class.General.php');
+
 
 $objGasto = new Gasto();
+$objGeneral = new General();
+
 
 $filtro_fecha_activo_checked = '';
 $filtro_categoria_activo_checked = '';
@@ -78,7 +82,9 @@ $html_rows = '';
 while(list(,$dataGasto) = each($rows)){
 	$rowPagos = $objGasto->getPagosSum($dataGasto["gasto_id"]);
 	$rowUltimoPago = $objGasto->getFechaUltimoPago($dataGasto["gasto_id"]);
-		
+	if($rowUltimoPago["gastos_pagos_fecha"] != 'N/A'){
+		$rowUltimoPago["gastos_pagos_fecha"] = $objGeneral->getDate($rowUltimoPago["gastos_pagos_fecha"]);
+	}
 	$rowPagos=$rowPagos[0];
 	
 	switch($dataGasto["gasto_status_id"]){
@@ -106,7 +112,7 @@ while(list(,$dataGasto) = each($rows)){
 	$html_rows.= '<tr style="background-color:'.$color_row.';">
 		<td align="center">'.$dataGasto["gasto_id"].'</td>
 		<td>'.$dataGasto["gasto_no_documento"].'</td>
-		<td>'.$dataGasto["gasto_fecha_vencimiento"].'</td>
+		<td>'.$objGeneral->getDate($dataGasto["gasto_fecha_vencimiento"]).'</td>
 		<td>'.$rowUltimoPago["gastos_pagos_fecha"].'</td>
 		<td>'.$asoccGastoCategoria[$dataGasto["gasto_categoria_id"]].'</td>
 		<td>'.$dataGasto["gasto_concepto"].'</td>

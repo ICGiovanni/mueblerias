@@ -10,6 +10,7 @@ class Calendario {
 		$c=new Connection();
 		$this->connect=$c->db;
 		$this->name_table_eventos = 'eventos';
+		$this->name_table_evento_gasto = 'evento_gasto';
 	}
 	
 	public function insertEvento($params){
@@ -123,7 +124,8 @@ class Calendario {
 		
 	}
 	
-	public function getRecordatorios(){
+	public function getRecordatorios(){ 
+	//trae de todos los recordatorios para posteriormente armar el mail y enviarlo
 		$sql="SELECT 
 			evento_id,
 			evento_nombre,
@@ -146,7 +148,7 @@ class Calendario {
 		";
 //echo $sql;
 		$statement=$this->connect->prepare($sql);
-		$statement->bindParam(':login_id', $login_id, PDO::PARAM_STR);
+		//$statement->bindParam(':login_id', $login_id, PDO::PARAM_STR);
 
 		$statement->execute();
         $result=$statement->fetchAll(PDO::FETCH_ASSOC);
@@ -183,4 +185,56 @@ class Calendario {
 		$statement->execute();
 		return "deleted";
 	}
+	
+	public function insertEventoGasto($evento_id, $gasto_id){
+		
+		$sql = "INSERT INTO ".$this->name_table_evento_gasto." 
+		( 
+		evento_id,
+		gasto_id
+		)
+		VALUES
+		( 
+		:evento_id,
+		:gasto_id
+		)";
+		
+		
+		$statement=$this->connect->prepare($sql);
+		
+		$statement->bindParam(':evento_id', $evento_id, PDO::PARAM_STR);
+        $statement->bindParam(':gasto_id', $gasto_id, PDO::PARAM_STR);
+		
+		$statement->execute();
+		return $this->connect->lastInsertId();
+	}
+	
+	public function existRecordatorio($gasto_id){
+		$sql="SELECT 
+			evento_id
+		FROM 
+			".$this->name_table_evento_gasto."
+		WHERE
+			gasto_id = :gasto_id";
+//echo $sql;
+		$statement=$this->connect->prepare($sql);
+		$statement->bindParam(':gasto_id', $gasto_id, PDO::PARAM_STR);
+
+		$statement->execute();
+        $result=$statement->fetchAll(PDO::FETCH_ASSOC);
+
+		return $result;
+	}
+	
+	public function deleteEventoGasto($evento_id){
+		$sql = "DELETE FROM ".$this->name_table_evento_gasto." 
+		WHERE evento_id = :evento_id LIMIT 1";
+		
+		$statement=$this->connect->prepare($sql);
+		$statement->bindParam(':evento_id', $evento_id, PDO::PARAM_STR);
+		
+		$statement->execute();
+		return "deleted";
+	}
+
 }

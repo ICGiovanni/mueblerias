@@ -8,4 +8,5 @@ require_once($_SERVER["REDIRECT_PATH_CONFIG"].'calendario/models/class.Calendari
 $calendario = new Calendario();
 
 $return = $calendario->deleteEvento($_GET["evento_id"]);
+$calendario->deleteEventoGasto($_GET["evento_id"]);
 echo $return;

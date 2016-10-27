@@ -10,6 +10,10 @@ require_once $pathProy.'/menu.php';
 require_once($_SERVER["REDIRECT_PATH_CONFIG"].'gastos/models/class.Gastos.php');
 require_once($_SERVER["REDIRECT_PATH_CONFIG"].'proveedores/models/class.Proveedores.php');
 require_once($_SERVER["REDIRECT_PATH_CONFIG"].'login/models/class.Login.php');
+require_once($_SERVER['REDIRECT_PATH_CONFIG'].'/calendario/models/class.Calendario.php');
+$objCalendario = new Calendario();
+
+
 $objGasto = new Gasto();
 $rowGasto = $objGasto->getGasto($_GET["gasto_id"]);
 $rowGasto=$rowGasto[0];
@@ -61,7 +65,11 @@ $objProveedor = new Proveedor();
 $rowsProveedores = $objProveedor->getProveedores();
 $options_proveedor_id = '<option value="0">-- Elige un Proveedor --</option>';
 while(list(,$dataProveedor) = each($rowsProveedores)){
-	$options_proveedor_id.='<option value="'.$dataProveedor["proveedor_id"].'">'.$dataProveedor["proveedor_nombre"].'</option>';
+	$selected = '';
+	if($dataProveedor["proveedor_id"] == $rowGasto["proveedor_id"]){
+		$selected = 'selected';
+	}
+	$options_proveedor_id.='<option value="'.$dataProveedor["proveedor_id"].'" '.$selected.'>'.$dataProveedor["proveedor_nombre"].'</option>';
 }
 /* FIN SECUENCIA PARA PROVEEDORES */
 
@@ -71,9 +79,28 @@ $rowsLogin = $objLogin->getUsers("");
 //print_r($rowsLogin);
 $options_login_id = '<option value="0">-- Elige un Empleado --</option>';
 while(list(,$dataLogin) = each($rowsLogin)){
-	$options_login_id.='<option value="'.$dataLogin["login_id"].'">'.$dataLogin["firstName"].' '.$dataLogin["lastName"].'</option>';
+	$selected = '';
+	if($dataLogin["login_id"] == $rowGasto["login_id"]){
+		$selected = 'selected';
+	}
+	$options_login_id.='<option value="'.$dataLogin["login_id"].'" '.$selected.'>'.$dataLogin["firstName"].' '.$dataLogin["lastName"].'</option>';
 }
 /* FIN SECUENCIA PARA EMPLEADOS */
+
+
+/* INICIA SECUENCIA PARA RECORDATORIOS */
+$rowRecordatorio = $objCalendario->existRecordatorio($_GET["gasto_id"]);
+if(isset($rowRecordatorio[0])){
+	$rowRecordatorio = $rowRecordatorio[0];
+	$rowEvento = $objCalendario->getEvento($rowRecordatorio["evento_id"]);
+	$rowEvento = $rowEvento[0];
+	//print_r($rowEvento);
+
+	list($gasto_fecha_recordatorio,$gasto_hora_recordatorio)=explode(" ",$rowEvento["evento_recordatorio_fecha"]);
+	list($gasto_fecha_recordatorio_ano,$gasto_fecha_recordatorio_mes,$gasto_fecha_recordatorio_dia)=explode("-",$gasto_fecha_recordatorio);
+	$gasto_hora_recordatorio = substr($gasto_hora_recordatorio, 0, -3);
+}
+/* FIN SECUENCIA PARA RECORDATORIOS */
 ?>
 
 
@@ -152,7 +179,7 @@ while(list(,$dataLogin) = each($rowsLogin)){
 								</td>
 								<?php
 								$recordatorio_activo_checked = '';
-								if($rowGasto["gasto_fecha_recordatorio_activo"] == "1"){
+								if($rowEvento["evento_recordatorio_activo"] == "1"){
 									$recordatorio_activo_checked = "checked";
 								}
 								?>

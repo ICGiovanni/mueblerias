@@ -16,7 +16,7 @@ $_GET["gasto_fecha_recordatorio"]=$gasto_fecha_recordatorio." ".$_GET["gasto_hor
 $_GET["gastos_pagos_fecha"]=$_GET["gasto_fecha_vencimiento"];
 
 
-require_once("../models/class.Gastos.php");
+require_once($_SERVER['REDIRECT_PATH_CONFIG']."gastos/models/class.Gastos.php");
 $gasto = new Gasto();
 
 $gasto_id = $gasto->insertGasto($_GET);
@@ -38,5 +38,9 @@ if(isset($_GET["gasto_fecha_recordatorio_activo"]) && $_GET["gasto_fecha_recorda
 						"login_id"=>$_SESSION["login_session"]["login_id"]
 					);
 	$evento_id = $objCalendario->insertEvento($params);
+	
+	$objCalendario->insertEventoGasto($evento_id, $gasto_id);
+	
+	
 }
 echo $gasto_id;
