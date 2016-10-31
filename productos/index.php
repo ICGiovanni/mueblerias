@@ -1,11 +1,13 @@
 <?php
 	include $_SERVER['REDIRECT_PATH_CONFIG'].'/config.php';
 	require_once($_SERVER["REDIRECT_PATH_CONFIG"].'productos/models/class.Productos.php');
+	require_once($_SERVER["REDIRECT_PATH_CONFIG"].'inventarios/models/class.Inventarios.php');
    // include $pathProy.'login/session.php';
     include $pathProy.'/header.php';
     include $pathProy.'/menu.php';
     
     $productos=new Productos();
+    $inventarios=new Inventarios();
 ?>
 <link href="<?php echo $raizProy?>css/plugins/chosen/chosen.css" rel="stylesheet">
 <style>
@@ -195,6 +197,7 @@ cursor: default;
                         <th>Material</th>
                         <th>Categoria</th>
                         <th>Precio P&uacute;blico</th>
+                        <th align="center">Inventario</th>
                         <th></th>                        
                     </tr>
                     </thead>
@@ -213,6 +216,8 @@ cursor: default;
                     	$description=$p['producto_description'];
                     	$price_utilitarian=$p['producto_price_utilitarian'];
                     	$price_public=$p['producto_price_public'];
+                    	$stock=$p['stock'];
+                    	
                     	                    	
                     	$color='<ul style="padding: 0" class="tag-list">';
                     	$color.='<li><a href="" class="href_colores"><i class="fa fa-tag"></i> '.$p['color_name'].'</a></li>';
@@ -233,13 +238,22 @@ cursor: default;
                     	
                     	
                     	$tr.='<tr class="gradeX">';
-                    	$tr.='<td>'.$sku.'</td>';
+                    	$tr.='<td align="center">'.$sku.'</td>';
                     	$tr.='<td>'.$nombre.'</td>';
-                    	$tr.='<td>'.$tipo.'</td>';
+                    	$tr.='<td align="center">'.$tipo.'</td>';
                     	$tr.='<td>'.$color.'</td>';
                     	$tr.='<td>'.$material.'</td>';
                     	$tr.='<td>'.$categoria.'</td>';
-                    	$tr.='<td>$ '.$price_public.'</td>';
+                    	$tr.='<td align="center">$ '.$price_public.'</td>';
+                    	
+                    	if($stock>0)
+                    	{
+                    		$tr.='<td align="center"><a href="#" class="link_modal" data-toggle="modal" data-target="#modal_view" data-id="'.$producto_id.'"  id="open_modal">'.$stock.'</a></td>';
+                    	}
+                    	else
+                    	{
+                    		$tr.='<td align="center">'.$stock.'</td>';
+                    	}
                     	$tr.='<td><div class="infont col-md-1 col-sm-1"><a href="editar_producto.php?id='.$producto_id.'"><i class="fa fa-pencil"></i></a></div><div class="infont col-md-1 col-sm-1"><a href="#" onClick="borrar_producto('.$producto_id.');"><i class="fa fa-trash-o"></i></a></div></td>';
                     	$tr.='</tr>';
                     	
@@ -258,6 +272,7 @@ cursor: default;
                         <th>Material</th>
                         <th>Categoria</th>
                         <th>Precio P&uacute;blico</th>
+                        <th>Inventario</th>
                         <th></th>                        
                     </tr>
                     </tfoot>
@@ -269,6 +284,43 @@ cursor: default;
             </div>
             </div>
 	</div>
+	
+	<div class="modal inmodal fade" id="modal_view" tabindex="-1" role="dialog"  aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header" style="padding: 15px">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Cerrar</span></button>
+                <h3 class="modal-title">Stock por Sucursal</h3>
+            </div>
+            <div class="modal-body" style="padding-bottom: 0px !important; margin-bottom: -15px !important">    
+               <div class="form-group">
+	           	
+	           	<div class="col-sm-12" >
+	           	           	
+	           	<table class="table table-striped">
+	           	<thead>
+					<tr>
+						<td>Sucursal</td>
+						<td>Cantidad</td>
+					</tr>
+				</thead>
+	           	<tbody id="products_table_list">
+	           	
+	           	</tbody>
+	           	</table>
+	           
+    
+    </div>
+               </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger btn-xs" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+	
+	
     <script src="<?php echo $raizProy?>js/plugins/dataTables/datatables.min.js"></script>
     
 	<script src="<?php echo $raizProy?>js/plugins/chosen/chosen.jquery.js"></script>
@@ -319,7 +371,7 @@ cursor: default;
         		        $.each( data, function( key, item )
             	    	{
         		        	filas+='<tr>';
-							filas+='<td>'+item.producto_sku+'</td>';
+							filas+='<td align="center">'+item.producto_sku+'</td>';
 							filas+='<td>'+item.producto_name+'</td>';
 							filas+='<td>'+item.producto_type+'</td>';
 
@@ -347,7 +399,8 @@ cursor: default;
 			    	    	filas+='</ul>';
 			    	    	filas+='</td>';
 							
-							filas+='<td>$ '+item.producto_price_public+'</td>';
+							filas+='<td align="center">$ '+item.producto_price_public+'</td>';
+							filas+='<td align="center">'+item.stock+'</td>';
 							filas+='<td><div class="infont col-md-1 col-sm-1"><a href="editar_producto.php?id='+item.producto_id+'"><i class="fa fa-pencil"></i></a></div><div class="infont col-md-1 col-sm-1"><a href="#" onClick="borrar_producto('+item.producto_id+');"><i class="fa fa-trash-o"></i></a></div></td>';
     		        		filas+='</tr>';
             	    	});
@@ -381,6 +434,29 @@ cursor: default;
     				}
     			});            		
             });
+	
+            $("a.link_modal").click(function()
+        	{
+        		var id=$(this).data("id");
+        		var action=$(this).data("action");
+        			
+        		$.getJSON( "../inventarios/inventario.php?t=is&id="+id, function( result )
+        		{
+        			var table="";
+        			var tr='';
+        			$.each(result, function(i, field)
+        			{
+        				tr+='<tr>';
+        				tr+='<td>'+field.sucursal_name+'</td>';
+        				tr+='<td>'+field.stock+'</td>';
+        				tr+='</tr>';
+        						
+					});
+
+        			$("#products_table_list").html(tr);
+        		});
+			});	
+            
 
         	$("#color").chosen();
         	$("#tipo").chosen();

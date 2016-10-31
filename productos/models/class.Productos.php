@@ -238,7 +238,14 @@ class Productos
 		}
 		
 		$sql="SELECT p.producto_id,p.producto_name,p.producto_sku,
-				p.producto_description,p.producto_price_utilitarian,p.producto_price_public,p.proveedor_id,IF(p.producto_type='U','&Uacute;nico','Conjunto') AS producto_type,c.color_name,m.material_name
+				p.producto_description,p.producto_price_utilitarian,p.producto_price_public,p.proveedor_id,
+				IF(p.producto_type='U','&Uacute;nico','Conjunto') AS producto_type,c.color_name,m.material_name,
+				IF((SELECT SUM(cantidad) AS stock
+				FROM inventario_productos ip
+				WHERE ip.producto_id=p.producto_id)!='',
+				(SELECT SUM(cantidad) AS stock
+				FROM inventario_productos ip
+				WHERE ip.producto_id=p.producto_id),0) AS stock
 				FROM productos p 
 				INNER JOIN colores c USING(color_id)
 				INNER JOIN materiales m USING(material_id)
@@ -329,7 +336,13 @@ class Productos
 		$sql="SELECT p.producto_id,p.producto_name,p.producto_sku,
 				p.producto_description,p.producto_price_utilitarian,p.producto_price_public,
 				p.proveedor_id,IF(p.producto_type='U','&Uacute;nico','Conjunto') AS producto_type,
-				p.producto_type AS type,p.producto_version,p.producto_medida,c.color_name,m.material_name,c.color_id,m.material_id,producto_price_utilitarian_discount
+				p.producto_type AS type,p.producto_version,p.producto_medida,c.color_name,m.material_name,c.color_id,m.material_id,producto_price_utilitarian_discount,
+				IF((SELECT SUM(cantidad) AS stock
+				FROM inventario_productos ip
+				WHERE ip.producto_id=p.producto_id)!='',
+				(SELECT SUM(cantidad) AS stock
+				FROM inventario_productos ip
+				WHERE ip.producto_id=p.producto_id),0) AS stock
 				FROM productos p
 				INNER JOIN colores c USING(color_id)
 				INNER JOIN materiales m USING(material_id)

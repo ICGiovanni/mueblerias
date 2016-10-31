@@ -83,6 +83,8 @@ class Inventarios
 				$this->ProductInventory($d['id'],$move[0]['sucursal_id_entrada'],$d['cantidad']);
 			}
 		}
+		
+		echo $move_id;
 	}
 	
 	public function GetProductSucursal($producto_id,$sucursal_id)
@@ -222,6 +224,49 @@ class Inventarios
 		
 		return $move_id;
 		
+	}
+	
+	public function GetStockbyProduct($product_id)
+	{
+		$sql="SELECT ip.producto_id,SUM(cantidad) AS stock
+				FROM inventario_productos ip
+				WHERE producto_id='$product_id'";
+		
+		$statement=$this->connect->prepare($sql);
+		$statement->execute();
+		$result=$statement->fetchAll(PDO::FETCH_ASSOC);
+		
+		if(isset($result[0]['producto_id']))
+		{
+			return $result[0]['stock'];
+		}
+		else
+		{
+			return 0;	
+		}
+	}
+	
+	public function GetStockbySucursal($product_id,$sucursal_id="")
+	{
+		$where="";
+		
+		if($sucursal_id)
+		{
+			$where=" AND sucursal_id='$sucursal_id'";
+		}
+		
+		$sql="SELECT p.producto_id,ivs.sucursal_name,SUM(ip.cantidad) AS stock
+				FROM productos p
+				INNER JOIN inventario_productos ip USING(producto_id)
+				INNER JOIN inv_sucursales ivs USING(sucursal_id)
+				WHERE p.producto_id='$product_id'".
+				$where;
+		
+		$statement=$this->connect->prepare($sql);
+		$statement->execute();
+		$result=$statement->fetchAll(PDO::FETCH_ASSOC);
+		
+		return $result;
 	}
 	
 }
