@@ -26,9 +26,9 @@ echo "</pre>";
 */
 foreach($list as $key => $value){
     $productId = $value['producto_id'];
-    $categoria = $productos->GetProductCategory($productId);
-    $material = $productos->GetProductMaterial($productId);
-    $color = $productos->GetProductColor($productId);        
+    $categoria = array('category'); // $productos->GetProductCategory($productId);
+    $material = array('material'); // $productos->GetProductMaterial($productId);
+    $color = array('color'); // $productos->GetProductColor($productId);        
     $galeria = $productos->GetImagesProduct($productId);
     $list[$key]['categoria'] = implode(",", $categoria);
     $list[$key]['material'] = implode(",", $material);
