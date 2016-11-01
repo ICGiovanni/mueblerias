@@ -241,8 +241,9 @@ $(document).ready(function()
 				        dataType: "json",
 				        success: function (data)
 				        {
+					        $("#modal_nuevo_inventario").hide();
 				            alert("El Movimiento ha sido agregado");
-				            var url="movimientos.php";
+				            var url="index.php";
 				    		$(location).attr("href", url);
 				        },
 				        cache: false,
