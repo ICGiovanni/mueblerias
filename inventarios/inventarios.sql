@@ -3,11 +3,14 @@ CREATE TABLE IF NOT EXISTS movimientos_inventario
 	movimiento_id INT NOT NULL AUTO_INCREMENT,
 	usuario_id_salida INT NOT NULL,
 	fecha_salida DATETIME NOT NULL,
-	sucursal_id_salida INT NOT NULL, 
+	sucursal_id_salida INT NOT NULL,
+	nota_salida TEXT NOT NULL,
+  	chofer VARCHAR(100),
 	estatus VARCHAR(30),
 	usuario_id_entrega INT NOT NULL,	
 	fecha_entrega DATETIME NOT NULL,
 	sucursal_id_entrada INT NOT NULL,
+	nota_entrega TEXT NOT NULL,
 	PRIMARY KEY (movimiento_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 

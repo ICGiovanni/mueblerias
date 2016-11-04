@@ -43,12 +43,14 @@ class Inventarios
 			$date_e='0000-00-00 00:00:00';
 		}
 		
-		$sql="INSERT INTO movimientos_inventario VALUES('',:usuario_o,:date_s,:origen,:status,:usuario_d,:date_e,:destino)";
+		$sql="INSERT INTO movimientos_inventario VALUES('',:usuario_o,:date_s,:origen,:nota_salida,:chofer,:status,:usuario_d,:date_e,:destino,'')";
 
 		$statement=$this->connect->prepare($sql);
 		$statement->bindParam(':usuario_o', $usuario_o, PDO::PARAM_STR);
 		$statement->bindParam(':date_s', $date_s, PDO::PARAM_STR);
 		$statement->bindParam('origen', $params['origen'], PDO::PARAM_STR);
+		$statement->bindParam('nota_salida', $params['nota_salida'], PDO::PARAM_STR);
+		$statement->bindParam('chofer', $params['chofer'], PDO::PARAM_STR);
 		$statement->bindParam('status', $status, PDO::PARAM_STR);
 		$statement->bindParam('usuario_d', $usuario_d, PDO::PARAM_STR);
 		$statement->bindParam('date_e', $date_e, PDO::PARAM_STR);
@@ -135,7 +137,6 @@ class Inventarios
 		}
 	}
 	
-	
 	public function GetMoves($move_id='')
 	{
 		$where="";
@@ -157,7 +158,7 @@ class Inventarios
 				IF(fecha_entrega!='0000-00-00',fecha_entrega,'') AS fecha_entrega,
 				CASE estatus
 				WHEN 'EP' THEN 'Entrega de Proveedor'
-				WHEN 'ET' THEN 'Entrega a Tienda'
+				WHEN 'ET' THEN 'Entregado a Tienda'
 				WHEN 'PE' THEN 'Por Entregar a Tienda'
 				END AS estatus_etiqueta,
 				estatus,
@@ -169,7 +170,7 @@ class Inventarios
 				(SELECT sucursal_name
 				FROM inv_sucursales
 				WHERE sucursal_id=mi.sucursal_id_entrada),'') AS sucursal_entrada,
-				mi.sucursal_id_salida,mi.sucursal_id_entrada
+				mi.sucursal_id_salida,mi.sucursal_id_entrada,mi.nota_salida,mi.nota_entrega,mi.chofer
 				FROM movimientos_inventario mi
 				$where
 				ORDER BY mi.movimiento_id DESC";
@@ -196,7 +197,7 @@ class Inventarios
 		
 	}
 	
-	public function ReceivingProducts($move_id)
+	public function ReceivingProducts($move_id,$nota)
 	{
 		
 		$usuario_d='1';
@@ -206,7 +207,7 @@ class Inventarios
 		$sucursal_salida=$result[0]['sucursal_id_salida'];
 		$sucursal_entrada=$result[0]['sucursal_id_entrada'];
 				
-		$sql="UPDATE movimientos_inventario SET usuario_id_entrega=$usuario_d,fecha_entrega='$date_e',estatus='ET' WHERE movimiento_id='$move_id'";
+		$sql="UPDATE movimientos_inventario SET usuario_id_entrega=$usuario_d,fecha_entrega='$date_e',estatus='ET',nota_entrega='$nota' WHERE movimiento_id='$move_id'";
 		$statement=$this->connect->prepare($sql);
 		$statement->execute();
 		

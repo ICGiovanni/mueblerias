@@ -581,7 +581,8 @@ class Productos
 				FROM imagenes_productos ip
 				WHERE ip.producto_id=p.producto_id
 				ORDER BY imagen_id ASC
-				limit 0,1),'".FINAL_URL."img/imagen-no.png') AS imagen
+				limit 0,1),'".FINAL_URL."img/imagen-no.png') AS imagen,
+				producto_price_public,producto_description
 				FROM productos p
 				INNER JOIN proveedores pr USING(proveedor_id)
 				WHERE producto_type='U'

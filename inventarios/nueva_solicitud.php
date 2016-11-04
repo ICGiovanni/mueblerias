@@ -50,7 +50,20 @@ $inventarios=new Inventarios();
 			</select>
 		</div>
 	</div>
-            
+	
+	<div class="form-group">
+        <label class="col-sm-2 control-label">Chofer</label>
+		<div class="col-sm-6" >
+			<input type="text" class="form-control" id="chofer" name="chofer">
+		</div>
+	</div>
+	<div class="form-group">
+        <label class="col-sm-2 control-label">Nota de Salida</label>
+		<div class="col-sm-6" >
+			 <textarea class="form-control" id="nota_salida" name="nota_salida"></textarea>
+		</div>
+	</div>
+    
 	<div class="form-group">
 	<label class="col-sm-2 control-label">Productos</label>
     <div class="col-sm-7" ><input type="text" class="form-control" id="producto" name="producto"></div>
@@ -178,23 +191,53 @@ $(document).ready(function()
 	$("#guardar_inventario").click(function()
 	{
 		var bandera=false;
+		var banderaE=true;
     	$.each($('.products'), function (index, value)
     	{
     		var id=$(value).val();
+			var sucursal=$("#origen").val();
+			var cantidad=$("#cantidad_"+id).val();
+			
+    		if(sucursal!='')
+			{
+    			var url="inventario.php";
+			    $.ajax(
+				{
+			        url: url,
+			        type: 'POST',
+			        data:{t:'cp',id:id,su:sucursal,c:cantidad},
+			        async: false,
+			        success: function (data)
+			        {
+						if(!data)
+						{
+							banderaE=false;
+						}
+					}
+				});
+			}
+    		
     		bandera=true;
     	});	
 		
 		if($("#origen").val()=='')
 		{
 			toastr.error('Debe de agregar el origen del stock');
-			$("#sku").val('');
-			$("#sku").focus();		
+			$("#origen").val('');
+			$("#origen").focus();		
 		}
 		else if($("#destino").val()=='')
 		{
 			toastr.error('Debe de agregar destino del stock');
-			$("#nombre").val('');
-			$("#nombre").focus();		
+			$("#destino").val('');
+			$("#destino").focus();		
+		}
+		else if($("#origen").val()==$("#destino").val())
+		{
+			toastr.error('No puede transferir productos a la misma sucursal');
+			$("#origen").val('');
+			$("#destino").val('');
+			$("#origen").focus();
 		}
 		else if(bandera==false)
 		{
@@ -202,8 +245,13 @@ $(document).ready(function()
 			$("#producto").val('');
 			$("#producto").focus();
 		}
+		else if(banderaE==false)
+		{
+
+		}
 		else
 		{
+			
 			var url="inventario.php?t=n";
 	
 			var formData = new FormData($("#form_inventario")[0]);
