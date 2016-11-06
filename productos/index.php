@@ -211,7 +211,7 @@ cursor: default;
                     {
                     	$producto_id=$p["producto_id"];
                     	$nombre=$p["producto_name"];
-                    	$tipo=$p["producto_type"];
+                    	$conjunto=$p["producto_conjunto"];
                     	$sku=$p['producto_sku'];
                     	$description=$p['producto_description'];
                     	$price_utilitarian=$p['producto_price_utilitarian'];
@@ -240,7 +240,7 @@ cursor: default;
                     	$tr.='<tr class="gradeX">';
                     	$tr.='<td align="center">'.$sku.'</td>';
                     	$tr.='<td>'.$nombre.'</td>';
-                    	$tr.='<td align="center">'.$tipo.'</td>';
+                    	$tr.='<td align="center">'.$conjunto.'</td>';
                     	$tr.='<td>'.$color.'</td>';
                     	$tr.='<td>'.$material.'</td>';
                     	$tr.='<td>'.$categoria.'</td>';

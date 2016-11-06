@@ -49,24 +49,23 @@ CREATE TABLE IF NOT EXISTS productos
 	producto_price_utilitarian FLOAT,
 	producto_price_utilitarian_discount FLOAT,
 	producto_price_public FLOAT,
-	color_id INT,
-	material_id INT,
-	proveedor_id INT,
-	producto_type ENUM('U','C') NOT NULL DEFAULT 'U',
+	producto_price_public_min FLOAT,
+	producto_price_public_discount FLOAT,
+	color_id INT NOT NULL DEFAULT 0,
+	material_id INT NOT NULL DEFAULT 0,
+	proveedor_id INT NOT NULL DEFAULT 0,
+	producto_conjunto INT NOT NULL DEFAULT 0,
 	producto_version VARCHAR(30) NOT NULL,
 	producto_medida VARCHAR(30) NOT NULL,
-	PRIMARY KEY (producto_id),
-	FOREIGN KEY (proveedor_id) REFERENCES proveedores(proveedor_id),
-	FOREIGN KEY (color_id) REFERENCES colores(color_id),
-	FOREIGN KEY (material_id) REFERENCES materiales(material_id)
+	producto_type ENUM('P','U','V') NOT NULL DEFAULT 'P',
+	producto_parent INT NOT NULL DEFAULT 0,
+	PRIMARY KEY (producto_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE IF NOT EXISTS productos_categorias
 (
 	producto_id INT NOT NULL,
-	categoria_id INT NOT NULL,
-	FOREIGN KEY (producto_id) REFERENCES productos(producto_id),
-	FOREIGN KEY (categoria_id) REFERENCES categorias(categoria_id)
+	categoria_id INT NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE IF NOT EXISTS imagenes_productos
@@ -75,17 +74,14 @@ CREATE TABLE IF NOT EXISTS imagenes_productos
 	producto_id INT NOT NULL,
 	imagen_name VARCHAR(100),
 	imagen_route VARCHAR(100),
-	PRIMARY KEY (imagen_id),
-	FOREIGN KEY (producto_id) REFERENCES productos(producto_id)
+	PRIMARY KEY (imagen_id)	
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE IF NOT EXISTS productos_conjunto
 (
 	producto_id INT NOT NULL,
 	producto_conjunto_id INT NOT NULL,
-	cantidad INT NOT NULL,
-	FOREIGN KEY (producto_id) REFERENCES productos(producto_id),
-	FOREIGN KEY (producto_conjunto_id) REFERENCES productos(producto_id)
+	cantidad INT NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE IF NOT EXISTS productos_descuentos
@@ -93,6 +89,5 @@ CREATE TABLE IF NOT EXISTS productos_descuentos
 	descuento_id INT NOT NULL AUTO_INCREMENT,
 	producto_id INT NOT NULL,
 	producto_descuento FLOAT,
-	PRIMARY KEY (descuento_id),
-	FOREIGN KEY (producto_id) REFERENCES productos(producto_id)
+	PRIMARY KEY (descuento_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;

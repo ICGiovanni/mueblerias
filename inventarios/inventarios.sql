@@ -27,7 +27,5 @@ CREATE TABLE IF NOT EXISTS inventario_productos
 	producto_id INT NOT NULL,
 	sucursal_id INT NOT NULL,
 	cantidad INT NOT NULL,
-	PRIMARY KEY (inventario_id),
-	FOREIGN KEY (producto_id) REFERENCES productos(producto_id)
-#	FOREIGN KEY (sucursal_id) REFERENCES inv_sucursales(sucursal_id)
+	PRIMARY KEY (inventario_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;

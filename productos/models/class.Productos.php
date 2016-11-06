@@ -52,18 +52,24 @@ class Productos
 	
 	public function InsertarProducto($params)
 	{
-		$type="U";
+		$tipo_producto=$params['tipo_producto'];
+		
+		$conjunto=0;
 		if(isset($params['conjunto']))
 		{
-			$type="C";
+			$conjunto=1;
 		}
 		
-		$sql="INSERT INTO productos VALUES('',:nombre,:sku,:descripcion,:precio_utilitario,:precio_utilitario_descuento,:precio_publico,:color,:material,:proveedor,:type,:version,:medida)";
+		$sql="INSERT INTO productos VALUES('',:nombre,:sku,:descripcion,:precio_utilitario,:precio_utilitario_descuento,:precio_publico,:precio_publico,:precio_publico,:color,:material,:proveedor,:conjunto,:version,:medida,:type,:producto_parent)";
+		
+		$precioU=($params['precioU']=='') ? 0 : $params['precioU'];
+		$precioUD=($params['precioUD']=='') ? 0 : $params['precioUD'];
+		$precioP=($params['precioP']=='') ? 0 : $params['precioP'];
 		
 		$statement=$this->connect->prepare($sql);
-		$price_utilitarian=number_format($params['precioU'], 2, '.', '');
-		$price_utilitarian_descuento=number_format($params['precioUD'], 2, '.', '');
-		$price_public=number_format($params['precioP'], 2, '.', '');
+		$price_utilitarian=number_format($precioU, 2, '.', '');
+		$price_utilitarian_descuento=number_format($precioUD, 2, '.', '');
+		$price_public=number_format($precioP, 2, '.', '');
 		
 		$statement->bindParam(':nombre', $params['nombre'], PDO::PARAM_STR);
 		$statement->bindParam(':sku', $params['sku'], PDO::PARAM_STR);
@@ -74,17 +80,25 @@ class Productos
 		$statement->bindParam(':color', $params['color'], PDO::PARAM_STR);
 		$statement->bindParam(':material', $params['material'], PDO::PARAM_STR);
 		$statement->bindParam(':proveedor', $params['proveedor'], PDO::PARAM_STR);
-		$statement->bindParam(':type', $type, PDO::PARAM_STR);
+		$statement->bindParam(':conjunto', $conjunto, PDO::PARAM_STR);
 		$statement->bindParam(':version', $params['version'], PDO::PARAM_STR);
 		$statement->bindParam(':medida', $params['medida'], PDO::PARAM_STR);
+		$statement->bindParam(':type', $tipo_producto, PDO::PARAM_STR);
+		$statement->bindParam(':producto_parent', $params['producto_padre_id'], PDO::PARAM_STR);
 		
 		$statement->execute();
 		
 		$producto_id=$this->connect->lastInsertId();
 		
-		$this->InsertCategoriesProduct($producto_id, $params['categoria']);
+		if(isset($params['categoria']))
+		{
+			$this->InsertCategoriesProduct($producto_id, $params['categoria']);
+		}
 		
-		$this->InsertDiscount($producto_id,$params['descuento']);
+		if(isset($params['descuento']))
+		{
+			$this->InsertDiscount($producto_id,$params['descuento']);
+		}
 		
 		return $producto_id;
 	}
@@ -335,7 +349,7 @@ class Productos
 		
 		$sql="SELECT p.producto_id,p.producto_name,p.producto_sku,
 				p.producto_description,p.producto_price_utilitarian,p.producto_price_public,
-				p.proveedor_id,IF(p.producto_type='U','&Uacute;nico','Conjunto') AS producto_type,
+				p.proveedor_id,IF(p.producto_conjunto='0','&Uacute;nico','Conjunto') AS producto_conjunto,
 				p.producto_type AS type,p.producto_version,p.producto_medida,c.color_name,m.material_name,c.color_id,m.material_id,producto_price_utilitarian_discount,
 				IF((SELECT SUM(cantidad) AS stock
 				FROM inventario_productos ip
@@ -584,13 +598,43 @@ class Productos
 				limit 0,1),'".FINAL_URL."img/imagen-no.png') AS imagen,
 				producto_price_public,producto_description
 				FROM productos p
-				INNER JOIN proveedores pr USING(proveedor_id)
-				WHERE producto_type='U'
+				WHERE producto_type IN('U')
 				ORDER BY p.producto_name ASC";
+		
 		$statement=$this->connect->prepare($sql);
 		$statement->execute();
 		$result=$statement->fetchAll(PDO::FETCH_ASSOC);
 		
+		return $result;
+	}
+	
+	public function GetProductsMain($type='')
+	{
+		if($type=='')
+		{
+			$type="'U','P'";
+		}
+		
+		$sql="SELECT p.producto_id,p.producto_sku,p.producto_name,
+				IF((SELECT imagen_route
+				FROM imagenes_productos ip
+				WHERE ip.producto_id=p.producto_id
+				ORDER BY imagen_id ASC
+				limit 0,1)!='',
+				(SELECT imagen_route
+				FROM imagenes_productos ip
+				WHERE ip.producto_id=p.producto_id
+				ORDER BY imagen_id ASC
+				limit 0,1),'".FINAL_URL."img/imagen-no.png') AS imagen,
+				producto_price_public,producto_description
+				FROM productos p
+				WHERE producto_type IN($type)
+				ORDER BY p.producto_name ASC";
+	
+		$statement=$this->connect->prepare($sql);
+		$statement->execute();
+		$result=$statement->fetchAll(PDO::FETCH_ASSOC);
+	
 		return $result;
 	}
 	

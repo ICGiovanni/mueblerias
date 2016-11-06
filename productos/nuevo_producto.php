@@ -41,6 +41,19 @@
     <div class="wrapper wrapper-content animated fadeInRight">
 		<form method="post" class="form-horizontal" action="/" id="form_productos" enctype="multipart/form-data">
 			<input type="hidden" id="code" name="code" value="">
+			
+			<div class="form-group">
+            <label class="col-sm-2 control-label">Tipo de Producto</label>
+			<div class="col-sm-6" >
+				<select data-placeholder="Selecciona el tipo de Producto" class="chosen-select" style="width:300px;" tabindex="4" id="tipo_producto" name="tipo_producto">
+	            <option value="" data-abrev=""></option>
+	            <option value="P" data-abrev="" selected>Principal</option>
+	            <option value="V" data-abrev="">Variación</option>
+	            <option value="U" data-abrev="">Único</option>	            
+				</select>
+			</div>
+            </div>
+			
 			<div class="form-group"><label class="col-sm-2 control-label">Modelo</label>
 			<div class="col-sm-6" ><input type="text" class="form-control" id="nombre" name="nombre" autocomplete=off></div>
             </div>
@@ -54,6 +67,7 @@
 			<input type="checkbox" name="manual" id="manual" value="">
 			</div>
             </div>
+            <div id="div_principal">
             <div class="form-group">
             <label class="col-sm-2 control-label">Version</label>
 			<div class="col-sm-2 "><input type="text" class="form-control" id="version" name="version"></div>
@@ -66,6 +80,65 @@
             <div class="form-group"><label class="col-sm-2 control-label">Descripci&oacute;n</label>
 			<div class="col-sm-6" ><textarea class="form-control" id="descripcion" name="descripcion"></textarea></div>
             </div>
+            
+            <div class="form-group">
+            <label class="col-sm-2 control-label">Categorias</label>
+			<div class="col-sm-6" >
+				<select data-placeholder="Selecciona una categoria" class="chosen-select" multiple style="width:300px;" tabindex="4" id="categoria" name="categoria[]">
+	            <option value=""></option>
+	            <?php 
+	            $productos=new Productos();
+	            
+	            $result=$productos->GetCategories();
+	            
+	            $list="";
+	            foreach($result as $r)
+	            {
+	            	$list.='<option value="'.$r['categoria_id'].'">'.$r['categoria_name'].'</option>';
+	            }
+	            
+	            echo $list;
+	            
+	            ?>
+				</select>
+			</div>
+            </div>
+            
+            
+            </div>
+            
+            <div id="div_producto_padre" style="display:none;">
+            <div class="form-group">
+	           	<label class="col-sm-2 control-label">Producto Padre</label>
+	           	<div class="col-sm-6" ><input type="text" class="form-control" id="producto_padre" name="producto_padre"></div>
+	           	</div>
+	        </div>
+	        
+            <input type="hidden" class="form-control" id="producto_padre_id" name="producto_padre_id" value="0">
+            
+            <div class="form-group">
+            <label class="col-sm-2 control-label">Proveedor</label>
+			<div class="col-sm-6" >
+				<select data-placeholder="Selecciona un proveedor" class="chosen-select" style="width:300px;" tabindex="4" id="proveedor" name="proveedor">
+	            <option value=""></option>
+	            <?php 
+	            $proveedor=new Proveedor();
+	            
+	            $result=$proveedor->getProveedores();
+	            
+	            $list="";
+	            foreach($result as $r)
+	            {
+	            	$list.='<option value="'.$r['proveedor_id'].'">'.$r['proveedor_nombre'].'</option>';
+	            }
+	            
+	            echo $list;
+	            
+	            ?>
+				</select>
+			</div>
+            </div>
+            <div id="div_variacion">
             
             <div class="form-group">
             <label class="col-sm-2 control-label">Colores</label>
@@ -112,60 +185,9 @@
 				</select>
 			</div>
             </div>
-            
-            <div class="form-group">
-            <label class="col-sm-2 control-label">Categorias</label>
-			<div class="col-sm-6" >
-				<select data-placeholder="Selecciona una categoria" class="chosen-select" multiple style="width:300px;" tabindex="4" id="categoria" name="categoria[]">
-	            <option value=""></option>
-	            <?php 
-	            $productos=new Productos();
-	            
-	            $result=$productos->GetCategories();
-	            
-	            $list="";
-	            foreach($result as $r)
-	            {
-	            	$list.='<option value="'.$r['categoria_id'].'">'.$r['categoria_name'].'</option>';
-	            }
-	            
-	            echo $list;
-	            
-	            ?>
-				</select>
-			</div>
-            </div>
-            
-            <div class="form-group">
-            <label class="col-sm-2 control-label">Proveedor</label>
-			<div class="col-sm-6" >
-				<select data-placeholder="Selecciona un proveedor" class="chosen-select" style="width:300px;" tabindex="4" id="proveedor" name="proveedor">
-	            <option value=""></option>
-	            <?php 
-	            $proveedor=new Proveedor();
-	            
-	            $result=$proveedor->getProveedores();
-	            
-	            $list="";
-	            foreach($result as $r)
-	            {
-	            	$list.='<option value="'.$r['proveedor_id'].'">'.$r['proveedor_nombre'].'</option>';
-	            }
-	            
-	            echo $list;
-	            
-	            ?>
-				</select>
-			</div>
-            </div>
            
-            <div class="form-group"><label class="col-sm-2 control-label">Imagenes</label>
-			<div class="col-sm-6" >
-			<input name="upload[]" type="file" id="upload" accept='image/*'/>
-    		<button class="add_more btn btn-primary btn-xs">Agregar</button>
-			</div>
-            </div>
             
+            	
             <div class="form-group">
             <label class="col-sm-2 control-label">Pecio Utilitario</label>
 			<div class="col-sm-2 "><input type="text" class="form-control" id="precioU" name="precioU" onkeypress="return validateNumber(event)"></div>
@@ -191,11 +213,22 @@
 			<div class="col-sm-2 "><input type="text" class="form-control" id="precioP" name="precioP" onkeypress="return validateCantidad(event)"></div>
             </div>
             
+            </div>
+            
+            <div class="form-group"><label class="col-sm-2 control-label">Imagenes</label>
+			<div class="col-sm-6" >
+			<input name="upload[]" type="file" id="upload" accept='image/*'/>
+    		<button class="add_more btn btn-primary btn-xs">Agregar</button>
+			</div>
+            </div>
+            
+            <div id="div_check_conjunto">
             <div class="form-group">
             <label class="col-sm-2 control-label">Conjunto</label>
 			<div class="col-sm-2 ">
 				<input type="checkbox" name="conjunto" id="conjunto" value="activo">
 			</div>
+            </div>
             </div>
 			<div id="div_conjunto" style="display:none;">
 	           	<div class="form-group">
@@ -244,7 +277,7 @@
 <script>
 $(document).ready(function()
 {
-
+	
 	$('.add_more').click(function(e){
         e.preventDefault();
         $(this).before('<input name="upload[]" type="file" id="upload" accept="image/*"/>');
@@ -272,7 +305,9 @@ $(document).ready(function()
 
 	$( "#guardar" ).click(function()
 	{
+		var tipo_producto=$("#tipo_producto").val();
 		var bandera=false;
+		
     	$.each($('.products'), function (index, value)
     	{
     		var id=$(value).val();
@@ -291,25 +326,25 @@ $(document).ready(function()
 			$("#nombre").val('');
 			$("#nombre").focus();		
 		}
-		else if($("#descripcion").val()=='')
+		else if($("#descripcion").val()=='' && (tipo_producto=='U' || tipo_producto=='P'))
 		{
 			toastr.error('Debe de agregar una breve Descripci\u00F3n');
 			$("#descripcion").val('');
 			$("#descripcion").focus();
 		}
-		else if($("#color").val()==undefined)
+		else if($("#color").val()==undefined && (tipo_producto=='U' || tipo_producto=='V'))
 		{
 			toastr.error('Debe de agregar un Color');
 			$("#color").val('');
 			$("#color").focus();		
 		}
-		else if($("#material").val()==undefined)
+		else if($("#material").val()==undefined && (tipo_producto=='U' || tipo_producto=='V'))
 		{
 			toastr.error('Debe de agregar un tipo de Material');
 			$("#material").val('');
 			$("#material").focus();		
 		}
-		else if($("#categoria").val()==undefined)
+		else if($("#categoria").val()==undefined && (tipo_producto=='U' || tipo_producto=='P'))
 		{
 			toastr.error('Debe de agregar un tipo de Categoria');
 			$("#categoria").val('');
@@ -321,13 +356,13 @@ $(document).ready(function()
 			$("#proveedor").val('');
 			$("#proveedor").focus();
 		}
-		else if($("#precioU").val()=='')
+		else if($("#precioU").val()=='' && (tipo_producto=='U' || tipo_producto=='V'))
 		{
 			toastr.error('Debe de agregar el Precio Utilitario del producto');
 			$("#precioU").val('');
 			$("#precioU").focus();		
 		}
-		else if($("#precioP").val()=='')
+		else if($("#precioP").val()=='' && (tipo_producto=='U' || tipo_producto=='V'))
 		{
 			toastr.error('Debe de agregar el Precio P\u00FAblico');
 			$("#precioU").val('');
@@ -339,6 +374,12 @@ $(document).ready(function()
 			$("#producto").val('');
 			$("#producto").focus();
         }
+		else if(tipo_producto=='V' && $("#producto_padre_id").val()==0)
+		{
+			toastr.error('Debe de agregar un producto padre para la variación');
+			$("#producto_padre").val('');
+			$("#producto_padre").focus();
+		}
 		else
 		{
 			var url="guardar_producto.php";
@@ -392,7 +433,7 @@ $(document).ready(function()
 			        {
 			        	alert("El Producto ha sido agregado");
 			            var url="index.php";
-			    		$(location).attr("href", url);
+			    		//$(location).attr("href", url);
 			        }
 		            
 		        },
@@ -505,38 +546,67 @@ $(document).ready(function()
 		{
 			sku+='-'+code;
 		}
-		$("#sku").val(sku);
-    	/*if(abrev!='')
-    	{
-	    	if(sku=='')
-	    	{
-				sku+=abrev;
-	    	}
-	    	else
-	    	{
-				sku+='-'.abrev;
-	    	}
-    	}
-
-    	var selected=$("#material").find('option:selected');
-    	var abrev=selected.data('abrev');
 		
-    	if(abrev!=undefined)
-    	{
-	    	if(sku=='')
-	    	{
-				sku+=abrev;
-	    	}
-	    	else
-	    	{
-				sku+='-'.abrev;
-	    	}
-    	}
-    	
-	    
-
-	    $("#sku").val(sku);*/
+		$("#sku").val(sku);
 	};
+
+	var hide_div=function(tipo_producto)
+	{
+		if(tipo_producto=='P')
+		{
+			$("#div_principal").show();
+			$("#div_variacion").hide();
+			$("#div_producto_padre").show();
+			$("#div_check_conjunto").hide();
+			$("#categoria").chosen("destroy");
+			$("#categoria").chosen();
+			$('#proveedor').chosen("destroy");
+			$("#proveedor").chosen();
+		}
+		else if(tipo_producto=='V')
+		{	
+			$("#div_principal").hide();
+			$("#div_variacion").show();
+			$("#div_producto_padre").show();
+			$("#div_check_conjunto").show();
+			$('#color').chosen("destroy");
+			$('#color').chosen();
+			$('#material').chosen("destroy");
+			$("#material").chosen();
+			$('#proveedor').chosen("destroy");
+			$("#proveedor").chosen();
+		}
+		else if(tipo_producto=='U')
+		{	
+			$("#div_principal").show();
+			$("#div_variacion").show();
+			$("#div_producto_padre").hide();
+			$("#div_check_conjunto").show();
+			$("#categoria").chosen("destroy");
+			$("#categoria").chosen();
+			$('#color').chosen("destroy");
+			$('#color').chosen();
+			$('#material').chosen("destroy");
+			$("#material").chosen();
+			$('#proveedor').chosen("destroy");
+			$("#proveedor").chosen();
+		}
+		else
+		{
+			$("#div_principal").show();
+			$("#div_variacion").hide();
+		}
+	};
+
+	$("#div_variacion").hide();
+
+	hide_div($("#tipo_producto").val());
+	
+	$("#tipo_producto").change(function()
+	{
+		var tipo_producto=$(this).val();
+		hide_div(tipo_producto);		
+	});
 
     $("#color").change(function()
     {
@@ -597,6 +667,7 @@ $(document).ready(function()
 				return "<img src='" + item.imagen + "' height='50' width='50'/>"+ value;
 			}
 		},
+		adjustWidth: false,
 		list:
 		{
 			match:
@@ -665,10 +736,54 @@ $(document).ready(function()
 
 	$("#producto").easyAutocomplete(options);
 
+	var optionsP=
+	{
+		url: "get_products_main.php",
+		getValue: function(element)
+		{
+			var name=element.producto_sku+' '+element.producto_name;
+			
+			return name;
+		},
+		template: {
+			type: "custom",
+			method: function(value, item) {
+				return "<img src='" + item.imagen + "' height='50' width='50'/>"+ value;
+			}
+		},
+		adjustWidth: false,
+		list:
+		{
+			match:
+			{
+				enabled: true
+			},
+			showAnimation:
+			{
+				type: "fade", //normal|slide|fade
+				time: 400,
+				callback: function() {}
+			},
+			hideAnimation: {
+				type: "slide", //normal|slide|fade
+				time: 400,
+				callback: function() {}
+			},
+			onChooseEvent:function()
+			{
+				var id=$("#producto_padre").getSelectedItemData().producto_id;
+				$("#producto_padre_id").val(id);				
+			}
+		}
+	};
+
+	$("#producto_padre").easyAutocomplete(optionsP);
+
 	$("#color").chosen();
 	$("#material").chosen();
 	$("#categoria").chosen();
 	$("#proveedor").chosen();
+	$("#tipo_producto").chosen();
 
 	var calculateDiscount=function()
 	{
