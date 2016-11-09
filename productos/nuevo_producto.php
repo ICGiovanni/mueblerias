@@ -433,7 +433,7 @@ $(document).ready(function()
 			        {
 			        	alert("El Producto ha sido agregado");
 			            var url="index.php";
-			    		//$(location).attr("href", url);
+			    		$(location).attr("href", url);
 			        }
 		            
 		        },
@@ -556,7 +556,7 @@ $(document).ready(function()
 		{
 			$("#div_principal").show();
 			$("#div_variacion").hide();
-			$("#div_producto_padre").show();
+			$("#div_producto_padre").hide();
 			$("#div_check_conjunto").hide();
 			$("#categoria").chosen("destroy");
 			$("#categoria").chosen();

@@ -608,6 +608,146 @@ class Productos
 		return $result;
 	}
 	
+	public function GetFeatureVariations($producto_id)
+	{
+		$sql="SELECT p.producto_id,p.producto_name,p.producto_sku,
+				c.color_id,c.color_name,c.color_abrev,
+				m.material_id,m.material_name,m.material_abrev
+				FROM productos p
+				INNER JOIN colores c USING(color_id)
+				INNER JOIN materiales m USING(material_id)
+				WHERE producto_parent='$producto_id'";
+		
+		$statement=$this->connect->prepare($sql);
+		$statement->execute();
+		$result=$statement->fetchAll(PDO::FETCH_ASSOC);
+		
+		return $result;
+	}
+	
+	public function GetFeatureProduct($producto_id)
+	{
+		$sql="SELECT p.producto_id,p.producto_name,p.producto_sku,
+				c.color_id,c.color_name,c.color_abrev,
+				m.material_id,m.material_name,m.material_abrev
+				FROM productos p
+				INNER JOIN colores c USING(color_id)
+				INNER JOIN materiales m USING(material_id)
+				WHERE producto_id='$producto_id'";
+		
+		$statement=$this->connect->prepare($sql);
+		$statement->execute();
+		$result=$statement->fetchAll(PDO::FETCH_ASSOC);
+		
+		return $result;
+	}
+	
+	public function ChangeUTF8($result)
+	{
+		foreach($result as $key=>$r)
+		{
+			foreach($r as $k=>$d)
+			{
+				$result[$key][$k]=utf8_encode($result[$key][$k]);
+			}
+		}
+		
+		return $result;
+	}
+	
+	public function GetDataProductsMainJson()
+	{
+		$sql="SELECT p.producto_id,p.producto_sku,p.producto_name,
+				IF((SELECT imagen_route
+				FROM imagenes_productos ip
+				WHERE ip.producto_id=p.producto_id
+				ORDER BY imagen_id ASC
+				LIMIT 0,1)!='',
+				(SELECT imagen_route
+				FROM imagenes_productos ip
+				WHERE ip.producto_id=p.producto_id
+				ORDER BY imagen_id ASC
+				LIMIT 0,1),'".FINAL_URL."img/imagen-no.png') AS imagen,
+				producto_price_public,producto_description,producto_price_utilitarian,
+				CASE producto_type
+				WHEN 'P' THEN 'PRINCIPAL'
+				WHEN 'U' THEN 'ÚNICO'
+				END AS producto_type_name,producto_type,
+				producto_conjunto		
+				FROM productos p
+				WHERE producto_type IN('U','P')";
+		
+		$statement=$this->connect->prepare($sql);
+		$statement->execute();
+		$result=$statement->fetchAll(PDO::FETCH_ASSOC);
+		$result=$this->ChangeUTF8($result);
+		
+		
+		foreach($result as $key=>$r)
+		{
+			if($r['producto_type']=='P')
+			{
+				$materiales=array();
+				$colores=array();
+				
+				$variation=$this->ChangeUTF8($this->GetFeatureVariations($r['producto_id']));
+				$result[$key]['variaciones']=$variation;
+				
+				foreach($variation as $v)
+				{
+					$color_id=$v['color_id'];
+					$banderaC=false;
+					foreach ($colores as $c)
+					{
+						if($c['color_id']==$color_id)
+						{
+							$banderaC=true;
+						}
+					}
+					
+					if(!$banderaC)
+					{
+						array_push($colores,array('color_id'=>$v['color_id'],'color_name'=>$v['color_name'],'color_abrev'=>$v['color_abrev']));
+					}
+					
+					$material_id=$v['material_id'];
+					$banderaM=false;
+					foreach ($materiales as $m)
+					{
+						if($m['material_id']==$material_id)
+						{
+							$banderaM=true;
+						}
+					}
+					
+					if(!$banderaM)
+					{
+						array_push($materiales,array('material_id'=>$v['material_id'],'material_name'=>$v['material_name'],'material_abrev'=>$v['material_abrev']));
+					}
+				}
+				
+				$result[$key]['materiales']=$materiales;
+				$result[$key]['colores']=$colores;
+			}
+			else
+			{
+				$materiales=array();
+				$colores=array();
+				
+				$feature=$this->ChangeUTF8($this->GetFeatureProduct($r['producto_id']));
+				
+				array_push($materiales,array('material_id'=>$feature[0]['material_id'],'material_name'=>$feature[0]['material_name'],'material_abrev'=>$feature[0]['material_abrev']));
+				
+				array_push($colores,array('color_id'=>$feature[0]['color_id'],'color_name'=>$feature[0]['color_name'],'color_abrev'=>$feature[0]['color_abrev']));
+				
+				$result[$key]['materiales']=$materiales;
+				$result[$key]['colores']=$colores;
+			}
+		}
+		
+		return json_encode($result);
+	}
+	
 	public function GetProductsMain($type='')
 	{
 		if($type=='')

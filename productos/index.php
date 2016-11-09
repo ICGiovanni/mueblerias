@@ -196,7 +196,6 @@ cursor: default;
                         <th>Color</th>
                         <th>Material</th>
                         <th>Categoria</th>
-                        <th>Precio P&uacute;blico</th>
                         <th align="center">Inventario</th>
                         <th></th>                        
                     </tr>
@@ -204,28 +203,38 @@ cursor: default;
                     <tbody id="productos">
                     <?php
                     $producto=new Productos();
-                    $productos=$producto->GetDataProduct();
-                    $tr="";
+                    $productos=$producto->GetDataProductsMainJson();
                     
+                   	$productos=json_decode($productos);
+                   	$tr="";
                     foreach($productos as $p)
                     {
-                    	$producto_id=$p["producto_id"];
-                    	$nombre=$p["producto_name"];
-                    	$conjunto=$p["producto_conjunto"];
-                    	$sku=$p['producto_sku'];
-                    	$description=$p['producto_description'];
-                    	$price_utilitarian=$p['producto_price_utilitarian'];
-                    	$price_public=$p['producto_price_public'];
-                    	$stock=$p['stock'];
                     	
-                    	                    	
-                    	$color='<ul style="padding: 0" class="tag-list">';
-                    	$color.='<li><a href="" class="href_colores"><i class="fa fa-tag"></i> '.$p['color_name'].'</a></li>';
-                    	$color.='</ul>';
-                    	                    	
-                    	$material='<ul style="padding: 0" class="tag-list">';
-                    	$material.='<li><a href="" class="href_colores"><i class="fa fa-tag"></i> '.$p['material_name'].'</a></li>';
-                    	$material.='</ul>';
+                    	$producto_id=$p->producto_id;
+                    	$nombre=$p->producto_name;
+                    	$conjunto=$p->producto_conjunto;
+                    	$tipo=$p->producto_type_name;
+                    	$sku=$p->producto_sku;
+                    	$description=$p->producto_description;
+                    	$price_utilitarian=$p->producto_price_utilitarian;
+                    	$price_public=$p->producto_price_public;
+                    	$stock=0;
+                    	
+                    	$color="";
+                    	foreach($p->colores as $c)
+                    	{
+	                    	$color.='<ul style="padding: 0" class="tag-list">';
+	                    	$color.='<li><a href="" class="href_colores"><i class="fa fa-tag"></i> '.$c->color_name.'</a></li>';
+	                    	$color.='</ul>';
+                    	}
+                    	
+                    	$material="";
+                    	foreach($p->materiales as $m)
+                    	{
+	                    	$material.='<ul style="padding: 0" class="tag-list">';
+	                    	$material.='<li><a href="" class="href_colores"><i class="fa fa-tag"></i> '.$m->material_name.'</a></li>';
+	                    	$material.='</ul>';
+                    	}
                     	
                     	$categorias=$producto->GetProductCategory($producto_id);
                     	
@@ -240,12 +249,11 @@ cursor: default;
                     	$tr.='<tr class="gradeX">';
                     	$tr.='<td align="center">'.$sku.'</td>';
                     	$tr.='<td>'.$nombre.'</td>';
-                    	$tr.='<td align="center">'.$conjunto.'</td>';
+                    	$tr.='<td align="center">'.$tipo.'</td>';
                     	$tr.='<td>'.$color.'</td>';
                     	$tr.='<td>'.$material.'</td>';
                     	$tr.='<td>'.$categoria.'</td>';
-                    	$tr.='<td align="center">$ '.$price_public.'</td>';
-                    	
+                    	                    	
                     	if($stock>0)
                     	{
                     		$tr.='<td align="center"><a href="#" class="link_modal" data-toggle="modal" data-target="#modal_view" data-id="'.$producto_id.'"  id="open_modal">'.$stock.'</a></td>';
@@ -254,7 +262,13 @@ cursor: default;
                     	{
                     		$tr.='<td align="center">'.$stock.'</td>';
                     	}
-                    	$tr.='<td><div class="infont col-md-1 col-sm-1"><a href="editar_producto.php?id='.$producto_id.'"><i class="fa fa-pencil"></i></a></div><div class="infont col-md-1 col-sm-1"><a href="#" onClick="borrar_producto('.$producto_id.');"><i class="fa fa-trash-o"></i></a></div></td>';
+                    	$tr.='<td>';
+                    	
+                    	if(isset($p->variaciones))
+                    	{
+                    		$tr.='<div class="infont col-md-1 col-sm-1"><a href="#" class="modal_variaciones" data-toggle="modal" data-target="#modal_variaciones" data-id="'.$producto_id.'" data-json=\''.json_encode($p->variaciones).'\' id="open_modal"><i class="fa fa-list-ul"></i></a></div>';
+                    	}
+                    	$tr.='<div class="infont col-md-1 col-sm-1"><a href="editar_producto.php?id='.$producto_id.'"><i class="fa fa-pencil"></i></a></div><div class="infont col-md-1 col-sm-1"><a href="#" onClick="borrar_producto('.$producto_id.');"><i class="fa fa-trash-o"></i></a></div></td>';
                     	$tr.='</tr>';
                     	
                     }
@@ -271,7 +285,6 @@ cursor: default;
                         <th>Color</th>
                         <th>Material</th>
                         <th>Categoria</th>
-                        <th>Precio P&uacute;blico</th>
                         <th>Inventario</th>
                         <th></th>                        
                     </tr>
@@ -319,6 +332,76 @@ cursor: default;
         </div>
     </div>
 </div>
+
+<div class="modal inmodal fade" id="modal_view" tabindex="-1" role="dialog"  aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header" style="padding: 15px">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Cerrar</span></button>
+                <h3 class="modal-title">Stock por Sucursal</h3>
+            </div>
+            <div class="modal-body" style="padding-bottom: 0px !important; margin-bottom: -15px !important">    
+               <div class="form-group">
+	           	
+	           	<div class="col-sm-12" >
+	           	           	
+	           	<table class="table table-striped">
+	           	<thead>
+					<tr>
+						<td>Sucursal</td>
+						<td>Cantidad</td>
+					</tr>
+				</thead>
+	           	<tbody id="products_table_list">
+	           	
+	           	</tbody>
+	           	</table>
+	           
+    
+    </div>
+               </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger btn-xs" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal inmodal fade" id="modal_variaciones" tabindex="-1" role="dialog"  aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header" style="padding: 15px">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Cerrar</span></button>
+                <h3 class="modal-title">Variaciones</h3>
+            </div>
+            <div class="modal-body" style="padding-bottom: 0px !important; margin-bottom: -15px !important">
+            <div class="ibox-content">
+	           	<table class="table table-striped">
+	           	<thead>
+					<tr>
+						<td>SKU</td>
+						<td>Modelo</td>
+						<td>Color</td>
+						<td>Material</td>
+						<td></td>
+					</tr>
+				</thead>
+	           	<tbody id="products_variable">
+	           	
+	           	</tbody>
+	           	</table>
+		   	</div>
+              
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger btn-xs" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
 	
 	
     <script src="<?php echo $raizProy?>js/plugins/dataTables/datatables.min.js"></script>
@@ -462,6 +545,24 @@ cursor: default;
         	$("#tipo").chosen();
         	$("#material").chosen();
         	$("#categoria").chosen();
+
+        	$("a.modal_variaciones").click(function()
+        	{
+        		var json=$(this).data("json");
+				var tr="";
+        		$.each(json, function(i, field)
+                {
+					tr+='<tr>';
+					tr+='<td>'+field.producto_sku+'</td>';
+					tr+='<td>'+field.producto_name+'</td>';
+					tr+='<td>'+field.color_name+'</td>';
+					tr+='<td>'+field.material_name+'</td>';
+					tr+='<td>'+''+'</td>';
+					tr+='</tr>';
+                });
+
+        		$("#products_variable").html(tr);
+        	});
             
         });
 
