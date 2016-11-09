@@ -14,8 +14,8 @@ require_once $pathProy.'/menu.php';
 
 <style>
 .wizard > .content > .body  position: relative; 
-.wizard > .content { min-height: 500px; }
-.wizard-big.wizard > .content { min-height: 500px; }
+.wizard > .content { min-height: 350px; overflow: scroll;}
+.wizard-big.wizard > .content { min-height: 350px; overflow: scroll; }
 
 </style>
         
