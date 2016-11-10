@@ -95,6 +95,7 @@
                             <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/proveedores/index.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'proveedores/'?>" >Lista de proveedores</a></li>                            
                             <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/proveedores/catalogo.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'proveedores/catalogo.php'?>" >Lista de productos</a></li>                            
                             <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/proveedores/pedidos.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'proveedores/pedidos.php'?>" >Lista de pedidos</a></li>                            
+                            <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/proveedores/grid.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'proveedores/grid.php'?>" >Catalogo de productos</a></li>                            
                         </ul>
                     </li>
                     

@@ -1,4 +1,10 @@
 <?php 
+if(isset($_GET['producto_id'])){
+    
+}
+else{
+    header('location: grid.php');
+}
 
 require_once $_SERVER['REDIRECT_PATH_CONFIG'].'/config.php';
 require_once $pathProy.'/header2.php';
@@ -12,16 +18,10 @@ require_once $pathProy.'/menu.php';
     
         <div class="row wrapper border-bottom white-bg page-heading">
             <div class="col-lg-10">
-                <h2>E-commerce product detail</h2>
-                <ol class="breadcrumb">
-                    <li>
-                        <a href="index.html">Home</a>
-                    </li>
-                    <li>
-                        <a>E-commerce</a>
-                    </li>
+                <h2>Catalogos</h2>
+                <ol class="breadcrumb">                    
                     <li class="active">
-                        <strong>Product detail</strong>
+                        <strong>Detalle de producto</strong>
                     </li>
                 </ol>
             </div>
