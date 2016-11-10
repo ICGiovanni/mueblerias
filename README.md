@@ -44,3 +44,11 @@ $return = $objCalendario->editEvento($params);
 
 // variable de inicio de sesión
   $_SESSION['login_session']
+
+// productos
+
+$_SESSION['punto_venta']
+array(
+    array('product_id'=>1, 'cantidad'=>2, 'precio'=>123.00),
+    array('product_id'=>2, 'cantidad'=>1, 'precio'=>123.00)
+)    

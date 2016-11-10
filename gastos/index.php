@@ -193,7 +193,7 @@ while(list(,$dataGasto) = each($rows)){
 						<div id="div_search_tools">
 							FILTRAR BUSQUEDA POR 
 						<form>
-							<table class="table-form ">
+							<table class="table-form">
 								<tr>
 									<td valign="">
 										<input type="checkbox" name="filtro_fecha_activo" id="filtro_fecha_activo" value="1" <?=$filtro_fecha_activo_checked?>/> <b>Rango de fechas</b><br>
