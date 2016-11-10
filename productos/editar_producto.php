@@ -52,6 +52,9 @@ if($datos[0]["type"]=='C')
 			<div class="form-group"><label class="col-sm-2 control-label">ID</label>
 			<div class="col-sm-6"><label class="col-sm-2 control-label"><?php echo $datos[0]["producto_id"]?></label></div>
             </div>
+            <div class="form-group"><label class="col-sm-2 control-label">Tipo</label>
+			<div class="col-sm-6"><label class="col-sm-2 control-label"><?php echo $datos[0]["producto_id"]?></label></div>
+            </div>
 			<div class="form-group"><label class="col-sm-2 control-label">Modelo</label>
 			<div class="col-sm-6" ><input type="text" class="form-control" id="nombre" name="nombre" value="<?php echo $datos[0]['producto_name'];?>"></div>
             </div>
@@ -226,6 +229,7 @@ if($datos[0]["type"]=='C')
 			foreach($descuentos as $d)
 			{
 				$descuento=$d['producto_descuento'];
+				die($descuento);
 				$descuentosA.='<div class="form-group">';
 				if($i==0)
 				{

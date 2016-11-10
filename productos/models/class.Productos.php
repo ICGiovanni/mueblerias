@@ -105,25 +105,40 @@ class Productos
 	
 	public function InsertDiscount($producto_id,$descuentos)
 	{
-		$sql="DELETE FROM productos_descuentos WHERE producto_id=:producto";
-		
-		$statement=$this->connect->prepare($sql);
-		$statement->bindParam(':producto', $producto_id, PDO::PARAM_STR);
-		
-		$statement->execute();
+		$banderaD=false;
 		
 		foreach($descuentos as $d)
 		{
-			$sql="INSERT INTO productos_descuentos VALUES('',:producto,:descuento)";
-		
-			$statement=$this->connect->prepare($sql);
-		
-			$statement->bindParam(':producto', $producto_id, PDO::PARAM_STR);
-			$statement->bindParam(':descuento', $d, PDO::PARAM_STR);
-		
-			$statement->execute();
+			if($d!=0)
+			{
+				$banderaD=true;
+			}
 		}
 		
+		if($banderaD)
+		{
+			$sql="DELETE FROM productos_descuentos WHERE producto_id=:producto";
+			
+			$statement=$this->connect->prepare($sql);
+			$statement->bindParam(':producto', $producto_id, PDO::PARAM_STR);
+			
+			$statement->execute();
+			
+			foreach($descuentos as $d)
+			{
+				if($d!=0)
+				{
+					$sql="INSERT INTO productos_descuentos VALUES('',:producto,:descuento)";
+				
+					$statement=$this->connect->prepare($sql);
+					$descuento=$d/100;
+					$statement->bindParam(':producto', $producto_id, PDO::PARAM_STR);
+					$statement->bindParam(':descuento', $descuento, PDO::PARAM_STR);
+				
+					$statement->execute();
+				}
+			}
+		}		
 	}
 	
 	public function GetProductSearch($params)
@@ -356,10 +371,12 @@ class Productos
 				WHERE ip.producto_id=p.producto_id)!='',
 				(SELECT SUM(cantidad) AS stock
 				FROM inventario_productos ip
-				WHERE ip.producto_id=p.producto_id),0) AS stock
+				WHERE ip.producto_id=p.producto_id),0) AS stock,
+				CASE producto_type
+				WHEN 'P' THEN 'PRINCIPAL'
+				WHEN 'U' THEN 'ÚNICO'
+				END AS producto_type_name,producto_type
 				FROM productos p
-				INNER JOIN colores c USING(color_id)
-				INNER JOIN materiales m USING(material_id)
 				INNER JOIN proveedores pr USING(proveedor_id)".
 				$where.
 				" ORDER BY p.producto_id";
@@ -655,8 +672,15 @@ class Productos
 		return $result;
 	}
 	
-	public function GetDataProductsMainJson()
+	public function GetDataProductsMainJson($producto_id="")
 	{
+		$where="";
+		
+		if($producto_id)
+		{
+			$where=" AND p.producto_id='$producto_id'";	
+		}
+		
 		$sql="SELECT p.producto_id,p.producto_sku,p.producto_name,
 				IF((SELECT imagen_route
 				FROM imagenes_productos ip
@@ -675,7 +699,8 @@ class Productos
 				END AS producto_type_name,producto_type,
 				producto_conjunto		
 				FROM productos p
-				WHERE producto_type IN('U','P')";
+				WHERE producto_type IN('U','P')
+				$where";
 		
 		$statement=$this->connect->prepare($sql);
 		$statement->execute();

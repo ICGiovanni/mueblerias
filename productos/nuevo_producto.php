@@ -433,7 +433,7 @@ $(document).ready(function()
 			        {
 			        	alert("El Producto ha sido agregado");
 			            var url="index.php";
-			    		$(location).attr("href", url);
+			    		//$(location).attr("href", url);
 			        }
 		            
 		        },
