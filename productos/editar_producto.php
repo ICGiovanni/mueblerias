@@ -36,9 +36,10 @@ $producto_id=$_REQUEST["id"];
 $datos=$productos->GetDataProduct($producto_id);
 $categorias=$productos->GetProductCategory($producto_id);
 $descuentos=$productos->GetDiscountProduct($producto_id);
+$descuentosP=$productos->GetDiscountProductPublic($producto_id);
 
 $checked="";
-if($datos[0]["type"]=='C')
+if($datos[0]["producto_conjunto"]=='1')
 {
 	$checked="checked";	
 }
@@ -48,6 +49,7 @@ if($datos[0]["type"]=='C')
     <div class="wrapper wrapper-content animated fadeInRight">
 		<form method="post" class="form-horizontal" action="/" id="form_productos" enctype="multipart/form-data">
 			<input type="hidden" class="form-control" id="id_producto" name="id_producto" value="<?php echo $datos[0]["producto_id"]?>">
+			<input type="hidden" class="form-control" id="tipo_producto" name="tipo_producto" value="<?php echo $datos[0]["producto_type"]?>">
 			<input type="hidden" id="code" name="code" value="">
 			<div class="form-group"><label class="col-sm-2 control-label">ID</label>
 			<div class="col-sm-6"><label class="col-sm-2 control-label"><?php echo $datos[0]["producto_id"]?></label></div>
@@ -273,6 +275,57 @@ if($datos[0]["producto_type"]=='V')
 			<div class="col-sm-2 "><input type="text" class="form-control" id="precioP" name="precioP" onkeypress="return validateCantidad(event)" value="<?php echo $datos[0]['producto_price_public'];?>"></div>
             </div>
             
+            <?php 
+			
+			$i=0;
+			$descuentosA="";
+			foreach($descuentosP as $d)
+			{
+				$descuento=$d['producto_descuento'];
+				
+				$descuentosA.='<div class="form-group">';
+				if($i==0)
+				{
+					$descuentosA.='<label class="col-sm-2 control-label">Descuento</label>';
+					$descuentosA.='<div class="col-sm-2 "><input class="form-control discountP" id="descuentoP" name="descuentoP[]" value="'.(100*$descuento).'" type="text" onkeypress="return validateNumber(event)"></div>';
+					$descuentosA.='<div class="col-md-1"><button class="btn btn-primary btn-xs" id="agregarDescuentoP" value="" placeholder="Descuento" type="button"><i class="fa fa-plus"></i></button></div>';
+			
+				}
+				else
+				{
+					$descuentosA.='<label class="col-sm-2 control-label"></label>';
+					$descuentosA.='<div class="col-sm-2 "><input class="form-control discountP" id="descuentoP" name="descuentoP[]" value="'.(100*$descuento).'" type="text" onkeypress="return validateNumber(event)"></div>';
+					$descuentosA.='<div class="col-md-1"><button class="btn btn-danger btn-xs deleteDiscountP" id="agregarDescuentoP" value="" placeholder="Descuento" type="button"><i class="fa fa-times"></i></button></div>';
+				}
+				$descuentosA.='</div>';
+				$i++;
+				
+			}
+			
+			if(!$descuentosA)
+			{
+				$descuentosA.='<div class="form-group">';
+				$descuentosA.='<label class="col-sm-2 control-label">Descuento</label>';
+				$descuentosA.='<div class="col-sm-2 "><input class="form-control discountP" id="descuentoP" name="descuentoP[]" value="" type="text" onkeypress="return validateNumber(event)"></div>';
+				$descuentosA.='<div class="col-md-1"><button class="btn btn-primary btn-xs" id="agregarDescuentoP" value="" placeholder="Descuento" type="button"><i class="fa fa-plus"></i></button></div>';
+				$descuentosA.='</div>';
+			}
+			echo $descuentosA;
+			?>
+            
+            
+            
+            <div id="newDiscountP"></div>
+            <div class="form-group">
+            <label class="col-sm-2 control-label">Precio P&uacute;blico con Descuento</label>
+			<div class="col-sm-2 "><input type="text" class="form-control" id="precioPD" name="precioPD" onkeypress="return validateCantidad(event)" readonly="readonly" value="<?php echo $datos[0]['producto_price_public_discount'];?>"></div>
+            </div>
+            
+            <div class="form-group">
+            <label class="col-sm-2 control-label">Precio P&uacute;blico Minimo</label>
+			<div class="col-sm-2 "><input type="text" class="form-control" id="precioPM" name="precioPM" onkeypress="return validateCantidad(event)" value="<?php echo $datos[0]['producto_price_public_min'];?>"></div>
+            </div>
+            
             </div>
            
             <div class="form-group"><label class="col-sm-2 control-label">Imagenes</label>
@@ -295,7 +348,7 @@ if($datos[0]["producto_type"]=='V')
             <div class="form-group">
             <label class="col-sm-2 control-label">Conjunto</label>
 			<div class="col-sm-2 ">
-				<input type="checkbox" name="conjunto" id="conjunto" value="activo" <?php echo $checked;?>>
+				<input type="checkbox" name="conjunto" id="conjunto" value="1" <?php echo $checked;?>>
 			</div>
             </div>
             
@@ -454,7 +507,9 @@ $(document).ready(function()
 
 	$( "#guardar" ).click(function()
 	{
+		var tipo_producto=$("#tipo_producto").val();
 		var bandera=false;
+		
     	$.each($('.products'), function (index, value)
     	{
     		var id=$(value).val();
@@ -473,25 +528,25 @@ $(document).ready(function()
 			$("#nombre").val('');
 			$("#nombre").focus();		
 		}
-		else if($("#descripcion").val()=='')
+		else if($("#descripcion").val()=='' && (tipo_producto=='U' || tipo_producto=='P'))
 		{
 			toastr.error('Debe de agregar una breve Descripci\u00F3n');
 			$("#descripcion").val('');
 			$("#descripcion").focus();
 		}
-		else if($("#color").val()==undefined)
+		else if($("#color").val()==undefined && (tipo_producto=='U' || tipo_producto=='V'))
 		{
 			toastr.error('Debe de agregar un Color');
 			$("#color").val('');
 			$("#color").focus();		
 		}
-		else if($("#material").val()==undefined)
+		else if($("#material").val()==undefined && (tipo_producto=='U' || tipo_producto=='V'))
 		{
 			toastr.error('Debe de agregar un tipo de Material');
 			$("#material").val('');
 			$("#material").focus();		
 		}
-		else if($("#categoria").val()==undefined)
+		else if($("#categoria").val()==undefined && (tipo_producto=='U' || tipo_producto=='P'))
 		{
 			toastr.error('Debe de agregar un tipo de Categoria');
 			$("#categoria").val('');
@@ -503,23 +558,29 @@ $(document).ready(function()
 			$("#proveedor").val('');
 			$("#proveedor").focus();
 		}
+		else if($("#precioU").val()=='' && (tipo_producto=='U' || tipo_producto=='V'))
+		{
+			toastr.error('Debe de agregar el Precio Utilitario del producto');
+			$("#precioU").val('');
+			$("#precioU").focus();		
+		}
+		else if($("#precioP").val()=='' && (tipo_producto=='U' || tipo_producto=='V'))
+		{
+			toastr.error('Debe de agregar el Precio P\u00FAblico');
+			$("#precioU").val('');
+			$("#precioU").focus();		
+		}
 		else if($('#conjunto').is(":checked") && bandera==false)
         {
 			toastr.error('Debe de agregar un producto para armar el Conjunto');
 			$("#producto").val('');
 			$("#producto").focus();
         }
-		else if($("#precioU").val()=='')
+		else if(tipo_producto=='V' && $("#producto_padre_id").val()==0)
 		{
-			toastr.error('Debe de agregar el Precio Utilitario del producto');
-			$("#precioU").val('');
-			$("#precioU").focus();		
-		}
-		else if($("#precioP").val()=='')
-		{
-			toastr.error('Debe de agregar el Precio P\u00FAblico');
-			$("#precioU").val('');
-			$("#precioU").focus();		
+			toastr.error('Debe de agregar un producto padre para la variación');
+			$("#producto_padre").val('');
+			$("#producto_padre").focus();
 		}
 		else
 		{
@@ -951,7 +1012,100 @@ $(document).ready(function()
 			get_sku();
 		}
 	});
-    
+
+
+	var calculateDiscountP=function()
+	{
+		var precio_utilitario=$("#precioP").val();
+		precio_utilitario=parseFloat(precio_utilitario);
+		precio_utilitario=precio_utilitario.toFixed(2);
+		
+		var precioUD=precio_utilitario;
+		var bandera=0;
+		
+		$("input[name='descuentoP[]']").each(function()
+		{        
+			if($(this).val()!='' || $(this).val()!=0)
+			{
+				var discount=$(this).val()/100;
+				discount=parseFloat(discount);
+				discount=discount.toFixed(2);
+				precioUD=parseFloat(precioUD-(discount*precioUD));
+				bandera=1;
+			}
+		}); 
+
+		if(bandera==0)
+		{
+			$("#precioPD").val($("#precioP").val());
+		}
+		else
+		{
+			precioUD=parseFloat(precioUD);
+			precioUD=precioUD.toFixed(2);
+			
+			$("#precioPD").val(precioUD);
+		}
+	};
+
+	var validateDiscountP=function(discount)
+	{
+		if($("#precioP").val()=='' || $("#precioP").val()==0)
+		{
+			discount.val('');
+			$("#precioP").val('');
+			$("#precioPD").val('');
+			$("#precioP").focus();
+			alert("Debe de agregar primero el Precio Público");
+		}
+		else if(discount.val()>=100)
+		{
+			discount.val('');
+			discount.focus();
+			alert("Descuento Invalido");
+			$("#precioPD").val($("#precioP").val());
+			calculateDiscountP();
+		}
+		else
+		{
+			calculateDiscountP();
+		}
+	};
+	
+	$("#agregarDescuentoP").click(function()
+	{
+		if($("#descuentoP").val()!='')
+		{
+			$("#newDiscountP").append('<div class="form-group"><label class="col-sm-2 control-label"></label><div class="col-sm-2 "><input class="form-control discountP" id="descuentoP" name="descuentoP[]" value="" type="text" onkeypress="return validateNumber(event)"></div><div class="col-md-1">                                <button class="btn btn-danger btn-xs deleteDiscountP" id="agregarDescuentoP" value="" placeholder="Descuento" type="button"><i class="fa fa-times"></i></button></div></div>');
+			
+			$(".deleteDiscountP").click(function(){            
+				$(this).parent().parent().remove();
+			    calculateDiscountP();
+			});
+			        
+			$(".discountP").keyup(function()
+			{
+				validateDiscountP($(this));
+			});  
+		}
+		else
+		{
+			$("#descuentoP").val('');
+			$("#descuentoP").focus();
+			alert("Debe de agregar primero un Descuento");
+		}
+	});
+	
+	$(".discountP").keyup(function()
+	{
+		validateDiscountP($(this));    	
+	});
+
+	$("#precioP").keyup(function()
+	{
+		$("#precioPD").val($(this).val());
+		calculateDiscountP();    	
+	});
 
 });
 

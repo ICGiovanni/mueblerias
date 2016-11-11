@@ -60,16 +60,22 @@ class Productos
 			$conjunto=1;
 		}
 		
-		$sql="INSERT INTO productos VALUES('',:nombre,:sku,:descripcion,:precio_utilitario,:precio_utilitario_descuento,:precio_publico,:precio_publico,:precio_publico,:color,:material,:proveedor,:conjunto,:version,:medida,:type,:producto_parent)";
+		$sql="INSERT INTO productos VALUES('',:nombre,:sku,:descripcion,:precio_utilitario,:precio_utilitario_descuento,:precio_publico,:precio_publico_min,:producto_price_public_discount,:color,:material,:proveedor,:conjunto,:version,:medida,:type,:producto_parent)";
+		
+		$statement=$this->connect->prepare($sql);
 		
 		$precioU=($params['precioU']=='') ? 0 : $params['precioU'];
 		$precioUD=($params['precioUD']=='') ? 0 : $params['precioUD'];
 		$precioP=($params['precioP']=='') ? 0 : $params['precioP'];
+		$precioPD=($params['precioPD']=='') ? 0 : $params['precioPD'];
+		$precioPM=($params['precioPM']=='') ? $precioP : $params['precioPM'];
 		
-		$statement=$this->connect->prepare($sql);
+		
 		$price_utilitarian=number_format($precioU, 2, '.', '');
 		$price_utilitarian_descuento=number_format($precioUD, 2, '.', '');
 		$price_public=number_format($precioP, 2, '.', '');
+		$price_public_discount=number_format($precioPD, 2, '.', '');
+		$price_public_min=number_format($precioPM, 2, '.', '');
 		
 		$statement->bindParam(':nombre', $params['nombre'], PDO::PARAM_STR);
 		$statement->bindParam(':sku', $params['sku'], PDO::PARAM_STR);
@@ -77,6 +83,8 @@ class Productos
 		$statement->bindParam(':precio_utilitario', $price_utilitarian, PDO::PARAM_STR);
 		$statement->bindParam(':precio_utilitario_descuento', $price_utilitarian_descuento, PDO::PARAM_STR);
 		$statement->bindParam(':precio_publico', $price_public, PDO::PARAM_STR);
+		$statement->bindParam(':precio_publico_min', $price_public_min, PDO::PARAM_STR);
+		$statement->bindParam(':producto_price_public_discount', $price_public_discount, PDO::PARAM_STR);
 		$statement->bindParam(':color', $params['color'], PDO::PARAM_STR);
 		$statement->bindParam(':material', $params['material'], PDO::PARAM_STR);
 		$statement->bindParam(':proveedor', $params['proveedor'], PDO::PARAM_STR);
@@ -98,6 +106,11 @@ class Productos
 		if(isset($params['descuento']))
 		{
 			$this->InsertDiscount($producto_id,$params['descuento']);
+		}
+		
+		if(isset($params['descuentoP']))
+		{
+			$this->InsertDiscountPublico($producto_id,$params['descuentoP']);
 		}
 		
 		return $producto_id;
@@ -139,6 +152,44 @@ class Productos
 				}
 			}
 		}		
+	}
+	
+	public function InsertDiscountPublico($producto_id,$descuentos)
+	{
+		$banderaD=false;
+	
+		foreach($descuentos as $d)
+		{
+			if($d!=0)
+			{
+				$banderaD=true;
+			}
+		}
+	
+		if($banderaD)
+		{
+			$sql="DELETE FROM productos_descuentos_publico WHERE producto_id=:producto";
+				
+			$statement=$this->connect->prepare($sql);
+			$statement->bindParam(':producto', $producto_id, PDO::PARAM_STR);
+				
+			$statement->execute();
+				
+			foreach($descuentos as $d)
+			{
+				if($d!=0)
+				{
+					$sql="INSERT INTO productos_descuentos_publico VALUES('',:producto,:descuento)";
+	
+					$statement=$this->connect->prepare($sql);
+					$descuento=$d/100;
+					$statement->bindParam(':producto', $producto_id, PDO::PARAM_STR);
+					$statement->bindParam(':descuento', $descuento, PDO::PARAM_STR);
+	
+					$statement->execute();
+				}
+			}
+		}
 	}
 	
 	public function GetProductSearch($params)
@@ -366,6 +417,7 @@ class Productos
 				p.producto_description,p.producto_price_utilitarian,p.producto_price_public,
 				p.proveedor_id,IF(p.producto_conjunto='0','&Uacute;nico','Conjunto') AS producto_conjunto,
 				p.producto_type AS type,p.producto_version,p.producto_medida,p.color_id,p.material_id,producto_price_utilitarian_discount,
+				producto_price_public_discount,producto_price_public_min,
 				IF((SELECT SUM(cantidad) AS stock
 				FROM inventario_productos ip
 				WHERE ip.producto_id=p.producto_id)!='',
@@ -376,7 +428,7 @@ class Productos
 				WHEN 'P' THEN 'PRINCIPAL'
 				WHEN 'U' THEN 'ÚNICO'
 				WHEN 'V' THEN 'VARIANTE'
-				END AS producto_type_name,producto_type,
+				END AS producto_type_name,producto_type,producto_conjunto,
 				IF(producto_type='V',
 				(SELECT producto_name
 				FROM productos
@@ -536,27 +588,32 @@ class Productos
 	
 	public function ActualizarProducto($params)
 	{
+		$conjunto=0;
 		if(isset($params['conjunto']))
 		{
-			$type="C";
+			$conjunto=1;
 		}
-		else
-		{
-			$type="U";
-			
-		}
+		
 		
 		$this->DeleteProductGroup($params['id_producto']);
 		
-		$sql="UPDATE productos SET producto_name=:nombre,producto_sku=:sku,producto_description=:descripcion,producto_price_utilitarian=:precio_utilitario,producto_price_public=:precio_publico,proveedor_id=:proveedor,color_id=:color,material_id=:material,producto_type=:type,producto_version=:version,	producto_medida=:medida,producto_price_utilitarian_discount=:precio_utilitario_descuento
+		$sql="UPDATE productos SET producto_name=:nombre,producto_sku=:sku,producto_description=:descripcion,producto_price_utilitarian=:precio_utilitario,producto_price_public=:precio_publico,proveedor_id=:proveedor,color_id=:color,material_id=:material,producto_version=:version,	producto_medida=:medida,producto_price_utilitarian_discount=:precio_utilitario_descuento,producto_price_public_min=:precio_publico_min,producto_price_public_discount=:producto_price_public_discount,producto_conjunto=:conjunto
 				WHERE producto_id=:producto";
 		
 		
 		$statement=$this->connect->prepare($sql);
 		
-		$price_utilitarian=number_format($params['precioU'], 2, '.', '');
-		$price_public=number_format($params['precioP'], 2, '.', '');
-		$price_utilitarian_descuento=number_format($params['precioUD'], 2, '.', '');
+		$precioU=($params['precioU']=='') ? 0 : $params['precioU'];
+		$precioUD=($params['precioUD']=='') ? 0 : $params['precioUD'];
+		$precioP=($params['precioP']=='') ? 0 : $params['precioP'];
+		$precioPD=($params['precioPD']=='') ? 0 : $params['precioPD'];
+		$precioPM=($params['precioPM']=='') ? $precioP : $params['precioPM'];
+		
+		$price_utilitarian=number_format($precioU, 2, '.', '');
+		$price_utilitarian_descuento=number_format($precioUD, 2, '.', '');
+		$price_public=number_format($precioP, 2, '.', '');
+		$price_public_discount=number_format($precioPD, 2, '.', '');
+		$price_public_min=number_format($precioPM, 2, '.', '');
 		
 		$statement->bindParam(':nombre', $params['nombre'], PDO::PARAM_STR);
 		$statement->bindParam(':sku', $params['sku'], PDO::PARAM_STR);
@@ -564,10 +621,12 @@ class Productos
 		$statement->bindParam(':precio_utilitario', $price_utilitarian, PDO::PARAM_STR);
 		$statement->bindParam(':precio_utilitario_descuento', $price_utilitarian_descuento, PDO::PARAM_STR);
 		$statement->bindParam(':precio_publico', $price_public, PDO::PARAM_STR);
+		$statement->bindParam(':precio_publico_min', $price_public_min, PDO::PARAM_STR);
+		$statement->bindParam(':producto_price_public_discount', $price_public_discount, PDO::PARAM_STR);
 		$statement->bindParam(':proveedor', $params['proveedor'], PDO::PARAM_STR);
 		$statement->bindParam(':color', $params['color'], PDO::PARAM_STR);
 		$statement->bindParam(':material', $params['material'], PDO::PARAM_STR);
-		$statement->bindParam(':type', $type, PDO::PARAM_STR);
+		$statement->bindParam(':conjunto', $conjunto, PDO::PARAM_STR);
 		$statement->bindParam(':version', $params['version'], PDO::PARAM_STR);
 		$statement->bindParam(':medida', $params['medida'], PDO::PARAM_STR);
 		$statement->bindParam(':producto', $params['id_producto'], PDO::PARAM_STR);
@@ -576,9 +635,20 @@ class Productos
 		
 		$producto_id=$params['id_producto'];
 		
-		$this->InsertCategoriesProduct($producto_id, $params['categoria']);
+		if(isset($params['categoria']))
+		{
+			$this->InsertCategoriesProduct($producto_id, $params['categoria']);
+		}
 		
-		$this->InsertDiscount($producto_id,$params['descuento']);
+		if(isset($params['descuento']))
+		{
+			$this->InsertDiscount($producto_id,$params['descuento']);
+		}
+		
+		if(isset($params['descuentoP']))
+		{
+			$this->InsertDiscountPublico($producto_id,$params['descuentoP']);
+		}
 		
 		return $producto_id;
 	}
@@ -634,7 +704,9 @@ class Productos
 	{
 		$sql="SELECT p.producto_id,p.producto_name,p.producto_sku,
 				c.color_id,c.color_name,c.color_abrev,
-				m.material_id,m.material_name,m.material_abrev
+				m.material_id,m.material_name,m.material_abrev,
+				p.producto_price_public,p.producto_price_public_min,
+				p.producto_price_public_discount
 				FROM productos p
 				INNER JOIN colores c USING(color_id)
 				INNER JOIN materiales m USING(material_id)
@@ -785,6 +857,10 @@ class Productos
 		{
 			$type="'U','P'";
 		}
+		else
+		{
+			$type="'".$type."'";	
+		}
 		
 		$sql="SELECT p.producto_id,p.producto_sku,p.producto_name,
 				IF((SELECT imagen_route
@@ -801,7 +877,7 @@ class Productos
 				FROM productos p
 				WHERE producto_type IN($type)
 				ORDER BY p.producto_name ASC";
-	
+		
 		$statement=$this->connect->prepare($sql);
 		$statement->execute();
 		$result=$statement->fetchAll(PDO::FETCH_ASSOC);
@@ -864,6 +940,20 @@ class Productos
 		$statement->execute();
 		$result=$statement->fetchAll(PDO::FETCH_ASSOC);
 		
+		return $result;
+	}
+	
+	public function GetDiscountProductPublic($producto_id)
+	{
+		$sql="SELECT producto_descuento
+		FROM productos_descuentos_publico
+		WHERE producto_id='$producto_id'
+		ORDER BY descuento_id ASC";
+	
+		$statement=$this->connect->prepare($sql);
+		$statement->execute();
+		$result=$statement->fetchAll(PDO::FETCH_ASSOC);
+	
 		return $result;
 	}
 }

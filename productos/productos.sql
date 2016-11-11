@@ -91,3 +91,11 @@ CREATE TABLE IF NOT EXISTS productos_descuentos
 	producto_descuento FLOAT,
 	PRIMARY KEY (descuento_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE IF NOT EXISTS productos_descuentos_publico
+(
+	descuento_id INT NOT NULL AUTO_INCREMENT,
+	producto_id INT NOT NULL,
+	producto_descuento FLOAT,
+	PRIMARY KEY (descuento_id)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;

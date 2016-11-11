@@ -213,7 +213,28 @@
 			<div class="col-sm-2 "><input type="text" class="form-control" id="precioP" name="precioP" onkeypress="return validateCantidad(event)"></div>
             </div>
             
+            <div class="form-group">
+           	<label class="col-sm-2 control-label">Descuento</label>
+           	<div class="col-sm-2 "><input class="form-control discountP" id="descuentoP" name="descuentoP[]" value="" type="text" onkeypress="return validateNumber(event)"></div>
+			<div class="col-md-1">                            
+                            <button class="btn btn-primary btn-xs" id="agregarDescuentoP" value="" placeholder="Descuento" type="button"><i class="fa fa-plus"></i></button>
+                        </div>    
             </div>
+            <div id="newDiscountP"></div>
+            <div class="form-group">
+            <label class="col-sm-2 control-label">Precio P&uacute;blico con Descuento</label>
+			<div class="col-sm-2 "><input type="text" class="form-control" id="precioPD" name="precioPD" onkeypress="return validateCantidad(event)" readonly="readonly"></div>
+            </div>
+            
+            <div class="form-group">
+            <label class="col-sm-2 control-label">Precio P&uacute;blico Minimo</label>
+			<div class="col-sm-2 "><input type="text" class="form-control" id="precioPM" name="precioPM" onkeypress="return validateCantidad(event)"></div>
+            </div>
+            
+            </div>
+            
+            
+            
             
             <div class="form-group"><label class="col-sm-2 control-label">Imagenes</label>
 			<div class="col-sm-6" >
@@ -226,7 +247,7 @@
             <div class="form-group">
             <label class="col-sm-2 control-label">Conjunto</label>
 			<div class="col-sm-2 ">
-				<input type="checkbox" name="conjunto" id="conjunto" value="activo">
+				<input type="checkbox" name="conjunto" id="conjunto" value="1">
 			</div>
             </div>
             </div>
@@ -433,7 +454,7 @@ $(document).ready(function()
 			        {
 			        	alert("El Producto ha sido agregado");
 			            var url="index.php";
-			    		//$(location).attr("href", url);
+			    		$(location).attr("href", url);
 			        }
 		            
 		        },
@@ -738,7 +759,7 @@ $(document).ready(function()
 
 	var optionsP=
 	{
-		url: "get_products_main.php",
+		url: "get_products_main.php?t=P",
 		getValue: function(element)
 		{
 			var name=element.producto_sku+' '+element.producto_name;
@@ -880,7 +901,101 @@ $(document).ready(function()
     });
 
 
+	var calculateDiscountP=function()
+	{
+		var precio_utilitario=$("#precioP").val();
+		precio_utilitario=parseFloat(precio_utilitario);
+		precio_utilitario=precio_utilitario.toFixed(2);
+		
+		var precioUD=precio_utilitario;
+		var bandera=0;
+		
+		$("input[name='descuentoP[]']").each(function()
+		{        
+			if($(this).val()!='' || $(this).val()!=0)
+			{
+				var discount=$(this).val()/100;
+				discount=parseFloat(discount);
+				discount=discount.toFixed(2);
+				precioUD=parseFloat(precioUD-(discount*precioUD));
+				bandera=1;
+			}
+		}); 
+
+		if(bandera==0)
+		{
+			$("#precioPD").val($("#precioP").val());
+		}
+		else
+		{
+			precioUD=parseFloat(precioUD);
+			precioUD=precioUD.toFixed(2);
+			
+			$("#precioPD").val(precioUD);
+		}
+	};
+
+	var validateDiscountP=function(discount)
+	{
+		if($("#precioP").val()=='' || $("#precioP").val()==0)
+		{
+			discount.val('');
+			$("#precioP").val('');
+			$("#precioPD").val('');
+			$("#precioP").focus();
+			alert("Debe de agregar primero el Precio Público");
+		}
+		else if(discount.val()>=100)
+		{
+			discount.val('');
+			discount.focus();
+			alert("Descuento Invalido");
+			$("#precioPD").val($("#precioP").val());
+			calculateDiscountP();
+		}
+		else
+		{
+			calculateDiscountP();
+		}
+	};
+	
+	$("#agregarDescuentoP").click(function()
+	{
+		if($("#descuentoP").val()!='')
+		{
+			$("#newDiscountP").append('<div class="form-group"><label class="col-sm-2 control-label"></label><div class="col-sm-2 "><input class="form-control discountP" id="descuentoP" name="descuentoP[]" value="" type="text" onkeypress="return validateNumber(event)"></div><div class="col-md-1">                                <button class="btn btn-danger btn-xs deleteDiscountP" id="agregarDescuentoP" value="" placeholder="Descuento" type="button"><i class="fa fa-times"></i></button></div></div>');
+			
+			$(".deleteDiscountP").click(function(){            
+				$(this).parent().parent().remove();
+			    calculateDiscountP();
+			});
+			        
+			$(".discountP").keyup(function()
+			{
+				validateDiscountP($(this));
+			});  
+		}
+		else
+		{
+			$("#descuentoP").val('');
+			$("#descuentoP").focus();
+			alert("Debe de agregar primero un Descuento");
+		}
+	});
+	
+	$(".discountP").keyup(function()
+	{
+		validateDiscountP($(this));    	
+	});
+
+	$("#precioP").keyup(function()
+	{
+		$("#precioPD").val($(this).val());
+		calculateDiscountP();    	
+	});
 });
+
+
 
 function validateCantidad(evt)
 {
