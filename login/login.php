@@ -9,7 +9,11 @@ if($_POST){
     extract($_POST);
         
     if(!empty($email) && !empty($password)){
-    
+        $stringEmail = $email;
+        if(!stristr($email, '@globmint.com')){
+            $email = $email.'@globmint.com';
+        }
+        
         $login = new Login();
         $loginInfo = $login->auth($email, $password);        
         
@@ -24,14 +28,16 @@ if($_POST){
         else{
             
             $error = base64_encode('Los datos son incorrectos, intente nuevamente');        
-            $rutaL =  $ruta."login/index.php?error=".$error;
+            $emailUser = base64_encode($stringEmail);
+            $rutaL =  $ruta."login/index.php?error=".$error.'&email='.$emailUser;
             header("Location: ".$rutaL);
             exit();
         }        
     }
     else{        
         $error = base64_encode('Ingresa correo electrónico y contraseña para acceder al sistema');        
-        $rutaL =  $ruta."login/index.php?error=".$error;
+        
+        $rutaL =  $ruta."login/index.php?error=".$error.'&email='.base64_encode($email);
         header("Location: ".$rutaL);
         exit();
     }

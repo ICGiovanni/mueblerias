@@ -12,8 +12,9 @@
             <div class="clear"></div>
             <form class="m-t" method="post" role="form" action="login.php">
                 <div class="input-group m-b">
+                    <input type="text" name="email" value="<?php if (isset($_GET['email'])){echo base64_decode($_GET['email']);}?>" placeholder="Correo Electrónico" class="form-control" autocomplete="off">
                     <span class="input-group-addon">@</span>
-                    <input type="text" name="email" value="" placeholder="Correo Electrónico" class="form-control">
+                    <input  type="text" name="" value="globmint.com"  class="form-control" disabled="disabled" style="width: 115px">
                 </div>
                 <div class="input-group m-b">
                     <span class="input-group-addon"><i class="fa fa-lock">&nbsp;</i></span>

@@ -8,9 +8,11 @@ require_once($_SERVER["REDIRECT_PATH_CONFIG"].'productos/models/class.Productos.
 $productos = new Productos();
 
 $dataProducts = json_decode($productos->GetDataProductsMainJson());
-//echo "<pre>";
-//    print_r($dataProducts);
-//echo "</pre>";
+/*
+echo "<pre>";
+    print_r($dataProducts);
+echo "</pre>";
+*/
 //$dataUnique = $productos->GetProductsUnique();
 
 ?>    
@@ -33,19 +35,31 @@ $dataProducts = json_decode($productos->GetDataProductsMainJson());
                 
                 foreach($dataProducts as $prod){                                
                                 
+                $active = '';
+                
+                if(isset($_SESSION['punto_venta'])){
+                    
+                    foreach($_SESSION['punto_venta']['Productos'] as $product){                        
+                        if($product['SKU']==$prod->producto_sku){
+                            $active = 'border: double 3px #1ab394 !important';                            
+                        }
+                    }
+                }
                 
                 echo '  <div class="col-md-3">
-                            <div class="ibox">
+                            <div class="ibox" style=" '.$active.'">
                                 <div class="ibox-content product-box">                                    
                                     <div class="product-imitation" style="padding: 10px 0px">
                                         <img src="'.$prod->imagen.'" alt="'.$prod->producto_sku.'" height="180px" width="200px" />
                                     </div>
                                     <div class="product-desc">
                                         <span class="product-price">';
+                                        $url = 'detalle';
                                         if($prod->producto_type=='U'){
                                             echo "$&nbsp;".$prod->producto_price_public;
                                         }else{
-                                            echo '<a href="detalle.php?producto_id='.base64_encode($prod->producto_id).'" style="color: #FFF"><small>ver modelos</small></a>';
+                                            $url = 'detalleVariacion';
+                                            echo '<a href="'.$url.'.php?producto_id='.base64_encode($prod->producto_id).'" style="color: #FFF"><small>ver modelos</small></a>';
                                         }
                                             
                 echo '                  </span>
@@ -53,27 +67,34 @@ $dataProducts = json_decode($productos->GetDataProductsMainJson());
                                         <div class="product-name" >'.$prod->producto_name.'</div>
                                         <div class="small m-t-xs">&nbsp;';
                                         if(count($prod->materiales)>0){
+                                            echo "<div>";
                                             foreach($prod->materiales as $material){
-                                                echo "<div>".$material->material_name."&nbsp;</div>";
+                                                echo $material->material_name.", &nbsp;";
                                             }
+                                            echo "</div>";
                                         }    
                                         else{
                                             echo "<div>&nbsp;</div>";
                                         }
                                         if(count($prod->colores)>0){
+                                            echo "<div>";
                                             foreach($prod->colores as $color){
-                                                echo "<div>".$color->color_name."&nbsp;</div>";
+                                                echo $color->color_name.", &nbsp;";
                                             }
+                                            echo "</div>";
                                         }
                                         else{
                                             echo "<div>&nbsp;</div>";
                                         }
                 echo '                  </div>                                        
                                         <div class="m-t text-right">
-                                            <a href="detalle.php?producto_id='.base64_encode($prod->producto_id).'" class="btn btn-xs btn-outline btn-primary">+ Info</a>
+                                            <a href="'.$url.'.php?producto_id='.base64_encode($prod->producto_id).'" class="btn btn-xs btn-outline btn-primary">+ Info'.$prod->producto_id.'</a>
                                                 &nbsp;';
                                         if($prod->producto_type=='U'){
-                                            echo '<a href="#" class="btn btn-xs btn-outline btn-warning addCarrito"> <i class="fa fa-cart-plus"></i> </a>';
+                                            echo '<a href="#" class="btn btn-xs btn-outline btn-warning addCarrito" id="addPuntoVenta" 
+                                                  data-sku="'.$prod->producto_sku.'"
+                                                  data-modelo="'.$prod->producto_name.'"
+                                                  data-precio="'.$prod->producto_price_public.'">+ <i class="fa fa-cart-plus"></i> </a>';
                                         }        
                                             
                 echo '                  </div>                                        
@@ -93,18 +114,11 @@ $dataProducts = json_decode($productos->GetDataProductsMainJson());
 <?php 
     require_once $pathProy.'/footer2.php';
 ?>
-
+<script src="<?php echo $raizProy?>js/plugins/slick/slick.min.js"></script>
 <script src="<?php echo $raizProy?>js/plugins/sweetalert/sweetalert.min.js"></script>
 <link href="<?php echo $raizProy?>css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+<script src="<?php echo $raizProy?>proveedores/js/addPuntoVenta.js"></script>
 
-<script>
-    $(document).ready(function(){
-        $(".addCarrito").click(function(){
-            $(this).parent().parent().parent().addClass("active");
-            swal("Agregado!", "Se ha agregado el producto al punto de venta", "success", "#DD6B55");
-        });
-    });
-</script>    
 <style type="text/css">
     .ibox .active{        
         border: double 3px #1ab394 !important;
