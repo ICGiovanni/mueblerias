@@ -1,5 +1,6 @@
 <?php 
 if(isset($_GET['producto_id'])){
+    $producto_id = base64_decode($_GET['producto_id']);
     
 }
 else{
@@ -9,6 +10,15 @@ else{
 require_once $_SERVER['REDIRECT_PATH_CONFIG'].'/config.php';
 require_once $pathProy.'/header2.php';
 require_once $pathProy.'/menu.php';
+
+require_once($_SERVER["REDIRECT_PATH_CONFIG"].'productos/models/class.Productos.php');
+
+$productos = new Productos();
+
+$images = $productos->GetImagesProduct($producto_id);
+$dataProduct = (json_decode($productos->GetDataProductsMainJson($producto_id)));
+$dataProduct = $dataProduct[0];
+
 
 ?>
 <link href="<?php echo $raizProy?>css/plugins/slick/slick.css" rel="stylesheet">
@@ -20,6 +30,9 @@ require_once $pathProy.'/menu.php';
             <div class="col-lg-10">
                 <h2>Catalogos</h2>
                 <ol class="breadcrumb">                    
+                    <li>
+                        <a href="grid.php">Catalogo</a>
+                    </li>
                     <li class="active">
                         <strong>Detalle de producto</strong>
                     </li>
@@ -30,7 +43,7 @@ require_once $pathProy.'/menu.php';
             </div>
         </div>
 
-        <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="wrapper wrapper-content animated fadeIn">
 
             <div class="row">
                 <div class="col-lg-12">
@@ -43,67 +56,79 @@ require_once $pathProy.'/menu.php';
 
 
                                     <div class="product-images">
-
-                                        <div>
-                                            <div class="image-imitation">
-                                                [IMAGE 1]
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <div class="image-imitation">
-                                                [IMAGE 2]
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <div class="image-imitation">
-                                                [IMAGE 3]
-                                            </div>
-                                        </div>
-
-
+                                        <?php
+                                            if(count($images)>0){
+                                                foreach($images as $image){
+                                                    echo '  <div>
+                                                            
+                                                                <div class="image-imitation">
+                                                                <center>
+                                                                    <img src="'.$image['imagen_route'].'" width="250px"/>
+                                                                </center>   
+                                                                </div>
+                                                             
+                                                            </div>';
+                                                }
+                                            }else{
+                                                echo '  <div>
+                                                                <div class="image-imitation">
+                                                                    <img src="'.$dataProduct->imagen.'" width="250px" />
+                                                                </div>
+                                                            </div>';
+                                            }   
+                                        ?>                                                                                                                    
                                     </div>
 
                                 </div>
                                 <div class="col-md-7">
 
                                     <h2 class="font-bold m-b-xs">
-                                        Desktop publishing software
+                                        <?php echo $dataProduct->producto_name?>
                                     </h2>
-                                    <small>Many desktop publishing packages and web page editors now.</small>
+                                    <small>
+                                        <?php echo $dataProduct->producto_description?>
+                                    </small>
                                     <div class="m-t-md">
-                                        <h2 class="product-main-price">$406,602 <small class="text-muted">Exclude Tax</small> </h2>
+                                        <h2 class="product-main-price">$ <?php echo $dataProduct->producto_price_public?><small class="text-muted"> IVA incluido</small> </h2>
                                     </div>
                                     <hr>
 
-                                    <h4>Product description</h4>
-
+                                    <h4>Detalle de producto</h4>
                                     <div class="small text-muted">
-                                        It is a long established fact that a reader will be distracted by the readable
-                                        content of a page when looking at its layout. The point of using Lorem Ipsum is
-
-                                        <br/>
-                                        <br/>
-                                        There are many variations of passages of Lorem Ipsum available, but the majority
-                                        have suffered alteration in some form, by injected humour, or randomised words
-                                        which don't look even slightly believable.
+                                        <?php echo $dataProduct->producto_description?>
                                     </div>
-                                    <dl class="small m-t-md">
-                                        <dt>Description lists</dt>
-                                        <dd>A description list is perfect for defining terms.</dd>
-                                        <dt>Euismod</dt>
-                                        <dd>Vestibulum id ligula porta felis euismod semper eget lacinia odio sem nec elit.</dd>
-                                        <dd>Donec id elit non mi porta gravida at eget metus.</dd>
-                                        <dt>Malesuada porta</dt>
-                                        <dd>Etiam porta sem malesuada magna mollis euismod.</dd>
-                                    </dl>
-                                    <hr>
+                                    <div class="clear">&nbsp;</div>
+                                    <div class="small">
+                                    <?php                                        
+                                        
+                                        if(count($dataProduct->materiales)>0){
+                                            echo "<dt>Material:</dt>";
+                                            foreach($dataProduct->materiales as $material){                                                
+                                                echo "<dd>".$material->material_name."</dd>";
+                                            }
+                                        }                                        
+                                        if(count($dataProduct->colores)>0){
+                                            echo "<dt>Color:</dt>";
+                                            foreach($dataProduct->colores as $color){
+                                                echo "<dd>".$color->color_name."</dd>";
+                                            }
+                                        }                                        
+                                    ?>    
 
+                                    </div>                                    
+                                    <hr>
                                     <div>
+                                        <p>
+                                        SKU: <small><?php echo $dataProduct->producto_sku?></small>
+                                        </p>
                                         <div class="btn-group">
-                                            <button class="btn btn-primary btn-sm"><i class="fa fa-cart-plus"></i> Add to cart</button>
-                                            <button class="btn btn-white btn-sm"><i class="fa fa-star"></i> Add to wishlist </button>
-                                            <button class="btn btn-white btn-sm"><i class="fa fa-envelope"></i> Contact with author </button>
+                                            <button class="btn btn-primary btn-sm addPuntoVenta" id='addPuntoVenta' 
+                                                    data-sku="<?php echo $dataProduct->producto_sku?>"
+                                                    data-modelo="<?php echo $dataProduct->producto_name?>"
+                                                    data-precio="<?php echo $dataProduct->producto_price_public?>"
+                                                    ><i class="fa fa-cart-plus"></i> Punto de venta</button>                                            
                                         </div>
+                                        
                                     </div>
 
 
@@ -111,13 +136,7 @@ require_once $pathProy.'/menu.php';
                                 </div>
                             </div>
 
-                        </div>
-                        <div class="ibox-footer">
-                            <span class="pull-right">
-                                Full stock - <i class="fa fa-clock-o"></i> 14.04.2016 10:04 pm
-                            </span>
-                            The generated Lorem Ipsum is therefore always free
-                        </div>
+                        </div>                        
                     </div>
 
                 </div>
@@ -125,31 +144,16 @@ require_once $pathProy.'/menu.php';
             
         </div>
 
-
-
-
-<!-- slick carousel-->
-<script src="js/plugins/slick/slick.min.js"></script>
-
 <?php 
     require_once $pathProy.'/footer2.php';
 ?>
 
+<link href="<?php echo $raizProy?>css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
 <script src="<?php echo $raizProy?>js/plugins/slick/slick.min.js"></script>
-    
+<script src="<?php echo $raizProy?>js/plugins/sweetalert/sweetalert.min.js"></script>
+<script src="<?php echo $raizProy?>proveedores/js/addPuntoVenta.js"></script>
 
-
-<script>
-    $(document).ready(function(){
-
-
-        $('.product-images').slick({
-            dots: true
-        });
-
-    });
-
-</script>
+   
 
 </body>
 

@@ -62,9 +62,7 @@ $listaPedidos = $pedidos->getPedidos();
                         <?php                                 
                         
                         foreach($listaPedidos as $item){
-                            $productId = $item['producto_id'];                            
-                            $material = $productos->GetProductMaterial($productId);
-                            $color = $productos->GetProductColor($productId);
+                            $productId = $item['producto_id'];                                                        
                             
                             $date1=date_create(date('Y-m-d'));
                             $date2=date_create($item['fecha_entrega']);
@@ -85,8 +83,8 @@ $listaPedidos = $pedidos->getPedidos();
                                         <td>".$item['pedido_id']."</td>
                                         <td>".$item['proveedor_nombre']."</td>
                                         <td>".$item['producto_name']."</td>                                                                                
-                                        <td>".implode(",", $color)."</td>
-                                        <td>".implode(",", $material)."</td> 
+                                        <td>".$item['color_name']."</td>
+                                        <td>".$item['material_name']."</td> 
                                         <td>".$item['stock']."</td> 
                                             
                                         <td>".$general->getDate($item['fecha_entrega'])."</td> 
@@ -95,8 +93,8 @@ $listaPedidos = $pedidos->getPedidos();
                                             <a href='#' data-toggle='modal' data-target='#myModal'>
                                                 <i class='fa fa-edit editPedido'
                                                     data-proveedor='".$item['proveedor_nombre']."'                                                    
-                                                    data-colores='".implode(",", $color)."'
-                                                    data-materiales='".implode(",", $material)."'
+                                                    data-colores='".$item['color_name']."'
+                                                    data-materiales='".$item['material_name']."'
                                                     data-telefono='".$item['telefono']."'
                                                     data-stock='".$item['stock']."'
                                                     data-fecha='".substr($item['fecha_entrega'],0,10)."'   

@@ -17,6 +17,8 @@ class Pedidos {
 
         $sql="SELECT * FROM ".$this->name_table." 
                 inner join productos using(producto_id) 
+                inner join colores using(color_id)
+                inner join materiales using(material_id)
                 inner join proveedores on pedidos.proveedor_id = proveedores.proveedor_id
                 where pedidos.status = 1
                 order by pedidos.fecha_entrega ASC";
