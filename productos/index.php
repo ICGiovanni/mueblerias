@@ -266,7 +266,7 @@ cursor: default;
                     	
                     	if(isset($p->variaciones))
                     	{
-                    		$tr.='<div class="infont col-md-1 col-sm-1"><a href="#" class="modal_variaciones" data-toggle="modal" data-target="#modal_variaciones" data-id="'.$producto_id.'" data-json=\''.json_encode($p->variaciones).'\' id="open_modal"><i class="fa fa-list-ul"></i></a></div>';
+                    		$tr.='<div class="infont col-md-1 col-sm-1"><a href="#" class="modal_variaciones" data-toggle="modal" data-target="#modal_variaciones" data-id="'.$producto_id.'" data-json=\''.json_encode($p->variaciones).'\' data-root="'.$nombre.'" id="open_modal"><i class="fa fa-list-ul"></i></a></div>';
                     	}
                     	$tr.='<div class="infont col-md-1 col-sm-1"><a href="editar_producto.php?id='.$producto_id.'"><i class="fa fa-pencil"></i></a></div><div class="infont col-md-1 col-sm-1"><a href="#" onClick="borrar_producto('.$producto_id.');"><i class="fa fa-trash-o"></i></a></div></td>';
                     	$tr.='</tr>';
@@ -373,7 +373,7 @@ cursor: default;
         <div class="modal-content">
             <div class="modal-header" style="padding: 15px">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Cerrar</span></button>
-                <h3 class="modal-title">Variaciones</h3>
+                <h3 class="modal-title" id="title_variations">Variaciones</h3>
             </div>
             <div class="modal-body" style="padding-bottom: 0px !important; margin-bottom: -15px !important">
             <div class="ibox-content">
@@ -547,17 +547,22 @@ cursor: default;
         	$("#categoria").chosen();
 
         	$("a.modal_variaciones").click(function()
-        	{
+        	{	
+            	var root=$(this).data("root");
         		var json=$(this).data("json");
+				
+        		$("#title_variations").html(root);
+        		
 				var tr="";
         		$.each(json, function(i, field)
                 {
+                    var producto_id=field.producto_id;
 					tr+='<tr>';
 					tr+='<td>'+field.producto_sku+'</td>';
 					tr+='<td>'+field.producto_name+'</td>';
 					tr+='<td>'+field.color_name+'</td>';
 					tr+='<td>'+field.material_name+'</td>';
-					tr+='<td>'+''+'</td>';
+					tr+='<td>'+'<div class="infont col-md-1 col-sm-1"><a href="editar_producto.php?id='+producto_id+'"><i class="fa fa-pencil"></i></a></div><div class="infont col-md-1 col-sm-1"><a href="#" onClick="borrar_producto('+producto_id+');"><i class="fa fa-trash-o"></i></a></div>'+'</td>';
 					tr+='</tr>';
                 });
 
