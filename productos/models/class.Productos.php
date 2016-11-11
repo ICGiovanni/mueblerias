@@ -365,7 +365,7 @@ class Productos
 		$sql="SELECT p.producto_id,p.producto_name,p.producto_sku,
 				p.producto_description,p.producto_price_utilitarian,p.producto_price_public,
 				p.proveedor_id,IF(p.producto_conjunto='0','&Uacute;nico','Conjunto') AS producto_conjunto,
-				p.producto_type AS type,p.producto_version,p.producto_medida,c.color_name,m.material_name,c.color_id,m.material_id,producto_price_utilitarian_discount,
+				p.producto_type AS type,p.producto_version,p.producto_medida,p.color_id,p.material_id,producto_price_utilitarian_discount,
 				IF((SELECT SUM(cantidad) AS stock
 				FROM inventario_productos ip
 				WHERE ip.producto_id=p.producto_id)!='',
@@ -375,7 +375,12 @@ class Productos
 				CASE producto_type
 				WHEN 'P' THEN 'PRINCIPAL'
 				WHEN 'U' THEN 'ÚNICO'
-				END AS producto_type_name,producto_type
+				WHEN 'V' THEN 'VARIANTE'
+				END AS producto_type_name,producto_type,
+				IF(producto_type='V',
+				(SELECT producto_name
+				FROM productos
+				WHERE producto_id=p.producto_parent),'') AS producto_principal
 				FROM productos p
 				INNER JOIN proveedores pr USING(proveedor_id)".
 				$where.
@@ -696,6 +701,7 @@ class Productos
 				CASE producto_type
 				WHEN 'P' THEN 'PRINCIPAL'
 				WHEN 'U' THEN 'ÚNICO'
+				WHEN 'V' THEN 'VARIANTE'
 				END AS producto_type_name,producto_type,
 				producto_conjunto		
 				FROM productos p

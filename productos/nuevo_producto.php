@@ -109,7 +109,7 @@
             
             <div id="div_producto_padre" style="display:none;">
             <div class="form-group">
-	           	<label class="col-sm-2 control-label">Producto Padre</label>
+	           	<label class="col-sm-2 control-label">Producto Principal</label>
 	           	<div class="col-sm-6" ><input type="text" class="form-control" id="producto_padre" name="producto_padre"></div>
 	           	</div>
 	        </div>

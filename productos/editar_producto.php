@@ -52,9 +52,20 @@ if($datos[0]["type"]=='C')
 			<div class="form-group"><label class="col-sm-2 control-label">ID</label>
 			<div class="col-sm-6"><label class="col-sm-2 control-label"><?php echo $datos[0]["producto_id"]?></label></div>
             </div>
-            <div class="form-group"><label class="col-sm-2 control-label">Tipo</label>
-			<div class="col-sm-6"><label class="col-sm-2 control-label"><?php echo $datos[0]["producto_id"]?></label></div>
+            <div class="form-group"><label class="col-sm-2 control-label">Tipo de Producto</label>
+			<div class="col-sm-6"><label class="col-sm-2 control-label"><?php echo utf8_encode($datos[0]["producto_type_name"]);?></label></div>
             </div>
+            
+<?php
+if($datos[0]["producto_type"]=='V')
+{
+	echo '<div class="form-group"><label class="col-sm-2 control-label">Producto Principal</label>';
+	echo '<div class="col-sm-10"><label class="col-sm-2 control-label">';
+	echo utf8_encode($datos[0]["producto_principal"]);
+	echo '</label></div></div>';
+}
+?>
+            
 			<div class="form-group"><label class="col-sm-2 control-label">Modelo</label>
 			<div class="col-sm-6" ><input type="text" class="form-control" id="nombre" name="nombre" value="<?php echo $datos[0]['producto_name'];?>"></div>
             </div>
@@ -68,6 +79,7 @@ if($datos[0]["type"]=='C')
 			<input type="checkbox" name="manual" id="manual" value="">
 			</div>
             </div>
+            <div id="div_principal" style="<?php echo ($datos[0]['producto_type']!='P' && $datos[0]['producto_type']!='U') ? "display:none;" : ''; ?>">
             <div class="form-group">
             <label class="col-sm-2 control-label">Version</label>
 			<div class="col-sm-2 "><input type="text" class="form-control" id="version" name="version" value="<?php echo $datos[0]['producto_version'];?>"></div>
@@ -82,6 +94,70 @@ if($datos[0]["type"]=='C')
 			<div class="col-sm-6" ><textarea class="form-control" id="descripcion" name="descripcion"><?php echo $datos[0]['producto_description'];?></textarea></div>
             </div>
             
+            <div class="form-group">
+            <label class="col-sm-2 control-label">Categorias</label>
+			<div class="col-sm-6" >
+				<select data-placeholder="Selecciona una categoria" class="chosen-select" multiple style="width:300px;" tabindex="4" id="categoria" name="categoria[]">
+	            <option value=""></option>
+	            <?php 
+	            $productos=new Productos();
+	            
+	            $result=$productos->GetCategories();
+	            
+	            $list="";
+	            foreach($result as $r)
+	            {
+	            	if(isset($categorias[$r['categoria_id']]))
+	            	{
+	            		$list.='<option value="'.$r['categoria_id'].'" selected="">'.$r['categoria_name'].'</option>';
+	            	}
+	            	else
+	            	{
+	            		$list.='<option value="'.$r['categoria_id'].'">'.$r['categoria_name'].'</option>';
+	            	}
+	            }
+	            
+	            echo $list;
+	            
+	            ?>
+				</select>
+			</div>
+            </div>
+            
+            
+            </div>
+            
+            <div class="form-group">
+            <label class="col-sm-2 control-label">Proveedor</label>
+			<div class="col-sm-6" >
+				<select data-placeholder="Selecciona un proveedor" class="chosen-select" style="width:300px;" tabindex="4" id="proveedor" name="proveedor">
+	            <option value=""></option>
+	            <?php 
+	            $proveedor=new Proveedor();
+	            
+	            $result=$proveedor->getProveedores();
+	            
+	            $list="";
+	            foreach($result as $r)
+	            {
+	            	if($datos[0]["proveedor_id"]==$r['proveedor_id'])
+	            	{
+	            		$list.='<option value="'.$r['proveedor_id'].'" selected>'.$r['proveedor_nombre'].'</option>';
+	            	}
+	            	else
+	            	{
+	            		$list.='<option value="'.$r['proveedor_id'].'">'.$r['proveedor_nombre'].'</option>';
+	            	}
+	            }
+	            
+	            echo $list;
+	            
+	            ?>
+				</select>
+			</div>
+            </div>
+            
+            <div id="div_variacion" style="<?php echo ($datos[0]['producto_type']!='P') ? '' : "display:none;"; ?>">
             <div class="form-group">
             <label class="col-sm-2 control-label">Colores</label>
 			<div class="col-sm-6" >
@@ -143,81 +219,6 @@ if($datos[0]["type"]=='C')
             </div>
             
             <div class="form-group">
-            <label class="col-sm-2 control-label">Categorias</label>
-			<div class="col-sm-6" >
-				<select data-placeholder="Selecciona una categoria" class="chosen-select" multiple style="width:300px;" tabindex="4" id="categoria" name="categoria[]">
-	            <option value=""></option>
-	            <?php 
-	            $productos=new Productos();
-	            
-	            $result=$productos->GetCategories();
-	            
-	            $list="";
-	            foreach($result as $r)
-	            {
-	            	if(isset($categorias[$r['categoria_id']]))
-	            	{
-	            		$list.='<option value="'.$r['categoria_id'].'" selected="">'.$r['categoria_name'].'</option>';
-	            	}
-	            	else
-	            	{
-	            		$list.='<option value="'.$r['categoria_id'].'">'.$r['categoria_name'].'</option>';
-	            	}
-	            }
-	            
-	            echo $list;
-	            
-	            ?>
-				</select>
-			</div>
-            </div>
-            
-            <div class="form-group">
-            <label class="col-sm-2 control-label">Proveedor</label>
-			<div class="col-sm-6" >
-				<select data-placeholder="Selecciona un proveedor" class="chosen-select" style="width:300px;" tabindex="4" id="proveedor" name="proveedor">
-	            <option value=""></option>
-	            <?php 
-	            $proveedor=new Proveedor();
-	            
-	            $result=$proveedor->getProveedores();
-	            
-	            $list="";
-	            foreach($result as $r)
-	            {
-	            	if($datos[0]["proveedor_id"]==$r['proveedor_id'])
-	            	{
-	            		$list.='<option value="'.$r['proveedor_id'].'" selected>'.$r['proveedor_nombre'].'</option>';
-	            	}
-	            	else
-	            	{
-	            		$list.='<option value="'.$r['proveedor_id'].'">'.$r['proveedor_nombre'].'</option>';
-	            	}
-	            }
-	            
-	            echo $list;
-	            
-	            ?>
-				</select>
-			</div>
-            </div>
-           
-            <div class="form-group"><label class="col-sm-2 control-label">Imagenes</label>
-			<div class="col-sm-6" >
-			<input name="upload[]" type="file" id="upload" accept='image/*'/>
-    		<button class="add_more btn btn-primary btn-xs">Agregar</button>
-			</div>
-            </div>
-            
-            <div class="form-group">
-            <label class="col-sm-2 control-label"></label>
-			<div class="col-sm-6" >
-			<div class="lightBoxGallery" id="gallery">
-			</div>
-			</div>
-            </div>
-            
-            <div class="form-group">
             <label class="col-sm-2 control-label">Pecio Utilitario</label>
 			<div class="col-sm-2 "><input type="text" class="form-control" id="precioU" name="precioU" onkeypress="return validateNumber(event)" value="<?php echo $datos[0]['producto_price_utilitarian'];?>"></div>
             </div>
@@ -229,19 +230,19 @@ if($datos[0]["type"]=='C')
 			foreach($descuentos as $d)
 			{
 				$descuento=$d['producto_descuento'];
-				die($descuento);
+				
 				$descuentosA.='<div class="form-group">';
 				if($i==0)
 				{
 					$descuentosA.='<label class="col-sm-2 control-label">Descuento</label>';
-					$descuentosA.='<div class="col-sm-2 "><input class="form-control discount" id="descuento" name="descuento[]" value="'.$descuento.'" type="text" onkeypress="return validateNumber(event)"></div>';
+					$descuentosA.='<div class="col-sm-2 "><input class="form-control discount" id="descuento" name="descuento[]" value="'.(100*$descuento).'" type="text" onkeypress="return validateNumber(event)"></div>';
 					$descuentosA.='<div class="col-md-1"><button class="btn btn-primary btn-xs" id="agregarDescuento" value="" placeholder="Descuento" type="button"><i class="fa fa-plus"></i></button></div>';
 			
 				}
 				else
 				{
 					$descuentosA.='<label class="col-sm-2 control-label"></label>';
-					$descuentosA.='<div class="col-sm-2 "><input class="form-control discount" id="descuento" name="descuento[]" value="'.$descuento.'" type="text" onkeypress="return validateNumber(event)"></div>';
+					$descuentosA.='<div class="col-sm-2 "><input class="form-control discount" id="descuento" name="descuento[]" value="'.(100*$descuento).'" type="text" onkeypress="return validateNumber(event)"></div>';
 					$descuentosA.='<div class="col-md-1"><button class="btn btn-danger btn-xs deleteDiscount" id="agregarDescuento" value="" placeholder="Descuento" type="button"><i class="fa fa-times"></i></button></div>';
 				}
 				$descuentosA.='</div>';
@@ -271,6 +272,25 @@ if($datos[0]["type"]=='C')
             <label class="col-sm-2 control-label">Precio P&uacute;blico</label>
 			<div class="col-sm-2 "><input type="text" class="form-control" id="precioP" name="precioP" onkeypress="return validateCantidad(event)" value="<?php echo $datos[0]['producto_price_public'];?>"></div>
             </div>
+            
+            </div>
+           
+            <div class="form-group"><label class="col-sm-2 control-label">Imagenes</label>
+			<div class="col-sm-6" >
+			<input name="upload[]" type="file" id="upload" accept='image/*'/>
+    		<button class="add_more btn btn-primary btn-xs">Agregar</button>
+			</div>
+            </div>
+            
+            <div class="form-group">
+            <label class="col-sm-2 control-label"></label>
+			<div class="col-sm-6" >
+			<div class="lightBoxGallery" id="gallery">
+			</div>
+			</div>
+            </div>
+            
+            
             
             <div class="form-group">
             <label class="col-sm-2 control-label">Conjunto</label>
@@ -595,7 +615,7 @@ $(document).ready(function()
 
 	var options=
 	{
-		url: "http://localhost/globmint.com/productos/get_products_unique.php",
+		url: "get_products_unique.php",
 		getValue: function(element)
 		{
 			var name=element.producto_sku+' '+element.producto_name;
