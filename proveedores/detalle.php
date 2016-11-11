@@ -122,7 +122,7 @@ $dataProduct = $dataProduct[0];
                                         SKU: <small><?php echo $dataProduct->producto_sku?></small>
                                         </p>
                                         <div class="btn-group">
-                                            <button class="btn btn-primary btn-sm" id='addPuntoVenta' 
+                                            <button class="btn btn-primary btn-sm addPuntoVenta" id='addPuntoVenta' 
                                                     data-sku="<?php echo $dataProduct->producto_sku?>"
                                                     data-modelo="<?php echo $dataProduct->producto_name?>"
                                                     data-precio="<?php echo $dataProduct->producto_price_public?>"

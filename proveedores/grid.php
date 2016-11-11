@@ -8,11 +8,7 @@ require_once($_SERVER["REDIRECT_PATH_CONFIG"].'productos/models/class.Productos.
 $productos = new Productos();
 
 $dataProducts = json_decode($productos->GetDataProductsMainJson());
-/*
-echo "<pre>";
-    print_r($dataProducts);
-echo "</pre>";
-*/
+
 //$dataUnique = $productos->GetProductsUnique();
 
 ?>    
@@ -43,6 +39,14 @@ echo "</pre>";
                         if($product['SKU']==$prod->producto_sku){
                             $active = 'border: double 3px #1ab394 !important';                            
                         }
+                        if($prod->producto_type!='U'){
+                            foreach($prod->variaciones as $variacion){
+                                if($product['SKU']==$variacion->producto_sku){
+                                    $active = 'border: double 3px #1ab394 !important';
+                                }
+                            }
+                        }
+                        
                     }
                 }
                 
@@ -91,7 +95,7 @@ echo "</pre>";
                                             <a href="'.$url.'.php?producto_id='.base64_encode($prod->producto_id).'" class="btn btn-xs btn-outline btn-primary">+ Info'.$prod->producto_id.'</a>
                                                 &nbsp;';
                                         if($prod->producto_type=='U'){
-                                            echo '<a href="#" class="btn btn-xs btn-outline btn-warning addCarrito" id="addPuntoVenta" 
+                                            echo '<a href="#" class="btn btn-xs btn-outline btn-warning addCarrito addPuntoVenta" id="addPuntoVenta_'.$prod->producto_id.'" 
                                                   data-sku="'.$prod->producto_sku.'"
                                                   data-modelo="'.$prod->producto_name.'"
                                                   data-precio="'.$prod->producto_price_public.'">+ <i class="fa fa-cart-plus"></i> </a>';

@@ -8,7 +8,8 @@ $(document).ready(function(){
         $(this).parent().parent().parent().addClass("active");            
     });
         
-    $("#addPuntoVenta").click(function(){        
+    $(".addPuntoVenta").click(function(){  
+        var id = $(this).attr('id');
         swal({   
             title: "Agregar a punto de venta",   
             text: "Desea agregar el producto al punto de venta",   
@@ -22,10 +23,10 @@ $(document).ready(function(){
                 url: "ajax/addPuntoVenta.php",
                 type: "post",
                 data: {
-                    sku : $("#addPuntoVenta").data('sku'),
-                    modelo : $("#addPuntoVenta").data('modelo'),
+                    sku : $("#"+id).data('sku'),
+                    modelo : $("#"+id).data('modelo'),
                     cantidad : 1,
-                    precio : $("#addPuntoVenta").data('precio')
+                    precio : $("#"+id).data('precio')
                 },
                 success: function (response) {            
                     console.log(response);

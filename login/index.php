@@ -1,5 +1,10 @@
-<?php   include $_SERVER['REDIRECT_PATH_CONFIG'].'config.php';    
+<?php   session_start();
+        if(isset($_SESSION['login_session'])){
+            header('location: profile.php');
+        }
+        include $_SERVER['REDIRECT_PATH_CONFIG'].'config.php';    
         include $pathProy.'header2.php';
+        
 ?>
 
     <div class="middle-box text-center animated fadeInDown">
@@ -12,7 +17,7 @@
             <div class="clear"></div>
             <form class="m-t" method="post" role="form" action="login.php">
                 <div class="input-group m-b">
-                    <input type="text" name="email" value="<?php if (isset($_GET['email'])){echo base64_decode($_GET['email']);}?>" placeholder="Correo Electrónico" class="form-control" autocomplete="off">
+                    <input type="text" name="email" value="<?php if (isset($_GET['email'])){echo base64_decode($_GET['email']);}?>" placeholder="Usuario" class="form-control" autocomplete="off">
                     <span class="input-group-addon">@</span>
                     <input  type="text" name="" value="globmint.com"  class="form-control" disabled="disabled" style="width: 115px">
                 </div>

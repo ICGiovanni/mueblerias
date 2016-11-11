@@ -14,8 +14,8 @@ require_once($_SERVER["REDIRECT_PATH_CONFIG"].'productos/models/class.Productos.
 
 $productos = new Productos();
 
-
-$dataProduct = end(json_decode($productos->GetDataProductsMainJson($producto_id)));
+$jsonProd = json_decode($productos->GetDataProductsMainJson($producto_id));
+$dataProduct = end($jsonProd);
 
 
 $images = $productos->GetImagesProduct($producto_id);
@@ -25,6 +25,7 @@ echo "<pre>";
     print_r($dataProduct);
 echo "</pre>";
 */
+$selectVariaciones='';
 if(count($dataProduct->variaciones)>0){  
     $selectVariaciones =  "<select class='form-control' id='selectVariaciones'>
                             <option value='0'>Selecciona una opción</option>";
@@ -128,7 +129,11 @@ if(count($dataProduct->variaciones)>0){
                                     <div class="clear">&nbsp;</div>
                                     <div class="small">
                                         <?php                                                                               
-                                            echo $selectVariaciones;                                                            
+                                            if(!empty($selectVariaciones)){
+                                                echo $selectVariaciones;
+                                            }else{
+                                                echo "<span class='text-danger'>No existe información para este producto</span>";
+                                            }
                                         ?>    
                                     </div>    
                                     <div class="m-t-md">
@@ -140,7 +145,7 @@ if(count($dataProduct->variaciones)>0){
                                     <div>
                                         
                                         <div class="btn-group pull-right">
-                                            <button class="btn btn-primary btn-sm" id='addPuntoVenta' 
+                                            <button class="btn btn-primary btn-sm addPuntoVenta" id='addPuntoVenta' 
                                                     data-sku="<?php echo $dataProduct->producto_sku?>"
                                                     data-modelo="<?php echo $dataProduct->producto_name?>"
                                                     data-precio="<?php echo $dataProduct->producto_price_public?>"
