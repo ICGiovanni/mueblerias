@@ -43,4 +43,9 @@ if(isset($_GET["gasto_fecha_recordatorio_activo"]) && $_GET["gasto_fecha_recorda
 	
 	
 }
+
+if(isset($_GET["gasto_categoria_id"]) && $_GET["gasto_categoria_id"] == 2){//PRESTAMOS
+	$gasto->insertPrestamo($gasto_id);
+}
+
 echo $gasto_id;
