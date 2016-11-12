@@ -11,6 +11,7 @@ class Gasto {
 		$this->connect=$c->db;
 		$this->name_table_gastos = 'gastos';
 		$this->name_table_gastos_pagos = 'gastos_pagos';
+		$this->name_table_prestamos = 'prestamos';
 	}
 
 	public function insertGasto($params){
@@ -343,6 +344,20 @@ class Gasto {
 		return $this->connect->lastInsertId();
 	}
 	
+	public function deleteGastoPago($params){
+		$sql = "DELETE FROM ".$this->name_table_gastos_pagos." 
+		WHERE gastos_pagos_id = :gastos_pagos_id LIMIT 1";
+		
+		$statement=$this->connect->prepare($sql);
+		$statement->bindParam(':gastos_pagos_id', $params["gastos_pagos_id"], PDO::PARAM_STR);
+		
+		$statement->execute();
+		
+		$this->updateGastoStatus($params["gasto_id"], "1");
+		
+		return "deleted";
+	}
+	
 	public function getPagosSum($gasto_id){
 		
 		$sql="SELECT SUM(gastos_pagos_monto) as gastos_pagos_monto FROM ".$this->name_table_gastos_pagos." WHERE gasto_id = :gasto_id";
@@ -411,12 +426,12 @@ class Gasto {
 	public function getGastosOperativo($gasto_categoria_id,$primerDia='',$ultimoDia=''){
 		$extra_inner = '';
 		$extra_where = '';
-		if($gasto_categoria_id == 2){
+		if($gasto_categoria_id == 2){ //PRESTAMOS
 			$extra_inner = 'INNER JOIN prestamos USING (gasto_id)';
 			$extra_where = 'AND prestamo_status_id = 1';
 		}
 		
-		if($gasto_categoria_id == 13){
+		if($gasto_categoria_id == 13){ //SUELDOS
 			$extra_where = 'AND gasto_fecha_vencimiento BETWEEN "'.$primerDia.' 00:00:00" AND "'.$ultimoDia.' 23:59:59"';
 		}
 		
@@ -442,7 +457,9 @@ class Gasto {
 			gasto_categoria_id = :gasto_categoria_id '.$extra_where.'
 		ORDER BY gasto_id DESC';
 		
-		//echo $sql;
+		if($gasto_categoria_id == 2){ //PRESTAMOS
+			echo $sql;
+		}
 
 		$statement=$this->connect->prepare($sql);
 		$statement->bindParam(':gasto_categoria_id', $gasto_categoria_id, PDO::PARAM_STR);
@@ -455,7 +472,7 @@ class Gasto {
 	
 	function huboPagoExtra($login_id,$primerDia,$ultimoDia){
 		$sql = 'SELECT 
-		gasto_id
+			gasto_monto
 		FROM '.$this->name_table_gastos.'
 		WHERE 
 			gasto_categoria_id = 25 
@@ -471,5 +488,90 @@ class Gasto {
         $result=$statement->fetchAll(PDO::FETCH_ASSOC);
 
 		return $result;
+	}
+	
+	public function creaNomina(){
+		
+		$sql = "SELECT login_id, salary FROM inv_login";
+		
+		$statement = $this->connect->prepare($sql);
+		$statement->execute();
+        $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+		
+		$sql = "INSERT INTO ".$this->name_table_gastos." 
+		( gasto_no_documento,
+		gasto_fecha_vencimiento,
+		gasto_fecha_recordatorio_activo,
+		gasto_fecha_recordatorio,		
+		gasto_concepto,
+		gasto_descripcion,
+		gasto_monto,
+		gasto_categoria_id,
+		gasto_status_id,
+		proveedor_id,
+		login_id,
+		sucursal_id,
+		gasto_beneficiario )
+		VALUES
+		( :gasto_no_documento,
+		:gasto_fecha_vencimiento,
+		:gasto_fecha_recordatorio_activo,
+		:gasto_fecha_recordatorio,
+		:gasto_concepto,
+		:gasto_descripcion,
+		:gasto_monto,
+		:gasto_categoria_id,
+		:gasto_status_id,
+		:proveedor_id,
+		:login_id,
+		:sucursal_id,
+		:gasto_beneficiario )";
+		
+		while(list(,$dataResult) = each($result) ){
+			
+			$dataResult["gasto_no_documento"] = 'Nomina semana ';
+			$dataResult["gasto_fecha_recordatorio_activo"] = '0';
+			$dataResult["gasto_concepto"] = "Nomina Juanito, semana ";
+			$dataResult["gasto_categoria_id"] = "13";
+			$dataResult["gasto_status_id"] = "1";
+			$dataResult["proveedor_id"] = "0";
+			$dataResult["sucursal_id"] = "1";
+			$dataResult["gasto_beneficiario"] = "Juanito";
+			
+			$statement=$this->connect->prepare($sql);
+		
+			$statement->bindParam(':gasto_no_documento', $dataResult["gasto_no_documento"], PDO::PARAM_STR);
+			$statement->bindParam(':gasto_fecha_vencimiento', date("Y-m-d"), PDO::PARAM_STR);
+			$statement->bindParam(':gasto_fecha_recordatorio_activo', $dataResult["gasto_fecha_recordatorio_activo"], PDO::PARAM_STR);
+			$statement->bindParam(':gasto_fecha_recordatorio', date("Y-m-d"), PDO::PARAM_STR);
+			$statement->bindParam(':gasto_concepto', $dataResult["gasto_concepto"], PDO::PARAM_STR);
+			$statement->bindParam(':gasto_descripcion', $dataResult["gasto_concepto"], PDO::PARAM_STR);
+			$statement->bindParam(':gasto_monto', $dataResult["salary"], PDO::PARAM_STR);
+			$statement->bindParam(':gasto_categoria_id', $dataResult["gasto_categoria_id"], PDO::PARAM_STR);
+			$statement->bindParam(':gasto_status_id', $dataResult["gasto_status_id"], PDO::PARAM_STR);
+			$statement->bindParam(':proveedor_id', $dataResult["proveedor_id"], PDO::PARAM_STR);
+			$statement->bindParam(':login_id', $dataResult["login_id"], PDO::PARAM_STR);
+			$statement->bindParam(':sucursal_id', $dataResult["sucursal_id"], PDO::PARAM_STR);
+			$statement->bindParam(':gasto_beneficiario', $dataResult["gasto_beneficiario"], PDO::PARAM_STR);
+			
+			$statement->execute();
+			
+		}
+		
+		//return $this->connect->lastInsertId();
+	}
+	///////////////////PRESTAMOS/////////////////////////////////////	
+	public function insertPrestamo($gasto_id){
+		
+		$sql = "INSERT INTO ".$this->name_table_prestamos." 
+		( gasto_id, prestamo_status_id )
+		VALUES
+		( :gasto_id, 1 )";
+		
+		$statement=$this->connect->prepare($sql);	
+		$statement->bindParam(':gasto_id', $gasto_id, PDO::PARAM_STR);
+		
+		$statement->execute();
+		return "inserted";
 	}
 }
