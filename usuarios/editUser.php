@@ -101,8 +101,7 @@
                     <label class="control-label">Perfil:</label>
                 </div>
                 <div class="col-md-5">
-                    <select id="perfil" class="form-control">
-                        <option value="0">Selecciona un perfil</option>
+                    <select id="perfil" class="form-control">                        
                         <?php 
                         foreach($profiles as $profile){
                             $select = '';
