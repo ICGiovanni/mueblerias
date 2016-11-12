@@ -458,7 +458,7 @@ class Gasto {
 		ORDER BY gasto_id DESC';
 		
 		if($gasto_categoria_id == 2){ //PRESTAMOS
-			echo $sql;
+			//echo $sql;
 		}
 
 		$statement=$this->connect->prepare($sql);

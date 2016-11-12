@@ -628,7 +628,7 @@ function genera_nomina(){
 				
 			},
 			success: function(msg){
-				//location.href = './';
+				location.href = './';
 			}		
 		});
 	
