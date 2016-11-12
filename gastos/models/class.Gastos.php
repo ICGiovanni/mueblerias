@@ -411,8 +411,8 @@ class Gasto {
 	
 	//////////////////////////////////////////////////////// VISTAS ESPECIALES
 	
-	public function getGastosNomina($primerDia,$ultimoDia){
-		return $this->getGastosOperativo("13",$primerDia,$ultimoDia);
+	public function getGastosNomina($primerDia,$ultimoDia,$grupo){
+		return $this->getGastosOperativo("13",$primerDia,$ultimoDia,$grupo);
 	}
 	
 	public function getGastosPrestamos(){
@@ -423,7 +423,7 @@ class Gasto {
 		return $this->getGastosOperativo("23");
 	}
 	
-	public function getGastosOperativo($gasto_categoria_id,$primerDia='',$ultimoDia=''){
+	public function getGastosOperativo($gasto_categoria_id,$primerDia='',$ultimoDia='',$grupo=''){
 		$extra_inner = '';
 		$extra_where = '';
 		if($gasto_categoria_id == 2){ //PRESTAMOS
@@ -432,7 +432,15 @@ class Gasto {
 		}
 		
 		if($gasto_categoria_id == 13){ //SUELDOS
-			$extra_where = 'AND gasto_fecha_vencimiento BETWEEN "'.$primerDia.' 00:00:00" AND "'.$ultimoDia.' 23:59:59"';
+			if($grupo=='DM'){
+				$grupo_where = '( profile_id = 1 OR profile_id = 2 OR profile_id = 3 OR profile_id = 4 )';
+			} elseif($grupo=='VN'){
+				$grupo_where = '( profile_id = 5 OR profile_id = 6 OR profile_id = 7 )';
+			} else {
+				die("Grupo nomina invalido.");
+			}
+		
+			$extra_where = 'AND '.$grupo_where.' AND gasto_fecha_vencimiento BETWEEN "'.$primerDia.' 00:00:00" AND "'.$ultimoDia.' 23:59:59"';
 		}
 		
 		$sql='SELECT 
@@ -457,8 +465,8 @@ class Gasto {
 			gasto_categoria_id = :gasto_categoria_id '.$extra_where.'
 		ORDER BY gasto_id DESC';
 		
-		if($gasto_categoria_id == 2){ //PRESTAMOS
-			echo $sql;
+		if($gasto_categoria_id == 13){ //PRESTAMOS
+			//echo $sql;
 		}
 
 		$statement=$this->connect->prepare($sql);
