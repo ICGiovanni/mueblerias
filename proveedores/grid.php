@@ -92,7 +92,7 @@ $dataProducts = json_decode($productos->GetDataProductsMainJson());
                                         }
                 echo '                  </div>                                        
                                         <div class="m-t text-right">
-                                            <a href="'.$url.'.php?producto_id='.base64_encode($prod->producto_id).'" class="btn btn-xs btn-outline btn-primary">+ Info'.$prod->producto_id.'</a>
+                                            <a href="'.$url.'.php?producto_id='.base64_encode($prod->producto_id).'" class="btn btn-xs btn-outline btn-primary">+ Info</a>
                                                 &nbsp;';
                                         if($prod->producto_type=='U'){
                                             echo '<a href="#" class="btn btn-xs btn-outline btn-warning addCarrito addPuntoVenta" id="addPuntoVenta_'.$prod->producto_id.'" 
