@@ -269,5 +269,5 @@ class Inventarios
 		
 		return $result;
 	}
-	
+		
 }
