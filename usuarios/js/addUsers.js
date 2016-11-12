@@ -12,7 +12,7 @@ $(document).ready(function(){
     $("#agregarTelefono").click(function(){
         $("#newPhone").append("<div>"+
                                 "<div class='clear'>&nbsp;</div>"+
-                                "<div class='row'><div class='col-md-3'>&nbsp;</div>"+
+                                "<div class='row'><div class='col-md-2'>&nbsp;</div>"+
                                 "<div class='col-md-2'><input class='form-control' name='telefono[]' value='' type='text'></div>"+
                                 "<div class='col-md-2'>"+
                                     "<select id='phoneType' name='phoneType[]' class='form-control'>"+

@@ -7,11 +7,16 @@
     
     $numProd = 0;
     $total = 0;
+    $subtotal = 0;
+    $iva = 0;
     
     if(isset($_SESSION['punto_venta']['Productos'])){
         $puntoVenta = $_SESSION['punto_venta'];
         $numProd = count($puntoVenta['Productos']);
         $total = $puntoVenta['Total'];
+        $subtotal = $puntoVenta['Subtotal'];
+        $iva = $puntoVenta['IVA'];
+        
     }
 ?>
 <link href="<?php echo $raizProy?>css/plugins/easy-autocomplete/easy-autocomplete.min.css" rel="stylesheet">
@@ -113,9 +118,21 @@
                 </div>
                 <div class="ibox-content">
                     <span>
+                        Subtotal
+                    </span>
+                    <h2 class="font-bold text-right">
+                        $ <?php echo number_format($subtotal,2,'.',',');?>
+                    </h2>                    
+                    <span>
+                        IVA
+                    </span>
+                    <h2 class="font-bold text-right">
+                        $ <?php echo number_format($iva,2,'.',',');?>
+                    </h2>                    
+                    <span>
                         Total
                     </span>
-                    <h2 class="font-bold">
+                    <h2 class="font-bold text-right">
                         $ <?php echo number_format($total,2,'.',',');?>
                     </h2>
                     <hr/>

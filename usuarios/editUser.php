@@ -29,16 +29,28 @@
         include $pathProy.'/header2.php';
         include $pathProy.'/menu.php';
 ?>
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-4">
+        <h2>Control de Usuarios</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="">Usuarios</a>
+            </li>
+            <li class="active">
+                <strong>Editar Usuario</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-sm-8">
+        <div class="title-action">
 
+        </div>
+    </div>
+</div> 
 <div class="clear">&nbsp;</div>      
 <div class="row">    
-    <div class="col-lg-12">
-        <div class="ibox-title">
-            <div class="row">
-                <div class="col-lg-10"><h4>Nuevo Usuario<small>&nbsp;</small></h4></div>                                
-            </div>            
-        </div>    
-        <div class="ibox-content animated fadeInRightBig">                                    
+    <div class="col-lg-12">        
+        <div class="animated fadeIn">                                    
             <div class="row">
                 <div class="col-md-3 text-right">
                     <label for="firstName" class="control-label">Nombre:</label>
@@ -89,8 +101,7 @@
                     <label class="control-label">Perfil:</label>
                 </div>
                 <div class="col-md-5">
-                    <select id="perfil" class="form-control">
-                        <option value="0">Selecciona un perfil</option>
+                    <select id="perfil" class="form-control">                        
                         <?php 
                         foreach($profiles as $profile){
                             $select = '';
@@ -140,9 +151,11 @@
                 <div class="col-md-5">
                     <input class="form-control" id="salario" value="<?php echo $infoUser['salary'] ?>" type="text">
                 </div>                            
-            </div>            
+            </div>  
+                                             
             <?php 
             $i=0;
+            if(is_array($telefonos))
             foreach($telefonos as $telefono){
             ?>
             <div>
@@ -187,7 +200,31 @@
             <?php
             $i++;
             }
-            ?>            
+            ?> 
+            <div>
+            <div class="clear">&nbsp;</div>
+            <div class="row">
+                <div class="col-md-3 text-right">
+                    
+                    <label class="control-label">Telefono:</label>
+                     
+                </div>
+                <div class="col-md-2">                            
+                    <input class="form-control" id="telefono" name="telefono[]" value="" type="text">                                            
+                </div>    
+                <div class="col-md-2">
+                    <select id="phoneType" name="phoneType[]" class="form-control">
+                        <option value="1">Celular</option>
+                        <option value="2">Casa</option>
+                        <option value="3">Oficina</option>
+                        <option value="4">Otro</option>
+                    </select>
+                </div>
+                <div class="col-md-1">                                               
+                    <button class="form-control" id="agregarTelefono" value="" placeholder="Telefono" type="button"><i class="fa fa-plus"></i></button>                    
+                </div>    
+            </div>
+            </div>  
             <div class="row" id="newPhone">
 
             </div>
@@ -282,7 +319,7 @@
                    <button class='btn btn-danger' id='cancelarUser'>Cancelar</button>
                </div>   
                <div class="col-md-2 text-right">
-                   <button class='btn btn-primary' id='saveUser'>Actualizar usuario</button>
+                   <button class='btn btn-primary' id='updateUser' data-user = '<?php echo $userId ?>'>Actualizar usuario</button>
                </div>
             </div>               
         </div>
