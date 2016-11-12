@@ -148,6 +148,20 @@ class Login {
             return $loginId;
         }
         
+        public function updateUser($data){
+            
+            
+            $sql = "UPDATE inv_login SET firstName='".$data['firstName']."', lastName='".$data['lastName']."', 
+                    secondLastName='".$data['secondLastName']."', email='".$data['email']."', profile_id=".$data['perfil'].", 
+                    sucursal_id=".$data['sucursal'].", salary=".$data['salario'].", comision=".$data['comision']."
+                    WHERE login_id = ".$data['idUser'];
+            $statement = $this->connect->prepare($sql);                    
+
+            $statement->execute();
+            
+            return $data['idUser'];
+        }
+        
         public function getProfiles(){
             
             $sql = "SELECT profile_id, profile_name FROM inv_profile where profile_id!=1";

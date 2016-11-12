@@ -40,7 +40,17 @@
                         <ul class="nav nav-second-level">
                             <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/gastos/index.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'gastos/'?>" >Lista de gastos</a></li>
                             <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/gastos/nuevo/index.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'gastos/nuevo/'?>" >Nuevo</a></li>
-                            <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/gastos/nomina/index.php'){ echo 'active';}?>"><a href="<?php echo $ruta.'gastos/nomina/'?>" >Nomina</a></li>                                                                                
+                            <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/gastos/nomina/index.php'){ echo 'active';}?>">
+                                    <a href="<?php echo $ruta.'gastos/nomina/'?>" >Nomina <span class="fa arrow"></span></a>
+                                    <ul class="nav nav-third-level" >
+                                        <li>
+                                            <a href="<?php echo $ruta.'gastos/nomina/?grupo=DM'?>">Administracion</a>
+                                        </li>
+                                        <li>
+                                            <a href="<?php echo $ruta.'gastos/nomina/?grupo=VN'?>">Ventas</a>
+                                        </li>                                        
+                                    </ul>
+                            </li>                                                                                
                         </ul>
                     </li>
 					

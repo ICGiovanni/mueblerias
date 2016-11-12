@@ -40,7 +40,7 @@ $(document).ready(function(){
     });
     
     $("#updateUser").click(function(){            
-        window.location.href = 'index.php';
+        updateUser();
     });        
 });
 
@@ -56,6 +56,85 @@ function cleanFileds(){
     $('#salario').val('');
     $('#fechaNacimiento').val('');
     $('#comision').val('');
+}
+
+
+function updateUser(){
+    var idUser = $("#updateUser").data('user');
+    var firstName = $('#firstName').val();
+    var lastName = $('#lastName').val();
+    var secondLastName = $('#secondLastName').val();
+    
+    var email = $('#email').val();
+    var password = $('#password').val();
+    var perfil = $('#perfil').val();            
+    var sucursal = $('#sucursal').val();
+    
+    var telefonos = new Array();
+    var tipos = new Array();    
+    
+    $("input[name='telefono[]']").each(function(){        
+        telefonos.push($(this).val());
+    });   
+    $("select[name='phoneType[]']").each(function(){                
+        tipos.push($(this).val());
+    });    
+    
+    var salario = ($('#salario').val()!=='') ? $('#salario').val() : 0;
+    var fechaNacimiento = $('#fechaNacimiento').val();
+    var comision = ($('#comision').val() !=='') ? $("#comision").val() : 0;        
+    
+    var calle = $('#calle').val();
+    var numExt = $('#numExt').val();
+    var numInt = $('#numInt').val();
+    var colonia = $('#colonia').val();
+    var cp = $('#cp').val();
+    var municipio = $('#municipio').val();
+    var estado = $('#estado').val();
+    
+    $.ajax({
+        url: "ajax/updateUser.php",
+        type: "post",
+        data: {
+            idUser : idUser,
+            firstName : firstName,
+            lastName : lastName,
+            secondLastName : secondLastName,
+            email : email,
+            password : password,
+            perfil : perfil,    
+            sucursal : sucursal,
+            telefonos : JSON.stringify(telefonos),
+            tipos : JSON.stringify(tipos),
+            salario : salario,
+            fechaNacimiento : fechaNacimiento,
+            comision : comision,
+            calle: calle,
+            numExt: numExt,
+            numInt: numInt,
+            colonia: colonia,
+            cp: cp,
+            municipio: municipio,
+            estado: estado            
+        },
+        success: function (response) {   
+            
+            console.log(response);
+            swal({
+                title: "Actualización!",
+                text: "Usuario actualizado correctamente!",
+                type: "success"
+            }, function () {
+                setTimeout(function(){
+                    window.location.href = 'index.php';
+                }, 1000);                
+            });
+            
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+           console.log('error al cargar los usuarios loadUsers()/index.php');
+        }
+    });
 }
 
 function saveUser(){
@@ -120,7 +199,9 @@ function saveUser(){
                 text: "Usuario guardado correctamente!",
                 type: "success"
             }, function () {
-                window.location.href = 'index.php';
+                setTimeout(function(){
+                    window.location.href = 'index.php';
+                }, 1000);
             });
 
         },

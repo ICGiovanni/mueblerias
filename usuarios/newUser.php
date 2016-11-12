@@ -47,46 +47,36 @@
                         </div>    
                     </div>                    
                     <div class="clear">&nbsp;</div>
-                    <div class="row">
-                        <div class="col-md-2 ">
-                            <label class="control-label">Apellido materno:</label>
-                        </div>
+                    <div class="row">                        
+                        <label class="control-label col-md-2">Apellido materno:</label>
                         <div class="col-md-5">
                             <input type="text" id="secondLastName" value=""  class="form-control" >
                         </div>    
                     </div>
                     <div class="clear">&nbsp;</div>
-                    <div class="row">
-                        <div class="col-md-2 ">
-                            <label class="control-label">Correo electrónico:</label>
-                        </div>
+                    <div class="row">                        
+                        <label class="control-label col-md-2">Correo electrónico:</label>                        
                         <div class="col-md-5">
                             <input type="text" id="email" value="" class="form-control" >
                         </div>    
                     </div>
                     <div class="clear">&nbsp;</div>
-                    <div class="row">
-                        <div class="col-md-2 ">
-                            <label class="control-label">Contraseña:</label>
-                        </div>
+                    <div class="row">                        
+                        <label class="control-label col-md-2">Contraseña:</label>                        
                         <div class="col-md-5">
                             <input type="password" id="password" value="" class="form-control" >
                         </div>    
                     </div>
                     <div class="clear">&nbsp;</div>
-                    <div class="row">
-                        <div class="col-md-2 ">
-                            <label class="control-label">Confirmar contraseña:</label>
-                        </div>
+                    <div class="row">                        
+                        <label class="control-label col-md-2">Confirmar contraseña:</label>                        
                         <div class="col-md-5">
                             <input type="password" id="password2" value="" class="form-control" >
                         </div>    
                     </div>
                     <div class="clear">&nbsp;</div>            
-                    <div class="row">
-                        <div class="col-md-2 ">
-                            <label class="control-label">Perfil:</label>
-                        </div>
+                    <div class="row">                        
+                        <label class="control-label col-md-2">Perfil:</label>                        
                         <div class="col-md-5">
                             <select id="perfil" class="form-control">
                                 <option value="0">Selecciona un perfil</option>
@@ -99,10 +89,8 @@
                         </div>    
                     </div>                    
                     <div class="clear">&nbsp;</div>
-                    <div class="row">
-                        <div class="col-md-2 ">
-                            <label class="control-label">Sucursal:</label>
-                        </div>
+                    <div class="row">                        
+                        <label class="control-label col-md-2">Sucursal:</label>
                         <div class="col-md-5">
                             <select id="sucursal" class="form-control">
                                 <option value="0">Selecciona una sucursal</option>
@@ -115,28 +103,22 @@
                         </div>    
                     </div>                                                        
                     <div class="clear">&nbsp;</div>
-                    <div class="row">
-                        <div class="col-md-2 ">
-                            <label class="control-label">Comision:</label>
-                        </div>
+                    <div class="row">                        
+                        <label class="control-label col-md-2">Comision:</label>                        
                         <div class="col-md-5">
                             <input class="form-control" id="comision" value="" placeholder="%" type="text">
                         </div>    
                     </div>                    
                     <div class="clear">&nbsp;</div>
-                    <div class="row">
-                        <div class="col-md-2 ">
-                            <label class="control-label">Salario:</label>
-                        </div>
+                    <div class="row">                        
+                        <label class="control-label col-md-2">Salario:</label>                        
                         <div class="col-md-5">
                             <input class="form-control" id="salario" value="" type="text">
                         </div>                            
                     </div>
                     <div class="clear">&nbsp;</div>
-                    <div class="row">
-                        <div class="col-md-3 ">
-                            <label class="control-label">Telefono:</label>
-                        </div>
+                    <div class="row">                        
+                        <label class="control-label col-md-2">Telefono:</label>                        
                         <div class="col-md-2">                            
                             <input class="form-control" id="telefono" name="telefono[]" value="" type="text">                                            
                         </div>    
@@ -154,32 +136,25 @@
                     </div>
                     <div class="row" id="newPhone"></div>
                     <div class="clear">&nbsp;</div>
-                    <div class="row">
-                        <div class="">
-                            <label class="control-label">Fecha de nacimiento:</label>
-                        </div>
-                        <div class="col-md-5">
+                    <div class="form-group">                        
+                        <label class="control-label col-md-2">Fecha de nacimiento:</label>                        
+                        <div class="col-md-5" style="padding: 0px 28px;">
                             <div class="form-group" id="data_1">            
                                 <div class="input-group date">
                                     <span class="input-group-addon"><i class="fa fa-calendar"></i></span><input class="form-control" value="" type="text" id="fechaNacimiento">
                                 </div>
                             </div>
                         </div>                            
-                    </div>
-                    <div class="clear">&nbsp;</div>
+                    </div>                    
                     <div class="row">
-                        <div class="col-md-3 ">
-                            <label class="control-label">Calle:</label>
-                        </div>
+                        <label class="control-label col-md-2">Calle:</label>                        
                         <div class="col-md-5">                            
                             <input class="form-control" id="calle" name="calle" value="" type="text">                            
                         </div>                            
                     </div>
                     <div class="clear">&nbsp;</div>
                     <div class="row">
-                        <div class="col-md-3 ">
-                            <label class="control-label">No. Exterior:</label>
-                        </div>
+                        <label class="control-label col-md-2">No. Exterior:</label>
                         <div class="col-md-1">                            
                             <input class="form-control" id="numExt" name="numExt" value="" type="text">                            
                         </div>                                                    
@@ -191,37 +166,29 @@
                         </div>
                     </div>
                     <div class="clear">&nbsp;</div>
-                    <div class="row">
-                        <div class="col-md-3 ">
-                            <label class="control-label">Colonia:</label>
-                        </div>
+                    <div class="row">                        
+                        <label class="control-label col-md-2">Colonia:</label>                        
                         <div class="col-md-5">                            
                             <input class="form-control" id="colonia" name="colonia" value="" type="text">                            
                         </div>                            
                     </div>
                     <div class="clear">&nbsp;</div>
                     <div class="row">
-                        <div class="col-md-3 ">
-                            <label class="control-label">C.P.</label>
-                        </div>
+                        <label class="control-label col-md-2">C.P.</label>
                         <div class="col-md-5">                            
                             <input class="form-control" id="cp" name="cp" value="" type="text">                            
                         </div>                            
                     </div>
                     <div class="clear">&nbsp;</div>
                     <div class="row">
-                        <div class="col-md-3 ">
-                            <label class="control-label">Municipio</label>
-                        </div>
+                        <label class="control-label col-md-2">Municipio</label>
                         <div class="col-md-5">                            
                             <input class="form-control" id="municipio" name="municipio" value="" type="text">                            
                         </div>                            
                     </div>
                     <div class="clear">&nbsp;</div>
-                    <div class="row">
-                        <div class="col-md-3 ">
-                            <label class="control-label">Estado</label>
-                        </div>
+                    <div class="row">                        
+                        <label class="control-label col-md-2">Estado</label>
                         <div class="col-md-5">                            
                             <select id="estado" name="estado" class="form-control m-b">
                                 <option value="0">Selecciona un estado</option>
