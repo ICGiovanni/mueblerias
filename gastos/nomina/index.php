@@ -65,7 +65,11 @@ $ultimoDia=date("Y/m/d",mktime(0,0,0,$month,$day+$array_dias_a_recorrer_2[$diaSe
 $objGasto = new Gasto();
 $objIngreso = new Ingreso();
 
-$rows = $objGasto->getGastosNomina($primerDia,$ultimoDia);
+if(!isset($_GET["grupo"])){
+	die("Grupo nomina invalido");
+}
+
+$rows = $objGasto->getGastosNomina($primerDia,$ultimoDia,$_GET["grupo"]);
 
 $rowsPrestamos = $objGasto->getGastosPrestamos();
 while(list(,$dataGasto) = each($rowsPrestamos)){
