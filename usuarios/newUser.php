@@ -31,28 +31,24 @@
 <div class="row">    
     <div class="col-lg-12">
            
-        <div class="wrapper wrapper-content animated fadeInRight">                                    
+        <div class="wrapper wrapper-content animated fadeInRight form-horizontal">                                    
                      
-                    <div class="row">
-                        <div class="col-md-3 text-right">
-                            <label for="firstName" class="control-label">Nombre:</label>
-                        </div>
+                    <div class="form-group">                        
+                        <label for="firstName" class="control-label col-md-2">Nombre:</label>                        
                         <div class="col-md-5">
                             <input type="text" id="firstName" value="" class="form-control" >
                         </div>    
                     </div>
                     <div class="clear">&nbsp;</div>
-                    <div class="row">
-                        <div class="col-md-3 text-right">
-                            <label class="control-label">Apellido paterno:</label>
-                        </div>
+                    <div class="form-group">                        
+                        <label class="control-label col-md-2">Apellido paterno:</label>                        
                         <div class="col-md-5">
                             <input type="text" id="lastName" value=""  class="form-control" >
                         </div>    
                     </div>                    
                     <div class="clear">&nbsp;</div>
                     <div class="row">
-                        <div class="col-md-3 text-right">
+                        <div class="col-md-2 ">
                             <label class="control-label">Apellido materno:</label>
                         </div>
                         <div class="col-md-5">
@@ -61,7 +57,7 @@
                     </div>
                     <div class="clear">&nbsp;</div>
                     <div class="row">
-                        <div class="col-md-3 text-right">
+                        <div class="col-md-2 ">
                             <label class="control-label">Correo electrónico:</label>
                         </div>
                         <div class="col-md-5">
@@ -70,7 +66,7 @@
                     </div>
                     <div class="clear">&nbsp;</div>
                     <div class="row">
-                        <div class="col-md-3 text-right">
+                        <div class="col-md-2 ">
                             <label class="control-label">Contraseña:</label>
                         </div>
                         <div class="col-md-5">
@@ -79,7 +75,7 @@
                     </div>
                     <div class="clear">&nbsp;</div>
                     <div class="row">
-                        <div class="col-md-3 text-right">
+                        <div class="col-md-2 ">
                             <label class="control-label">Confirmar contraseña:</label>
                         </div>
                         <div class="col-md-5">
@@ -88,7 +84,7 @@
                     </div>
                     <div class="clear">&nbsp;</div>            
                     <div class="row">
-                        <div class="col-md-3 text-right">
+                        <div class="col-md-2 ">
                             <label class="control-label">Perfil:</label>
                         </div>
                         <div class="col-md-5">
@@ -104,7 +100,7 @@
                     </div>                    
                     <div class="clear">&nbsp;</div>
                     <div class="row">
-                        <div class="col-md-3 text-right">
+                        <div class="col-md-2 ">
                             <label class="control-label">Sucursal:</label>
                         </div>
                         <div class="col-md-5">
@@ -120,7 +116,7 @@
                     </div>                                                        
                     <div class="clear">&nbsp;</div>
                     <div class="row">
-                        <div class="col-md-3 text-right">
+                        <div class="col-md-2 ">
                             <label class="control-label">Comision:</label>
                         </div>
                         <div class="col-md-5">
@@ -129,7 +125,7 @@
                     </div>                    
                     <div class="clear">&nbsp;</div>
                     <div class="row">
-                        <div class="col-md-3 text-right">
+                        <div class="col-md-2 ">
                             <label class="control-label">Salario:</label>
                         </div>
                         <div class="col-md-5">
@@ -138,7 +134,7 @@
                     </div>
                     <div class="clear">&nbsp;</div>
                     <div class="row">
-                        <div class="col-md-3 text-right">
+                        <div class="col-md-3 ">
                             <label class="control-label">Telefono:</label>
                         </div>
                         <div class="col-md-2">                            
@@ -159,7 +155,7 @@
                     <div class="row" id="newPhone"></div>
                     <div class="clear">&nbsp;</div>
                     <div class="row">
-                        <div class="col-md-3 text-right">
+                        <div class="">
                             <label class="control-label">Fecha de nacimiento:</label>
                         </div>
                         <div class="col-md-5">
@@ -172,7 +168,7 @@
                     </div>
                     <div class="clear">&nbsp;</div>
                     <div class="row">
-                        <div class="col-md-3 text-right">
+                        <div class="col-md-3 ">
                             <label class="control-label">Calle:</label>
                         </div>
                         <div class="col-md-5">                            
@@ -181,13 +177,13 @@
                     </div>
                     <div class="clear">&nbsp;</div>
                     <div class="row">
-                        <div class="col-md-3 text-right">
+                        <div class="col-md-3 ">
                             <label class="control-label">No. Exterior:</label>
                         </div>
                         <div class="col-md-1">                            
                             <input class="form-control" id="numExt" name="numExt" value="" type="text">                            
                         </div>                                                    
-                        <div class="col-md-2 text-right">
+                        <div class="col-md-2 ">
                             <label class="control-label">No. Interior:</label>
                         </div>
                         <div class="col-md-1">                            
@@ -196,7 +192,7 @@
                     </div>
                     <div class="clear">&nbsp;</div>
                     <div class="row">
-                        <div class="col-md-3 text-right">
+                        <div class="col-md-3 ">
                             <label class="control-label">Colonia:</label>
                         </div>
                         <div class="col-md-5">                            
@@ -205,7 +201,7 @@
                     </div>
                     <div class="clear">&nbsp;</div>
                     <div class="row">
-                        <div class="col-md-3 text-right">
+                        <div class="col-md-3 ">
                             <label class="control-label">C.P.</label>
                         </div>
                         <div class="col-md-5">                            
@@ -214,7 +210,7 @@
                     </div>
                     <div class="clear">&nbsp;</div>
                     <div class="row">
-                        <div class="col-md-3 text-right">
+                        <div class="col-md-3 ">
                             <label class="control-label">Municipio</label>
                         </div>
                         <div class="col-md-5">                            
@@ -223,7 +219,7 @@
                     </div>
                     <div class="clear">&nbsp;</div>
                     <div class="row">
-                        <div class="col-md-3 text-right">
+                        <div class="col-md-3 ">
                             <label class="control-label">Estado</label>
                         </div>
                         <div class="col-md-5">                            
@@ -235,10 +231,10 @@
                     <div class="clear">&nbsp;</div>
                     <div class="row colaboradorForm">  
                         <div class="col-lg-4">&nbsp;</div>
-                        <div class="col-lg-2 text-right">
+                        <div class="col-lg-2 ">
                             <button class='btn btn-danger btn-xs' id='cancelarUser'>Cancelar</button>
                         </div>   
-                        <div class="col-md-2 text-right">        
+                        <div class="col-md-2 ">        
                             <button class='btn btn-primary btn-xs' id='saveUser'>Guardar Usuario</button>
                         </div>
                     </div>  

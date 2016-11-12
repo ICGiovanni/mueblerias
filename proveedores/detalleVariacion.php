@@ -15,6 +15,8 @@ require_once($_SERVER["REDIRECT_PATH_CONFIG"].'productos/models/class.Productos.
 $productos = new Productos();
 
 $jsonProd = json_decode($productos->GetDataProductsMainJson($producto_id));
+
+
 $dataProduct = end($jsonProd);
 
 
@@ -35,7 +37,7 @@ if(count($dataProduct->variaciones)>0){
         $containerOptions .= '<div id="container_'.$variacion->producto_id.'" 
                                 data-sku="'.$variacion->producto_sku.'"
                                 data-modelo="'.$variacion->producto_name.'"
-                                data-precio="1999.00"
+                                data-precio="'.$variacion->producto_price_public.'"
                                 data-material="'.$variacion->material_name.'"
                                 data-color="'.$variacion->color_name.'"    
                               ></div>';

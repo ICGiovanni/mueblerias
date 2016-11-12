@@ -40,8 +40,7 @@
                         <ul class="nav nav-second-level">
                             <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/gastos/index.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'gastos/'?>" >Lista de gastos</a></li>
                             <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/gastos/nuevo/index.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'gastos/nuevo/'?>" >Nuevo</a></li>
-                            <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/gastos/nomina/index.php'){ echo 'active';}?>"><a href="<?php echo $ruta.'gastos/nomina/'?>" >Nomina</a></li>                                                    
-                            <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/gastos/proveedores/index.php'){ echo 'active';}?>"><a href="<?php echo $ruta.'gastos/proveedores/'?>" >Proveedores</a></li>                                                    
+                            <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/gastos/nomina/index.php'){ echo 'active';}?>"><a href="<?php echo $ruta.'gastos/nomina/'?>" >Nomina</a></li>                                                                                
                         </ul>
                     </li>
 					
@@ -83,7 +82,8 @@
                             <i class="fa fa-user"></i> <span class="nav-label">Inventarios</span>
                         </a>
                         <ul class="nav nav-second-level">
-							<li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/inventarios/sucursales/index.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'inventarios/sucursales/'?>" >Sucursales</a></li>							
+                            <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/inventarios/index.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'inventarios/'?>" >Lista</a></li>							
+                            <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/inventarios/sucursales/index.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'inventarios/sucursales/'?>" >Sucursales</a></li>							
                         </ul>
                     </li>
 					
@@ -131,87 +131,24 @@
                             <span class="m-r-sm text-muted welcome-message">Bienvenido a Globmint.</span>
                         </li>
                         <li class="dropdown">
-                            <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
-                                <i class="fa fa-envelope"></i>  <span class="label label-warning">16</span>
-                            </a>
-                            <ul class="dropdown-menu dropdown-messages">
-                                <li>
-                                    <div class="dropdown-messages-box">
-                                        <a href="profile.html" class="pull-left">
-                                            <img alt="image" class="img-circle" src="<?php echo $raizProy?>img/a7.jpg">
-                                        </a>
-                                        <div class="media-body">
-                                            <small class="pull-right">46h ago</small>
-                                            <strong>Mike Loreipsum</strong> started following <strong>Monica Smith</strong>. <br>
-                                            <small class="text-muted">3 days ago at 7:58 pm - 10.06.2014</small>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="divider"></li>
-                                <li>
-                                    <div class="dropdown-messages-box">
-                                        <a href="profile.html" class="pull-left">
-                                            <img alt="image" class="img-circle" src="<?php echo $raizProy?>img/a4.jpg">
-                                        </a>
-                                        <div class="media-body ">
-                                            <small class="pull-right text-navy">5h ago</small>
-                                            <strong>Chris Johnatan Overtunk</strong> started following <strong>Monica Smith</strong>. <br>
-                                            <small class="text-muted">Yesterday 1:21 pm - 11.06.2014</small>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="divider"></li>                                                              
-                                <li>
-                                    <div class="text-center link-block">
-                                        <a href="mailbox.html">
-                                            <i class="fa fa-envelope"></i> <strong>Read All Messages</strong>
-                                        </a>
-                                    </div>
-                                </li>
-                            </ul>
-                        </li>
+                            <a class="dropdown-toggle count-info"  href="<?php echo $ruta.'proveedores/grid.php'?>">
+                                <i class="fa fa-th"></i>                                
+                            </a>                            
+                        </li>  
                         <li class="dropdown">
-                            <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
-                                <i class="fa fa-bell"></i>  <span class="label label-primary">8</span>
-                            </a>
-                            <ul class="dropdown-menu dropdown-alerts">
-                                <li>
-                                    <a href="mailbox.html">
-                                        <div>
-                                            <i class="fa fa-envelope fa-fw"></i> You have 16 messages
-                                            <span class="pull-right text-muted small">4 minutes ago</span>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li class="divider"></li>
-                                <li>
-                                    <a href="profile.html">
-                                        <div>
-                                            <i class="fa fa-twitter fa-fw"></i> 3 New Followers
-                                            <span class="pull-right text-muted small">12 minutes ago</span>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li class="divider"></li>
-                                <li>
-                                    <a href="grid_options.html">
-                                        <div>
-                                            <i class="fa fa-upload fa-fw"></i> Server Rebooted
-                                            <span class="pull-right text-muted small">4 minutes ago</span>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li class="divider"></li>
-                                <li>
-                                    <div class="text-center link-block">
-                                        <a href="notifications.html">
-                                            <strong>See All Alerts</strong>
-                                            <i class="fa fa-angle-right"></i>
-                                        </a>
-                                    </div>
-                                </li>
-                            </ul>
-                        </li>
+                            <a class="dropdown-toggle count-info"  href="<?php echo $ruta.'ventas'?>">
+                                <i class="fa fa-shopping-cart"></i>&nbsp;&nbsp;&nbsp;
+                                <span class="label label-warning">
+                                    <?php 
+                                    $numProd = 0;
+                                    if(isset($_SESSION['punto_venta']) && is_array($_SESSION['punto_venta']['Productos'])){
+                                        $numProd =  count($_SESSION['punto_venta']['Productos']);
+                                    }
+                                    echo $numProd;
+                                    ?>
+                                </span>
+                            </a>                            
+                        </li>                        
                         <li>
                             <a href="<?php echo $ruta.'login/logout.php'?>">
                                 <i class="fa fa-sign-out"></i> Salir

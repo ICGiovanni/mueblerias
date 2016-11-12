@@ -33,9 +33,9 @@ $dataProducts = json_decode($productos->GetDataProductsMainJson());
                                 
                 $active = '';
                 
-                if(isset($_SESSION['punto_venta'])){
-                    
-                    foreach($_SESSION['punto_venta']['Productos'] as $product){                        
+                if(isset($_SESSION['punto_venta']) && is_array($_SESSION['punto_venta']['Productos'])){
+                    $puntoVenta = $_SESSION['punto_venta'];                    
+                    foreach($puntoVenta['Productos'] as $product){                        
                         if($product['SKU']==$prod->producto_sku){
                             $active = 'border: double 3px #1ab394 !important';                            
                         }

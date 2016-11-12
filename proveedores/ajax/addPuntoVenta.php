@@ -32,6 +32,17 @@ if($_POST){
         $_SESSION['punto_venta']['Productos'][] = $producto;     
     }
     
+    $subtotal = '';
+    foreach($_SESSION['punto_venta']['Productos'] as $prod){
+        $subtotal = $subtotal + $prod['Subtotal'];
+    }
+    $iva = $subtotal*.16;
+    $_SESSION['punto_venta']['Subtotal']= $subtotal;
+    $_SESSION['punto_venta']['IVA']= $iva;
+    $_SESSION['punto_venta']['Total']= $subtotal + $iva;
+    
+    
+    
 }
 echo "<pre>";
     print_r($_SESSION);
