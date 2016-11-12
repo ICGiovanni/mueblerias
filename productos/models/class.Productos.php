@@ -61,7 +61,7 @@ class Productos
 			$conjunto=1;
 		}
 		
-		$sql="INSERT INTO productos VALUES('',:nombre,:sku,:descripcion,:precio_utilitario,:precio_utilitario_descuento,:precio_publico,:precio_publico_min,:producto_price_public_discount,:color,:material,:proveedor,:conjunto,:version,:medida,:type,:producto_parent)";
+		$sql="INSERT INTO productos VALUES('',:nombre,:sku,:descripcion,:descripcionC,:precio_utilitario,:precio_utilitario_descuento,:precio_publico,:precio_publico_min,:producto_price_public_discount,:color,:material,:proveedor,:conjunto,:version,:medida,:type,:producto_parent)";
 		
 		$statement=$this->connect->prepare($sql);
 		
@@ -81,6 +81,7 @@ class Productos
 		$statement->bindParam(':nombre', $params['nombre'], PDO::PARAM_STR);
 		$statement->bindParam(':sku', $params['sku'], PDO::PARAM_STR);
 		$statement->bindParam(':descripcion', $params['descripcion'], PDO::PARAM_STR);
+		$statement->bindParam(':descripcionC', $params['descripcionC'], PDO::PARAM_STR);
 		$statement->bindParam(':precio_utilitario', $price_utilitarian, PDO::PARAM_STR);
 		$statement->bindParam(':precio_utilitario_descuento', $price_utilitarian_descuento, PDO::PARAM_STR);
 		$statement->bindParam(':precio_publico', $price_public, PDO::PARAM_STR);
@@ -433,7 +434,8 @@ class Productos
 				IF(producto_type='V',
 				(SELECT producto_name
 				FROM productos
-				WHERE producto_id=p.producto_parent),'') AS producto_principal
+				WHERE producto_id=p.producto_parent),'') AS producto_principal,
+				producto_description_corta
 				FROM productos p
 				INNER JOIN proveedores pr USING(proveedor_id)".
 				$where.
@@ -595,10 +597,9 @@ class Productos
 			$conjunto=1;
 		}
 		
-		
 		$this->DeleteProductGroup($params['id_producto']);
 		
-		$sql="UPDATE productos SET producto_name=:nombre,producto_sku=:sku,producto_description=:descripcion,producto_price_utilitarian=:precio_utilitario,producto_price_public=:precio_publico,proveedor_id=:proveedor,color_id=:color,material_id=:material,producto_version=:version,	producto_medida=:medida,producto_price_utilitarian_discount=:precio_utilitario_descuento,producto_price_public_min=:precio_publico_min,producto_price_public_discount=:producto_price_public_discount,producto_conjunto=:conjunto
+		$sql="UPDATE productos SET producto_name=:nombre,producto_sku=:sku,producto_description=:descripcion,producto_price_utilitarian=:precio_utilitario,producto_price_public=:precio_publico,proveedor_id=:proveedor,color_id=:color,material_id=:material,producto_version=:version,	producto_medida=:medida,producto_price_utilitarian_discount=:precio_utilitario_descuento,producto_price_public_min=:precio_publico_min,producto_price_public_discount=:producto_price_public_discount,producto_conjunto=:conjunto,producto_description_corta=:descripcionC
 				WHERE producto_id=:producto";
 		
 		
@@ -619,6 +620,7 @@ class Productos
 		$statement->bindParam(':nombre', $params['nombre'], PDO::PARAM_STR);
 		$statement->bindParam(':sku', $params['sku'], PDO::PARAM_STR);
 		$statement->bindParam(':descripcion', $params['descripcion'], PDO::PARAM_STR);
+		$statement->bindParam(':descripcionC', $params['descripcionC'], PDO::PARAM_STR);
 		$statement->bindParam(':precio_utilitario', $price_utilitarian, PDO::PARAM_STR);
 		$statement->bindParam(':precio_utilitario_descuento', $price_utilitarian_descuento, PDO::PARAM_STR);
 		$statement->bindParam(':precio_publico', $price_public, PDO::PARAM_STR);

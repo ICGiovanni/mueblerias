@@ -81,6 +81,10 @@
 			<div class="col-sm-6" ><textarea class="form-control" id="descripcion" name="descripcion"></textarea></div>
             </div>
             
+            <div class="form-group"><label class="col-sm-2 control-label">Descripci&oacute;n Corta</label>
+			<div class="col-sm-6" ><textarea class="form-control" id="descripcionC" name="descripcionC"></textarea></div>
+            </div>
+            
             <div class="form-group">
             <label class="col-sm-2 control-label">Categorias</label>
 			<div class="col-sm-6" >

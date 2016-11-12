@@ -93,7 +93,11 @@ if($datos[0]["producto_type"]=='V')
 			</div>
             
             <div class="form-group"><label class="col-sm-2 control-label">Descripci&oacute;n</label>
-			<div class="col-sm-6" ><textarea class="form-control" id="descripcion" name="descripcion"><?php echo $datos[0]['producto_description'];?></textarea></div>
+			<div class="col-sm-6" ><textarea class="form-control" id="descripcion" name="descripcion"><?php echo utf8_encode($datos[0]['producto_description']);?></textarea></div>
+            </div>
+            
+            <div class="form-group"><label class="col-sm-2 control-label">Descripci&oacute;n Corta</label>
+			<div class="col-sm-6" ><textarea class="form-control" id="descripcionC" name="descripcionC"><?php echo utf8_encode($datos[0]['producto_description_corta']);?></textarea></div>
             </div>
             
             <div class="form-group">
