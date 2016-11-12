@@ -10,6 +10,7 @@
     $inventarios=new Inventarios();
 ?>
 <link href="<?php echo $raizProy?>css/plugins/chosen/chosen.css" rel="stylesheet">
+<link href="<?=$raizProy?>css/plugins/footable/footable.core.css" rel="stylesheet">
 <style>
 a.href_colores{
 pointer-events: none;
@@ -214,11 +215,13 @@ cursor: default;
                     	$nombre=$p->producto_name;
                     	$conjunto=$p->producto_conjunto;
                     	$tipo=$p->producto_type_name;
+                    	$tipo_abbrev=$p->producto_type;
                     	$sku=$p->producto_sku;
                     	$description=$p->producto_description;
                     	$price_utilitarian=$p->producto_price_utilitarian;
                     	$price_public=$p->producto_price_public;
-                    	$stock=0;
+                    	$stock=$p->stock;
+                    	
                     	
                     	$color="";
                     	foreach($p->colores as $c)
@@ -254,12 +257,21 @@ cursor: default;
                     	$tr.='<td>'.$material.'</td>';
                     	$tr.='<td>'.$categoria.'</td>';
                     	                    	
-                    	if($stock>0)
+                    	if($stock>0 && $tipo_abbrev!='P')
                     	{
                     		$tr.='<td align="center"><a href="#" class="link_modal" data-toggle="modal" data-target="#modal_view" data-id="'.$producto_id.'"  id="open_modal">'.$stock.'</a></td>';
                     	}
+                    	else if($stock>0 && $tipo_abbrev=='P')
+                    	{
+                    		$tr.='<td align="center"><a href="#" class="modal_variaciones_stock" data-toggle="modal" data-target="#modal_variaciones_stock" data-id="'.$producto_id.'" data-json=\''.json_encode($p->variaciones).'\' data-root="'.$nombre.'" id="open_modal">'.$stock.'</a></div>';
+                    	}
                     	else
                     	{
+                    		if(!$stock)
+                    		{
+                    			$stock=0;
+                    		}
+                    		
                     		$tr.='<td align="center">'.$stock.'</td>';
                     	}
                     	$tr.='<td>';
@@ -377,13 +389,15 @@ cursor: default;
             </div>
             <div class="modal-body" style="padding-bottom: 0px !important; margin-bottom: -15px !important">
             <div class="ibox-content">
-	           	<table class="table table-striped">
+	           	<table class="footable table table-bordered dataTables-example toggle-square" data-filter="#filter" id="tabla_variaciones">
 	           	<thead>
 					<tr>
 						<td>SKU</td>
 						<td>Modelo</td>
 						<td>Color</td>
 						<td>Material</td>
+						<td>Stock</td>
+						<td data-hide="all" style="text-align:right;display: none;"></td>
 						<td></td>
 					</tr>
 				</thead>
@@ -400,9 +414,44 @@ cursor: default;
         </div>
     </div>
 </div>
+
+<div class="modal inmodal fade" id="modal_variaciones_stock" tabindex="-1" role="dialog"  aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header" style="padding: 15px">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Cerrar</span></button>
+                <h3 class="modal-title" id="title_variations_stock">Variaciones</h3>
+            </div>
+            <div class="modal-body" style="padding-bottom: 0px !important; margin-bottom: -15px !important">
+            <div class="ibox-content">
+	           	<table class="footable table table-bordered dataTables-example toggle-square" data-filter="#filter" id="tabla_variaciones_stock">
+	           	<thead>
+					<tr>
+						<td>SKU</td>
+						<td>Modelo</td>
+						<td>Color</td>
+						<td>Material</td>
+						<td>Stock</td>
+						<td data-hide="all" style="text-align:right;display: none;"></td>
+						<td></td>
+					</tr>
+				</thead>
+	           	<tbody id="products_variable_stock">
+	           	
+	           	</tbody>
+	           	</table>
+		   	</div>
+              
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger btn-xs" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
 </div>
 
-	
+
+	<script src="<?=$raizProy?>js/plugins/footable/footable.all.min.js"></script>
 	
     <script src="<?php echo $raizProy?>js/plugins/dataTables/datatables.min.js"></script>
     
@@ -412,6 +461,8 @@ cursor: default;
     <script>
         $(document).ready(function(){
 
+
+        	
         	var table=$('#tabla_productos').DataTable({
                 dom: '<"html5buttons"B>lTfgitp',
                 buttons: [
@@ -562,12 +613,110 @@ cursor: default;
 					tr+='<td>'+field.producto_name+'</td>';
 					tr+='<td>'+field.color_name+'</td>';
 					tr+='<td>'+field.material_name+'</td>';
+					tr+='<td style="text-align:center;">';
+					
+					tr+='<label>'+field.stock+'</label>';
+					
+					tr+='</td>';
+
+					
+					tr+='<td style="display: none;">';
+					var stock_sucursal="<b>Cantidad por Sucursal:</b><br>";
+					var bandera=false;
+					$.each(field.stock_sucursal, function(k,j)
+			        {
+						stock_sucursal+=j.sucursal_name+' <i class="fa fa-long-arrow-right"></i> '+j.stock;
+						bandera=true;	
+			        });
+
+			        if(!bandera)
+			        {
+			        	stock_sucursal='No existe inventario';
+			        }
+
+			        tr+=stock_sucursal;
+					tr+='</td>';
+					
 					tr+='<td>'+'<div class="infont col-md-1 col-sm-1"><a href="editar_producto.php?id='+producto_id+'"><i class="fa fa-pencil"></i></a></div><div class="infont col-md-1 col-sm-1"><a href="#" onClick="borrar_producto('+producto_id+');"><i class="fa fa-trash-o"></i></a></div>'+'</td>';
 					tr+='</tr>';
                 });
 
         		$("#products_variable").html(tr);
+        		
+        		setTimeout(function(){
+        		$('#tabla_variaciones').footable({
+        			"paging": {
+        				"enabled": true
+        			},
+        			"filtering": {
+        				"enabled": true
+        			},
+        			"sorting": {
+        				"enabled": true
+        			}
+        		});},500);
         	});
+
+
+        	$("a.modal_variaciones_stock").click(function()
+                	{	
+                    	var root=$(this).data("root");
+                		var json=$(this).data("json");
+        				
+                		$("#title_variations_stock").html(root);
+                		
+        				var tr="";
+                		$.each(json, function(i, field)
+                        {
+                            var producto_id=field.producto_id;
+        					tr+='<tr>';
+        					tr+='<td>'+field.producto_sku+'</td>';
+        					tr+='<td>'+field.producto_name+'</td>';
+        					tr+='<td>'+field.color_name+'</td>';
+        					tr+='<td>'+field.material_name+'</td>';
+        					tr+='<td style="text-align:center;">';
+        					
+        					tr+='<label>'+field.stock+'</label>';
+        					
+        					tr+='</td>';
+
+        					
+        					tr+='<td style="display: none;">';
+        					var stock_sucursal="<b>Cantidad por Sucursal:</b><br>";
+        					var bandera=false;
+        					$.each(field.stock_sucursal, function(k,j)
+        			        {
+        						stock_sucursal+=j.sucursal_name+' <i class="fa fa-long-arrow-right"></i> '+j.stock;
+        						bandera=true;	
+        			        });
+
+        			        if(!bandera)
+        			        {
+        			        	stock_sucursal='No existe inventario';
+        			        }
+
+        			        tr+=stock_sucursal;
+        					tr+='</td>';
+        					
+        					tr+='<td>'+'<div class="infont col-md-1 col-sm-1"><a href="editar_producto.php?id='+producto_id+'"><i class="fa fa-pencil"></i></a></div><div class="infont col-md-1 col-sm-1"><a href="#" onClick="borrar_producto('+producto_id+');"><i class="fa fa-trash-o"></i></a></div>'+'</td>';
+        					tr+='</tr>';
+                        });
+
+                		$("#products_variable_stock").html(tr);
+                		
+                		setTimeout(function(){
+                		$('#tabla_variaciones_stock').footable({
+                			"paging": {
+                				"enabled": true
+                			},
+                			"filtering": {
+                				"enabled": true
+                			},
+                			"sorting": {
+                				"enabled": true
+                			}
+                		});},500);
+                	});
             
         });
 

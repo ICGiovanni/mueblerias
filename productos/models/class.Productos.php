@@ -1,5 +1,6 @@
 <?php
 require_once($_SERVER["REDIRECT_PATH_CONFIG"].'models/connection/class.Connection.php');
+require_once($_SERVER["REDIRECT_PATH_CONFIG"].'inventarios/models/class.Inventarios.php');
 
 class Productos
 {
@@ -690,7 +691,7 @@ class Productos
 				limit 0,1),'".FINAL_URL."img/imagen-no.png') AS imagen,
 				producto_price_public,producto_description
 				FROM productos p
-				WHERE producto_type IN('U')
+				WHERE producto_type IN('U','V')
 				ORDER BY p.producto_name ASC";
 		
 		$statement=$this->connect->prepare($sql);
@@ -702,11 +703,19 @@ class Productos
 	
 	public function GetFeatureVariations($producto_id)
 	{
+		$inventarios=new Inventarios();
+		
 		$sql="SELECT p.producto_id,p.producto_name,p.producto_sku,
 				c.color_id,c.color_name,c.color_abrev,
 				m.material_id,m.material_name,m.material_abrev,
 				p.producto_price_public,p.producto_price_public_min,
-				p.producto_price_public_discount
+				p.producto_price_public_discount,
+				IF((SELECT SUM(cantidad)
+				FROM inventario_productos
+				WHERE producto_id=p.producto_id)!='',
+				(SELECT SUM(cantidad)
+				FROM inventario_productos
+				WHERE producto_id=p.producto_id),0) AS stock
 				FROM productos p
 				INNER JOIN colores c USING(color_id)
 				INNER JOIN materiales m USING(material_id)
@@ -715,6 +724,29 @@ class Productos
 		$statement=$this->connect->prepare($sql);
 		$statement->execute();
 		$result=$statement->fetchAll(PDO::FETCH_ASSOC);
+		
+		$result=$this->ChangeUTF8($result);
+		
+		foreach($result as $key=>$r)
+		{
+			$stock=$inventarios->GetStockbySucursal($r['producto_id']);
+			
+			$arrayStock=array();
+			foreach($stock as $k=>$s)
+			{
+				if($s['sucursal_name']!='')
+				$arrayStock=$s;
+			}
+			
+			if(count($arrayStock))
+			{
+				$result[$key]['stock_sucursal']=$stock;
+			}
+			else 
+			{
+				$result[$key]['stock_sucursal']=array();
+			}
+		}
 		
 		return $result;
 	}
@@ -775,7 +807,19 @@ class Productos
 				WHEN 'U' THEN 'ÚNICO'
 				WHEN 'V' THEN 'VARIANTE'
 				END AS producto_type_name,producto_type,
-				producto_conjunto		
+				producto_conjunto,
+				IF(producto_type='P',
+				(SELECT SUM(cantidad)
+				FROM inventario_productos
+				WHERE producto_id IN(SELECT producto_id
+				FROM productos
+				WHERE producto_parent=p.producto_id)),
+				IF((SELECT SUM(cantidad)
+				FROM inventario_productos
+				WHERE producto_id=p.producto_id)!='',
+				(SELECT SUM(cantidad)
+				FROM inventario_productos
+				WHERE producto_id=p.producto_id),0)) AS stock
 				FROM productos p
 				WHERE producto_type IN('U','P')
 				$where";
@@ -793,7 +837,7 @@ class Productos
 				$materiales=array();
 				$colores=array();
 				
-				$variation=$this->ChangeUTF8($this->GetFeatureVariations($r['producto_id']));
+				$variation=$this->GetFeatureVariations($r['producto_id']);
 				$result[$key]['variaciones']=$variation;
 				
 				foreach($variation as $v)
