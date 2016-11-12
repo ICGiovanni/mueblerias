@@ -37,7 +37,7 @@ while( list(,$dataPagoDetalle)=each($rowPagosDetalle) ){
 		$gastos_pagos_iva = 'N/A';
 	}
 	//$dataPagoDetalle["gastos_pagos_id"]
-	$rowsDataPagoDetalle.='<tr><td align="center">'.$_GET["gasto_id"].'.'.$folioInterno.'</td><td >'.$dataPagoDetalle["firstName"].' '.$dataPagoDetalle["lastName"].'</td><td align="right">$ '.number_format($dataPagoDetalle["gastos_pagos_monto"],2).'</td><td align="right">'.$gastos_pagos_monto_sin_iva.'</td><td align="right">'.$gastos_pagos_iva.'</td><td align="center">'.$es_fiscal.'</td><td>'.$dataPagoDetalle["gastos_pagos_forma_de_pago_desc"].'</td><td>'.$dataPagoDetalle["gastos_pagos_referencia"].'</td><td align="center">'.$dataPagoDetalle["gastos_pagos_fecha"].'</td><td align="right">$ '.number_format($restan_parcial,2).'</td></tr>';
+	$rowsDataPagoDetalle.='<tr><td align="center">'.$_GET["gasto_id"].'.'.$folioInterno.'</td><td >'.$dataPagoDetalle["firstName"].' '.$dataPagoDetalle["lastName"].'</td><td align="right">$ '.number_format($dataPagoDetalle["gastos_pagos_monto"],2).'</td><td align="right">'.$gastos_pagos_monto_sin_iva.'</td><td align="right">'.$gastos_pagos_iva.'</td><td align="center">'.$es_fiscal.'</td><td>'.$dataPagoDetalle["gastos_pagos_forma_de_pago_desc"].'</td><td>'.$dataPagoDetalle["gastos_pagos_referencia"].'</td><td align="center">'.$dataPagoDetalle["gastos_pagos_fecha"].'</td><td align="right">$ '.number_format($restan_parcial,2).'</td> <td align="center"><i class="fa fa-trash" onclick="borra_pago(\''.$dataPagoDetalle["gastos_pagos_id"].'\',\''.$_GET["gasto_id"].'\')"></i></td></tr>';
 	$restan_parcial+=$dataPagoDetalle["gastos_pagos_monto"];
 	$folioInterno--;
 }
@@ -125,6 +125,7 @@ while(list(,$dataGastoCategoria) = each($rowsGastosCategoria)){
 								<th>Referencia</th>
 								<th style="text-align:center">Fecha del pago</th>
 								<th style="text-align:right">Restan</th>
+								<th style="text-align:right">Borrar Pago</th>
 							</tr>
 							<?=$rowsDataPagoDetalle?>
 						</table>
@@ -235,6 +236,18 @@ function crea_pago(){
 			//$("#myModal").modal('hide');
 			//$("#boton_crea_registro").removeClass().addClass("btn btn-primary");
 			//$("#span_crea_registro").removeClass();
+		}		
+	});
+}
+
+function borra_pago(gastos_pagos_id,gasto_id){
+	
+	$.ajax({
+		type: "GET",
+		url: "../ajax/borra_pago.php",			
+		data: {gastos_pagos_id:gastos_pagos_id, gasto_id:gasto_id},
+		success: function(msg){
+			location.href = '../';			
 		}		
 	});
 }

@@ -2,7 +2,7 @@
 require_once $_SERVER['REDIRECT_PATH_CONFIG'].'config.php';
 require_once($_SERVER["REDIRECT_PATH_CONFIG"].'login/session.php');
 date_default_timezone_set ("America/Mexico_City");
-require_once $pathProy.'/header.php';
+require_once $pathProy.'/header2.php';
 require_once $pathProy.'/menu.php';
 require_once($_SERVER["REDIRECT_PATH_CONFIG"].'gastos/models/class.Gastos.php');
 require_once($_SERVER["REDIRECT_PATH_CONFIG"].'ingresos/models/class.Ingresos.php');
@@ -10,8 +10,6 @@ require_once($_SERVER["REDIRECT_PATH_CONFIG"].'models/general/class.General.php'
 $general = new General();
 
 /////
-
-
 // Obtenemos el numero de la semana
 if(isset($_GET["semana"])){
 	$semana = $_GET["semana"];
@@ -160,8 +158,9 @@ while(list(,$dataGasto) = each($rows)){
 		
 		$monto_dia_extra = 0;
 		if(isset($res_dia_extra[0])){
-			$ckeckbox_dia_extra = '<i class="fa fa-check-square-o"></i>';
-			$monto_dia_extra = ($dataGasto["gasto_monto"]/7);
+			$res_dia_extra = $res_dia_extra[0];
+			$ckeckbox_dia_extra = '<i class="fa fa-check-square-o"></i> $'.$res_dia_extra["gasto_monto"];
+			$monto_dia_extra = $res_dia_extra["gasto_monto"];			
 		}
 		
 		$res_dia_descuento = $objIngreso->huboDescuentoPenalizacion($dataGasto["login_id"],$primerDia,$ultimoDia, $dataGasto["gasto_id"]);
@@ -361,7 +360,7 @@ $(document).ready(function(){
 				"lengthMenu": "Display _MENU_ records per page",
 				"zeroRecords": "Nothing found - sorry",
 				"info": "Mostrando _MAX_ entradas",
-				"infoEmpty": "No records available",
+				"infoEmpty": '<button type="button" class="btn btn-warning btn-xs" onclick="genera_nomina();" > Generar nomina de esta semana </button>',
 				"infoFiltered": "(filtered from _MAX_ total records)"
 			},
 			buttons: [
@@ -491,6 +490,10 @@ function creaPagoSalario(gasto_id, login_id){
 	cierra_gasto = '1';
 	login_id_quien_registra = '<?=$_SESSION["login_session"]["login_id"]?>'; // de quien registra el pago
 	
+	termino_A = false;
+	termino_B = true;
+	termino_C = true;
+	
 	$.ajax({
 			type: "GET",
 			url: "../ajax/crea_pago.php", // pago del gasto salarial
@@ -509,10 +512,12 @@ function creaPagoSalario(gasto_id, login_id){
 			},
 			success: function(msg){
 				//location.href = './';
+				termino = true;
 			}		
 	});
 	
 	if($("#dia_extra_"+login_id).is(':checked')){
+		termino_B = false;		
 	//si esta checado dia extra se inserta el gasto y el pago automatico del gasto
 		gasto_no_documento = "dia extra salario folio "+gasto_id;
 		gasto_fecha_vencimiento = '<?=date("d/m/Y")?>';		
@@ -577,13 +582,15 @@ function creaPagoSalario(gasto_id, login_id){
 			},
 			success: function(msg){
 				//
+				termino_B = true;
 			}		
 		});
 	}
-	if($("#dia_descuento_"+login_id).is(':checked')){
+	if($("#dia_descuento_"+login_id).is(':checked')){		
 	//si esta checado el dia descuento se crea el registro del ingreso
 		//dia_descuento_monto = Number($("#salario_diario_"+login_id).html().replace(",",""));
-		//dia_descuento_penalizacion = Number($("#dia_descuento_penalizacion_"+login_id).val());		
+		//dia_descuento_penalizacion = Number($("#dia_descuento_penalizacion_"+login_id).val());
+		termino_C = false;
 		ingreso_monto = Number($("#dia_descuento_penalizacion_"+login_id).val());
 		ingreso_categoria_id = '2'; // Dia Descuento/Penalización
 		ingreso_descripcion = 'Dia Descuento/Penalización salario folio '+gasto_id;
@@ -599,13 +606,34 @@ function creaPagoSalario(gasto_id, login_id){
 				},
 				success: function(msg){
 					//
+					termino_C = true;
 				}		
 			});
 		}
 		
 	}
-	location.href = './';
+	
+	setTimeout(function(){
+		location.href = './';
+	}, 500);
+	
+	
 }
+
+function genera_nomina(){
+	$.ajax({
+			type: "GET",
+			url: "ajax/genera_nomina.php", // se crea el gasto del dia extra y se paga en automatico
+			data: {				
+				
+			},
+			success: function(msg){
+				//location.href = './';
+			}		
+		});
+	
+}
+
 
 </script>
 
