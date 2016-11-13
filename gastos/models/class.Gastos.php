@@ -106,6 +106,15 @@ class Gasto {
 	}
 	
 	public function deleteGasto($gasto_id){
+		//Primero se borran los pagos hechos al gasto
+		$sql = "DELETE FROM ".$this->name_table_gastos_pagos." 
+		WHERE gasto_id = :gasto_id LIMIT 1";
+		$statement=$this->connect->prepare($sql);
+		$statement->bindParam(':gasto_id', $gasto_id, PDO::PARAM_STR);
+		
+		$statement->execute();
+		
+		//Segundo se borra el gasto
 		$sql = "DELETE FROM ".$this->name_table_gastos." 
 		WHERE gasto_id = :gasto_id LIMIT 1";
 		

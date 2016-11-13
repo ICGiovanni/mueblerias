@@ -14,7 +14,7 @@ $html_rows = '';
 while(list(,$dataSucursal) = each($rows) ){
 	$boton_borrar = '';
 	
-	if($_SESSION["login_session"]["profile_id"] == "1"){ // profile_director
+	if($_SESSION["login_session"]["profile_id"] == "1" && $dataSucursal['sucursal_id']!="1"){ // profile_director
 		$boton_borrar = ' &nbsp;<a href="javascript:void(0)" data-toggle="modal" data-target="#myModal8" onclick="load_sucursal_d(\''.$dataSucursal['sucursal_id'].'\');"><i class="fa fa-trash" title="Borrar"></i></a>';
 	}
 	

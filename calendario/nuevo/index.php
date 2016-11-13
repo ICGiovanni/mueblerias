@@ -92,7 +92,7 @@ $objCalendario = new Calendario();
 							<tr>
 							
 								<td>Descripción:</td>
-								<td><input type="text" name="evento_desc" id="evento_desc" value="" size="40"></td>
+								<td><textarea  name="evento_desc" id="evento_desc" cols="35" rows="5" ></textarea></td>
 								
 								
 							</tr>

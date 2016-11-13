@@ -622,7 +622,7 @@ function creaPagoSalario(gasto_id, login_id){
 	
 	setTimeout(function(){
 		location.href = './?grupo=<?=$_GET["grupo"]?>';
-	}, 500);
+	}, 1000);
 	
 	
 }
