@@ -50,10 +50,36 @@ require_once $pathProy.'/menu.php';
                                 <fieldset>
                                     <!-- <h2>Account Information</h2> -->
                                     <div class="row">
+										<div class="col-lg-4">
+											
+											<div class="form-group" style='height: 100px'>   
+												<label>Opciones de compra</label><br />
+												<input type="checkbox" name="envio" id="envio" /> Envío <br>
+												<input type="checkbox" name="factura" id="factura" />Factura
+											</div> 
+											
+											<div class="form-group">   
+												<label>Agregar Cliente</label>
+												<table class="table">
+													<tr>
+														<td><input id="busqueda_cliente" name="busqueda_cliente" type="text" class="form-control"> </td>
+														<td></td>
+													</tr>
+												</table>                                                 
+												<table class="table">
+													<tr>
+														<td><input id="busqueda_cliente" name="busqueda_cliente" type="text" class="form-control"> </td>
+														<td></td>
+													</tr>
+												</table>
+                                            </div>
+										</div>
+									
                                         <div class="col-lg-4">
                                             
                                             <div class="form-group">
-                                                <label>Métodos de pago elegidos</label>
+                                                <label>Método de Pago </label>
+												<div style="float: right; margin-right:10px;"> <button type="button" class="btn btn-info btn-xs" > <b>+</b> </button> </div>
                                                 <table class="table">
 													<tr>
 														<td>
@@ -66,43 +92,13 @@ require_once $pathProy.'/menu.php';
 															<input type="text" name="metodo_01" class="form-control " placeholder="$" />
 														</td>
 													</tr>
-													<tr>
-														<td>
-															<select data-placeholder="Selecciona un material" class="chosen-select" id="sel_metodo_pago_02" style="width:100px;"> 
-																<option>efectivo</option>
-																<option>tarjeta</option>
-															</select>
-														</td>
-														<td>
-															<input type="text" name="metodo_01" class="form-control " placeholder="$" />
-														</td>
-													</tr>
-													<tr>
-														<td>
-															<select data-placeholder="Selecciona un material" class="chosen-select" id="sel_metodo_pago_03" style="width:100px;"> 
-																<option>efectivo</option>
-																<option>tarjeta</option>
-															</select>
-														</td>
-														<td>
-															<input type="text" name="metodo_01" class="form-control " placeholder="$" />
-														</td>
-													</tr>
+													
 												</table>
                                             </div>
                                         </div>
-										<div class="col-lg-4">
+										<div class="col-lg-4">                                            
                                             <div class="form-group">
-                                                &nbsp;<br>
-                                            </div>
-                                            <div class="form-group">
-											
-											
-											<label> 
-													<button type="button" class="btn btn-warning btn-xs" style="" onclick="location.href = 'nuevo/';" >
-														+ Agregar Método de Pago
-													</button> <br><br>
-												</label>
+											<label> Totales </label>
 											
                                                 <table class="table table-striped table-bordered">
 													<tr>
@@ -138,76 +134,17 @@ require_once $pathProy.'/menu.php';
 														</td>
 													</tr>
 												</table>
-                                            </div>
-                                            
-                                        </div>
-                                        <div class="col-lg-4">
-                                            <div class="text-center">
-                                                <div style="margin-top: 20px">
-                                                    <i class="fa fa-sign-in" style="font-size: 180px;color: #e5e5e5 "></i>
-                                                </div>
+												
+												
                                             </div>
                                         </div>
+                                        
                                     </div>
 
                                 </fieldset>
 								<!-- FINALIZA METODO DE PAGO -->
 								
-                                <h1>Cliente</h1>
-								<!-- INICIA SELECCION CLIENTE -->
-                                <fieldset>
-                                    <!-- <h2></h2> -->
-                                    <div class="row">
-                                        <div class="col-lg-6">
-                                            <div class="form-group">   
-												<label>Buscar Cliente</label>
-												<table class="table">
-													<tr>
-														<td><input id="busqueda_cliente" name="busqueda_cliente" type="text" class="form-control"> </td>
-														<td><i class="fa fa-search" style="font-size: 20px;"></i></td>
-													</tr>
-												</table>
-                                                 
-                                            </div>
-                                        </div>
-										
-										<div class="col-lg-2">
-                                            <div class="form-group">   
-												<label> &nbsp; </label>
-												<table class="table">
-													<tr>
-														<td> 
-															<button type="button" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#myModal2" >
-															+ Nuevo Cliente
-															</button> 
-														</td>
-													</tr>
-												</table>
-                                                 
-                                            </div>
-											
-                                        </div>
-										
-										<div class="col-lg-4">
-                                            <div class="text-center">
-                                                <div style="">
-                                                    <i class="fa fa-sign-in" style="font-size: 100px;color: #e5e5e5 "></i>
-                                                </div>
-                                            </div>
-                                        </div>
-										
-										<div class="col-lg-8">
-											<label>
-												Luis Mario Rodriguez
-											</label> <br>
-											Calle Luis Barrera 2358, Fraccionamiento Ojo de Pato<br>
-											Cuautitlan Izcalli, Estado de México, C.P. 58975<br><br>
-												<i class="fa fa-check-circle-o" style="font-size: 20px; color: #1AB394 "></i>&nbsp;&nbsp; CLIENTE VINCULADO
-										</div>
-										
-                                    </div>
-                                </fieldset>
-								<!-- FINALIZA SELECCION CLIENTE -->
+                                
 								
                                 <h1>Envío</h1>
 								<!-- INICIA SELECCION ENVIO -->
@@ -216,7 +153,7 @@ require_once $pathProy.'/menu.php';
 									<div class="form-group">
 										
 										<div class="col-lg-4">
-										<div align="left"><input type="checkbox" name="sin_envio" name="sin_envio" /> <b style="color:red;">SIN ENVIO </b></div>
+										<div align="left"></div>
 											<table class="table">
 												<tr>
 													<td><label>Calle: </label></td>
@@ -308,7 +245,7 @@ require_once $pathProy.'/menu.php';
                                 <fieldset>
 								<div class="row">
 									<div class="col-lg-4">
-										<div align="left"><input type="checkbox" name="sin_envio" name="sin_envio" /> <b style="color:red;">SIN FACTURA </b></div>
+										<div align="left"></div>
 										
 										<table class="table">
 										<tr>

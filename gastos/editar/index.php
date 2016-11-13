@@ -90,6 +90,7 @@ while(list(,$dataLogin) = each($rowsLogin)){
 
 /* INICIA SECUENCIA PARA RECORDATORIOS */
 $rowRecordatorio = $objCalendario->existRecordatorio($_GET["gasto_id"]);
+$rowEvento["evento_recordatorio_activo"] = "0";
 if(isset($rowRecordatorio[0])){
 	$rowRecordatorio = $rowRecordatorio[0];
 	$rowEvento = $objCalendario->getEvento($rowRecordatorio["evento_id"]);

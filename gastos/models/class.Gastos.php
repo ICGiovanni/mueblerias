@@ -500,7 +500,7 @@ class Gasto {
 	
 	public function creaNomina(){
 		
-		$sql = "SELECT login_id, salary FROM inv_login";
+		$sql = "SELECT login_id, salary, firstName, lastName FROM inv_login";
 		
 		$statement = $this->connect->prepare($sql);
 		$statement->execute();
@@ -539,12 +539,12 @@ class Gasto {
 			
 			$dataResult["gasto_no_documento"] = 'Nomina semana ';
 			$dataResult["gasto_fecha_recordatorio_activo"] = '0';
-			$dataResult["gasto_concepto"] = "Nomina Juanito, semana ";
+			$dataResult["gasto_concepto"] = "Nomina ".$dataResult["firstName"]." ".$dataResult["lastName"].", semana ";
 			$dataResult["gasto_categoria_id"] = "13";
 			$dataResult["gasto_status_id"] = "1";
 			$dataResult["proveedor_id"] = "0";
 			$dataResult["sucursal_id"] = "1";
-			$dataResult["gasto_beneficiario"] = "Juanito";
+			$dataResult["gasto_beneficiario"] = $dataResult["firstName"]." ".$dataResult["lastName"];
 			
 			$statement=$this->connect->prepare($sql);
 		

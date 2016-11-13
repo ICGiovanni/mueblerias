@@ -105,6 +105,7 @@ while(list(,$dataGasto) = each($rows)){
 			break;
 	}
 	$boton_borrar = '';
+	//echo $_SESSION["login_session"]["profile_id"].".";
 	if($_SESSION["login_session"]["profile_id"] == "1"){ // profile_director
 		$boton_borrar = ' &nbsp;<a href="borrar/?gasto_id='.$dataGasto["gasto_id"].'"><i class="fa fa-trash" title="Borrar"></i></a>';
 	}

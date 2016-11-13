@@ -189,7 +189,7 @@ while(list(,$dataGasto) = each($rows)){
 				$monto_este_mes = $res_pago_prestamo[0]["ingreso_monto"];
 			}
 		}
-		
+		//echo $dataGasto["gasto_monto"]." + ".$comision_activa." - ".$monto_este_mes." - ".$monto_dia_descuento_penalizacion." +  ".$monto_dia_extra;
 		$totalPagarEsteMes = $dataGasto["gasto_monto"] + $comision_activa - $monto_este_mes - $monto_dia_descuento_penalizacion +  $monto_dia_extra;
 	}	
 	
@@ -243,7 +243,7 @@ while(list(,$dataGasto) = each($rows)){
 </style>
 <div class="row wrapper border-bottom white-bg page-heading">
 	<div class="col-sm-8">
-		<h2>Nomina Semana <?=$semana?> - <i>Del <?="Sab"?> <?=$general->getOnlyDate($primerDia)?> al <?="Vie"?> <?=$general->getOnlyDate($ultimoDia)?></i></h2>
+		<h2>Nomina Semana <?=$semana?> - <span style="font-size:14px">Del <?="Sab"?> <b><?=$general->getOnlyDate($primerDia)?></b> al <?="Vie"?> <b><?=$general->getOnlyDate($ultimoDia)?></b></span></h2> 
 		<ol class="breadcrumb">
 			<li>
 				<a href="">Gastos</a>
@@ -400,8 +400,11 @@ function updateRestanTotal(login_id){
 		//alert(ingreso_monto)
 		ingreso_monto = Number( $('#aCuentaEsteMes_'+login_id).val() );
 		gasto_id = $('#aCuentaEsteMes_'+login_id).attr("data-gasto-id-prestamo"); //gasto_id del prestamo, no del salario
-		restan_val = Number($('#span_restan_'+gasto_id).html());
+		//alert( $('#span_restan_'+gasto_id).html().replace(",","") );
+		restan_val = Number( $('#span_restan_'+gasto_id).html().replace(",","") );
 		restarian_val = restan_val - ingreso_monto;
+		//alert(restan_val);
+		//alert(ingreso_monto);
 		$('#span_restarian_'+gasto_id).html(restarian_val.toFixed(2));
 	}
 	
@@ -618,7 +621,7 @@ function creaPagoSalario(gasto_id, login_id){
 	}
 	
 	setTimeout(function(){
-		location.href = './';
+		location.href = './?grupo=<?=$_GET["grupo"]?>';
 	}, 500);
 	
 	
@@ -629,10 +632,10 @@ function genera_nomina(){
 			type: "GET",
 			url: "ajax/genera_nomina.php", // se crea el gasto del dia extra y se paga en automatico
 			data: {				
-				
+				semana:<?=$semana?>
 			},
 			success: function(msg){
-				location.href = './';
+				location.href = './?grupo=<?=$_GET["grupo"]?>';
 			}		
 		});
 	
