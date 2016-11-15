@@ -45,7 +45,7 @@ while(list(,$dataLogin) = each($rowsLogin)){
 <!-- Data picker -->
 <link href="<?=$raizProy?>css/plugins/datapicker/datepicker3.css" rel="stylesheet">
 <link href="<?=$raizProy?>css/plugins/clockpicker/clockpicker.css" rel="stylesheet">
-
+<link href="<?=$raizProy?>css/plugins/chosen/chosen.css" rel="stylesheet">
 
 <style>
 .glyphicon-refresh-animate {
@@ -65,6 +65,7 @@ while(list(,$dataLogin) = each($rowsLogin)){
 .table-form td, th{
 	padding: 5px;
 }
+
 </style>
 <div class="row wrapper border-bottom white-bg page-heading">
 	<div class="col-sm-4">
@@ -91,10 +92,8 @@ while(list(,$dataLogin) = each($rowsLogin)){
                 <div class="ibox float-e-margins">
                    
                  <!--   <div class="ibox-content"> -->
-					
-					
-					
-						<div class="table-responsive">
+
+						<div>
 						
 						<table class="table-form">
 							<tr>
@@ -146,7 +145,7 @@ while(list(,$dataLogin) = each($rowsLogin)){
 								
 								<td colspan="2" align="right">Categoria:</td>
 								<td>
-									<select name="gasto_categoria_id" id="gasto_categoria_id">
+									<select name="gasto_categoria_id" id="gasto_categoria_id" class="chosen-select" >
 										<?=$options_gasto_categoria_id?>
 									</select>
 								</td>
@@ -206,9 +205,7 @@ while(list(,$dataLogin) = each($rowsLogin)){
         </div>
 		
     <!-- Mainly scripts -->
-	
-	
-    <script src="<?=$raizProy?>js/jquery-2.1.1.js"></script>
+	<script src="<?=$raizProy?>js/jquery-2.1.1.js"></script>
     <script src="<?=$raizProy?>js/bootstrap.min.js"></script>
     <script src="<?=$raizProy?>js/plugins/metisMenu/jquery.metisMenu.js"></script>
     <script src="<?=$raizProy?>js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
@@ -226,37 +223,14 @@ while(list(,$dataLogin) = each($rowsLogin)){
     <script src="<?=$raizProy?>js/plugins/pace/pace.min.js"></script>
 
     <!-- Page-Level Scripts -->
-
+	<script src="<?=$raizProy?>js/plugins/chosen/chosen.jquery.js"></script>
 <script>
 
 $(document).ready(function(){
-	/*
-	$('.dataTables-example').DataTable({
-				searching: false,
-				ordering:  false,
-				paging: false,
-                dom: '<"html5buttons"B>lTfgitp',
-                buttons: [
-                    { extend: 'copy'},
-                    {extend: 'csv'},
-                    {extend: 'excel', title: 'ExampleFile'},
-                    {extend: 'pdf', title: 'ExampleFile'},
-                    {extend: 'print',
-                     customize: function (win){
-                            $(win.document.body).addClass('white-bg');
-                            $(win.document.body).css('font-size', '10px');
-
-                            $(win.document.body).find('table')
-                                    .addClass('compact')
-                                    .css('font-size', 'inherit');
-                    }
-                    }
-                ]
-
-            });
-	*/
+	
      $.fn.datepicker.defaults.language = 'es';
 	 $('.clockpicker').clockpicker();
+	 $('#gasto_categoria_id').chosen();
 });
 
 

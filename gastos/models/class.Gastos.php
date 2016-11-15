@@ -507,9 +507,9 @@ class Gasto {
 		return $result;
 	}
 	
-	public function creaNomina(){
+	public function creaNomina($params){
 		
-		$sql = "SELECT login_id, salary, firstName, lastName FROM inv_login";
+		$sql = "SELECT login_id, salary, salary_periodicity, firstName, lastName FROM inv_login";
 		
 		$statement = $this->connect->prepare($sql);
 		$statement->execute();
@@ -546,32 +546,36 @@ class Gasto {
 		
 		while(list(,$dataResult) = each($result) ){
 			
-			$dataResult["gasto_no_documento"] = 'Nomina semana ';
-			$dataResult["gasto_fecha_recordatorio_activo"] = '0';
-			$dataResult["gasto_concepto"] = "Nomina ".$dataResult["firstName"]." ".$dataResult["lastName"].", semana ";
-			$dataResult["gasto_categoria_id"] = "13";
-			$dataResult["gasto_status_id"] = "1";
-			$dataResult["proveedor_id"] = "0";
-			$dataResult["sucursal_id"] = "1";
-			$dataResult["gasto_beneficiario"] = $dataResult["firstName"]." ".$dataResult["lastName"];
+			if( ($params["toca_semanal"] && $dataResult["salary_periodicity"]==1) || ($params["toca_quincenal"] && $dataResult["salary_periodicity"]==2) || ($params["toca_mensual"] && $dataResult["salary_periodicity"]==3) ){
 			
-			$statement=$this->connect->prepare($sql);
-		
-			$statement->bindParam(':gasto_no_documento', $dataResult["gasto_no_documento"], PDO::PARAM_STR);
-			$statement->bindParam(':gasto_fecha_vencimiento', date("Y-m-d"), PDO::PARAM_STR);
-			$statement->bindParam(':gasto_fecha_recordatorio_activo', $dataResult["gasto_fecha_recordatorio_activo"], PDO::PARAM_STR);
-			$statement->bindParam(':gasto_fecha_recordatorio', date("Y-m-d"), PDO::PARAM_STR);
-			$statement->bindParam(':gasto_concepto', $dataResult["gasto_concepto"], PDO::PARAM_STR);
-			$statement->bindParam(':gasto_descripcion', $dataResult["gasto_concepto"], PDO::PARAM_STR);
-			$statement->bindParam(':gasto_monto', $dataResult["salary"], PDO::PARAM_STR);
-			$statement->bindParam(':gasto_categoria_id', $dataResult["gasto_categoria_id"], PDO::PARAM_STR);
-			$statement->bindParam(':gasto_status_id', $dataResult["gasto_status_id"], PDO::PARAM_STR);
-			$statement->bindParam(':proveedor_id', $dataResult["proveedor_id"], PDO::PARAM_STR);
-			$statement->bindParam(':login_id', $dataResult["login_id"], PDO::PARAM_STR);
-			$statement->bindParam(':sucursal_id', $dataResult["sucursal_id"], PDO::PARAM_STR);
-			$statement->bindParam(':gasto_beneficiario', $dataResult["gasto_beneficiario"], PDO::PARAM_STR);
+				$dataResult["gasto_no_documento"] = 'Nomina semana '.$params["semana"];
+				$dataResult["gasto_fecha_recordatorio_activo"] = '0';
+				$dataResult["gasto_concepto"] = "Nomina ".$dataResult["firstName"]." ".$dataResult["lastName"].", semana ".$params["semana"];
+				$dataResult["gasto_categoria_id"] = "13";
+				$dataResult["gasto_status_id"] = "1";
+				$dataResult["proveedor_id"] = "0";
+				$dataResult["sucursal_id"] = "1";
+				$dataResult["gasto_beneficiario"] = $dataResult["firstName"]." ".$dataResult["lastName"];
+				
+				$statement=$this->connect->prepare($sql);
 			
-			$statement->execute();
+				$statement->bindParam(':gasto_no_documento', $dataResult["gasto_no_documento"], PDO::PARAM_STR);
+				$statement->bindParam(':gasto_fecha_vencimiento', date("Y-m-d"), PDO::PARAM_STR);
+				$statement->bindParam(':gasto_fecha_recordatorio_activo', $dataResult["gasto_fecha_recordatorio_activo"], PDO::PARAM_STR);
+				$statement->bindParam(':gasto_fecha_recordatorio', date("Y-m-d"), PDO::PARAM_STR);
+				$statement->bindParam(':gasto_concepto', $dataResult["gasto_concepto"], PDO::PARAM_STR);
+				$statement->bindParam(':gasto_descripcion', $dataResult["gasto_concepto"], PDO::PARAM_STR);
+				$statement->bindParam(':gasto_monto', $dataResult["salary"], PDO::PARAM_STR);
+				$statement->bindParam(':gasto_categoria_id', $dataResult["gasto_categoria_id"], PDO::PARAM_STR);
+				$statement->bindParam(':gasto_status_id', $dataResult["gasto_status_id"], PDO::PARAM_STR);
+				$statement->bindParam(':proveedor_id', $dataResult["proveedor_id"], PDO::PARAM_STR);
+				$statement->bindParam(':login_id', $dataResult["login_id"], PDO::PARAM_STR);
+				$statement->bindParam(':sucursal_id', $dataResult["sucursal_id"], PDO::PARAM_STR);
+				$statement->bindParam(':gasto_beneficiario', $dataResult["gasto_beneficiario"], PDO::PARAM_STR);
+				
+				$statement->execute();
+			
+			}
 			
 		}
 		

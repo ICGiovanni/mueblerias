@@ -53,13 +53,38 @@ $array_dias_a_recorrer_2 = array("0"=>"5","1"=>"4","2"=>"3","3"=>"2","4"=>"1","5
 // A la fecha recibida, le restamos el dia de la semana y obtendremos el lunes
 //if($diaSemana)
 $primerDia=date("Y/m/d",mktime(0,0,0,$month,$day-$array_dias_a_recorrer[$diaSemana],$year));
+$primerDia_dia=date("d",mktime(0,0,0,$month,$day-$array_dias_a_recorrer[$diaSemana],$year));
+$primerDia_mes=date("m",mktime(0,0,0,$month,$day-$array_dias_a_recorrer[$diaSemana],$year));
 
 // A la fecha recibida, le sumamos el dia de la semana menos siete y obtendremos el domingo
 $ultimoDia=date("Y/m/d",mktime(0,0,0,$month,$day+$array_dias_a_recorrer_2[$diaSemana],$year));
+$ultimoDia_dia=date("d",mktime(0,0,0,$month,$day+$array_dias_a_recorrer_2[$diaSemana],$year));
+$ultimoDia_mes=date("m",mktime(0,0,0,$month,$day+$array_dias_a_recorrer_2[$diaSemana],$year));
+
+$toca_semanal = 1;
+$toca_quincenal = 0;
+$toca_mensual = 0;
 
 //echo "<br>Semana: ".$semana." - Año: ".$year;
 //echo "<br>Primer día ".$primerDia;
 //echo "<br>Ultimo día ".$ultimoDia;
+
+
+if($primerDia_dia <= 15 && $ultimoDia_dia >= 15){
+	$toca_quincenal = 1;
+}
+if( $ultimoDia_dia >= 30 || ($ultimoDia_mes == "02" && $ultimoDia_dia >= 28) ){
+	$toca_quincenal = 1;
+	$toca_mensual	= 1;
+}
+if($primerDia_mes != $ultimoDia_mes){
+	$toca_quincenal = 1;
+	$toca_mensual	= 1;
+}
+//echo "<br> toca semanal: ".$toca_semanal;
+//echo "<br> toca quincena: ".$toca_quincenal;
+//echo "<br> toca mensual: ".$toca_mensual;
+
 /////
 
 $objGasto = new Gasto();
@@ -255,16 +280,16 @@ while(list(,$dataGasto) = each($rows)){
 	</div>
 	<div class="col-sm-4">
 		<div class="title-action">
-			<button type="button" class="btn btn-primary btn-xs"  onclick="location.href = './?semana=<?=($semana-1)?>';" >
+			<button type="button" class="btn btn-primary btn-xs"  onclick="location.href = './?semana=<?=($semana-1)?>&grupo=<?=$_GET["grupo"]?>';" >
 			<i class="fa fa-arrow-left"></i> semana atras 
 			</button>
 			<?php
 			if($semana < date("W")){
 			?>
-			<button type="button" class="btn btn-primary btn-xs"  onclick="location.href = './?semana=<?=($semana+1)?>';" >
+			<button type="button" class="btn btn-primary btn-xs"  onclick="location.href = './?semana=<?=($semana+1)?>&grupo=<?=$_GET["grupo"]?>';" >
 			semana adelante <i class="fa fa-arrow-right"></i>
 			</button>
-			<button type="button" class="btn btn-primary btn-xs"  onclick="location.href = './';" >
+			<button type="button" class="btn btn-primary btn-xs"  onclick="location.href = './?grupo=<?=$_GET["grupo"]?>';" >
 			semana actual
 			</button>
 			<?php
@@ -631,8 +656,9 @@ function genera_nomina(){
 	$.ajax({
 			type: "GET",
 			url: "ajax/genera_nomina.php", // se crea el gasto del dia extra y se paga en automatico
+
 			data: {				
-				semana:<?=$semana?>
+				semana:<?=$semana?>, toca_semanal:<?=$toca_semanal?>, toca_quincenal:<?=$toca_quincenal?>, toca_mensual:<?=$toca_mensual?>
 			},
 			success: function(msg){
 				location.href = './?grupo=<?=$_GET["grupo"]?>';
