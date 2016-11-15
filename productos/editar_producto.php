@@ -226,7 +226,7 @@ if($datos[0]["producto_type"]=='V')
             
             <div class="form-group">
             <label class="col-sm-2 control-label">Pecio Utilitario</label>
-			<div class="col-sm-2 "><input type="text" class="form-control" id="precioU" name="precioU" onkeypress="return validateNumber(event)" value="<?php echo $datos[0]['producto_price_utilitarian'];?>"></div>
+			<div class="col-sm-2 "><input type="text" class="form-control" id="precioU" name="precioU" onkeypress="return validateNumber(event)" value="<?php echo $datos[0]['producto_price_purchase'];?>"></div>
             </div>
             
 			<?php 
@@ -271,7 +271,7 @@ if($datos[0]["producto_type"]=='V')
             
             <div class="form-group">
             <label class="col-sm-2 control-label">Pecio Utilitario con Descuento</label>
-			<div class="col-sm-2 "><input type="text" class="form-control" id="precioUD" name="precioUD" value="<?php echo $datos[0]['producto_price_utilitarian_discount'];?>" readonly="readonly"></div>
+			<div class="col-sm-2 "><input type="text" class="form-control" id="precioUD" name="precioUD" value="<?php echo $datos[0]['producto_price_purchase_discount'];?>" readonly="readonly"></div>
             </div>
             
             <div class="form-group">

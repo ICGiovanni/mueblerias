@@ -320,7 +320,7 @@ class Productos
 		}
 		
 		$sql="SELECT p.producto_id,p.producto_name,p.producto_sku,
-				p.producto_description,p.producto_price_utilitarian,p.producto_price_public,p.proveedor_id,
+				p.producto_description,p.producto_price_purchase,p.producto_price_public,p.proveedor_id,
 				IF(p.producto_type='U','&Uacute;nico','Conjunto') AS producto_type,c.color_name,m.material_name,
 				IF((SELECT SUM(cantidad) AS stock
 				FROM inventario_productos ip
@@ -416,9 +416,9 @@ class Productos
 		}
 		
 		$sql="SELECT p.producto_id,p.producto_name,p.producto_sku,
-				p.producto_description,p.producto_price_utilitarian,p.producto_price_public,
+				p.producto_description,p.producto_price_purchase,p.producto_price_public,
 				p.proveedor_id,IF(p.producto_conjunto='0','&Uacute;nico','Conjunto') AS producto_conjunto,
-				p.producto_type AS type,p.producto_version,p.producto_medida,p.color_id,p.material_id,producto_price_utilitarian_discount,
+				p.producto_type AS type,p.producto_version,p.producto_medida,p.color_id,p.material_id,producto_price_purchase_discount,
 				producto_price_public_discount,producto_price_public_min,
 				IF((SELECT SUM(cantidad) AS stock
 				FROM inventario_productos ip
@@ -599,7 +599,7 @@ class Productos
 		
 		$this->DeleteProductGroup($params['id_producto']);
 		
-		$sql="UPDATE productos SET producto_name=:nombre,producto_sku=:sku,producto_description=:descripcion,producto_price_utilitarian=:precio_utilitario,producto_price_public=:precio_publico,proveedor_id=:proveedor,color_id=:color,material_id=:material,producto_version=:version,	producto_medida=:medida,producto_price_utilitarian_discount=:precio_utilitario_descuento,producto_price_public_min=:precio_publico_min,producto_price_public_discount=:producto_price_public_discount,producto_conjunto=:conjunto,producto_description_corta=:descripcionC
+		$sql="UPDATE productos SET producto_name=:nombre,producto_sku=:sku,producto_description=:descripcion,producto_price_purchase=:precio_utilitario,producto_price_public=:precio_publico,proveedor_id=:proveedor,color_id=:color,material_id=:material,producto_version=:version,	producto_medida=:medida,producto_price_purchase_discount=:precio_utilitario_descuento,producto_price_public_min=:precio_publico_min,producto_price_public_discount=:producto_price_public_discount,producto_conjunto=:conjunto,producto_description_corta=:descripcionC
 				WHERE producto_id=:producto";
 		
 		
@@ -803,7 +803,7 @@ class Productos
 				WHERE ip.producto_id=p.producto_id
 				ORDER BY imagen_id ASC
 				LIMIT 0,1),'".FINAL_URL."img/imagen-no.png') AS imagen,
-				producto_price_public,producto_description,producto_price_utilitarian,
+				producto_price_public,producto_description,producto_price_purchase,
 				CASE producto_type
 				WHEN 'P' THEN 'PRINCIPAL'
 				WHEN 'U' THEN 'ÚNICO'

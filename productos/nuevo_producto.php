@@ -47,8 +47,8 @@
 			<div class="col-sm-6" >
 				<select data-placeholder="Selecciona el tipo de Producto" class="chosen-select" style="width:300px;" tabindex="4" id="tipo_producto" name="tipo_producto">
 	            <option value="" data-abrev=""></option>
-	            <option value="P" data-abrev="" selected>Principal</option>
-	            <option value="V" data-abrev="">Variación</option>
+	            <option value="P" data-abrev="">Principal</option>
+	            <option value="V" data-abrev="" selected>Variación</option>
 	            <option value="U" data-abrev="">Único</option>	            
 				</select>
 			</div>
@@ -193,13 +193,30 @@
             
             	
             <div class="form-group">
-            <label class="col-sm-2 control-label">Pecio Utilitario</label>
-			<div class="col-sm-2 "><input type="text" class="form-control" id="precioU" name="precioU" onkeypress="return validateNumber(event)"></div>
+            <label class="col-sm-2 control-label">Pecio de Compra</label>
+			<div class="col-sm-2 ">
+			<div class="input-group m-b">
+			<span class="input-group-addon">$</span>
+			<input type="text" class="form-control" id="precioU" name="precioU" onkeypress="return validateNumber(event)">
+			</div>
+			</div>
+			<div class="col-sm-2 ">
+			<div class="input-group m-b">
+			<span class="input-group-addon">-$</span>
+			<input type="text" class="form-control" id="precioUD" name="precioUD" readonly="readonly">
+			
+			</div>
+			</div>
             </div>
             
             <div class="form-group">
            	<label class="col-sm-2 control-label">Descuento</label>
-           	<div class="col-sm-2 "><input class="form-control discount" id="descuento" name="descuento[]" value="" type="text" onkeypress="return validateNumber(event)"></div>
+           	<div class="col-sm-2 ">
+           	<div class="input-group m-b">
+           	<input class="form-control discount" id="descuento" name="descuento[]" value="" type="text" onkeypress="return validateNumber(event)">
+           	<span class="input-group-addon">%</span>
+           	</div>
+           	</div>
 			<div class="col-md-1">                            
                             <button class="btn btn-primary btn-xs" id="agregarDescuento" value="" placeholder="Descuento" type="button"><i class="fa fa-plus"></i></button>
                         </div>    
@@ -207,32 +224,63 @@
             
             <div id="newDiscount"></div>
             
-            <div class="form-group">
-            <label class="col-sm-2 control-label">Pecio Utilitario con Descuento</label>
-			<div class="col-sm-2 "><input type="text" class="form-control" id="precioUD" name="precioUD" readonly="readonly"></div>
-            </div>
             
             <div class="form-group">
             <label class="col-sm-2 control-label">Precio P&uacute;blico</label>
-			<div class="col-sm-2 "><input type="text" class="form-control" id="precioP" name="precioP" onkeypress="return validateCantidad(event)"></div>
-            </div>
+			<div class="col-sm-2">
+			<div class="input-group m-b">
+			<input type="text" class="form-control" id="precioPUP" name="precioPUP" onkeypress="return validateCantidad(event)" value="65">
+			<span class="input-group-addon">%</span>
+			</div>			
+			</div>
+			
+			<div class="col-sm-2 ">
+			<div class="input-group m-b">
+			<span class="input-group-addon">$</span>
+			<input type="text" class="form-control" id="precioP" name="precioP" onkeypress="return validateCantidad(event)" readonly="readonly">
+			</div>
+			</div>
+			
+			 <div class="col-sm-2 ">
+			 <div class="input-group m-b">
+			 <span class="input-group-addon">-$</span>
+			 <input type="text" class="form-control" id="precioPD" name="precioPD" onkeypress="return validateCantidad(event)" readonly="readonly">
+			 </div>
+			</div>
+            </div>            
+            
             
             <div class="form-group">
            	<label class="col-sm-2 control-label">Descuento</label>
-           	<div class="col-sm-2 "><input class="form-control discountP" id="descuentoP" name="descuentoP[]" value="" type="text" onkeypress="return validateNumber(event)"></div>
+           	<div class="col-sm-2 ">
+           	 <div class="input-group m-b">
+           	<input class="form-control discountP" id="descuentoP" name="descuentoP[]" value="" type="text" onkeypress="return validateNumber(event)">
+           	<span class="input-group-addon">%</span>
+           	</div>
+           	</div>
 			<div class="col-md-1">                            
                             <button class="btn btn-primary btn-xs" id="agregarDescuentoP" value="" placeholder="Descuento" type="button"><i class="fa fa-plus"></i></button>
                         </div>    
             </div>
             <div id="newDiscountP"></div>
-            <div class="form-group">
-            <label class="col-sm-2 control-label">Precio P&uacute;blico con Descuento</label>
-			<div class="col-sm-2 "><input type="text" class="form-control" id="precioPD" name="precioPD" onkeypress="return validateCantidad(event)" readonly="readonly"></div>
-            </div>
+            
             
             <div class="form-group">
             <label class="col-sm-2 control-label">Precio P&uacute;blico Minimo</label>
-			<div class="col-sm-2 "><input type="text" class="form-control" id="precioPM" name="precioPM" onkeypress="return validateCantidad(event)"></div>
+            
+            <div class="col-sm-2">
+			<div class="input-group m-b">
+			<input type="text" class="form-control" id="precioPMM" name="precioPMM" onkeypress="return validateCantidad(event)" value="25">
+			<span class="input-group-addon">%</span>
+			</div>			
+			</div>
+            
+			<div class="col-sm-2 ">
+			<div class="input-group m-b">
+			<span class="input-group-addon">$</span>
+			<input type="text" class="form-control" id="precioPM" name="precioPM" onkeypress="return validateCantidad(event)" readonly="readonly">
+			</div>
+			</div>
             </div>
             
             </div>
@@ -873,7 +921,7 @@ $(document).ready(function()
 	{
 		if($("#descuento").val()!='')
 		{
-	        $("#newDiscount").append('<div class="form-group"><label class="col-sm-2 control-label"></label><div class="col-sm-2 "><input class="form-control discount" id="descuento" name="descuento[]" value="" type="text" onkeypress="return validateNumber(event)"></div><div class="col-md-1">                                <button class="btn btn-danger btn-xs deleteDiscount" id="agregarDescuento" value="" placeholder="Descuento" type="button"><i class="fa fa-times"></i></button></div></div>');
+	        $("#newDiscount").append('<div class="form-group"><label class="col-sm-2 control-label"></label><div class="col-sm-2 "><div class="input-group m-b"><input class="form-control discount" id="descuento" name="descuento[]" value="" type="text" onkeypress="return validateNumber(event)"><span class="input-group-addon">+%</span></div></div><div class="col-md-1">                                <button class="btn btn-danger btn-xs deleteDiscount" id="agregarDescuento" value="" placeholder="Descuento" type="button"><i class="fa fa-times"></i></button></div></div>');
 	
 	        $(".deleteDiscount").click(function(){            
 	            $(this).parent().parent().remove();
@@ -893,51 +941,135 @@ $(document).ready(function()
 		}
      });
 
+	var public_price=function()
+	{
+		var precio_compra=$("#precioU").val();
+		var aumento=$("#precioPUP").val();
+		var precio_publico='';
+		
+		if(precio_compra!='')
+		{
+			aumento=parseFloat(aumento/100);
+			aumento=aumento.toFixed(2);
+			
+			precio_compra=parseFloat(precio_compra);
+			precio_compra=precio_compra.toFixed(2);
+			
+			precio_publico=parseFloat(precio_compra*aumento);
+			precio_publico=precio_publico.toFixed(2);
+			precio_publico=parseFloat(precio_publico)+parseFloat(precio_compra);
+			precio_publico=precio_publico.toFixed(2);
+			
+			$("#precioP").val(precio_publico);
+		}
+		else
+		{
+			$("#precioP").val('');
+		}
+	};
+
+
+	var calculateDiscountP=function()
+	{
+		if($("#precioU").val())
+		{
+			$("#precioPD").val($("#precioP").val());
+			var precio_utilitario=$("#precioP").val();
+			precio_utilitario=parseFloat(precio_utilitario);
+			precio_utilitario=precio_utilitario.toFixed(2);
+			
+			var precioUD=precio_utilitario;
+			var bandera=0;
+			
+			$("input[name='descuentoP[]']").each(function()
+			{        
+				if($(this).val()!='' || $(this).val()!=0)
+				{
+					var discount=$(this).val()/100;
+					discount=parseFloat(discount);
+					discount=discount.toFixed(2);
+					precioUD=parseFloat(precioUD-(discount*precioUD));
+					bandera=1;
+				}
+			}); 
+	
+			if(bandera==0)
+			{
+				$("#precioPD").val($("#precioP").val());
+			}
+			else
+			{
+				precioUD=parseFloat(precioUD);
+				precioUD=precioUD.toFixed(2);
+				
+				$("#precioPD").val(precioUD);
+			}
+		}
+		else
+		{
+			$("#precioPD").val('');
+		}
+	};
+
+	var public_price_min=function()
+	{
+		var price_public=$("#precioP").val();
+		var aumento=$("#precioPMM").val();
+		var precio_publico_min='';
+		
+		if(price_public!='')
+		{
+			aumento=parseFloat(aumento/100);
+			aumento=aumento.toFixed(2);
+			
+			price_public=parseFloat(price_public);
+			price_public=price_public.toFixed(2);
+			
+			precio_publico_min=parseFloat(price_public*aumento);
+			precio_publico_min=precio_publico_min.toFixed(2);
+			precio_publico_min=parseFloat(price_public)-parseFloat(precio_publico_min);
+			precio_publico_min=precio_publico_min.toFixed(2);
+			
+			$("#precioPM").val(precio_publico_min);
+		}
+		else
+		{
+			$("#precioPM").val('');
+		}
+	};
+	
 	$(".discount").keyup(function()
 	{
 		validateDiscount($(this));    	
     });
 
+
+    var calculate_prices=function()
+    {
+    	calculateDiscount();
+		public_price();
+		calculateDiscountP();
+		public_price_min();
+    };
+
 	$("#precioU").keyup(function()
 	{
-		$("#precioUD").val($(this).val());
-		calculateDiscount();    	
-    });
-
-
-	var calculateDiscountP=function()
-	{
-		var precio_utilitario=$("#precioP").val();
-		precio_utilitario=parseFloat(precio_utilitario);
-		precio_utilitario=precio_utilitario.toFixed(2);
-		
-		var precioUD=precio_utilitario;
-		var bandera=0;
-		
-		$("input[name='descuentoP[]']").each(function()
-		{        
-			if($(this).val()!='' || $(this).val()!=0)
-			{
-				var discount=$(this).val()/100;
-				discount=parseFloat(discount);
-				discount=discount.toFixed(2);
-				precioUD=parseFloat(precioUD-(discount*precioUD));
-				bandera=1;
-			}
-		}); 
-
-		if(bandera==0)
+		if($(this).val()!='')
 		{
-			$("#precioPD").val($("#precioP").val());
+			$("#precioUD").val($(this).val());
+			$("#precioP").val($(this).val());
+			calculate_prices();
 		}
 		else
 		{
-			precioUD=parseFloat(precioUD);
-			precioUD=precioUD.toFixed(2);
-			
-			$("#precioPD").val(precioUD);
-		}
-	};
+			$("#precioP").val('');
+			$("#precioUD").val('');
+			$("#precioPD").val('');
+			$("#precioPM").val('');
+		}    	
+    });
+
+
 
 	var validateDiscountP=function(discount)
 	{
@@ -967,7 +1099,7 @@ $(document).ready(function()
 	{
 		if($("#descuentoP").val()!='')
 		{
-			$("#newDiscountP").append('<div class="form-group"><label class="col-sm-2 control-label"></label><div class="col-sm-2 "><input class="form-control discountP" id="descuentoP" name="descuentoP[]" value="" type="text" onkeypress="return validateNumber(event)"></div><div class="col-md-1">                                <button class="btn btn-danger btn-xs deleteDiscountP" id="agregarDescuentoP" value="" placeholder="Descuento" type="button"><i class="fa fa-times"></i></button></div></div>');
+			$("#newDiscountP").append('<div class="form-group"><label class="col-sm-2 control-label"></label><div class="col-sm-2 "><div class="input-group m-b"><input class="form-control discountP" id="descuentoP" name="descuentoP[]" value="" type="text" onkeypress="return validateNumber(event)"><span class="input-group-addon">%</span></div></div><div class="col-md-1">                                <button class="btn btn-danger btn-xs deleteDiscountP" id="agregarDescuentoP" value="" placeholder="Descuento" type="button"><i class="fa fa-times"></i></button></div></div>');
 			
 			$(".deleteDiscountP").click(function(){            
 				$(this).parent().parent().remove();
@@ -986,6 +1118,7 @@ $(document).ready(function()
 			alert("Debe de agregar primero un Descuento");
 		}
 	});
+
 	
 	$(".discountP").keyup(function()
 	{
@@ -994,9 +1127,35 @@ $(document).ready(function()
 
 	$("#precioP").keyup(function()
 	{
-		$("#precioPD").val($(this).val());
 		calculateDiscountP();    	
 	});
+
+	$("#precioPUP").keyup(function()
+	{
+		if($(this).val()<100)
+		{
+			calculate_prices();
+		}
+		else
+		{
+			$(this).val('');
+			alert("Descuento Invalido");
+		}
+	});
+
+	$("#precioPMM").keyup(function()
+	{
+		if($(this).val()<100)
+		{
+			calculate_prices();
+		}
+		else
+		{
+			$(this).val('');
+			alert("Descuento Invalido");
+		}	    	
+	});
+	
 });
 
 

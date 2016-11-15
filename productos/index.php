@@ -218,7 +218,7 @@ cursor: default;
                     	$tipo_abbrev=$p->producto_type;
                     	$sku=$p->producto_sku;
                     	$description=$p->producto_description;
-                    	$price_utilitarian=$p->producto_price_utilitarian;
+                    	$price_utilitarian=$p->producto_price_purchase;
                     	$price_public=$p->producto_price_public;
                     	$stock=$p->stock;
                     	
