@@ -168,7 +168,7 @@ while(list(,$dataLogin) = each($rowsLogin)){
 								<td>$ <input type="text" name="gasto_monto" id="gasto_monto" value="" size="10"></td>
 								<td colspan="2" align="right">Proveedor:</td>
 								<td>
-									<select name="proveedor_id" id="proveedor_id">
+									<select name="proveedor_id" id="proveedor_id" onchange="update_beneficiary_from_proveedor();">
 										<?=$options_proveedor_id?>
 									</select>
 								</td>
@@ -178,7 +178,7 @@ while(list(,$dataLogin) = each($rowsLogin)){
 								<td><input type="text" name="gasto_beneficiario" id="gasto_beneficiario" value="" size="40"></td>
 								<td colspan="2" align="right">Empleado:</td>
 								<td>
-									<select name="login_id" id="login_id">
+									<select name="login_id" id="login_id" onchange="update_beneficiary_from_login();">
 										<?=$options_login_id?>
 									</select>
 								</td>
@@ -323,6 +323,16 @@ function crea_gasto(){
 			//$("#span_crea_gasto").removeClass();
 		}		
 	});
+}
+
+function update_beneficiary_from_login(){
+	login_text = $("#login_id option:selected").text();
+	$("#gasto_beneficiario").val(login_text);
+}
+
+function update_beneficiary_from_proveedor(){
+	login_text = $("#proveedor_id option:selected").text();
+	$("#gasto_beneficiario").val(login_text);
 }
 </script>
 

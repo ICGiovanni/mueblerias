@@ -13,7 +13,6 @@ require_once($_SERVER["REDIRECT_PATH_CONFIG"].'login/models/class.Login.php');
 require_once($_SERVER['REDIRECT_PATH_CONFIG'].'/calendario/models/class.Calendario.php');
 $objCalendario = new Calendario();
 
-
 $objGasto = new Gasto();
 $rowGasto = $objGasto->getGasto($_GET["gasto_id"]);
 $rowGasto=$rowGasto[0];
@@ -236,7 +235,7 @@ if(isset($rowRecordatorio[0])){
 								<td>$ <input type="text" name="gasto_monto" id="gasto_monto" value="<?=$rowGasto["gasto_monto"]?>" size="10"></td>
 								<td colspan="2" align="right">Proveedor:</td>
 								<td>
-									<select name="proveedor_id" id="proveedor_id">
+									<select name="proveedor_id" id="proveedor_id" onchange="update_beneficiary_from_proveedor();">
 										<?=$options_proveedor_id?>
 									</select>
 								</td>
@@ -246,7 +245,7 @@ if(isset($rowRecordatorio[0])){
 								<td><input type="text" name="gasto_beneficiario" id="gasto_beneficiario" value="<?=$rowGasto["gasto_beneficiario"]?>" size="40" ></td>
 								<td colspan="2" align="right">Empleado:</td>
 								<td>
-									<select name="login_id" id="login_id">
+									<select name="login_id" id="login_id" onchange="update_beneficiary_from_login();">
 										<?=$options_login_id?>
 									</select>
 								</td>
@@ -399,6 +398,16 @@ function edita_gasto(gasto_id){
 			//$("#span_crea_gasto").removeClass();
 		}		
 	});
+}
+
+function update_beneficiary_from_login(){
+	login_text = $("#login_id option:selected").text();
+	$("#gasto_beneficiario").val(login_text);
+}
+
+function update_beneficiary_from_proveedor(){
+	login_text = $("#proveedor_id option:selected").text();
+	$("#gasto_beneficiario").val(login_text);
 }
 </script>
 
