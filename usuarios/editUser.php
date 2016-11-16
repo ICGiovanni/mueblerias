@@ -151,7 +151,21 @@
                 <div class="col-md-5">
                     <input class="form-control" id="salario" value="<?php echo $infoUser['salary'] ?>" type="text">
                 </div>                            
-            </div>  
+            </div>
+            <div class="clear">&nbsp;</div>            
+            <div class="row">
+                <div class="col-md-3 text-right">
+                    <label class="control-label">Periodicidad de pago:</label>
+                </div>
+                <div class="col-md-5">
+                    <select id="periodicidad" class="form-control">                        
+                       <option value="0">Selecciona una opción</option>
+                        <option value="1" <?php if( $infoUser['salary_periodicity']==1){ echo "selected";} ?>>Semanal</option>
+                        <option value="2" <?php if( $infoUser['salary_periodicity']==2){ echo "selected";} ?>>Quincenal</option>
+                        <option value="3" <?php if( $infoUser['salary_periodicity']==3){ echo "selected";} ?>>Mensual</option>                   
+                    </select>
+                </div>    
+            </div> 
                                              
             <?php 
             $i=0;

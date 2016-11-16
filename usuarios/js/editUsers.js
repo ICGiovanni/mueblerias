@@ -81,6 +81,7 @@ function updateUser(){
     });    
     
     var salario = ($('#salario').val()!=='') ? $('#salario').val() : 0;
+    var periodicidad = $("#periodicidad").val();
     var fechaNacimiento = $('#fechaNacimiento').val();
     var comision = ($('#comision').val() !=='') ? $("#comision").val() : 0;        
     
@@ -107,6 +108,7 @@ function updateUser(){
             telefonos : JSON.stringify(telefonos),
             tipos : JSON.stringify(tipos),
             salario : salario,
+            periodicidad: periodicidad,
             fechaNacimiento : fechaNacimiento,
             comision : comision,
             calle: calle,

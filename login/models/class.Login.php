@@ -105,9 +105,9 @@ class Login {
             
             
             $sql = "   INSERT INTO inv_login (login_id, firstName, lastName, secondLastName,  email, password, profile_id, collaborator, 
-                            sucursal_id, address_id, salary, comision, birthdate, created_timestamp, modify_timestamp) 
+                            sucursal_id, address_id, salary, salary_periodicity, comision, birthdate, created_timestamp, modify_timestamp) 
                             VALUES (0, :firstName, :lastName, :secondLastName, :email, :password, :profile_id, :collaborator,
-                            :sucursal_id, :address_id, :salary, :comision, :birthdate, :created_timestamp, :modify_timestamp)";
+                            :sucursal_id, :address_id, :salary, :salary_periodicity, :comision, :birthdate, :created_timestamp, :modify_timestamp)";
             
             $statement=$this->connect->prepare($sql);
 
@@ -125,6 +125,7 @@ class Login {
             $statement->bindParam(':sucursal_id',$data['sucursal'],PDO::PARAM_INT);
             $statement->bindParam(':address_id',$addressId ,PDO::PARAM_INT);
             $statement->bindParam(':salary',$data['salario'],PDO::PARAM_NULL);
+            $statement->bindParam(':salary_periodicity',$data['periodicidad'],PDO::PARAM_NULL);
             $statement->bindParam(':comision',$data['comision'],PDO::PARAM_NULL);
             $statement->bindParam(':birthdate',$fechaNacimiento,PDO::PARAM_NULL);            
             $statement->bindParam(':created_timestamp', $timestamp,PDO::PARAM_NULL);
@@ -153,7 +154,7 @@ class Login {
             
             $sql = "UPDATE inv_login SET firstName='".$data['firstName']."', lastName='".$data['lastName']."', 
                     secondLastName='".$data['secondLastName']."', email='".$data['email']."', profile_id=".$data['perfil'].", 
-                    sucursal_id=".$data['sucursal'].", salary=".$data['salario'].", comision=".$data['comision']."
+                    sucursal_id=".$data['sucursal'].", salary=".$data['salario'].", salary_periodicity=".$data['periodicidad'].", comision=".$data['comision']."
                     WHERE login_id = ".$data['idUser'];
             $statement = $this->connect->prepare($sql);                    
 
