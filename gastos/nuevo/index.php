@@ -183,6 +183,11 @@ while(list(,$dataLogin) = each($rowsLogin)){
 									</select>
 								</td>
 							</tr>
+							<tr>
+								<td></td>
+								<td></td>
+								<td colspan="3" align="right"><input type="checkbox" name="pago_automatico" id="pago_automatico" /> REGISTRAR PAGO TOTAL EN AUTOMATICO</td>
+							</tr>
 							
 					  </table>
 		
@@ -295,34 +300,86 @@ function crea_gasto(){
 	$("#boton_crea_gasto").addClass("disabled");
 	$("#span_crea_gasto").addClass("glyphicon glyphicon-refresh glyphicon-refresh-animate");
 	
-	$.ajax({
-		type: "GET",
-		url: "../ajax/crea_gasto.php",			
-		data: {
-			
-			gasto_no_documento:gasto_no_documento,
-			gasto_fecha_vencimiento:gasto_fecha_vencimiento,
-			gasto_fecha_recordatorio_activo:gasto_fecha_recordatorio_activo,
-			gasto_fecha_recordatorio:gasto_fecha_recordatorio,
-			gasto_categoria_id:gasto_categoria_id,
-			gasto_concepto:gasto_concepto,
-			gasto_descripcion:gasto_descripcion,
-			gasto_monto:gasto_monto,
-			gasto_status_id:gasto_status_id, 
-			gasto_hora_vencimiento:gasto_hora_vencimiento, 
-			gasto_hora_recordatorio:gasto_hora_recordatorio, 
-			sucursal_id:sucursal_id, 
-			proveedor_id:proveedor_id,
-			login_id:login_id,
-			gasto_beneficiario:gasto_beneficiario
-		},
-		success: function(msg){
-			location.href = '../';
-			//$("#myModal").modal('hide');
-			//$("#boton_crea_gasto").removeClass().addClass("btn btn-primary");
-			//$("#span_crea_gasto").removeClass();
-		}		
-	});
+	if( $("#pago_automatico").is(":checked") ){
+		var d = new Date();
+		/// DATOS PARA PAGO AUTOMATICO	
+		pago_automatico = '1';
+		gastos_pagos_monto = gasto_monto;
+		gastos_pagos_forma_de_pago_id = '1';
+		gastos_pagos_es_fiscal = '0';
+		gastos_pagos_monto_sin_iva= '0';
+		gastos_pagos_iva = '0';
+		gastos_pagos_fecha = '<?=date("d/m/Y")?>';
+		gastos_pagos_hora= d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();		
+		gastos_pagos_referencia = '';
+		login_id_quien_registra = '<?=$_SESSION["login_session"]["login_id"]?>'; // de quien registra el pago
+		
+		$.ajax({
+			type: "GET",
+			url: "../ajax/crea_gasto.php",			
+			data: {
+				
+				gasto_no_documento:gasto_no_documento,
+				gasto_fecha_vencimiento:gasto_fecha_vencimiento,
+				gasto_fecha_recordatorio_activo:gasto_fecha_recordatorio_activo,
+				gasto_fecha_recordatorio:gasto_fecha_recordatorio,
+				gasto_categoria_id:gasto_categoria_id,
+				gasto_concepto:gasto_concepto,
+				gasto_descripcion:gasto_descripcion,
+				gasto_monto:gasto_monto,
+				gasto_status_id:gasto_status_id, 
+				gasto_hora_vencimiento:gasto_hora_vencimiento, 
+				gasto_hora_recordatorio:gasto_hora_recordatorio, 
+				sucursal_id:sucursal_id, 
+				proveedor_id:proveedor_id,
+				login_id:login_id, 
+				gasto_beneficiario:gasto_beneficiario,
+				pago_automatico:pago_automatico,
+				
+				gastos_pagos_monto:gastos_pagos_monto,
+				gastos_pagos_forma_de_pago_id:gastos_pagos_forma_de_pago_id,
+				gastos_pagos_es_fiscal:gastos_pagos_es_fiscal,
+				gastos_pagos_monto_sin_iva:gastos_pagos_monto_sin_iva,
+				gastos_pagos_iva:gastos_pagos_iva,
+				gastos_pagos_fecha:gastos_pagos_fecha,
+				gastos_pagos_hora:gastos_pagos_hora,
+				gastos_pagos_referencia:gastos_pagos_referencia,
+				login_id_quien_registra:login_id_quien_registra // login_id de quien registra el pago
+			},
+			success: function(msg){
+				location.href = '../';
+			}		
+		});
+		
+	}
+	else {
+	
+		$.ajax({
+			type: "GET",
+			url: "../ajax/crea_gasto.php",			
+			data: {
+				
+				gasto_no_documento:gasto_no_documento,
+				gasto_fecha_vencimiento:gasto_fecha_vencimiento,
+				gasto_fecha_recordatorio_activo:gasto_fecha_recordatorio_activo,
+				gasto_fecha_recordatorio:gasto_fecha_recordatorio,
+				gasto_categoria_id:gasto_categoria_id,
+				gasto_concepto:gasto_concepto,
+				gasto_descripcion:gasto_descripcion,
+				gasto_monto:gasto_monto,
+				gasto_status_id:gasto_status_id, 
+				gasto_hora_vencimiento:gasto_hora_vencimiento, 
+				gasto_hora_recordatorio:gasto_hora_recordatorio, 
+				sucursal_id:sucursal_id, 
+				proveedor_id:proveedor_id,
+				login_id:login_id,
+				gasto_beneficiario:gasto_beneficiario
+			},
+			success: function(msg){
+				location.href = '../';
+			}		
+		});
+	}
 }
 
 function update_beneficiary_from_login(){

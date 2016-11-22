@@ -11,8 +11,9 @@ $gasto = new Gasto();
 
 $return = $gasto->insertGastoPago($_GET);
 
+/* se sustituye con validacion en funcion insertGastoPago
 if(isset($_GET["cierra_gasto"]) && $_GET["cierra_gasto"]=="1"){
 	$gasto->updateGastoStatus($_GET["gasto_id"],"2");
 }
-
+*/
 echo $return;
