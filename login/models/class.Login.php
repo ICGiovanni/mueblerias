@@ -165,7 +165,7 @@ class Login {
         
         public function getProfiles(){
             
-            $sql = "SELECT profile_id, profile_name FROM inv_profile where profile_id!=1";
+            $sql = "SELECT profile_id, profile_name FROM inv_profile";
             $statement = $this->connect->prepare($sql);                   
 
             $statement->execute();
