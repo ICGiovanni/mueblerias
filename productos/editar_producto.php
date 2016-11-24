@@ -224,9 +224,22 @@ if($datos[0]["producto_type"]=='V')
 			</div>
             </div>
             
+            
             <div class="form-group">
-            <label class="col-sm-2 control-label">Pecio Utilitario</label>
-			<div class="col-sm-2 "><input type="text" class="form-control" id="precioU" name="precioU" onkeypress="return validateNumber(event)" value="<?php echo $datos[0]['producto_price_purchase'];?>"></div>
+            <label class="col-sm-2 control-label">Pecio de Compra</label>
+			<div class="col-sm-2 ">
+			<div class="input-group m-b">
+			<span class="input-group-addon">$</span>
+			<input type="text" class="form-control" id="precioU" name="precioU" onkeypress="return validateNumber(event)" value="<?php echo $datos[0]['producto_price_purchase'];?>">
+			</div>
+			</div>
+			<div class="col-sm-2 ">
+			<div class="input-group m-b">
+			<span class="input-group-addon">-$</span>
+			<input type="text" class="form-control" id="precioUD" name="precioUD" readonly="readonly" value="<?php echo $datos[0]['producto_price_purchase_discount'];?>">
+			
+			</div>
+			</div>
             </div>
             
 			<?php 
@@ -241,14 +254,14 @@ if($datos[0]["producto_type"]=='V')
 				if($i==0)
 				{
 					$descuentosA.='<label class="col-sm-2 control-label">Descuento</label>';
-					$descuentosA.='<div class="col-sm-2 "><input class="form-control discount" id="descuento" name="descuento[]" value="'.(100*$descuento).'" type="text" onkeypress="return validateNumber(event)"></div>';
+					$descuentosA.='<div class="col-sm-2 "><div class="input-group m-b"><input class="form-control discount" id="descuento" name="descuento[]" value="'.(100*$descuento).'" type="text" onkeypress="return validateNumber(event)"><span class="input-group-addon">%</span></div></div>';
 					$descuentosA.='<div class="col-md-1"><button class="btn btn-primary btn-xs" id="agregarDescuento" value="" placeholder="Descuento" type="button"><i class="fa fa-plus"></i></button></div>';
 			
 				}
 				else
 				{
 					$descuentosA.='<label class="col-sm-2 control-label"></label>';
-					$descuentosA.='<div class="col-sm-2 "><input class="form-control discount" id="descuento" name="descuento[]" value="'.(100*$descuento).'" type="text" onkeypress="return validateNumber(event)"></div>';
+					$descuentosA.='<div class="col-sm-2 "><div class="input-group m-b"><input class="form-control discount" id="descuento" name="descuento[]" value="'.(100*$descuento).'" type="text" onkeypress="return validateNumber(event)"><span class="input-group-addon">+%</span></div></div>';
 					$descuentosA.='<div class="col-md-1"><button class="btn btn-danger btn-xs deleteDiscount" id="agregarDescuento" value="" placeholder="Descuento" type="button"><i class="fa fa-times"></i></button></div>';
 				}
 				$descuentosA.='</div>';
@@ -260,7 +273,7 @@ if($datos[0]["producto_type"]=='V')
 			{
 				$descuentosA.='<div class="form-group">';
 				$descuentosA.='<label class="col-sm-2 control-label">Descuento</label>';
-				$descuentosA.='<div class="col-sm-2 "><input class="form-control discount" id="descuento" name="descuento[]" value="" type="text" onkeypress="return validateNumber(event)"></div>';
+				$descuentosA.='<div class="col-sm-2 "><div class="input-group m-b"><input class="form-control discount" id="descuento" name="descuento[]" value="" type="text" onkeypress="return validateNumber(event)"><span class="input-group-addon">%</span></div></div>';
 				$descuentosA.='<div class="col-md-1"><button class="btn btn-primary btn-xs" id="agregarDescuento" value="" placeholder="Descuento" type="button"><i class="fa fa-plus"></i></button></div>';
 				$descuentosA.='</div>';
 			}
@@ -829,7 +842,7 @@ $(document).ready(function()
 	{
 		if($("#descuento").val()!='')
 		{
-	        $("#newDiscount").append('<div class="form-group"><label class="col-sm-2 control-label"></label><div class="col-sm-2 "><input class="form-control discount" id="descuento" name="descuento[]" value="" type="text" onkeypress="return validateNumber(event)"></div><div class="col-md-1">                                <button class="btn btn-danger btn-xs deleteDiscount" id="agregarDescuento" value="" placeholder="Descuento" type="button"><i class="fa fa-times"></i></button></div></div>');
+	        $("#newDiscount").append('<div class="form-group"><label class="col-sm-2 control-label"></label><div class="col-sm-2 "><div class="input-group m-b"><input class="form-control discount" id="descuento" name="descuento[]" value="" type="text" onkeypress="return validateNumber(event)"><span class="input-group-addon">+%</span></div></div><div class="col-md-1">                                <button class="btn btn-danger btn-xs deleteDiscount" id="agregarDescuento" value="" placeholder="Descuento" type="button"><i class="fa fa-times"></i></button></div></div>');
 	
 	        $(".deleteDiscount").click(function(){            
 	            $(this).parent().parent().remove();

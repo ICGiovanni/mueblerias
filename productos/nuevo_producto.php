@@ -48,8 +48,7 @@
 				<select data-placeholder="Selecciona el tipo de Producto" class="chosen-select" style="width:300px;" tabindex="4" id="tipo_producto" name="tipo_producto">
 	            <option value="" data-abrev=""></option>
 	            <option value="P" data-abrev="">Principal</option>
-	            <option value="V" data-abrev="" selected>Variación</option>
-	            <option value="U" data-abrev="">Único</option>	            
+	            <option value="U" data-abrev="" selected>General</option>	            
 				</select>
 			</div>
             </div>
@@ -59,7 +58,7 @@
             </div>
             <div class="form-group">
             <label class="col-sm-2 control-label">SKU</label>
-			<div class="col-sm-2 ">
+			<div class="col-sm-4 ">
 			<input type="text" class="form-control" id="sku" name="sku" readonly>
 			</div>
 			<label class="col-sm-1 control-label">Manual</label>
@@ -108,8 +107,37 @@
 			</div>
             </div>
             
+            <div id="div_variantes">
+	           	<div class="form-group">
+	           	<label class="col-sm-2 control-label">Productos Variantes</label>
+	           	<div class="col-sm-6" ><input type="text" class="form-control" id="productoV" name="productoV"></div>
+	           	</div>
+	           	
+	           	<div class="form-group">
+	           	<div class="col-sm-2" ></div>
+	           	<div class="col-sm-6" >
+	           	<div id="product_list_variante" class="ibox-content">
+	           	
+	           	<table class="table table-striped">
+	           	<thead>
+					<tr>
+						<td></td>
+						<td>SKU</td>
+						<td>Nombre</td>
+						<td></td>
+					</tr>
+				</thead>
+	           	<tbody id="products_table_variante">
+	           	
+	           	</tbody>
+	           	</table>
+	           </div>
+	           </div>
+	           </div>
+            
             
             </div>
+           </div>
             
             <div id="div_producto_padre" style="display:none;">
             <div class="form-group">
@@ -124,7 +152,7 @@
             <label class="col-sm-2 control-label">Proveedor</label>
 			<div class="col-sm-6" >
 				<select data-placeholder="Selecciona un proveedor" class="chosen-select" style="width:300px;" tabindex="4" id="proveedor" name="proveedor">
-	            <option value=""></option>
+	            <option value="" data-name=""></option>
 	            <?php 
 	            $proveedor=new Proveedor();
 	            
@@ -133,7 +161,7 @@
 	            $list="";
 	            foreach($result as $r)
 	            {
-	            	$list.='<option value="'.$r['proveedor_id'].'">'.$r['proveedor_nombre'].'</option>';
+	            	$list.='<option value="'.$r['proveedor_id'].'" data-name="'.$r['proveedor_nombre'].'">'.$r['proveedor_nombre'].'</option>';
 	            }
 	            
 	            echo $list;
@@ -386,6 +414,13 @@ $(document).ready(function()
     		var id=$(value).val();
     		bandera=true;
     	});	
+
+    	var banderaV=false;
+    	$.each($('.products_variante'), function (index, value)
+		{
+    		var id=$(value).val();
+    		banderaV=true;
+    	});	
 		
 		if($("#sku").val()=='')
 		{
@@ -453,6 +488,12 @@ $(document).ready(function()
 			$("#producto_padre").val('');
 			$("#producto_padre").focus();
 		}
+		else if(tipo_producto=='P' && banderaV==false)
+		{
+			toastr.error('Debe de agregar un producto para armar el Producto Principal');
+			$("#productoV").val('');
+			$("#productoV").focus();
+		}
 		else
 		{
 			var url="guardar_producto.php";
@@ -493,6 +534,49 @@ $(document).ready(function()
 					        dataType: "json",
 					        success: function (data)
 					        {
+					        	if(tipo_producto!='P')
+						        {
+						            alert("El Producto ha sido agregado");
+						            var url="index.php";
+						    		$(location).attr("href", url);
+						        }
+					        },
+					        cache: false,
+					        contentType: false,
+					        processData: false
+					    });
+			        }
+			        else if(tipo_producto!='P')
+			        {
+			        	alert("El Producto ha sido agregado");
+			            var url="index.php";
+			    		$(location).attr("href", url);
+			        }
+
+			        if(tipo_producto=='P')
+			        {
+			        	var url="guardar_variantes.php?id="+producto_id;
+				        var products=new Array();
+				        
+				        $.each($('.products_variante'), function (index, value)
+		            	{
+				        	var p={};
+				        	var id=$(value).val();
+				        	p.id=id;
+				        	products.push(p);
+		            	});	
+
+				        var jsonProducts=JSON.stringify(products);
+				        
+			        	$.ajax({
+					        url: url,
+					        type: 'POST',
+					        data:  jsonProducts,
+					        contentType: "application/json; charset=utf-8",
+					        async: false,
+					        dataType: "json",
+					        success: function (data)
+					        {
 					            alert("El Producto ha sido agregado");
 					            var url="index.php";
 					    		$(location).attr("href", url);
@@ -501,12 +585,6 @@ $(document).ready(function()
 					        contentType: false,
 					        processData: false
 					    });
-			        }
-			        else
-			        {
-			        	alert("El Producto ha sido agregado");
-			            var url="index.php";
-			    		$(location).attr("href", url);
 			        }
 		            
 		        },
@@ -551,6 +629,11 @@ $(document).ready(function()
 
 		var code=letter_code+num;
 
+		var num=Math.floor(Math.random()*9)+1;
+		var letter_code=letter[Math.floor(Math.random()*9)+1];
+
+		code+=letter_code+num;
+
 		return code;
 	};
     
@@ -572,6 +655,23 @@ $(document).ready(function()
 		modelo=modelo.substring(3,0);
 				
 		sku=modelo;
+
+		var selected=$("#proveedor").find('option:selected');
+    	var proveedor_abrev=selected.data('name').toUpperCase();
+    	proveedor_abrev=$.trim(proveedor_abrev);
+    	proveedor_abrev=proveedor_abrev.substring(3,0);
+		
+    	if(proveedor_abrev!='')
+    	{
+        	if(sku=='')
+        	{
+    			sku+=proveedor_abrev;
+        	}
+        	else
+        	{
+        		sku+='-'+proveedor_abrev;
+        	}
+    	}
 
 		var selected=$("#color").find('option:selected');
     	var color_abrev=selected.data('abrev');
@@ -631,6 +731,7 @@ $(document).ready(function()
 			$("#div_variacion").hide();
 			$("#div_producto_padre").hide();
 			$("#div_check_conjunto").hide();
+			$("#div_variantes").show();
 			$("#categoria").chosen("destroy");
 			$("#categoria").chosen();
 			$('#proveedor').chosen("destroy");
@@ -642,6 +743,7 @@ $(document).ready(function()
 			$("#div_variacion").show();
 			$("#div_producto_padre").show();
 			$("#div_check_conjunto").show();
+			$("#div_variantes").hide();
 			$('#color').chosen("destroy");
 			$('#color').chosen();
 			$('#material').chosen("destroy");
@@ -655,6 +757,7 @@ $(document).ready(function()
 			$("#div_variacion").show();
 			$("#div_producto_padre").hide();
 			$("#div_check_conjunto").show();
+			$("#div_variantes").hide();
 			$("#categoria").chosen("destroy");
 			$("#categoria").chosen();
 			$('#color').chosen("destroy");
@@ -683,24 +786,40 @@ $(document).ready(function()
 
     $("#color").change(function()
     {
-    	get_sku();
+    	if(!$("#manual").is(":checked"))
+		{
+    		get_sku();
+		}
     });
 
     $("#material").change(function()
 	{
-    	get_sku();
+    	if(!$("#manual").is(":checked"))
+		{
+    		get_sku();
+		}
+    });
+
+    $("#proveedor").change(function()
+	{
+    	if(!$("#manual").is(":checked"))
+		{
+    		get_sku();
+		}
     });
 
 	$('#nombre').keyup(function()
 	{
-		get_sku();
+		if(!$("#manual").is(":checked"))
+		{
+			get_sku();
+		}
     });
 
 	$('#manual').change(function()
 	{
 		if($(this).is(":checked"))
 		{
-			$("#sku").val('');
 			$("#sku").prop('readonly',false);
 			$("#sku").focus();			
 		}
@@ -808,6 +927,97 @@ $(document).ready(function()
 	}
 
 	$("#producto").easyAutocomplete(options);
+
+
+
+
+	var options=
+	{
+		url: "get_products_unique.php",
+		getValue: function(element)
+		{
+			var name=element.producto_sku+' '+element.producto_name;
+			
+			return name;
+		},
+		template: {
+			type: "custom",
+			method: function(value, item) {
+				return "<img src='" + item.imagen + "' height='50' width='50'/>"+ value;
+			}
+		},
+		adjustWidth: false,
+		list:
+		{
+			match:
+			{
+				enabled: true
+			},
+			showAnimation:
+			{
+				type: "fade", //normal|slide|fade
+				time: 400,
+				callback: function() {}
+			},
+			hideAnimation: {
+				type: "slide", //normal|slide|fade
+				time: 400,
+				callback: function() {}
+			},
+			onChooseEvent:function()
+			{
+				var id=$("#productoV").getSelectedItemData().producto_id;
+				var sku=$("#productoV").getSelectedItemData().producto_sku;
+				var name=$("#productoV").getSelectedItemData().producto_name;
+				var imagen=$("#productoV").getSelectedItemData().imagen;
+				
+				SelectedItemDataV(id,sku,name,imagen);
+			}
+		}
+	};
+
+	var SelectedItemDataV=function(id,sku,name,imagen)
+	{
+		var table='';
+
+		var product=$("#product_"+id).val();
+
+		if(product==undefined)
+		{
+			table+='<tr>';
+			table+='<input type="hidden" id="product_'+id+'" name="product_'+id+'" value="'+id+'" class="products_variante">';
+			
+			if(imagen!='')
+			{
+				imagen='<img src="'+imagen+'" height="50" width="50">';
+			}
+			
+			table+='<td>'+imagen+'</td>';
+			table+='<td>'+sku+'</td>';
+			table+='<td>'+name+'</td>';
+			table+='<td class="text-left"><a id="delete_'+id+'" href="#" onCLick="deleteRow(this.id);"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>';
+			table+='</tr>';			
+	
+			$('#products_table_variante').append(table);
+	
+			$("#productoV").focus();
+			$("#productoV").val('');
+			$("#product_list_variante").fadeIn();
+		}
+		else
+		{
+			$("#productoV").focus();
+			$("#productoV").val('');
+			alert("El producto ya ha sido agregado");
+		}
+	}
+
+	$("#productoV").easyAutocomplete(options);
+	
+
+
+
+	
 
 	var optionsP=
 	{

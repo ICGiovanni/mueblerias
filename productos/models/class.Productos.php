@@ -693,7 +693,7 @@ class Productos
 				limit 0,1),'".FINAL_URL."img/imagen-no.png') AS imagen,
 				producto_price_public,producto_description
 				FROM productos p
-				WHERE producto_type IN('U','V')
+				WHERE producto_type IN('U')
 				ORDER BY p.producto_name ASC";
 		
 		$statement=$this->connect->prepare($sql);
@@ -944,6 +944,23 @@ class Productos
 			$statement->bindParam(':producto_conjunto', $d['id'], PDO::PARAM_STR);
 			$statement->bindParam(':cantidad', $d['cantidad'], PDO::PARAM_STR);
 				
+			$statement->execute();
+		}
+	}
+	
+	public function InsertProductoVariantes($producto_id,$data)
+	{
+		foreach($data as $d)
+		{
+				
+			$sql="UPDATE productos SET producto_parent=:producto,producto_type='V' WHERE producto_id=:producto_id";
+	
+			$statement=$this->connect->prepare($sql);
+	
+			$statement->bindParam(':producto', $producto_id, PDO::PARAM_STR);
+			$statement->bindParam(':producto_id', $d['id'], PDO::PARAM_STR);
+			
+	
 			$statement->execute();
 		}
 	}

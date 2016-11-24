@@ -46,6 +46,7 @@ CREATE TABLE IF NOT EXISTS productos
 	producto_name VARCHAR(100) NOT NULL,
 	producto_sku VARCHAR(30) NOT NULL,
 	producto_description TEXT NOT NULL,
+	producto_description_corta TEXT NOT NULL,
 	producto_price_purchase FLOAT,
 	producto_price_purchase_discount FLOAT,
 	producto_price_public FLOAT,

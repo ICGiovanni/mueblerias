@@ -278,7 +278,10 @@ cursor: default;
                     	
                     	if(isset($p->variaciones))
                     	{
-                    		$tr.='<div class="infont col-md-1 col-sm-1"><a href="#" class="modal_variaciones" data-toggle="modal" data-target="#modal_variaciones" data-id="'.$producto_id.'" data-json=\''.json_encode($p->variaciones).'\' data-root="'.$nombre.'" id="open_modal"><i class="fa fa-list-ul"></i></a></div>';
+                    		if(count($p->variaciones))
+                    		{
+                    			$tr.='<div class="infont col-md-1 col-sm-1"><a href="#" class="modal_variaciones" data-toggle="modal" data-target="#modal_variaciones" data-id="'.$producto_id.'" data-json=\''.json_encode($p->variaciones).'\' data-root="'.$nombre.'" id="open_modal"><i class="fa fa-list-ul"></i></a></div>';
+                    		}
                     	}
                     	$tr.='<div class="infont col-md-1 col-sm-1"><a href="editar_producto.php?id='.$producto_id.'"><i class="fa fa-pencil"></i></a></div><div class="infont col-md-1 col-sm-1"><a href="#" onClick="borrar_producto('.$producto_id.');"><i class="fa fa-trash-o"></i></a></div></td>';
                     	$tr.='</tr>';
