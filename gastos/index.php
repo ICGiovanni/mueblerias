@@ -107,7 +107,8 @@ while(list(,$dataGasto) = each($rows)){
 	$boton_borrar = '';
 	//echo $_SESSION["login_session"]["profile_id"].".";
 	if($_SESSION["login_session"]["profile_id"] == "1"){ // profile_director
-		$boton_borrar = ' &nbsp;<a href="borrar/?gasto_id='.$dataGasto["gasto_id"].'"><i class="fa fa-trash" title="Borrar"></i></a>';
+		//$boton_borrar = ' &nbsp;<a href="borrar/?gasto_id='.$dataGasto["gasto_id"].'"><i class="fa fa-trash" title="Borrar"></i></a>';
+		$boton_borrar = ' &nbsp;<i class="fa fa-trash" title="Borrar" onclick="confirmDelete('.$dataGasto["gasto_id"].');"></i>';
 	}
 	$dataGasto["gasto_saldo"]=$dataGasto["gasto_monto"] - $rowPagos["gastos_pagos_monto"];
 	$html_rows.= '<tr style="background-color:'.$color_row.';">
@@ -131,7 +132,7 @@ while(list(,$dataGasto) = each($rows)){
 <!-- Data picker -->
 <link href="<?=$raizProy?>css/plugins/datapicker/datepicker3.css" rel="stylesheet">
 <link href="<?=$raizProy?>css/plugins/clockpicker/clockpicker.css" rel="stylesheet">
-
+<link href="<?=$raizProy?>css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
 
 <style>
 .glyphicon-refresh-animate {
@@ -305,7 +306,7 @@ while(list(,$dataGasto) = each($rows)){
     <script src="<?=$raizProy?>js/plugins/metisMenu/jquery.metisMenu.js"></script>
     <script src="<?=$raizProy?>js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
     <script src="<?=$raizProy?>js/plugins/jeditable/jquery.jeditable.js"></script>
-
+	<script src="<?=$raizProy?>js/plugins/sweetalert/sweetalert.min.js"></script>
     <script src="<?=$raizProy?>js/plugins/dataTables/datatables.min.js"></script>
 	
 
@@ -373,6 +374,44 @@ $(document).ready(function(){
 	}).datepicker("setDate", "<?=isset($_GET["filtro_fecha_fin"])?$_GET["filtro_fecha_fin"]:'0'?>");
 
 });
+
+function confirmDelete(gasto_id){
+	swal({
+	  title: "¿ Estás seguro ?",
+	  text: "Se va a eliminar el gasto #Folio: "+gasto_id,
+	  type: "warning",
+	  showCancelButton: true,
+	  confirmButtonColor: "#DD6B55",
+	  confirmButtonText: "Borrar",
+	  cancelButtonText: "Cancelar",
+	  closeOnConfirm: false,
+	},
+	function(isConfirm){
+		if (isConfirm) {
+			borrar_gasto(gasto_id);
+			swal({
+				title: "Borrado!", 
+				text: "Se ha borrado el gasto #Folio: "+gasto_id, 
+				type: "success"			
+			}, function () {
+				location.href = './';
+			});
+		}
+	});
+}
+
+function borrar_gasto(gasto_id){
+	
+	$.ajax({
+		type: "GET",
+		url: "ajax/borra_gasto.php",			
+		data: {gasto_id:gasto_id},
+		success: function(msg){
+			
+		}		
+	});
+	
+}
 </script>
 
 </body>

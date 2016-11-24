@@ -153,10 +153,6 @@ while(list(,$dataGastoStatus) = each($rowsGastosStatus)){
 
 <script>
 
-$(document).ready(function(){
-	
-});
-
 function borrar_gasto(gasto_id){
 	$("#boton_crea_gasto").addClass("disabled");
 	$("#span_crea_gasto").addClass("glyphicon glyphicon-refresh glyphicon-refresh-animate");
