@@ -61,7 +61,7 @@ class Productos
 			$conjunto=1;
 		}
 		
-		$sql="INSERT INTO productos VALUES('',:nombre,:sku,:descripcion,:descripcionC,:precio_utilitario,:precio_utilitario_descuento,:precio_publico,:precio_publico_min,:producto_price_public_discount,:color,:material,:proveedor,:conjunto,:version,:medida,:type,:producto_parent)";
+		$sql="INSERT INTO productos VALUES('',:nombre,:sku,:descripcion,:descripcionC,:precio_utilitario,:precio_utilitario_descuento,:porcentaje_utilidad,:precio_publico,:precio_publico_min,:producto_price_public_discount,:producto_price_min_public_percent,:color,:material,:proveedor,:conjunto,:version,:medida,:type,:producto_parent)";
 		
 		$statement=$this->connect->prepare($sql);
 		
@@ -84,9 +84,11 @@ class Productos
 		$statement->bindParam(':descripcionC', $params['descripcionC'], PDO::PARAM_STR);
 		$statement->bindParam(':precio_utilitario', $price_utilitarian, PDO::PARAM_STR);
 		$statement->bindParam(':precio_utilitario_descuento', $price_utilitarian_descuento, PDO::PARAM_STR);
+		$statement->bindParam(':porcentaje_utilidad', $params['precioPUP'], PDO::PARAM_STR);
 		$statement->bindParam(':precio_publico', $price_public, PDO::PARAM_STR);
 		$statement->bindParam(':precio_publico_min', $price_public_min, PDO::PARAM_STR);
 		$statement->bindParam(':producto_price_public_discount', $price_public_discount, PDO::PARAM_STR);
+		$statement->bindParam(':producto_price_min_public_percent', $params['precioPMM'], PDO::PARAM_STR);
 		$statement->bindParam(':color', $params['color'], PDO::PARAM_STR);
 		$statement->bindParam(':material', $params['material'], PDO::PARAM_STR);
 		$statement->bindParam(':proveedor', $params['proveedor'], PDO::PARAM_STR);
@@ -428,14 +430,15 @@ class Productos
 				WHERE ip.producto_id=p.producto_id),0) AS stock,
 				CASE producto_type
 				WHEN 'P' THEN 'PRINCIPAL'
-				WHEN 'U' THEN 'ÚNICO'
-				WHEN 'V' THEN 'VARIANTE'
+				WHEN 'U' THEN 'GENERAL'
+				WHEN 'V' THEN 'GENERAL'
 				END AS producto_type_name,producto_type,producto_conjunto,
 				IF(producto_type='V',
 				(SELECT producto_name
 				FROM productos
 				WHERE producto_id=p.producto_parent),'') AS producto_principal,
-				producto_description_corta
+				producto_description_corta,producto_price_min_public_percent,
+				producto_price_purchase_percent
 				FROM productos p
 				INNER JOIN proveedores pr USING(proveedor_id)".
 				$where.
