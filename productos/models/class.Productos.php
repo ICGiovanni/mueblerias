@@ -824,7 +824,8 @@ class Productos
 				WHERE producto_id=p.producto_id)!='',
 				(SELECT SUM(cantidad)
 				FROM inventario_productos
-				WHERE producto_id=p.producto_id),0)) AS stock
+				WHERE producto_id=p.producto_id),0)) AS stock,
+				producto_description_corta,producto_description
 				FROM productos p
 				WHERE producto_type IN('U','P')
 				$where";
