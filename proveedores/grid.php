@@ -12,7 +12,9 @@ $inventarios=new Inventarios();
 $proveedores = new Proveedor();
 
 $dataProducts = json_decode($productos->GetDataProductsMainJson());
-
+/*echo "<pre>";
+    print_r($dataProducts);
+echo "<pre>";*/
 //$dataUnique = $productos->GetProductsUnique();
 
 ?>    
