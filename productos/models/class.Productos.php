@@ -706,6 +706,31 @@ class Productos
 		return $result;
 	}
 	
+	public function GetProductsSell()
+	{
+		$sql="SELECT p.producto_id,p.producto_sku,p.producto_name,
+				IF((SELECT imagen_route
+				FROM imagenes_productos ip
+				WHERE ip.producto_id=p.producto_id
+				ORDER BY imagen_id ASC
+				limit 0,1)!='',
+				(SELECT imagen_route
+				FROM imagenes_productos ip
+				WHERE ip.producto_id=p.producto_id
+				ORDER BY imagen_id ASC
+				limit 0,1),'".FINAL_URL."img/imagen-no.png') AS imagen,
+				producto_price_public,producto_description
+				FROM productos p
+				WHERE producto_type IN('U')
+				ORDER BY p.producto_name ASC";
+	
+		$statement=$this->connect->prepare($sql);
+		$statement->execute();
+		$result=$statement->fetchAll(PDO::FETCH_ASSOC);
+	
+		return $result;
+	}
+	
 	public function GetFeatureVariations($producto_id)
 	{
 		$inventarios=new Inventarios();

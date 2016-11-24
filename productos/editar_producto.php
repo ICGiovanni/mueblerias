@@ -131,6 +131,41 @@ if($datos[0]["producto_type"]=='V')
             </div>
             
             
+            <div id="div_variantes">
+	           	<div class="form-group">
+	           	<label class="col-sm-2 control-label">Productos Variantes</label>
+	           	<div class="col-sm-6" ><input type="text" class="form-control" id="productoV" name="productoV"></div>
+	           	</div>
+	           	
+	           	<div class="form-group">
+	           	<div class="col-sm-2" ></div>
+	           	<div class="col-sm-6" >
+	           	<div id="product_list_variante" class="ibox-content">
+	           	
+	           	<table class="table table-striped">
+	           	<thead>
+					<tr>
+						<td></td>
+						<td>SKU</td>
+						<td>Nombre</td>
+						<td></td>
+					</tr>
+				</thead>
+	           	<tbody id="products_table_variante">
+	           	<?php 
+	           	
+	           	
+	           	?>
+	           	
+	           	</tbody>
+	           	</table>
+	           </div>
+	           </div>
+	           </div>
+            
+            
+            </div>
+            
             </div>
             
             <div class="form-group">
