@@ -32,6 +32,8 @@ if($rowEvento["evento_recordatorio_activo"]==1){
 <!-- Data picker -->
 <link href="<?=$raizProy?>css/plugins/datapicker/datepicker3.css" rel="stylesheet">
 <link href="<?=$raizProy?>css/plugins/clockpicker/clockpicker.css" rel="stylesheet">
+<link href="<?=$raizProy?>css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+
 <style>
 
 .table-form td, th{
@@ -53,7 +55,7 @@ if($rowEvento["evento_recordatorio_activo"]==1){
 	<div class="col-sm-8">
 		<div class="title-action">
 			<button type="button" class="btn btn-danger btn-xs" onclick="location.href = '../';"><i class="fa fa-arrow-left"></i> Regresar a Calendario</button>&nbsp;&nbsp;
-			<button type="button" class="btn btn-danger btn-xs" onclick="location.href = '../borrar/?evento_id=<?=$rowEvento["evento_id"]?>';">BORRAR EVENTO</button>&nbsp;&nbsp;
+			<button type="button" class="btn btn-danger btn-xs" onclick="confirmDelete('<?=$rowEvento["evento_id"]?>'); ">BORRAR EVENTO</button>&nbsp;&nbsp;
             <button id="boton_crea_evento" type="button" class="btn btn-primary btn-xs" onclick="edita_evento();">Guardar Evento</button> <span id="span_crea_evento"></span>
 		</div>
 	</div>
@@ -146,7 +148,7 @@ if($rowEvento["evento_recordatorio_activo"]==1){
     <script src="<?=$raizProy?>js/plugins/metisMenu/jquery.metisMenu.js"></script>
     <script src="<?=$raizProy?>js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
     <script src="<?=$raizProy?>js/plugins/jeditable/jquery.jeditable.js"></script>
-
+	<script src="<?=$raizProy?>js/plugins/sweetalert/sweetalert.min.js"></script>
     <script src="<?=$raizProy?>js/plugins/dataTables/datatables.min.js"></script>
 	
 
@@ -184,7 +186,43 @@ $('#data_2 .input-group.date').datepicker({
 }).datepicker("setDate", "<?=$evento_recordatorio_fecha_dia?>/<?=$evento_recordatorio_fecha_mes?>/<?=$evento_recordatorio_fecha_ano?>");
 
 
+function confirmDelete(evento_id){
+	swal({
+	  title: "¿ Estás seguro ?",
+	  text: "Se va a eliminar la actividad #"+evento_id,
+	  type: "warning",
+	  showCancelButton: true,
+	  confirmButtonColor: "#DD6B55",
+	  confirmButtonText: "Borrar",
+	  cancelButtonText: "Cancelar",
+	  closeOnConfirm: false,
+	},
+	function(isConfirm){
+		if (isConfirm) {
+			borrar_actividad(evento_id);
+			swal({
+				title: "Borrado!", 
+				text: "Se ha borrado la actividad #"+evento_id, 
+				type: "success"			
+			}, function () {
+				location.href = '../';
+			});
+		}
+	});
+}
 
+function borrar_actividad(evento_id){
+	
+	$.ajax({
+		type: "GET",
+		url: "../ajax/borra_evento.php",			
+		data: {evento_id:evento_id},
+		success: function(msg){
+			
+		}		
+	});
+	
+}
 
 function edita_evento(){
 	evento_id='<?=$_GET["evento_id"]?>';

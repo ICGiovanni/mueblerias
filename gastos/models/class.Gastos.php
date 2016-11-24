@@ -350,7 +350,20 @@ class Gasto {
 		$statement->bindParam(':login_id', $params['login_id'], PDO::PARAM_STR);
 		
 		$statement->execute();
+		
+		$this->checkSaldo($params['gasto_id'], $params['gastos_pagos_monto']);
+		
+		
 		return $this->connect->lastInsertId();
+	}
+	
+	public function checkSaldo($gasto_id, $gastos_pagos_monto){
+		$rowPagos = $this->getPagosSum($gasto_id);
+		$rowPagos = $rowPagos[0];
+		
+		if($rowPagos["gastos_pagos_monto"] >= $gastos_pagos_monto){
+			$this->updateGastoStatus($gasto_id,"2");
+		}
 	}
 	
 	public function deleteGastoPago($params){

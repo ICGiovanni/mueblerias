@@ -1,7 +1,6 @@
 <?php 
 if(isset($_GET['producto_id'])){
     $producto_id = base64_decode($_GET['producto_id']);
-    
 }
 else{
     header('location: grid.php');
@@ -16,10 +15,12 @@ require_once($_SERVER["REDIRECT_PATH_CONFIG"].'productos/models/class.Productos.
 $productos = new Productos();
 
 $images = $productos->GetImagesProduct($producto_id);
-$dataProduct = (json_decode($productos->GetDataProductsMainJson($producto_id)));
-$dataProduct = $dataProduct[0];
-
-
+$dataProduct = end(json_decode($productos->GetDataProductsMainJson($producto_id)));
+/*
+echo "<pre>";
+    print_r($dataProduct);
+echo "</pre>";
+*/
 ?>
 <link href="<?php echo $raizProy?>css/plugins/slick/slick.css" rel="stylesheet">
 <link href="<?php echo $raizProy?>css/plugins/slick/slick-theme.css" rel="stylesheet">
@@ -30,9 +31,6 @@ $dataProduct = $dataProduct[0];
             <div class="col-lg-10">
                 <h2>Catalogos</h2>
                 <ol class="breadcrumb">                    
-                    <li>
-                        <a href="grid.php">Catalogo</a>
-                    </li>
                     <li class="active">
                         <strong>Detalle de producto</strong>
                     </li>
@@ -63,7 +61,7 @@ $dataProduct = $dataProduct[0];
                                                             
                                                                 <div class="image-imitation">
                                                                 <center>
-                                                                    <img src="'.$image['imagen_route'].'" width="250px"/>
+                                                                    <img src="'.$image['imagen_route'].'" />
                                                                 </center>   
                                                                 </div>
                                                              
@@ -72,7 +70,7 @@ $dataProduct = $dataProduct[0];
                                             }else{
                                                 echo '  <div>
                                                                 <div class="image-imitation">
-                                                                    <img src="'.$dataProduct->imagen.'" width="250px" />
+                                                                    <img src="'.$dataProduct->imagen.'" />
                                                                 </div>
                                                             </div>';
                                             }   
@@ -94,10 +92,7 @@ $dataProduct = $dataProduct[0];
                                     <hr>
 
                                     <h4>Detalle de producto</h4>
-                                    <div class="small text-muted">
-                                        <?php echo $dataProduct->producto_description?>
-                                    </div>
-                                    <div class="clear">&nbsp;</div>
+
                                     <div class="small">
                                     <?php                                        
                                         
@@ -106,7 +101,8 @@ $dataProduct = $dataProduct[0];
                                             foreach($dataProduct->materiales as $material){                                                
                                                 echo "<dd>".$material->material_name."</dd>";
                                             }
-                                        }                                        
+                                        }    
+                                        
                                         if(count($dataProduct->colores)>0){
                                             echo "<dt>Color:</dt>";
                                             foreach($dataProduct->colores as $color){
@@ -118,17 +114,9 @@ $dataProduct = $dataProduct[0];
                                     </div>                                    
                                     <hr>
                                     <div>
-                                        <p>
-                                        SKU: <small><?php echo $dataProduct->producto_sku?></small>
-                                        </p>
                                         <div class="btn-group">
-                                            <button class="btn btn-primary btn-sm addPuntoVenta" id='addPuntoVenta' 
-                                                    data-sku="<?php echo $dataProduct->producto_sku?>"
-                                                    data-modelo="<?php echo $dataProduct->producto_name?>"
-                                                    data-precio="<?php echo $dataProduct->producto_price_public?>"
-                                                    ><i class="fa fa-cart-plus"></i> Punto de venta</button>                                            
+                                            <button class="btn btn-primary btn-sm" id='addPuntoVenta'><i class="fa fa-cart-plus"></i> Punto de venta</button>                                            
                                         </div>
-                                        
                                     </div>
 
 
@@ -136,7 +124,13 @@ $dataProduct = $dataProduct[0];
                                 </div>
                             </div>
 
-                        </div>                        
+                        </div>
+                        <div class="ibox-footer">
+                            <span class="pull-right">
+                                Full stock - <i class="fa fa-clock-o"></i> 14.04.2016 10:04 pm
+                            </span>
+                            The generated Lorem Ipsum is therefore always free
+                        </div>
                     </div>
 
                 </div>
@@ -148,12 +142,39 @@ $dataProduct = $dataProduct[0];
     require_once $pathProy.'/footer2.php';
 ?>
 
-<link href="<?php echo $raizProy?>css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
 <script src="<?php echo $raizProy?>js/plugins/slick/slick.min.js"></script>
 <script src="<?php echo $raizProy?>js/plugins/sweetalert/sweetalert.min.js"></script>
-<script src="<?php echo $raizProy?>proveedores/js/addPuntoVenta.js"></script>
+<link href="<?php echo $raizProy?>css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+    
 
-   
+
+<script>
+    $(document).ready(function(){
+
+
+        $('.product-images').slick({
+            dots: true
+        });
+        
+        
+        $("#addPuntoVenta").click(function(){
+            swal({   
+                title: "Agregar a punto de venta",   
+                text: "Desea agregar el producto al punto de venta",   
+                type: "info",   
+                showCancelButton: true,   
+                closeOnConfirm: false,   
+                showLoaderOnConfirm: true,
+            }, function(){
+                                
+                setTimeout(function(){     swal("Ajax request finished!");   }, 2000);
+                
+            });
+        });
+
+    });
+
+</script>
 
 </body>
 

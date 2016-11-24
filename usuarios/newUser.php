@@ -118,6 +118,18 @@
                     </div>
                     <div class="clear">&nbsp;</div>
                     <div class="row">                        
+                        <label class="control-label col-md-2">Periodicidad de pago:</label>
+                        <div class="col-md-5">                            
+                            <select id="periodicidad" name="periodicidad" class="form-control m-b">
+                                <option value="0">Selecciona una opción</option>
+                                <option value="1">Semanal</option>
+                                <option value="2">Quincenal</option>
+                                <option value="3">Mensual</option>
+                            </select>
+                        </div>                            
+                    </div>
+                    <div class="clear">&nbsp;</div>
+                    <div class="row">                        
                         <label class="control-label col-md-2">Telefono:</label>                        
                         <div class="col-md-2">                            
                             <input class="form-control" id="telefono" name="telefono[]" value="" type="text">                                            

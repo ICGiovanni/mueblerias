@@ -20,7 +20,7 @@ require_once($_SERVER['REDIRECT_PATH_CONFIG']."gastos/models/class.Gastos.php");
 $gasto = new Gasto();
 
 $gasto_id = $gasto->insertGasto($_GET);
-if(isset($_GET["pago_automatico"]) && $_GET["pago_automatico"] == 1){
+if(isset($_GET["pago_automatico"]) && $_GET["pago_automatico"] == 1){ //desde formulario nuevo gasto y cuando viene de un gasto dia extra sueldo
 	$_GET["gasto_id"] =  $gasto_id;
 	$_GET["login_id"] = $_GET["login_id_quien_registra"]; // se sobreescribe login del beneficiario por el de quien registra
 	$gasto->insertGastoPago($_GET);
