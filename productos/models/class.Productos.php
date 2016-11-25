@@ -721,7 +721,7 @@ class Productos
 				limit 0,1),'".FINAL_URL."img/imagen-no.png') AS imagen,
 				producto_price_public,producto_description
 				FROM productos p
-				WHERE producto_type IN('U')
+				WHERE producto_type IN('U','V')
 				ORDER BY p.producto_name ASC";
 	
 		$statement=$this->connect->prepare($sql);
