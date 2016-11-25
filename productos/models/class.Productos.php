@@ -602,7 +602,7 @@ class Productos
 		
 		$this->DeleteProductGroup($params['id_producto']);
 		
-		$sql="UPDATE productos SET producto_name=:nombre,producto_sku=:sku,producto_description=:descripcion,producto_price_purchase=:precio_utilitario,producto_price_public=:precio_publico,proveedor_id=:proveedor,color_id=:color,material_id=:material,producto_version=:version,	producto_medida=:medida,producto_price_purchase_discount=:precio_utilitario_descuento,producto_price_public_min=:precio_publico_min,producto_price_public_discount=:producto_price_public_discount,producto_conjunto=:conjunto,producto_description_corta=:descripcionC
+		$sql="UPDATE productos SET producto_name=:nombre,producto_sku=:sku,producto_description=:descripcion,producto_price_purchase=:precio_utilitario,producto_price_public=:precio_publico,proveedor_id=:proveedor,color_id=:color,material_id=:material,producto_version=:version,	producto_medida=:medida,producto_price_purchase_discount=:precio_utilitario_descuento,producto_price_public_min=:precio_publico_min,producto_price_public_discount=:producto_price_public_discount,producto_conjunto=:conjunto,producto_description_corta=:descripcionC,producto_price_purchase_percent=:porcentaje_utilidad,producto_price_min_public_percent=:producto_price_min_public_percent
 				WHERE producto_id=:producto";
 		
 		
@@ -626,9 +626,11 @@ class Productos
 		$statement->bindParam(':descripcionC', $params['descripcionC'], PDO::PARAM_STR);
 		$statement->bindParam(':precio_utilitario', $price_utilitarian, PDO::PARAM_STR);
 		$statement->bindParam(':precio_utilitario_descuento', $price_utilitarian_descuento, PDO::PARAM_STR);
+		$statement->bindParam(':porcentaje_utilidad', $params['precioPUP'], PDO::PARAM_STR);
 		$statement->bindParam(':precio_publico', $price_public, PDO::PARAM_STR);
 		$statement->bindParam(':precio_publico_min', $price_public_min, PDO::PARAM_STR);
 		$statement->bindParam(':producto_price_public_discount', $price_public_discount, PDO::PARAM_STR);
+		$statement->bindParam(':producto_price_min_public_percent', $params['precioPMM'], PDO::PARAM_STR);
 		$statement->bindParam(':proveedor', $params['proveedor'], PDO::PARAM_STR);
 		$statement->bindParam(':color', $params['color'], PDO::PARAM_STR);
 		$statement->bindParam(':material', $params['material'], PDO::PARAM_STR);
@@ -979,6 +981,11 @@ class Productos
 	
 	public function InsertProductoVariantes($producto_id,$data)
 	{
+		$sql="UPDATE productos SET producto_parent='0' WHERE producto_parent='$producto_id'";
+		
+		$statement=$this->connect->prepare($sql);
+		$statement->execute();
+		
 		foreach($data as $d)
 		{
 				

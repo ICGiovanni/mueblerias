@@ -153,8 +153,23 @@ if($datos[0]["producto_type"]=='V')
 				</thead>
 	           	<tbody id="products_table_variante">
 	           	<?php 
+	           	$result=$productos->GetFeatureVariations($producto_id);
+	           	$table='';
 	           	
-	           	
+	           	foreach($result as $r)
+	           	{
+	           		$id=$r['producto_id'];
+	           		$sku=$r['producto_sku'];
+	           		$name=$r['producto_name'];
+	           		
+	           		$table.='<tr>';
+	           		$table.='<td>'.$sku.'</td>';
+	           		$table.='<td>'.$name.'</td>';
+	           		$table.='<td class="text-left"><a id="delete_'.$id.'" href="#" onCLick="deleteRow(this.id);"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>';
+	           		$table.='</tr>';
+	           		
+	           	}
+	           	echo $table;
 	           	?>
 	           	
 	           	</tbody>
@@ -433,16 +448,6 @@ if($datos[0]["producto_type"]=='V')
 			</div>
 			</div>
             </div>
-            
-            
-            
-            <div class="form-group">
-            <label class="col-sm-2 control-label">Conjunto</label>
-			<div class="col-sm-2 ">
-				<input type="checkbox" name="conjunto" id="conjunto" value="1" <?php echo $checked;?>>
-			</div>
-            </div>
-            
             <?php 
             
             if($checked)
@@ -453,7 +458,18 @@ if($datos[0]["producto_type"]=='V')
             {
             	$visible='style="display:none;"';	
             }
+            
             ?>
+            
+            <div id="div_check_conjunto" <?php echo $visible;?>>
+            
+            <div class="form-group">
+            <label class="col-sm-2 control-label">Conjunto</label>
+			<div class="col-sm-2 ">
+				<input type="checkbox" name="conjunto" id="conjunto" value="1" <?php echo $checked;?>>
+			</div>
+            </div>
+            
             
 			<div id="div_conjunto" <?php echo $visible;?>>
 	           	<div class="form-group">
@@ -499,6 +515,7 @@ if($datos[0]["producto_type"]=='V')
 	           </div>
 	           </div>
 	           </div>
+            </div>
             </div>
             
             <div class="form-group">
