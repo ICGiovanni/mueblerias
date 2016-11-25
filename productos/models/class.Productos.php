@@ -836,8 +836,8 @@ class Productos
 				producto_price_public,producto_description,producto_price_purchase,
 				CASE producto_type
 				WHEN 'P' THEN 'PRINCIPAL'
-				WHEN 'U' THEN 'ÚNICO'
-				WHEN 'V' THEN 'VARIANTE'
+				WHEN 'U' THEN 'GENERAL'
+				WHEN 'V' THEN 'GENERAL'
 				END AS producto_type_name,producto_type,
 				producto_conjunto,
 				IF(producto_type='P',

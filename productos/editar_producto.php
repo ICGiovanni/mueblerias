@@ -163,6 +163,7 @@ if($datos[0]["producto_type"]=='V')
 	           		$name=$r['producto_name'];
 	           		
 	           		$table.='<tr>';
+	           		$table.='<input type="hidden" id="product_'.$id.'" name="product_'.$id.'" value="'.$id.'" class="products_variante">';
 	           		$table.='<td>'.$sku.'</td>';
 	           		$table.='<td>'.$name.'</td>';
 	           		$table.='<td class="text-left"><a id="delete_'.$id.'" href="#" onCLick="deleteRow(this.id);"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>';
