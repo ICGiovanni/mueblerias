@@ -170,7 +170,7 @@ $(document).ready(function()
 		        data: $("#form_cliente").serialize(), // serializes the form's elements.
 		        success: function(data)
 		        {
-		        	alert("El Cliente ha sido registrado"); // show response from the php script.
+		        	//alert("El Cliente ha sido registrado"); // show response from the php script.
 		        	var url="index.php";
 		    		$(location).attr("href", url);
 				}

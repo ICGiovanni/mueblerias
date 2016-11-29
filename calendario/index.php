@@ -1,7 +1,7 @@
 <?php
 require_once $_SERVER['REDIRECT_PATH_CONFIG'].'config.php';
 require_once($_SERVER["REDIRECT_PATH_CONFIG"].'login/session.php');
-require_once $pathProy.'/header.php';
+require_once $pathProy.'/header2.php';
 require_once $pathProy.'/menu.php';
 require_once($_SERVER["REDIRECT_PATH_CONFIG"].'calendario/models/class.Calendario.php');
 
