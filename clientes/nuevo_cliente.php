@@ -4,6 +4,7 @@
     include $pathProy.'/header.php';
     include $pathProy.'/menu.php';
 ?>
+<link href="<?php echo $raizProy?>css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
 
 
     <div class="row wrapper border-bottom white-bg page-heading">
@@ -103,7 +104,7 @@
         
 		</form>
 	</div>
-
+<script src="<?php echo $raizProy?>js/plugins/sweetalert/sweetalert.min.js"></script>
 <script src="<?php echo $raizProy?>js/plugins/toastr/toastr.min.js"></script>
 <script src="<?php echo $raizProy?>clientes/js/clientes.js"></script>   
 
