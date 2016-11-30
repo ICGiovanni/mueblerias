@@ -192,7 +192,7 @@ require_once $pathProy.'/menu.php';
                         </div>
                         <div class="ibox-content">
 
-                           <table class="table table-bordered  table-striped">
+                           <table class="table table-bordered table-striped">
                             <thead>
                             <tr>
                                 <th>#</th>
