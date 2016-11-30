@@ -71,7 +71,7 @@
 			</div>
             <div class="form-group">
            	<label class="col-sm-2 control-label">Telefono</label>
-           	<div class="col-sm-3 "><input class="form-control" id="telefono" name="telefono[]" value="" type="text"></div>
+           	<div class="col-sm-3 "><input class="form-control telefono_cliente" id="telefono" name="telefono[]" value="" type="text" onkeypress="return validateNumber(event)"></div>
            	<div class="col-md-2">
                             <select id="phoneType" name="phoneType[]" class="form-control">
                                 <option value="1">Celular</option>
