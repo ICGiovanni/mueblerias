@@ -21,9 +21,10 @@ $(document).ready(function()
 	
 	$("#nombre").focus();
 
-	$( "#guardar" ).click(function()
+	var validate_form=function()
 	{
 		var email_regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i;
+		var bandera=false;
 
 		if($("#nombre").val()=='')
 		{
@@ -57,6 +58,18 @@ $(document).ready(function()
 		}
 		else
 		{
+			bandera=true;
+		}
+		
+		return bandera;
+	};
+	
+	$( "#guardar" ).click(function()
+	{
+		var validate=validate_form();
+		
+		if(validate)
+		{
 			var url="guardar_cliente.php";
 			 
 			$.ajax(
@@ -75,8 +88,33 @@ $(document).ready(function()
 		            });
 				}
 			});
-
+		}
+	});
+	
+	$( "#editar" ).click(function()
+	{
+		var validate=validate_form();
+		
+		if(validate)
+		{
+			var url="actualizar_cliente.php";
 			
+			$.ajax(
+			{
+				type: "POST",
+				url: url,
+				data: $("#form_cliente").serialize(), // serializes the form's elements.
+				success: function(data)
+				{
+					swal({
+		                title: "Guardado!",
+		                text: "Cliente actualizado correctamente!",
+		                type: "success"
+		            }, function () {
+		                window.location.href = 'index.php';
+		            });
+				}
+			});
 		}
 	});
 	
