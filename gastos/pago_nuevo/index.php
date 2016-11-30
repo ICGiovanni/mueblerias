@@ -139,7 +139,7 @@ while(list(,$dataGastoCategoria) = each($rowsGastosCategoria)){
 										</div>
 									</div>
 									<div class="input-group clockpicker" data-autoclose="true">
-										<input name="gastos_pagos_hora" id ="gastos_pagos_hora" type="text" class="form-control" value="12:00" >
+										<input name="gastos_pagos_hora" id ="gastos_pagos_hora" type="text" class="form-control" value="<?=date("H:m")?>" >
 										<span class="input-group-addon">
 											<span class="fa fa-clock-o"></span>
 										</span>
@@ -237,11 +237,18 @@ function crea_pago(){
 	gasto_id = '<?=$_GET["gasto_id"]?>';
 	gastos_pagos_monto=$("#gastos_pagos_monto").val();
 	gastos_pagos_forma_de_pago_id=$("#gastos_pagos_forma_de_pago_id").val();
+	gastos_pagos_referencia=$("textarea#gastos_pagos_referencia").val();
 	
 	if(gastos_pagos_forma_de_pago_id == '0'){
 		alert("Es necesario elegir un metodo de pago");
 		return;
 	}
+	
+	if((gastos_pagos_forma_de_pago_id == '2' || gastos_pagos_forma_de_pago_id == '3' || gastos_pagos_forma_de_pago_id == '4' || gastos_pagos_forma_de_pago_id == '6' || gastos_pagos_forma_de_pago_id == '7') && gastos_pagos_referencia ==''){
+		alert("Es necesario ingresar una referencia para el metodo de pago seleccionado");
+		return;
+	}
+	
 	
 	if ( $("#gastos_pagos_es_fiscal").is(':checked') ){
 		gastos_pagos_es_fiscal = "1";
@@ -253,7 +260,7 @@ function crea_pago(){
 	gastos_pagos_fecha=$("#gastos_pagos_fecha").val();
 	gastos_pagos_hora=$("#gastos_pagos_hora").val();
 	
-	gastos_pagos_referencia=$("textarea#gastos_pagos_referencia").val();
+	
 	login_id = '<?=$_SESSION["login_session"]["login_id"]?>';
 	
 	$("#boton_crea_registro").addClass("disabled");

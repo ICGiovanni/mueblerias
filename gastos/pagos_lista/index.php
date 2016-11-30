@@ -113,7 +113,7 @@ while(list(,$dataGastoCategoria) = each($rowsGastosCategoria)){
 							</tr>
 						</table>
 						        
-						<table class="table">
+						<table class="table table-striped">
 							<tr>
 								<th style="text-align:center">Folio Pago</th>
 								<th style="text-align:center">Usuario que registró</th>
