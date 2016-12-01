@@ -59,7 +59,10 @@ $(document).ready(function(){
         
     });
     $("#btn_guardar_proveedor").click(function(){
-        var nombre = $("#nombre").val();
+        var nombre = $("#nombreComercial").val();
+        var nombreFiscal = $("#nombreFiscal").val();
+        var representante = $("#representante").val();
+        
         var email = $("#email").val();
         
         var telefonos = new Array();
@@ -84,7 +87,9 @@ $(document).ready(function(){
             url: "ajax/saveProveedor.php",
             type: "post",
             data: {
-                nombre : nombre,            
+                nombre : nombre,    
+                nombreFiscal: nombreFiscal,
+                representante: representante,
                 email : email,
                 telefonos : JSON.stringify(telefonos),
                 tipos : JSON.stringify(tipos),

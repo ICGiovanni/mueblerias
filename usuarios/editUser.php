@@ -122,6 +122,7 @@
                 <div class="col-md-5">
                     <select id="sucursal" class="form-control">
                         <option value="0">Selecciona una sucursal</option>
+                        <option value="0">Sin Sucursal</option>
                         <?php 
                         foreach($sucursales as $sucursal){
                             $select = '';
@@ -199,12 +200,12 @@
                     <?php 
                         if($i==0){
                     ?>
-                    <button class="form-control" id="agregarTelefono" value="" placeholder="Telefono" type="button"><i class="fa fa-plus"></i></button>
+                    <button class="btn btn-primary btn-xs" id="agregarTelefono" value="" placeholder="Telefono" type="button"><i class="fa fa-plus"></i></button>
                     <?php
                         }
                         else{
                     ?>   
-                    <button class='form-control deletePhone' value='' type='button'><i class='fa fa-times'></i></button>
+                    <button class='btn btn-danger btn-xs deletePhone' value='' type='button'><i class='fa fa-times'></i></button>
                     <?php
                         }
                     ?>
@@ -216,28 +217,7 @@
             }
             ?> 
             <div>
-            <div class="clear">&nbsp;</div>
-            <div class="row">
-                <div class="col-md-3 text-right">
-                    
-                    <label class="control-label">Telefono:</label>
-                     
-                </div>
-                <div class="col-md-2">                            
-                    <input class="form-control" id="telefono" name="telefono[]" value="" type="text">                                            
-                </div>    
-                <div class="col-md-2">
-                    <select id="phoneType" name="phoneType[]" class="form-control">
-                        <option value="1">Celular</option>
-                        <option value="2">Casa</option>
-                        <option value="3">Oficina</option>
-                        <option value="4">Otro</option>
-                    </select>
-                </div>
-                <div class="col-md-1">                                               
-                    <button class="form-control" id="agregarTelefono" value="" placeholder="Telefono" type="button"><i class="fa fa-plus"></i></button>                    
-                </div>    
-            </div>
+            
             </div>  
             <div class="row" id="newPhone">
 
@@ -328,12 +308,10 @@
             </div>                                   
             <div class="clear">&nbsp;</div>            
             <div class="row ">  
-               <div class="col-lg-4">&nbsp;</div>
-               <div class="col-lg-2 text-right">
-                   <button class='btn btn-danger' id='cancelarUser'>Cancelar</button>
-               </div>   
-               <div class="col-md-2 text-right">
-                   <button class='btn btn-primary' id='updateUser' data-user = '<?php echo $userId ?>'>Actualizar usuario</button>
+               <div class="col-lg-3">&nbsp;</div>
+               <div class="col-lg-5 text-right">
+                   <button class='btn btn-danger btn-xs' id='cancelarUser'>Cancelar</button>               
+                   <button class='btn btn-primary btn-xs' id='updateUser' data-user = '<?php echo $userId ?>'>Actualizar usuario</button>
                </div>
             </div>               
         </div>

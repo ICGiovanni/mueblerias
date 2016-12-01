@@ -66,14 +66,7 @@
                         <div class="col-md-5">
                             <input type="password" id="password" value="" class="form-control" >
                         </div>    
-                    </div>
-                    <div class="clear">&nbsp;</div>
-                    <div class="row">                        
-                        <label class="control-label col-md-2">Confirmar contraseña:</label>                        
-                        <div class="col-md-5">
-                            <input type="password" id="password2" value="" class="form-control" >
-                        </div>    
-                    </div>
+                    </div>                    
                     <div class="clear">&nbsp;</div>            
                     <div class="row">                        
                         <label class="control-label col-md-2">Perfil:</label>                        
@@ -121,7 +114,7 @@
                     <div class="row">                        
                         <label class="control-label col-md-2">Periodicidad de pago:</label>
                         <div class="col-md-5">                            
-                            <select id="periodicidad" name="periodicidad" class="form-control m-b">
+                            <select id="periodicidad" name="periodicidad" class="form-control m-b chosen-select" data-placeholder="Selecciona una opcion">
                                 <option value="0">Selecciona una opción</option>
                                 <option value="1">Semanal</option>
                                 <option value="2">Quincenal</option>
@@ -203,7 +196,7 @@
                     <div class="row">                        
                         <label class="control-label col-md-2">Estado</label>
                         <div class="col-md-5">                            
-                            <select id="estado" name="estado" class="form-control m-b">
+                            <select id="estado" name="estado" class="form-control m-b chosen-select">
                                 <option value="0">Selecciona un estado</option>
                             </select>
                         </div>                            
@@ -229,9 +222,20 @@
     include $pathProy.'footer.php';
 ?>
 
-<script src="<?php echo $raizProy?>usuarios/js/addUsers.js"></script>    
+
 <script src="<?php echo $raizProy?>js/plugins/datapicker/bootstrap-datepicker.js"></script>
 <script src="<?php echo $raizProy?>js/plugins/sweetalert/sweetalert.min.js"></script>
+<script src="<?php echo $raizProy?>js/plugins/chosen/chosen.jquery.js"></script>
 
+<link href="<?php echo $raizProy?>css/plugins/chosen/chosen.css" rel="stylesheet">
 <link href="<?php echo $raizProy?>css/plugins/datapicker/datepicker3.css" rel="stylesheet">
 <link href="<?php echo $raizProy?>css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+<script src="<?php echo $raizProy?>usuarios/js/addUsers.js"></script>    
+<script>
+        $(document).ready(function(){
+            $("#periodicidad").chosen();
+            $("#perfil").chosen();
+            $("#sucursal").chosen();
+           
+        });
+</script>    

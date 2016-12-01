@@ -34,11 +34,13 @@ require_once $pathProy.'/menu.php';
                     <table id="tablaProveedores" class="table table-striped table-bordered table-hover dataTables-example" >
                         <thead>
                         <tr>                            
-                            <th>Nombre</th>
+                            <th>Nombre Comercial</th>
+                            <th>Nombre Fiscal</th>
+                            <th>Representante</th>
                             <th>Telefono</th>
                             <th>E-mail</th>
                             <th width='120px'><center>Dirección</center></th>
-                            <th width='120px'><center>Accion</center></th>                            
+                            <th width='60px'><center>Accion</center></th>                            
                         </tr>
                         </thead>
                         <tbody id='listaProveedores'></tbody>

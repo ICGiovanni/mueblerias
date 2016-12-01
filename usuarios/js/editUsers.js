@@ -22,7 +22,7 @@ $(document).ready(function(){
                                         "<option value='4'>Otro</option>"+
                                     "</select>"+
                                 "</div>"+
-                                "<div class='col-md-1'><button class='form-control deletePhone' value='' type='button'><i class='fa fa-times'></i></button></div>"+
+                                "<div class='col-md-1'><button class='btn btn-danger btn-xs deletePhone' value='' type='button'><i class='fa fa-times'></i></button></div>"+
                                "</div></div>");
                        
         $(".deletePhone").click(function(){            

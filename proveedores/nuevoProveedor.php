@@ -25,13 +25,25 @@ require_once $pathProy.'/menu.php';
 <div class="wrapper wrapper-content animated fadeIn">
     <form method="get" class="form-horizontal" action="/" id="form_cliente">              
         <div class="row">    
-            <div class="col-lg-12">                      
+            <div class="col-lg-12">                                                                        
                 <div class="form-group">                            
-                    <label for="nombre" class="control-label col-md-2">Nombre:</label>                            
+                    <label for="nombreComercial" class="control-label col-md-2">Nombre Comercial:</label>                            
                     <div class="col-md-6">
-                        <input type="text" id="nombre" value="" class="form-control" >
+                        <input type="text" id="nombreComercial" value="" class="form-control" >
                     </div>    
-                </div>                                    
+                </div>
+                <div class="form-group">                            
+                    <label for="nombreFiscal" class="control-label col-md-2">Nombre Fiscal:</label>                            
+                    <div class="col-md-6">
+                        <input type="text" id="nombreFiscal" value="" class="form-control" >
+                    </div>    
+                </div>
+                <div class="form-group">                            
+                    <label for="representante" class="control-label col-md-2">Representante:</label>                            
+                    <div class="col-md-6">
+                        <input type="text" id="representante" value="" class="form-control" >
+                    </div>    
+                </div>
                 <div class="form-group">                      
                     <label class="control-label col-md-2">Correo electrónico:</label>                    
                     <div class="col-md-6">
