@@ -389,7 +389,7 @@ $(document).ready(function(){
 				"lengthMenu": "Display _MENU_ records per page",
 				"zeroRecords": "Nothing found - sorry",
 				"info": "Mostrando _MAX_ entradas",
-				"infoEmpty": '<button type="button" class="btn btn-warning btn-xs" onclick="genera_nomina();" > Generar nomina de esta semana </button>',
+				"infoEmpty": '<button type="button" name="button_nomina" id="button_nomina" class="btn btn-warning btn-xs" onclick="genera_nomina();" > Generar nomina de esta semana </button>',
 				"infoFiltered": "(filtered from _MAX_ total records)"
 			},
 			buttons: [
@@ -651,9 +651,12 @@ function creaPagoSalario(gasto_id, login_id){
 	
 	
 }
-
+creando_nomina = false;
 function genera_nomina(){
-	$.ajax({
+	$("#button_nomina").addClass("disabled");
+	if(!creando_nomina){
+		creando_nomina = true;
+		$.ajax({
 			type: "GET",
 			url: "ajax/genera_nomina.php", // se crea el gasto del dia extra y se paga en automatico
 
@@ -664,6 +667,9 @@ function genera_nomina(){
 				location.href = './?grupo=<?=$_GET["grupo"]?>';
 			}		
 		});
+	} 
+	return;
+	
 	
 }
 
