@@ -602,7 +602,7 @@ class Productos
 		
 		$this->DeleteProductGroup($params['id_producto']);
 		
-		$sql="UPDATE productos SET producto_name=:nombre,producto_sku=:sku,producto_description=:descripcion,producto_price_purchase=:precio_utilitario,producto_price_public=:precio_publico,proveedor_id=:proveedor,color_id=:color,material_id=:material,producto_version=:version,	producto_medida=:medida,producto_price_purchase_discount=:precio_utilitario_descuento,producto_price_public_min=:precio_publico_min,producto_price_public_discount=:producto_price_public_discount,producto_conjunto=:conjunto,producto_description_corta=:descripcionC
+		$sql="UPDATE productos SET producto_name=:nombre,producto_sku=:sku,producto_description=:descripcion,producto_price_purchase=:precio_utilitario,producto_price_public=:precio_publico,proveedor_id=:proveedor,color_id=:color,material_id=:material,producto_version=:version,	producto_medida=:medida,producto_price_purchase_discount=:precio_utilitario_descuento,producto_price_public_min=:precio_publico_min,producto_price_public_discount=:producto_price_public_discount,producto_conjunto=:conjunto,producto_description_corta=:descripcionC,producto_price_purchase_percent=:porcentaje_utilidad,producto_price_min_public_percent=:producto_price_min_public_percent
 				WHERE producto_id=:producto";
 		
 		
@@ -626,9 +626,11 @@ class Productos
 		$statement->bindParam(':descripcionC', $params['descripcionC'], PDO::PARAM_STR);
 		$statement->bindParam(':precio_utilitario', $price_utilitarian, PDO::PARAM_STR);
 		$statement->bindParam(':precio_utilitario_descuento', $price_utilitarian_descuento, PDO::PARAM_STR);
+		$statement->bindParam(':porcentaje_utilidad', $params['precioPUP'], PDO::PARAM_STR);
 		$statement->bindParam(':precio_publico', $price_public, PDO::PARAM_STR);
 		$statement->bindParam(':precio_publico_min', $price_public_min, PDO::PARAM_STR);
 		$statement->bindParam(':producto_price_public_discount', $price_public_discount, PDO::PARAM_STR);
+		$statement->bindParam(':producto_price_min_public_percent', $params['precioPMM'], PDO::PARAM_STR);
 		$statement->bindParam(':proveedor', $params['proveedor'], PDO::PARAM_STR);
 		$statement->bindParam(':color', $params['color'], PDO::PARAM_STR);
 		$statement->bindParam(':material', $params['material'], PDO::PARAM_STR);
@@ -706,6 +708,31 @@ class Productos
 		return $result;
 	}
 	
+	public function GetProductsSell()
+	{
+		$sql="SELECT p.producto_id,p.producto_sku,p.producto_name,
+				IF((SELECT imagen_route
+				FROM imagenes_productos ip
+				WHERE ip.producto_id=p.producto_id
+				ORDER BY imagen_id ASC
+				limit 0,1)!='',
+				(SELECT imagen_route
+				FROM imagenes_productos ip
+				WHERE ip.producto_id=p.producto_id
+				ORDER BY imagen_id ASC
+				limit 0,1),'".FINAL_URL."img/imagen-no.png') AS imagen,
+				producto_price_public,producto_description
+				FROM productos p
+				WHERE producto_type IN('U','V')
+				ORDER BY p.producto_name ASC";
+	
+		$statement=$this->connect->prepare($sql);
+		$statement->execute();
+		$result=$statement->fetchAll(PDO::FETCH_ASSOC);
+	
+		return $result;
+	}
+	
 	public function GetFeatureVariations($producto_id)
 	{
 		$inventarios=new Inventarios();
@@ -747,11 +774,48 @@ class Productos
 			{
 				$result[$key]['stock_sucursal']=$stock;
 			}
-			else 
+			else
 			{
 				$result[$key]['stock_sucursal']=array();
 			}
+			
+			$conjunto=$this->GetConjuntosProduct($r['producto_id']);
+			
+			if(count($conjunto))
+			{
+				$result[$key]['conjunto']=$conjunto;
+			}
+			else
+			{
+				$result[$key]['conjunto']=array();
+			}
 		}
+		
+		return $result;
+	}
+	
+	public function GetConjuntosProduct($product_id)
+	{
+		$sql="SELECT p.producto_id,p.producto_name,p.producto_sku,
+				c.color_id,c.color_name,c.color_abrev,
+				m.material_id,m.material_name,m.material_abrev,
+				p.producto_price_public,p.producto_price_public_min,
+				p.producto_price_public_discount,
+				IF((SELECT SUM(cantidad)
+				FROM inventario_productos
+				WHERE producto_id=p.producto_id)!='',
+				(SELECT SUM(cantidad)
+				FROM inventario_productos
+				WHERE producto_id=p.producto_id),0) AS stock
+				FROM productos p
+				INNER JOIN productos_conjunto pc USING(producto_id)
+				INNER JOIN colores c USING(color_id)
+				INNER JOIN materiales m USING(material_id)
+				WHERE p.producto_id='$product_id'";
+		
+		$statement=$this->connect->prepare($sql);
+		$statement->execute();
+		$result=$statement->fetchAll(PDO::FETCH_ASSOC);
 		
 		return $result;
 	}
@@ -809,8 +873,8 @@ class Productos
 				producto_price_public,producto_description,producto_price_purchase,
 				CASE producto_type
 				WHEN 'P' THEN 'PRINCIPAL'
-				WHEN 'U' THEN 'ÚNICO'
-				WHEN 'V' THEN 'VARIANTE'
+				WHEN 'U' THEN 'GENERAL'
+				WHEN 'V' THEN 'GENERAL'
 				END AS producto_type_name,producto_type,
 				producto_conjunto,
 				IF(producto_type='P',
@@ -824,7 +888,8 @@ class Productos
 				WHERE producto_id=p.producto_id)!='',
 				(SELECT SUM(cantidad)
 				FROM inventario_productos
-				WHERE producto_id=p.producto_id),0)) AS stock
+				WHERE producto_id=p.producto_id),0)) AS stock,
+				producto_description_corta,producto_description
 				FROM productos p
 				WHERE producto_type IN('U','P')
 				$where";
@@ -895,6 +960,17 @@ class Productos
 				$result[$key]['materiales']=$materiales;
 				$result[$key]['colores']=$colores;
 			}
+			
+			$conjunto=$this->GetConjuntosProduct($r['producto_id']);
+			
+			if(count($conjunto))
+			{
+				$result[$key]['conjunto']=$conjunto;
+			}
+			else
+			{
+				$result[$key]['conjunto']=array();
+			}
 		}
 		
 		return json_encode($result);
@@ -953,6 +1029,11 @@ class Productos
 	
 	public function InsertProductoVariantes($producto_id,$data)
 	{
+		$sql="UPDATE productos SET producto_parent='0' WHERE producto_parent='$producto_id'";
+		
+		$statement=$this->connect->prepare($sql);
+		$statement->execute();
+		
 		foreach($data as $d)
 		{
 				

@@ -6,7 +6,7 @@
     include $pathProy.'/menu.php';
 ?>
 
-
+<link href="<?php echo $raizProy?>css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
     <div class="row wrapper border-bottom white-bg page-heading">
         <div class="col-sm-4">
             <h2>Editar Cliente</h2>
@@ -100,7 +100,7 @@ $datos=$clientes->GetClientes($id_cliente);
            		{
            			$phonesC.='<label class="col-sm-2 control-label"></label>';
            		}
-           		$phonesC.='<div class="col-sm-3 "><input class="form-control" id="telefono" name="telefono[]" value="'.$phone.'" type="text"></div>
+           		$phonesC.='<div class="col-sm-3 "><input class="form-control telefono_cliente" id="telefono" name="telefono[]" value="'.$phone.'" type="text"></div>
            	<div class="col-md-2">
                             <select id="phoneType" name="phoneType[]" class="form-control">';
            		
@@ -137,138 +137,68 @@ $datos=$clientes->GetClientes($id_cliente);
             
             echo $phonesC;
             ?>
+            </div>
             <div id="newPhone"></div>
-            <div class="form-group"><label class="col-sm-2 control-label">E-mail</label>
-			<div class="col-sm-6" id="divEmail"><input type="text" class="form-control" id="email" name="email" value="<?php echo $datos[0]["email"]?>"></div>
+            
+          	<div class="form-group">
+          	<?php 
+          	$emails=$clientes->GetEmailsClient($id_cliente);
+          	
+          	$emailC="";
+          	$i=0;
+			foreach($emails as $e)
+			{
+				$email=$e['email'];
+				$emailC.='<div class="form-group">';
+				if($i==0)
+				{
+					$emailC.='<label class="col-sm-2 control-label">E-mail</label>';
+					$emailC.='<div class="col-sm-3 "><input class="form-control" id="email" name="email[]" value="'.$email.'" type="text"></div>';
+					$emailC.='<div class="col-md-1">                            
+                            <button class="btn btn-primary btn-xs" id="agregarEmail" value="" placeholder="E-mail" type="button"><i class="fa fa-plus"></i></button>
+                        </div>';
+				}
+				else 
+				{
+					$emailC.='<label class="col-sm-2 control-label">E-mail</label>';
+					$emailC.='<div class="col-sm-3 "><input class="form-control" id="email" name="email[]" value="'.$email.'" type="text"></div>';
+					$emailC.='<div class="col-md-1">
+                            <button class="btn btn-danger btn-xs deleteEmail" id="agregarEmail" value="" placeholder="E-mail" type="button"><i class="fa fa-times"></i></button>
+                        </div>';
+				}
+				$emailC.='</div>';
+				
+				$i++;
+			}
+			
+			if(!$emailC)
+			{
+				$emailC.='<div class="form-group">';
+				$emailC.='<label class="col-sm-2 control-label">E-mail</label>';
+				$emailC.='<div class="col-sm-3 "><input class="form-control" id="email" name="email[]" value="" type="text"></div>';
+				$emailC.='<div class="col-md-1">
+                            <button class="btn btn-danger btn-xs deleteEmail" id="agregarEmail" value="" placeholder="E-mail" type="button"><i class="fa fa-times"></i></button>
+                        </div>';
+				$emailC.='</div>';
+			}
+          	echo $emailC;
+          	?>
+          	
             </div>
-            <div class="form-group"><label class="col-sm-2 control-label">E-mail Alterno</label>
-			<div class="col-sm-6" id="divEmail"><input type="text" class="form-control" id="emailA" name="emailA" value="<?php echo $datos[0]["emailA"]?>"></div>
-            </div>
+            <div id="newEmail"></div>
+            
             <div class="form-group">
-			<div class="col-sm-4 col-sm-offset-2">
-			<button class="btn btn-white" id="cancelar" type="button">Cancelar</button>
-			<button class="btn btn-primary" id="guardar" type="button">Guardar</button>
+			<div class="col-sm-6 col-sm-offset-2" align="right"><br>
+			<button class="btn btn-danger btn-xs" id="cancelar" type="button">Cancelar</button>&nbsp;&nbsp;&nbsp;&nbsp;
+			<button class="btn btn-primary btn-xs" id="editar" type="button">Guardar Cliente</button>
 			</div>
 			</div>
-        
+            
 		</form>
 	</div>
+<script src="<?php echo $raizProy?>js/plugins/sweetalert/sweetalert.min.js"></script>
 <script src="<?php echo $raizProy?>js/plugins/toastr/toastr.min.js"></script>
-<script>
-$(document).ready(function()
-{
-
-	toastr.options=
-	{
-		  "closeButton": true,
-		  "debug": false,
-		  "progressBar": true,
-		  "preventDuplicates": false,
-		  "positionClass": "toast-top-right",
-		  "onclick": null,
-		  "showDuration": "400",
-		  "hideDuration": "1000",
-		  "timeOut": "7000",
-		  "extendedTimeOut": "1000",
-		  "showEasing": "swing",
-		  "hideEasing": "linear",
-		  "showMethod": "fadeIn",
-		  "hideMethod": "fadeOut"
-	}
-	
-	$("#nombre").focus();
-
-	$( "#guardar" ).click(function()
-	{
-		var email_regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i;
-		if($("#nombre").val()=='')
-		{
-			toastr.error('Debe de agregar un Nombre');
-			$("#nombre").val('');
-			$("#nombre").focus();		
-		}
-		else if($("#apellidoP").val()=='')
-		{
-			toastr.error('Debe de agregar un Apellido Paterno');
-			$("#apellidoP").val('');
-			$("#apellidoP").focus();		
-		}
-		else if($("#apellidoM").val()=='')
-		{
-			toastr.error('Debe de agregar un Apellido Materno');
-			$("#apellidoM").val('');
-			$("#apellidoM").focus();		
-		}
-		else if($("#telefono").val()=='')
-		{
-			toastr.error('Debe de agregar un Telefono');
-			$("#telefono").val('');
-			$("#telefono").focus();
-		}
-		else if(!email_regex.test($("#email").val()))
-		{
-			toastr.error('Debe de agregar un E-mail valido');
-			$("#email").val('');
-			$("#email").focus();
-		}
-		else
-		{
-			var url="actualizar_cliente.php";
-			 
-			$.ajax(
-			{
-		    	type: "POST",
-		        url: url,
-		        data: $("#form_cliente").serialize(), // serializes the form's elements.
-		        success: function(data)
-		        {
-		        	alert("El Cliente ha sido actualizado"); // show response from the php script.
-		        	var url="index.php";
-		    		$(location).attr("href", url);
-				}
-			});
-
-			
-		}
-	});
-	
-	$( "#cancelar" ).click(function()
-	{
-		var url="index.php";
-		$(location).attr("href", url);
-	});
-
-	$.getJSON("states_json.php",function(result)
-	{
-        $.each(result, function(i, field)
-		{
-    		if(field.id_estado==$("#id_estado").val())
-    		{
-    			$("#estado").append('<option value="'+field.id_estado+'" selected>'+field.estado+'</option>');	
-    		}
-    		else
-    		{
-    			$("#estado").append('<option value="'+field.id_estado+'" >'+field.estado+'</option>');
-    		}
-        	
-        });
-    });
-
-	$("#agregarTelefono").click(function(){
-        $("#newPhone").append('<div class="form-group"><label class="col-sm-2 control-label"></label><div class="col-sm-3 "><input class="form-control" id="telefono" name="telefono[]" value="" type="text"></div><div class="col-md-2">                                <select id="phoneType" name="phoneType[]" class="form-control"><option value="1">Celular</option><option value="2">Casa</option>                                    <option value="3">Oficina</option><option value="4">Otro</option>                                </select></div><div class="col-md-1"><button class="form-control deletePhone" id="agregarTelefono" value="" placeholder="Telefono" type="button"><i class="fa fa-times"></i></button></div></div>');
-
-        $(".deletePhone").click(function(){            
-            $(this).parent().parent().remove();
-        });  
-     });
-
-	$(".deletePhone").click(function(){            
-        $(this).parent().parent().remove();
-    }); 
-});
-</script>
-
-
+<script src="<?php echo $raizProy?>clientes/js/clientes.js"></script>   
    
 
 <?php

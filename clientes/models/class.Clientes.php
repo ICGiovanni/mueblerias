@@ -13,7 +13,7 @@ class Clientes
 	
 	public function InsertarCliente($params)
 	{
-		$sql="INSERT INTO clientes VALUES('',:nombre,:apellidoP,:apellidoM,:razonS,:rfc,:calle,:noExt,:noInt,:colonia,:codigoPostal,:municipio,:estado,:email,:emailA,'')";
+		$sql="INSERT INTO clientes VALUES('',:nombre,:apellidoP,:apellidoM,:razonS,:rfc,:calle,:noExt,:noInt,:colonia,:codigoPostal,:municipio,:estado,'')";
 		
 		$statement=$this->connect->prepare($sql);
 		
@@ -29,8 +29,6 @@ class Clientes
 		$statement->bindParam(':codigoPostal', $params['codigoPostal'], PDO::PARAM_STR);
 		$statement->bindParam(':municipio', $params['municipio'], PDO::PARAM_STR);
 		$statement->bindParam(':estado', $params['estado'], PDO::PARAM_STR);		
-		$statement->bindParam(':email', $params['email'], PDO::PARAM_STR);
-		$statement->bindParam(':emailA', $params['emailA'], PDO::PARAM_STR);
 		
 		$statement->execute();
 		$cliente_id=$this->connect->lastInsertId();
@@ -54,6 +52,21 @@ class Clientes
 			}
 		}
 		
+		$email=$_REQUEST['email'];
+	
+		foreach($email as $k=>$e)
+		{
+			if($e!='')
+			{
+				$sql="INSERT INTO cliente_email VALUES('',:id_cliente,:email)";
+				$statement=$this->connect->prepare($sql);
+				$statement->bindParam(':id_cliente', $cliente_id, PDO::PARAM_STR);
+				$statement->bindParam(':email', $e, PDO::PARAM_STR);
+		
+				$statement->execute();
+			}
+		}
+		
 		return $cliente_id;
 	}
 	
@@ -61,9 +74,7 @@ class Clientes
 	{
 		$sql="UPDATE clientes SET nombre=:nombre,apellidoP=:apellidoP,apellidoM=:apellidoM,razon_social=:razonS,rfc=:rfc,
 				calle=:calle,num_exterior=:noExt,num_interior=:noInt,colonia=:colonia,
-				codigo_postal=:codigoPostal,municipio=:municipio,id_estado=:estado,
-				email=:email,
-				emailA=:emailA
+				codigo_postal=:codigoPostal,municipio=:municipio,id_estado=:estado
 				WHERE id_cliente=:id_cliente";
 		
 		$statement=$this->connect->prepare($sql);
@@ -80,8 +91,6 @@ class Clientes
 		$statement->bindParam(':codigoPostal', $params['codigoPostal'], PDO::PARAM_STR);
 		$statement->bindParam(':municipio', $params['municipio'], PDO::PARAM_STR);
 		$statement->bindParam(':estado', $params['estado'], PDO::PARAM_STR);
-		$statement->bindParam(':email', $params['email'], PDO::PARAM_STR);
-		$statement->bindParam(':emailA', $params['emailA'], PDO::PARAM_STR);
 		
 		$statement->execute();
 		
@@ -108,12 +117,38 @@ class Clientes
 			}
 		}
 		
+		$email=$_REQUEST['email'];
+		
+		foreach($email as $k=>$e)
+		{
+			if($e!='')
+			{
+				$sql="INSERT INTO cliente_email VALUES('',:id_cliente,:email)";
+				$statement=$this->connect->prepare($sql);
+				$statement->bindParam(':id_cliente', $cliente_id, PDO::PARAM_STR);
+				$statement->bindParam(':email', $e, PDO::PARAM_STR);
+		
+				$statement->execute();
+			}
+		}
+		
 		return $cliente_id;
 	}
 	
 	public function BorrarTelefonos($id_cliente)
 	{
 		$sql="DELETE FROM cliente_telefono WHERE id_cliente=:id_cliente";
+		
+		$statement=$this->connect->prepare($sql);
+		$statement->bindParam(':id_cliente', $id_cliente, PDO::PARAM_STR);
+		
+		$statement->execute();
+		return $id_cliente;
+	}
+	
+	public function BorrarEmail($id_cliente)
+	{
+		$sql="DELETE FROM cliente_email WHERE id_cliente=:id_cliente";
 		
 		$statement=$this->connect->prepare($sql);
 		$statement->bindParam(':id_cliente', $id_cliente, PDO::PARAM_STR);
@@ -139,7 +174,7 @@ class Clientes
 	{
 		$sql="SELECT c.id_cliente,c.nombre,c.apellidoP,c.apellidoM,c.razon_social,c.rfc,c.calle,c.num_exterior,
 				c.num_interior,c.colonia,c.codigo_postal,c.municipio,
-				e.estado,c.email,c.emailA,c.rating,
+				e.estado,c.rating,
 				IF((SELECT ct.number
 				FROM cliente_telefono ct
 				WHERE ct.id_cliente=c.id_cliente
@@ -149,7 +184,17 @@ class Clientes
 				FROM cliente_telefono ct
 				WHERE ct.id_cliente=c.id_cliente
 				ORDER BY id_telefono ASC
-				LIMIT 0,1),'') AS telefono
+				LIMIT 0,1),'') AS telefono,
+				IF((SELECT ce.email
+				FROM cliente_email ce
+				WHERE ce.id_cliente=c.id_cliente
+				ORDER BY id_email ASC
+				LIMIT 0,1)!='',
+				(SELECT ce.email
+				FROM cliente_email ce
+				WHERE ce.id_cliente=c.id_cliente
+				ORDER BY id_email ASC
+				LIMIT 0,1),'') AS email
 				FROM clientes c
 				INNER JOIN estados e USING(id_estado)
 				ORDER BY c.id_cliente";
@@ -161,7 +206,6 @@ class Clientes
 		$json=json_encode($result);
 		
 		$jsonPathFile='json/lista_clientes.json';
-		
 		$handler = fopen($jsonPathFile, "w");
 		fwrite($handler, $json);
 		fclose($handler);
@@ -206,7 +250,7 @@ class Clientes
 		
 		$sql="SELECT c.id_cliente,c.nombre,c.apellidoP,c.apellidoM,c.razon_social,c.rfc,c.calle,c.num_exterior,
 				c.num_interior,c.colonia,c.codigo_postal,c.municipio,
-				e.estado,c.email,c.emailA
+				e.estado
 				FROM clientes c
 				INNER JOIN estados e USING(id_estado)
 				$where
@@ -244,6 +288,21 @@ class Clientes
 		$statement->execute();
 		$result=$statement->fetchAll(PDO::FETCH_ASSOC);
 		
+		return $result;
+	}
+	
+	public function GetEmailsClient($id_cliente)
+	{
+		$sql="SELECT ce.email
+				FROM cliente_email ce
+				WHERE ce.id_cliente=:id_cliente";
+		
+		$statement=$this->connect->prepare($sql);
+		$statement->bindParam(':id_cliente', $id_cliente, PDO::PARAM_STR);
+	
+		$statement->execute();
+		$result=$statement->fetchAll(PDO::FETCH_ASSOC);
+	
 		return $result;
 	}
 }

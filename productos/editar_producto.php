@@ -131,6 +131,57 @@ if($datos[0]["producto_type"]=='V')
             </div>
             
             
+            <div id="div_variantes">
+	           	<div class="form-group">
+	           	<label class="col-sm-2 control-label">Productos Variantes</label>
+	           	<div class="col-sm-6" ><input type="text" class="form-control" id="productoV" name="productoV"></div>
+	           	</div>
+	           	
+	           	<div class="form-group">
+	           	<div class="col-sm-2" ></div>
+	           	<div class="col-sm-6" >
+	           	<div id="product_list_variante" class="ibox-content">
+	           	
+	           	<table class="table table-striped">
+	           	<thead>
+					<tr>
+						<td></td>
+						<td>SKU</td>
+						<td>Nombre</td>
+						<td></td>
+					</tr>
+				</thead>
+	           	<tbody id="products_table_variante">
+	           	<?php 
+	           	$result=$productos->GetFeatureVariations($producto_id);
+	           	$table='';
+	           	
+	           	foreach($result as $r)
+	           	{
+	           		$id=$r['producto_id'];
+	           		$sku=$r['producto_sku'];
+	           		$name=$r['producto_name'];
+	           		
+	           		$table.='<tr>';
+	           		$table.='<input type="hidden" id="product_'.$id.'" name="product_'.$id.'" value="'.$id.'" class="products_variante">';
+	           		$table.='<td>'.$sku.'</td>';
+	           		$table.='<td>'.$name.'</td>';
+	           		$table.='<td class="text-left"><a id="delete_'.$id.'" href="#" onCLick="deleteRow(this.id);"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>';
+	           		$table.='</tr>';
+	           		
+	           	}
+	           	echo $table;
+	           	?>
+	           	
+	           	</tbody>
+	           	</table>
+	           </div>
+	           </div>
+	           </div>
+            
+            
+            </div>
+            
             </div>
             
             <div class="form-group">
@@ -398,16 +449,6 @@ if($datos[0]["producto_type"]=='V')
 			</div>
 			</div>
             </div>
-            
-            
-            
-            <div class="form-group">
-            <label class="col-sm-2 control-label">Conjunto</label>
-			<div class="col-sm-2 ">
-				<input type="checkbox" name="conjunto" id="conjunto" value="1" <?php echo $checked;?>>
-			</div>
-            </div>
-            
             <?php 
             
             if($checked)
@@ -418,7 +459,18 @@ if($datos[0]["producto_type"]=='V')
             {
             	$visible='style="display:none;"';	
             }
+            
             ?>
+            
+            <div id="div_check_conjunto" <?php echo $visible;?>>
+            
+            <div class="form-group">
+            <label class="col-sm-2 control-label">Conjunto</label>
+			<div class="col-sm-2 ">
+				<input type="checkbox" name="conjunto" id="conjunto" value="1" <?php echo $checked;?>>
+			</div>
+            </div>
+            
             
 			<div id="div_conjunto" <?php echo $visible;?>>
 	           	<div class="form-group">
@@ -464,6 +516,7 @@ if($datos[0]["producto_type"]=='V')
 	           </div>
 	           </div>
 	           </div>
+            </div>
             </div>
             
             <div class="form-group">
