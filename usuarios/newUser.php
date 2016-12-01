@@ -93,7 +93,8 @@
                         <label class="control-label col-md-2">Sucursal:</label>
                         <div class="col-md-5">
                             <select id="sucursal" class="form-control">
-                                <option value="0">Selecciona una sucursal</option>
+                                <option>Selecciona una sucursal</option>
+                                <option value="0">Sin Sucursal</option>
                                 <?php 
                                 foreach($sucursales as $sucursal){
                                     echo "<option value='".$sucursal['sucursal_id']."'>".$sucursal['sucursal_name']."</option>";
@@ -143,7 +144,7 @@
                             </select>
                         </div>
                         <div class="col-md-1">                            
-                            <button class="form-control" id="agregarTelefono" value="" placeholder="Telefono" type="button"><i class="fa fa-plus"></i></button>
+                            <button class="btn btn-primary btn-xs" id="agregarTelefono" value="" placeholder="Telefono" type="button"><i class="fa fa-plus"></i></button>
                         </div>    
                     </div>
                     <div class="row" id="newPhone"></div>
@@ -209,11 +210,9 @@
                     </div>
                     <div class="clear">&nbsp;</div>
                     <div class="row colaboradorForm">  
-                        <div class="col-lg-4">&nbsp;</div>
-                        <div class="col-lg-2 ">
-                            <button class='btn btn-danger btn-xs' id='cancelarUser'>Cancelar</button>
-                        </div>   
-                        <div class="col-md-2 ">        
+                        <div class="col-lg-2">&nbsp;</div>
+                        <div class="col-lg-5 text-right ">
+                            <button class='btn btn-danger btn-xs' id='cancelarUser'>Cancelar</button>                               
                             <button class='btn btn-primary btn-xs' id='saveUser'>Guardar Usuario</button>
                         </div>
                     </div>  

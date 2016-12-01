@@ -40,8 +40,6 @@ CREATE TABLE IF NOT EXISTS `clientes` (
   `codigo_postal` varchar(10) NOT NULL,
   `municipio` varchar(100) NOT NULL,
   `id_estado` int(11) NOT NULL,
-  `email` varchar(100) NOT NULL,
-  `emailA` varchar(100) NOT NULL,
   `rating` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_cliente`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
@@ -75,4 +73,14 @@ CREATE TABLE IF NOT EXISTS cliente_telefono
 	PRIMARY KEY(id_telefono),
 	FOREIGN KEY (id_cliente) REFERENCES clientes(id_cliente),
 	FOREIGN KEY (phone_type_id) REFERENCES inv_phone_type(phone_type_id)
+)ENGINE=InnoDB  DEFAULT CHARSET=latin1;
+
+
+CREATE TABLE IF NOT EXISTS cliente_email
+(
+	id_email INT NOT NULL AUTO_INCREMENT,
+	id_cliente INT NOT NULL,
+	email VARCHAR(120),
+	PRIMARY KEY(id_email),
+	FOREIGN KEY (id_cliente) REFERENCES clientes(id_cliente)
 )ENGINE=InnoDB  DEFAULT CHARSET=latin1;

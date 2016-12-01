@@ -104,6 +104,20 @@ class Proveedor {
         return $result;
     }
     
+    public function getProveedorPhone($proveedor_id)
+    {
+        $sql="SELECT *
+        FROM proveedor_telefono left join inv_phone_type using(phone_type_id) WHERE proveedor_id = :proveedor_id";
+
+        $statement=$this->connect->prepare($sql);
+        $statement->bindParam(':proveedor_id', $proveedor_id, PDO::PARAM_STR);
+
+        $statement->execute();
+        $result=$statement->fetchAll(PDO::FETCH_ASSOC);
+
+        return $result;
+    }
+    
     public function getProveedoresList()
     {
 
@@ -142,20 +156,29 @@ class Proveedor {
         $addressId =  $this->connect->lastInsertId();
 
 
-        $sql = "   INSERT INTO proveedores (proveedor_id, proveedor_nombre, telefono, email, address_id) 
-                    VALUES (0, :nombre, :telefono, :email, ".$addressId.")";
+        $sql = "   INSERT INTO proveedores (proveedor_id, proveedor_nombre, email, address_id) 
+                    VALUES (0, :nombre, :email, ".$addressId.")";
 
         $statement=$this->connect->prepare($sql);
 
-        $statement->bindParam(':nombre', $data['nombre'] ,PDO::PARAM_STR);            
-        $statement->bindParam(':telefono', $data['telefono'] ,PDO::PARAM_STR);            
+        $statement->bindParam(':nombre', $data['nombre'] ,PDO::PARAM_STR);                    
         $statement->bindParam(':email',$data['email'],PDO::PARAM_STR);
 
         $statement->execute();            
         
-        $loginId = $this->connect->lastInsertId();
+        $idProveedor = $this->connect->lastInsertId();
+                
+        $tipos = json_decode($data['tipos']);
+        foreach(json_decode($data['telefonos']) as $key => $value){
+            echo $sqlProv = " INSERT INTO proveedor_telefono(id_telefono, proveedor_id, phone_type_id, number)
+                        VALUES(0, ".$idProveedor.", ".$tipos[$key].", ".$value.")";
+
+            $statement=$this->connect->prepare($sqlProv);
+            $statement->execute();            
+
+        }
         
-        return $loginId;
+        return $idProveedor;
     }
     
     public function updateProveedor($data){

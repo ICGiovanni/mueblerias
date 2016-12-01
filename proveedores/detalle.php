@@ -61,7 +61,7 @@ echo "</pre>";
                                                             
                                                                 <div class="image-imitation">
                                                                 <center>
-                                                                    <img src="'.$image['imagen_route'].'" />
+                                                                    <img src="'.$image['imagen_route'].'" width="250px"/>
                                                                 </center>   
                                                                 </div>
                                                              
@@ -70,7 +70,7 @@ echo "</pre>";
                                             }else{
                                                 echo '  <div>
                                                                 <div class="image-imitation">
-                                                                    <img src="'.$dataProduct->imagen.'" />
+                                                                    <img src="'.$dataProduct->imagen.'" width="250px"/>
                                                                 </div>
                                                             </div>';
                                             }   
@@ -84,7 +84,7 @@ echo "</pre>";
                                         <?php echo $dataProduct->producto_name?>
                                     </h2>
                                     <small>
-                                        <?php echo $dataProduct->producto_description?>
+                                        <?php echo $dataProduct->producto_description_corta?>
                                     </small>
                                     <div class="m-t-md">
                                         <h2 class="product-main-price">$ <?php echo $dataProduct->producto_price_public?><small class="text-muted"> IVA incluido</small> </h2>
@@ -92,7 +92,10 @@ echo "</pre>";
                                     <hr>
 
                                     <h4>Detalle de producto</h4>
-
+                                    <div class="small text-muted">
+                                        <?php echo $dataProduct->producto_description?>
+                                    </div>
+                                    <div class="clear">&nbsp;</div>
                                     <div class="small">
                                     <?php                                        
                                         

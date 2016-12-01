@@ -351,7 +351,7 @@ class Gasto {
 		
 		$statement->execute();
 		
-		$this->checkSaldo($params['gasto_id'], $params['gastos_pagos_monto']);
+		$this->checkSaldo($params['gasto_id']);
 		
 		
 		return $this->connect->lastInsertId();
@@ -361,7 +361,10 @@ class Gasto {
 		$rowPagos = $this->getPagosSum($gasto_id);
 		$rowPagos = $rowPagos[0];
 		
-		if($rowPagos["gastos_pagos_monto"] >= $gastos_pagos_monto){
+		$rowTotal = $this->getTotalPagar($gasto_id);
+		$rowTotal = $rowTotal[0];
+		
+		if($rowPagos["gastos_pagos_monto"] >= $rowTotal["gasto_monto"]){
 			$this->updateGastoStatus($gasto_id,"2");
 		}
 	}
@@ -383,6 +386,18 @@ class Gasto {
 	public function getPagosSum($gasto_id){
 		
 		$sql="SELECT SUM(gastos_pagos_monto) as gastos_pagos_monto FROM ".$this->name_table_gastos_pagos." WHERE gasto_id = :gasto_id";
+
+		$statement=$this->connect->prepare($sql);
+		$statement->bindParam(':gasto_id', $gasto_id, PDO::PARAM_STR);
+
+		$statement->execute();
+        $result=$statement->fetchAll(PDO::FETCH_ASSOC);
+
+		return $result;
+	}
+	
+	public function getTotalPagar($gasto_id){
+		$sql="SELECT gasto_monto FROM ".$this->name_table_gastos." WHERE gasto_id = :gasto_id";
 
 		$statement=$this->connect->prepare($sql);
 		$statement->bindParam(':gasto_id', $gasto_id, PDO::PARAM_STR);
@@ -608,4 +623,27 @@ class Gasto {
 		$statement->execute();
 		return "inserted";
 	}
+	
+	//////////////////////FUNCION PARA CRONS///////////////////////////////////
+	public function marcaVencidos(){
+		$sql = 'SELECT 
+			gasto_id
+		FROM '.$this->name_table_gastos.'
+		WHERE 
+			gasto_fecha_vencimiento < "'.date("Y-m-d H:m:s").'"
+		AND 
+			gasto_status_id = 1';
+			
+		$statement=$this->connect->prepare($sql);
+
+		$statement->execute();
+        $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+		
+		
+		while( list(,$dataVencidos) = each ($result) ){
+			echo "cambia gasto ".$dataVencidos["gasto_id"]." a vencido<br>";
+			$this->updateGastoStatus($dataVencidos["gasto_id"], 4);// 4 = vencido
+		}
+	}
+	
 }

@@ -21,8 +21,8 @@
         </div>
         <div class="col-sm-8">
             <div class="title-action">
-                <a href="./nuevo_cliente.php" class="btn btn-primary btn-xs">Nuevo Cliente</a>
-                <a href="#" id="rating" data-toggle="modal" data-target="#ratingModal" class="btn btn-primary btn-xs">Configurar Rating</a>
+                <a href="./nuevo_cliente.php" class="btn btn-primary btn-xs">+ Nuevo Cliente</a>
+                <!--<a href="#" id="rating" data-toggle="modal" data-target="#ratingModal" class="btn btn-primary btn-xs">Configurar Rating</a>-->
             </div>
             
         </div>
@@ -35,16 +35,13 @@
                 <div class="ibox float-e-margins">
                     <div class="ibox-title">
                         <div class="ibox-tools">
-                             <a class="collapse-link">
+                             
+                            <a class="dropdown-toggle" id="rating" data-toggle="modal" data-target="#ratingModal" href="#">
+                                Configurar Rating <i class="fa fa-wrench"></i>
+                            </a>
+                           <a class="collapse-link">
                                 <i class="fa fa-chevron-up"></i>
                             </a>
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                <i class="fa fa-wrench"></i>
-                            </a>
-                            <ul class="dropdown-menu dropdown-user">
-                                <li><a href="#" id="rating" data-toggle="modal" data-target="#ratingModal">Configurar Rating</a>
-                                </li>
-                            </ul>
                             <!-- <a class="close-link">
                                 <i class="fa fa-times"></i>
                             </a>-->
@@ -184,6 +181,7 @@
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
           <h4 class="modal-title">Configurar Rating</h4>
+          <label class="col-sm-12 control-label">Esta opci&oacute;n es para generar las estrellas de cada cliente dependiendo del monto que se le haga la venta como tambi&eacute;n del numero de ventas</label>
         </div>
         <div class="modal-body">
         <div class="wrapper wrapper-content animated fadeInRight">
@@ -268,8 +266,9 @@
         	$( "#rating" ).click(function()
             {
         		$("#monto").focus();
+        		var n = Date.now();
                 
-        		$.getJSON("json/rating.json",function(result)
+        		$.getJSON("json/rating.json?"+n,function(result)
         		{
             		var monto=result[0].monto;
             		var compras=result[0].compras;

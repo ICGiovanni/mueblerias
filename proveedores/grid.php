@@ -12,7 +12,9 @@ $inventarios=new Inventarios();
 $proveedores = new Proveedor();
 
 $dataProducts = json_decode($productos->GetDataProductsMainJson());
-
+/*echo "<pre>";
+    print_r($dataProducts);
+echo "<pre>";*/
 //$dataUnique = $productos->GetProductsUnique();
 
 ?>    
@@ -162,6 +164,7 @@ $dataProducts = json_decode($productos->GetDataProductsMainJson());
                     echo '                  </span>
                                             <small class="text-muted">'.$prod->producto_sku.'</small>
                                             <div class="product-name" >'.$prod->producto_name.'</div>
+                                            <div class="small m-t-xs" >'.$prod->producto_description_corta.'</div>
                                             <div class="small m-t-xs">&nbsp;';
                                             if(count($prod->materiales)>0){
                                                 echo "<div>";
