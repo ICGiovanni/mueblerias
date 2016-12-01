@@ -159,7 +159,7 @@ $(document).ready(function()
     setTimeout(function(){$("#producto").focus();},0);
     
     var options={
-            url: "../productos/get_products_unique.php",
+            url: "../productos/get_products_sell.php",
             getValue: function(element){
                 var name=element.producto_sku+' '+element.producto_name;			
                 return name;
