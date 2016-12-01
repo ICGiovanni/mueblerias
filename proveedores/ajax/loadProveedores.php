@@ -7,9 +7,21 @@ require_once($_SERVER["REDIRECT_PATH_CONFIG"].'proveedores/models/class.Proveedo
 
     if(count($list)>0){
         foreach($list as $prov){
+            
+            $telefonos = $proveedores->getProveedorPhone($prov['proveedor_id']);
+            
+            $telefono = '';
+            
+            foreach($telefonos as $phone){
+                $telefono.= "<b>".$phone['type'].":</b>&nbsp;".$phone['number']."<br />";
+            }
+                
+            
             echo "  <tr>
                         <td>".$prov['proveedor_nombre']."</td>
-                        <td>".$prov['telefono']."</td>
+                        <td>".$prov['proveedor_nombre_fiscal']."</td>
+                        <td>".$prov['proveedor_representante']."</td>
+                        <td>".$telefono."</td>
                         <td>".$prov['email']."</td>
                         <td align='center'>".$prov['street']."&nbsp;".$prov['number']."&nbsp;".$prov['int_number']."&nbsp;".$prov['neighborhood']."</td>
                         <td align='center'>
@@ -18,7 +30,7 @@ require_once($_SERVER["REDIRECT_PATH_CONFIG"].'proveedores/models/class.Proveedo
                                     data-proveedor_id='".$prov['proveedor_id']."'
                                     data-address_id='".$prov['address_id']."'                                        
                                     data-nombre='".$prov['proveedor_nombre']."'
-                                    data-telefono='".$prov['telefono']."'
+                                    data-telefono='".$telefono."'
                                     data-email='".$prov['email']."'
                                     data-email='".$prov['email']."'
                                     data-calle='".$prov['street']."' 

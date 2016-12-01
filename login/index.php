@@ -17,13 +17,14 @@
             <div class="clear"></div>
             <form class="m-t" method="post" role="form" action="login.php">
                 <div class="input-group m-b">
-                    <input type="text" name="email" value="<?php if (isset($_GET['email'])){echo base64_decode($_GET['email']);}?>" placeholder="Usuario" class="form-control" autocomplete="off">
-                    <span class="input-group-addon">@</span>
-                    <input  type="text" name="" value="globmint.com"  class="form-control" disabled="disabled" style="width: 115px">
+                    <div style="display: inline-block; vertical-align: middle; width: 55%">
+                        <input type="text" name="email" value="<?php if (isset($_GET['email'])){echo base64_decode($_GET['email']);}?>" placeholder="Usuario" class="form-control" autocomplete="off">
+                    </div>    
+                    <div style="display: inline-block; vertical-align: middle; font-size: 17px">&nbsp;@globmint.com</div>
                 </div>
-                <div class="input-group m-b">
-                    <span class="input-group-addon"><i class="fa fa-lock">&nbsp;</i></span>
+                <div class="input-group m-b">                    
                     <input type="password" name="password" value="" class="form-control" placeholder="Contraseña">
+                    <span class="input-group-addon"><i class="fa fa-lock">&nbsp;</i></span>
                 </div>                                
                 <div>
                     <?php 

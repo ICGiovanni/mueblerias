@@ -100,7 +100,7 @@ $datos=$clientes->GetClientes($id_cliente);
            		{
            			$phonesC.='<label class="col-sm-2 control-label"></label>';
            		}
-           		$phonesC.='<div class="col-sm-3 "><input class="form-control" id="telefono" name="telefono[]" value="'.$phone.'" type="text"></div>
+           		$phonesC.='<div class="col-sm-3 "><input class="form-control telefono_cliente" id="telefono" name="telefono[]" value="'.$phone.'" type="text"></div>
            	<div class="col-md-2">
                             <select id="phoneType" name="phoneType[]" class="form-control">';
            		
@@ -175,7 +175,7 @@ $datos=$clientes->GetClientes($id_cliente);
 			{
 				$emailC.='<div class="form-group">';
 				$emailC.='<label class="col-sm-2 control-label">E-mail</label>';
-				$emailC.='<div class="col-sm-3 "><input class="form-control" id="email" name="email[]" value="'.$email.'" type="text"></div>';
+				$emailC.='<div class="col-sm-3 "><input class="form-control" id="email" name="email[]" value="" type="text"></div>';
 				$emailC.='<div class="col-md-1">
                             <button class="btn btn-danger btn-xs deleteEmail" id="agregarEmail" value="" placeholder="E-mail" type="button"><i class="fa fa-times"></i></button>
                         </div>';
@@ -188,12 +188,12 @@ $datos=$clientes->GetClientes($id_cliente);
             <div id="newEmail"></div>
             
             <div class="form-group">
-			<div class="col-sm-4 col-sm-offset-2">
-			<button class="btn btn-white" id="cancelar" type="button">Cancelar</button>
-			<button class="btn btn-primary" id="editar" type="button">Guardar</button>
+			<div class="col-sm-6 col-sm-offset-2" align="right"><br>
+			<button class="btn btn-danger btn-xs" id="cancelar" type="button">Cancelar</button>&nbsp;&nbsp;&nbsp;&nbsp;
+			<button class="btn btn-primary btn-xs" id="editar" type="button">Guardar Cliente</button>
 			</div>
 			</div>
-        
+            
 		</form>
 	</div>
 <script src="<?php echo $raizProy?>js/plugins/sweetalert/sweetalert.min.js"></script>

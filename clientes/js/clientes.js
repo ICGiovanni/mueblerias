@@ -133,11 +133,40 @@ $(document).ready(function()
     });
 
 	$("#agregarTelefono").click(function(){
-        $("#newPhone").append('<div class="form-group"><label class="col-sm-2 control-label"></label><div class="col-sm-3 "><input class="form-control" id="telefono" name="telefono[]" value="" type="text"></div><div class="col-md-2">                                <select id="phoneType" name="phoneType[]" class="form-control"><option value="1">Celular</option><option value="2">Casa</option>                                    <option value="3">Oficina</option><option value="4">Otro</option>                                </select></div><div class="col-md-1"><button class="btn btn-danger btn-xs deletePhone" id="agregarTelefono" value="" placeholder="Telefono" type="button"><i class="fa fa-times"></i></button></div></div>');
+        $("#newPhone").append('<div class="form-group"><label class="col-sm-2 control-label"></label><div class="col-sm-3 "><input class="form-control telefono_cliente" id="telefono" name="telefono[]" value="" type="text" onkeypress="return validateNumber(event)"></div><div class="col-md-2">                                <select id="phoneType" name="phoneType[]" class="form-control"><option value="1">Celular</option><option value="2">Casa</option>                                    <option value="3">Oficina</option><option value="4">Otro</option>                                </select></div><div class="col-md-1"><button class="btn btn-danger btn-xs deletePhone" id="agregarTelefono" value="" placeholder="Telefono" type="button"><i class="fa fa-times"></i></button></div></div>');
 
         $(".deletePhone").click(function(){            
             $(this).parent().parent().remove();
-        });  
+        });
+        
+        $(".telefono_cliente").keyup(function(event)
+        		{
+        			if(event.which!=8)
+        			{
+        				var str=$(this).val();
+        				str=str.replace(/\s+/g,"");
+        				
+        				var j=0;
+        				var cad="";
+        				for(var i=0; i<str.length;i++)
+        				{
+        					var caracter=str.charAt(i);
+        					
+        					if(j==1)
+        					{
+        						cad+=caracter+' ';
+        						j=0;
+        					}
+        					else
+        					{
+        						cad+=caracter;
+        						j++;
+        					}
+        				}
+        				
+        				$(this).val(cad);
+        			}
+        		});
      });
 
 	$("#agregarEmail").click(function(){
@@ -148,4 +177,42 @@ $(document).ready(function()
         });  
      });
 	
+	$(".telefono_cliente").keyup(function(event)
+	{
+		if(event.which!=8)
+		{
+			var str=$(this).val();
+			str=str.replace(/\s+/g,"");
+			
+			var j=0;
+			var cad="";
+			for(var i=0; i<str.length;i++)
+			{
+				var caracter=str.charAt(i);
+				
+				if(j==1)
+				{
+					cad+=caracter+' ';
+					j=0;
+				}
+				else
+				{
+					cad+=caracter;
+					j++;
+				}
+			}
+			
+			$(this).val(cad);
+		}
+	});
+	
 });
+
+function validateNumber(evt)
+{
+	evt = (evt) ? evt : window.event;
+    var charCode = (evt.which) ? evt.which : evt.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+        return false;
+    }
+}

@@ -5,6 +5,8 @@
 ?>
 <style type="text/css">
     .colaboradorForm{ display: none;}
+    .fa-thumbs-o-up{color:#18A689;}
+    .fa-thumbs-o-down{color:#EC4758;}
 </style>
 <div class="row wrapper border-bottom white-bg page-heading">
 	<div class="col-sm-4">
@@ -36,10 +38,10 @@
                     <thead>
                     <tr>
                         <th>Usuario</th>
-                        <th>Creado</th>
-                        <th>Estatus</th>
                         <th>Email</th>
+                        <th>Creado</th>
                         <th>Ultimo Acceso</th>
+                        <th>Estatus</th>                                                
                         <th class="text-center">Activación</th>  
                         <th class="text-center">Acciones</th>  
                     </tr>
@@ -58,7 +60,7 @@
 <?php
     include $pathProy.'footer2.php';
 ?>
-<script src="<?php echo $raizProy?>usuarios/js/usuarios.js"></script>    
+
 <script src="<?php echo $raizProy?>js/plugins/datapicker/bootstrap-datepicker.js"></script>
 <script src="<?php echo $raizProy?>js/plugins/dataTables/datatables.min.js"></script>
 <script src="<?php echo $raizProy?>js/plugins/sweetalert/sweetalert.min.js"></script>
@@ -66,3 +68,4 @@
 <link href="<?php echo $raizProy?>css/plugins/datapicker/datepicker3.css" rel="stylesheet">
 <link href="<?php echo $raizProy?>css/plugins/dataTables/datatables.min.css" rel="stylesheet">
 <link href="<?php echo $raizProy?>css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+<script src="<?php echo $raizProy?>usuarios/js/usuarios.js"></script>    

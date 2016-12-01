@@ -22,7 +22,11 @@ function loadUsers(){
         success: function (response) {
            $("#loadUsers").html(response);
            setTimeout(function(){
-               $('.dataTables-example').DataTable();
+               $('.dataTables-example').DataTable({
+                   "language": {
+                        "url": "../js/plugins/dataTables/Spanish.json"
+                    }
+               });
 
                 /* Init DataTables */
                 var oTable = $('#editable').DataTable();

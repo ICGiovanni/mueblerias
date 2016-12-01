@@ -59,9 +59,22 @@ $(document).ready(function(){
         
     });
     $("#btn_guardar_proveedor").click(function(){
-        var nombre = $("#nombre").val();
+        var nombre = $("#nombreComercial").val();
+        var nombreFiscal = $("#nombreFiscal").val();
+        var representante = $("#representante").val();
+        
         var email = $("#email").val();
-        var telefono = $("#telefono").val();
+        
+        var telefonos = new Array();
+        var tipos = new Array();    
+
+        $("input[name='telefono[]']").each(function(){        
+            telefonos.push($(this).val());
+        });   
+        $("select[name='phoneType[]']").each(function(){                
+            tipos.push($(this).val());
+        });
+        
         var calle = $("#calle").val();
         var numExt = $("#numExt").val();
         var numInt = $("#numInt").val();
@@ -74,9 +87,12 @@ $(document).ready(function(){
             url: "ajax/saveProveedor.php",
             type: "post",
             data: {
-                nombre : nombre,            
+                nombre : nombre,    
+                nombreFiscal: nombreFiscal,
+                representante: representante,
                 email : email,
-                telefono : telefono,
+                telefonos : JSON.stringify(telefonos),
+                tipos : JSON.stringify(tipos),
                 calle: calle,
                 numExt: numExt,
                 numInt: numInt,
@@ -86,14 +102,13 @@ $(document).ready(function(){
                 estado: estado            
             },
             success: function (response) {            
-                $("#myModal").modal('hide');    
+                console.log('response'+response);
                 swal({
                     title: "Guardado!",
                     text: "Proveedor guardado correctamente!",
                     type: "success"
                 }, function () {                    
-                    loadProveedores();    
-                    
+                    window.location.href = 'index.php';
                 });
 
             },
@@ -102,6 +117,27 @@ $(document).ready(function(){
             }
         });
         
+    });
+    
+    $("#agregarTelefono").click(function(){
+        $("#newPhone").append("<div>"+
+                                "<div class='clear'>&nbsp;</div>"+
+                                "<div class='row'><div class='col-md-2'>&nbsp;</div>"+
+                                "<div class='col-md-2'><input class='form-control' name='telefono[]' value='' type='text'></div>"+
+                                "<div class='col-md-2'>"+
+                                    "<select id='phoneType' name='phoneType[]' class='form-control'>"+
+                                        "<option value='1'>Celular</option>"+
+                                        "<option value='2'>Casa</option>"+
+                                        "<option value='3'>Oficina</option>"+
+                                        "<option value='4'>Otro</option>"+
+                                    "</select>"+
+                                "</div>"+
+                                "<div class='col-md-1' style='padding-top: 5px'><button class='btn btn-danger btn-xs deletePhone' value='' type='button'><i class='fa fa-times'></i></button></div>"+
+                               "</div></div>");
+                       
+        $(".deletePhone").click(function(){            
+            $(this).parent().parent().parent().remove();
+        });               
     });
     
     
