@@ -295,7 +295,7 @@ cursor: default;
                     <tfoot>
                     <tr>
                     	<th>SKU</th>
-                        <th>Producto</th>
+                        <th>Modelo</th>
                         <th>Tipo</th>
                         <th>Color</th>
                         <th>Material</th>
