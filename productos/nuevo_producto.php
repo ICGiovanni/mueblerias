@@ -173,7 +173,7 @@
             <div id="div_variacion">
             
             <div class="form-group">
-            <label class="col-sm-2 control-label">Colores</label>
+            <label class="col-sm-2 control-label">Color(es)</label>
 			<div class="col-sm-6" >
 				<select data-placeholder="Selecciona un color" class="chosen-select" style="width:300px;" tabindex="4" id="color" name="color">
 	            <option value="" data-abrev=""></option>
@@ -196,7 +196,7 @@
             </div>
             
             <div class="form-group">
-            <label class="col-sm-2 control-label">Materiales</label>
+            <label class="col-sm-2 control-label">Material(es)</label>
 			<div class="col-sm-6" >
 				<select data-placeholder="Selecciona un material" class="chosen-select" style="width:300px;" tabindex="4" id="material" name="material">
 	            <option value="" data-abrev=></option>
@@ -221,15 +221,16 @@
             
             	
             <div class="form-group">
-            <label class="col-sm-2 control-label">Pecio de Compra</label>
+            <label class="col-sm-2 control-label">P.L.</label>
 			<div class="col-sm-2 ">
 			<div class="input-group m-b">
 			<span class="input-group-addon">$</span>
 			<input type="text" class="form-control" id="precioU" name="precioU" onkeypress="return validateNumber(event)">
 			</div>
 			</div>
-			<div class="col-sm-2 ">
+			<div class="col-sm-3 ">
 			<div class="input-group m-b">
+			<span class="input-group-addon">P.L.D.</span>
 			<span class="input-group-addon">-$</span>
 			<input type="text" class="form-control" id="precioUD" name="precioUD" readonly="readonly">
 			
@@ -238,7 +239,7 @@
             </div>
             
             <div class="form-group">
-           	<label class="col-sm-2 control-label">Descuento</label>
+           	<label class="col-sm-2 control-label">P.L.D.</label>
            	<div class="col-sm-2 ">
            	<div class="input-group m-b">
            	<input class="form-control discount" id="descuento" name="descuento[]" value="" type="text" onkeypress="return validateNumber(event)">
@@ -254,7 +255,7 @@
             
             
             <div class="form-group">
-            <label class="col-sm-2 control-label">Precio P&uacute;blico</label>
+            <label class="col-sm-2 control-label">P.</label>
 			<div class="col-sm-2">
 			<div class="input-group m-b">
 			<input type="text" class="form-control" id="precioPUP" name="precioPUP" onkeypress="return validateCantidad(event)" value="65">
@@ -262,15 +263,17 @@
 			</div>			
 			</div>
 			
-			<div class="col-sm-2 ">
+			<div class="col-sm-3">
 			<div class="input-group m-b">
+			<span class="input-group-addon">P.V.P.</span>
 			<span class="input-group-addon">$</span>
 			<input type="text" class="form-control" id="precioP" name="precioP" onkeypress="return validateCantidad(event)" readonly="readonly">
 			</div>
 			</div>
 			
-			 <div class="col-sm-2 ">
+			 <div class="col-sm-3">
 			 <div class="input-group m-b">
+			 <span class="input-group-addon">P.V.P.D.</span>
 			 <span class="input-group-addon">-$</span>
 			 <input type="text" class="form-control" id="precioPD" name="precioPD" onkeypress="return validateCantidad(event)" readonly="readonly">
 			 </div>
@@ -279,7 +282,7 @@
             
             
             <div class="form-group">
-           	<label class="col-sm-2 control-label">Descuento</label>
+           	<label class="col-sm-2 control-label">D.</label>
            	<div class="col-sm-2 ">
            	 <div class="input-group m-b">
            	<input class="form-control discountP" id="descuentoP" name="descuentoP[]" value="" type="text" onkeypress="return validateNumber(event)">
@@ -294,9 +297,9 @@
             
             
             <div class="form-group">
-            <label class="col-sm-2 control-label">Precio P&uacute;blico Minimo</label>
+            <label class="col-sm-2 control-label">P.P.M.</label>
             
-            <div class="col-sm-2">
+            <div class="col-sm-3">
 			<div class="input-group m-b">
 			<input type="text" class="form-control" id="precioPMM" name="precioPMM" onkeypress="return validateCantidad(event)" value="25">
 			<span class="input-group-addon">%</span>
@@ -326,8 +329,11 @@
             <div id="div_check_conjunto">
             <div class="form-group">
             <label class="col-sm-2 control-label">Conjunto</label>
-			<div class="col-sm-2 ">
+			<div class="col-sm-1">
 				<input type="checkbox" name="conjunto" id="conjunto" value="1">
+			</div>
+			<div class="col-sm-6 ">
+				 <label class="control-label">* Son productos que conforman otro y pueden ser vendidos por separado</label>
 			</div>
             </div>
             </div>

@@ -177,7 +177,7 @@ cursor: default;
 							</td>
 							<td colspan="4">
 							<button type="button" class="btn btn-primary btn-xs" id="filtar">Filtrar</button> &nbsp;&nbsp;&nbsp;
-										<button type="button" class="btn btn-warning btn-xs"  onclick="location.href = '.';" >Limpiar</button>
+										<button type="button" class="btn btn-warning btn-xs"  onclick="location.href = '.';" >Limpiar Filtros</button>
 							</td>
 					</tr>
 					</table>

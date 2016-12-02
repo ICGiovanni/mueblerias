@@ -216,7 +216,7 @@ if($datos[0]["producto_type"]=='V')
             
             <div id="div_variacion" style="<?php echo ($datos[0]['producto_type']!='P') ? '' : "display:none;"; ?>">
             <div class="form-group">
-            <label class="col-sm-2 control-label">Colores</label>
+            <label class="col-sm-2 control-label">Color(es)</label>
 			<div class="col-sm-6" >
 				<select data-placeholder="Selecciona un color" class="chosen-select" style="width:300px;" tabindex="4" id="color" name="color">
 	            <option value="" data-abrev=""></option>
@@ -246,7 +246,7 @@ if($datos[0]["producto_type"]=='V')
             </div>
             
             <div class="form-group">
-            <label class="col-sm-2 control-label">Materiales</label>
+            <label class="col-sm-2 control-label">Material(es)</label>
 			<div class="col-sm-6" >
 				<select data-placeholder="Selecciona un material" class="chosen-select" style="width:300px;" tabindex="4" id="material" name="material">
 	            <option value="" data-abrev=""></option>
@@ -277,15 +277,17 @@ if($datos[0]["producto_type"]=='V')
             
             
             <div class="form-group">
-            <label class="col-sm-2 control-label">Pecio de Compra</label>
+            <label class="col-sm-2 control-label">P.L.</label>
 			<div class="col-sm-2 ">
 			<div class="input-group m-b">
+			<span class="input-group-addon">P.L.D.</span>
 			<span class="input-group-addon">$</span>
 			<input type="text" class="form-control" id="precioU" name="precioU" onkeypress="return validateNumber(event)" value="<?php echo $datos[0]['producto_price_purchase'];?>">
 			</div>
 			</div>
 			<div class="col-sm-2 ">
 			<div class="input-group m-b">
+			<label class="col-sm-2 control-label">P.L.D.</label>
 			<span class="input-group-addon">-$</span>
 			<input type="text" class="form-control" id="precioUD" name="precioUD" readonly="readonly" value="<?php echo $datos[0]['producto_price_purchase_discount'];?>">
 			
@@ -304,7 +306,7 @@ if($datos[0]["producto_type"]=='V')
 				$descuentosA.='<div class="form-group">';
 				if($i==0)
 				{
-					$descuentosA.='<label class="col-sm-2 control-label">Descuento</label>';
+					$descuentosA.='<label class="col-sm-2 control-label">D.</label>';
 					$descuentosA.='<div class="col-sm-2 "><div class="input-group m-b"><input class="form-control discount" id="descuento" name="descuento[]" value="'.(100*$descuento).'" type="text" onkeypress="return validateNumber(event)"><span class="input-group-addon">%</span></div></div>';
 					$descuentosA.='<div class="col-md-1"><button class="btn btn-primary btn-xs" id="agregarDescuento" value="" placeholder="Descuento" type="button"><i class="fa fa-plus"></i></button></div>';
 			
@@ -323,7 +325,7 @@ if($datos[0]["producto_type"]=='V')
 			if(!$descuentosA)
 			{
 				$descuentosA.='<div class="form-group">';
-				$descuentosA.='<label class="col-sm-2 control-label">Descuento</label>';
+				$descuentosA.='<label class="col-sm-2 control-label">D.</label>';
 				$descuentosA.='<div class="col-sm-2 "><div class="input-group m-b"><input class="form-control discount" id="descuento" name="descuento[]" value="" type="text" onkeypress="return validateNumber(event)"><span class="input-group-addon">%</span></div></div>';
 				$descuentosA.='<div class="col-md-1"><button class="btn btn-primary btn-xs" id="agregarDescuento" value="" placeholder="Descuento" type="button"><i class="fa fa-plus"></i></button></div>';
 				$descuentosA.='</div>';
@@ -334,7 +336,7 @@ if($datos[0]["producto_type"]=='V')
             <div id="newDiscount"></div>
                         
             <div class="form-group">
-            <label class="col-sm-2 control-label">Precio P&uacute;blico</label>
+            <label class="col-sm-2 control-label">P.</label>
 			<div class="col-sm-2">
 			<div class="input-group m-b">
 			<input type="text" class="form-control" id="precioPUP" name="precioPUP" onkeypress="return validateCantidad(event)" value="<?php echo $datos[0]['producto_price_purchase_percent'];?>">
@@ -344,6 +346,7 @@ if($datos[0]["producto_type"]=='V')
 			
 			<div class="col-sm-2 ">
 			<div class="input-group m-b">
+			<span class="input-group-addon">P.V.P.</span>
 			<span class="input-group-addon">$</span>
 			<input type="text" class="form-control" id="precioP" name="precioP" onkeypress="return validateCantidad(event)" readonly="readonly" value="<?php echo $datos[0]['producto_price_public'];?>">
 			</div>
@@ -351,6 +354,7 @@ if($datos[0]["producto_type"]=='V')
 			
 			 <div class="col-sm-2 ">
 			 <div class="input-group m-b">
+			 <span class="input-group-addon">P.V.P.D.</span>
 			 <span class="input-group-addon">-$</span>
 			 <input type="text" class="form-control" id="precioPD" name="precioPD" onkeypress="return validateCantidad(event)" readonly="readonly" value="<?php echo $datos[0]['producto_price_public_discount'];?>">
 			 </div>
@@ -369,7 +373,7 @@ if($datos[0]["producto_type"]=='V')
 				$descuentosA.='<div class="form-group">';
 				if($i==0)
 				{
-					$descuentosA.='<label class="col-sm-2 control-label">Descuento</label>';
+					$descuentosA.='<label class="col-sm-2 control-label">D.</label>';
 					$descuentosA.='<div class="col-sm-2 ">
            	 <div class="input-group m-b">
            	<input class="form-control discountP" id="descuentoP" name="descuentoP[]" value="'.(100*$descuento).'" type="text" onkeypress="return validateNumber(event)">
@@ -396,7 +400,7 @@ if($datos[0]["producto_type"]=='V')
 			if(!$descuentosA)
 			{
 				$descuentosA.='<div class="form-group">';
-				$descuentosA.='<label class="col-sm-2 control-label">Descuento</label>';
+				$descuentosA.='<label class="col-sm-2 control-label">D.</label>';
 				$descuentosA.='<div class="col-sm-2 ">
            	 <div class="input-group m-b">
            	<input class="form-control discountP" id="descuentoP" name="descuentoP[]" value="" type="text" onkeypress="return validateNumber(event)">
@@ -466,8 +470,11 @@ if($datos[0]["producto_type"]=='V')
             
             <div class="form-group">
             <label class="col-sm-2 control-label">Conjunto</label>
-			<div class="col-sm-2 ">
+			<div class="col-sm-1 ">
 				<input type="checkbox" name="conjunto" id="conjunto" value="1" <?php echo $checked;?>>
+			</div>
+			<div class="col-sm-6 ">
+				 <label class="control-label">* Son productos que conforman otro y pueden ser vendidos por separado</label>
 			</div>
             </div>
             
