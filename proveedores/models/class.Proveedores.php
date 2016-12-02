@@ -104,12 +104,26 @@ class Proveedor {
         return $result;
     }
     
+    public function getProveedorPhone($proveedor_id)
+    {
+        $sql="SELECT *
+        FROM proveedor_telefono left join inv_phone_type using(phone_type_id) WHERE proveedor_id = :proveedor_id";
+
+        $statement=$this->connect->prepare($sql);
+        $statement->bindParam(':proveedor_id', $proveedor_id, PDO::PARAM_STR);
+
+        $statement->execute();
+        $result=$statement->fetchAll(PDO::FETCH_ASSOC);
+
+        return $result;
+    }
+    
     public function getProveedoresList()
     {
 
         $sql="SELECT 
         proveedor_id,
-        proveedor_nombre, telefono, email, street, number, int_number, neighborhood, municipality, state, zip_code, address_id
+        proveedor_nombre, proveedor_nombre_fiscal, proveedor_representante, telefono, email, street, number, int_number, neighborhood, municipality, state, zip_code, address_id
         FROM ".$this->name_table." left JOIN inv_address USING (address_id) WHERE status=1   
         ORDER BY proveedor_nombre ASC";
 
@@ -142,20 +156,31 @@ class Proveedor {
         $addressId =  $this->connect->lastInsertId();
 
 
-        $sql = "   INSERT INTO proveedores (proveedor_id, proveedor_nombre, telefono, email, address_id) 
-                    VALUES (0, :nombre, :telefono, :email, ".$addressId.")";
+        $sql = "   INSERT INTO proveedores (proveedor_id, proveedor_nombre, proveedor_nombre_fiscal, proveedor_representante, email, address_id) 
+                    VALUES (0, :nombre, :fiscal, :representante, :email, ".$addressId.")";
 
         $statement=$this->connect->prepare($sql);
 
-        $statement->bindParam(':nombre', $data['nombre'] ,PDO::PARAM_STR);            
-        $statement->bindParam(':telefono', $data['telefono'] ,PDO::PARAM_STR);            
+        $statement->bindParam(':nombre', $data['nombre'] ,PDO::PARAM_STR);                    
+        $statement->bindParam(':fiscal', $data['nombreFiscal'] ,PDO::PARAM_STR);                    
+        $statement->bindParam(':representante', $data['representante'] ,PDO::PARAM_STR);                    
         $statement->bindParam(':email',$data['email'],PDO::PARAM_STR);
 
         $statement->execute();            
         
-        $loginId = $this->connect->lastInsertId();
+        $idProveedor = $this->connect->lastInsertId();
+                
+        $tipos = json_decode($data['tipos']);
+        foreach(json_decode($data['telefonos']) as $key => $value){
+            echo $sqlProv = " INSERT INTO proveedor_telefono(id_telefono, proveedor_id, phone_type_id, number)
+                        VALUES(0, ".$idProveedor.", ".$tipos[$key].", ".$value.")";
+
+            $statement=$this->connect->prepare($sqlProv);
+            $statement->execute();            
+
+        }
         
-        return $loginId;
+        return $idProveedor;
     }
     
     public function updateProveedor($data){
@@ -253,7 +278,7 @@ class Proveedor {
             $where = " WHERE p.proveedor_id='$proveedor_id'";
         }
         $sql="SELECT p.producto_id,p.producto_name,p.producto_sku,
-                        p.producto_price_utilitarian,p.producto_price_public,p.proveedor_id
+                        p.producto_price_purchase,p.producto_price_public,p.proveedor_id
                         FROM productos p".
                         $where.
                         " ORDER BY p.producto_id";

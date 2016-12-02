@@ -12,7 +12,9 @@ $inventarios=new Inventarios();
 $proveedores = new Proveedor();
 
 $dataProducts = json_decode($productos->GetDataProductsMainJson());
-
+/*echo "<pre>";
+    print_r($dataProducts);
+echo "<pre>";*/
 //$dataUnique = $productos->GetProductsUnique();
 
 ?>    
@@ -66,8 +68,8 @@ $dataProducts = json_decode($productos->GetDataProductsMainJson());
                             </div>
 			</td>
                         <td style="padding-left: 4px">
-                            <div class="form-group" id="data_nombre" >
-                                <input type="text" id="nombre" name="nombre" class="form-control" placeholder="Nombre"> 
+                            <div class="form-group" id="data_modelo" >
+                                <input type="text" id="modelo" name="modelo" class="form-control" placeholder="Modelo"> 
                             </div>
 			</td>
                     </tr>
@@ -147,7 +149,7 @@ $dataProducts = json_decode($productos->GetDataProductsMainJson());
                                         <a href="'.$url.'.php?producto_id='.base64_encode($prod->producto_id).'">
                                         <div class="product-imitation" style="padding: 10px 0px">
                                             <img src="'.$prod->imagen.'" alt="'.$prod->producto_sku.'" height="180px" width="200px" />
-                                            <div class="line" style="'.$active.'" id="line_'.$prod->producto_id.'"><span style="color: #FFF; background-color: #F7A54A; padding: 0px 10px">Punto de venta</span></div>    
+                                            <div class="line" style="'.$active.'" id="line_'.$prod->producto_id.'"><span style="color: #FFF; padding: 0px 10px" class="diagonal">Punto de venta</span></div>    
                                         </div>
                                         </a>
                                         <div class="product-desc">
@@ -162,6 +164,7 @@ $dataProducts = json_decode($productos->GetDataProductsMainJson());
                     echo '                  </span>
                                             <small class="text-muted">'.$prod->producto_sku.'</small>
                                             <div class="product-name" >'.$prod->producto_name.'</div>
+                                            <div class="small m-t-xs" >'.$prod->producto_description_corta.'</div>
                                             <div class="small m-t-xs">&nbsp;';
                                             if(count($prod->materiales)>0){
                                                 echo "<div>";
@@ -239,15 +242,30 @@ $dataProducts = json_decode($productos->GetDataProductsMainJson());
 <script src="<?php echo $raizProy?>js/plugins/dataTables/datatables.min.js"></script>    
 <style type="text/css">    
     .line{
-        width: 400px;
-        height: 35px;
-        border-bottom: 7px solid #F7A54A;
-        -webkit-transform: translateY(40px) translateX(5px) rotate(-58deg);
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 120px 120px 0 0;
+        border-color: #ffb700 transparent transparent transparent;
+        line-height: 0px;
+        _border-color: #ffb700 #000000 #000000 #000000;
+        _filter: progid:DXImageTransform.Microsoft.Chroma(color='#000000');
         position: absolute;
-        top: 114px;
-        left: -90px;
-        font-size: 22px;       
-        z-index: 999;
+        top: 0px;
+        left: 15px;
+        z-index: 0;
+        opacity: .6;
+        filter: alpha(opacity=60);
         visibility: hidden;
+    }
+    .diagonal{
+        width: 125px;
+        height: 15px;        
+        -webkit-transform: translateY(34px) translateX(15px) rotate(-46deg);
+        position: absolute;
+        top: -110px;
+        left: -25px;
+        font-size: 14px;
+        z-index: 999;        
     }
 </style>    

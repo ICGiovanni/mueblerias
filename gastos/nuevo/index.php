@@ -145,7 +145,7 @@ while(list(,$dataLogin) = each($rowsLogin)){
 								
 								<td colspan="2" align="right">Categoria:</td>
 								<td>
-									<select name="gasto_categoria_id" id="gasto_categoria_id" class="chosen-select" >
+									<select name="gasto_categoria_id" id="gasto_categoria_id" class="chosen-select"  onchange="update_sucursal();" >
 										<?=$options_gasto_categoria_id?>
 									</select>
 								</td>
@@ -390,6 +390,14 @@ function update_beneficiary_from_login(){
 function update_beneficiary_from_proveedor(){
 	login_text = $("#proveedor_id option:selected").text();
 	$("#gasto_beneficiario").val(login_text);
+}
+
+function update_sucursal(){
+	gasto_categoria_id = $("#gasto_categoria_id option:selected").val();
+	if(gasto_categoria_id == "2"){ //si es prestamo 
+		$("#sucursal_id").val("1"); // se le atribuye el gasto a la oficina central
+		
+	}
 }
 </script>
 

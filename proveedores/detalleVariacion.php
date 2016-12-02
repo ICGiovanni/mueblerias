@@ -120,7 +120,7 @@ if(count($dataProduct->variaciones)>0){
                                         <?php echo $dataProduct->producto_name?>
                                     </h2>
                                     <small>
-                                        <?php echo $dataProduct->producto_description?>
+                                        <?php echo $dataProduct->producto_description_corta?>
                                     </small>                                    
                                     <hr>
 

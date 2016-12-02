@@ -159,7 +159,7 @@ $(document).ready(function()
     setTimeout(function(){$("#producto").focus();},0);
     
     var options={
-            url: "../productos/get_products_unique.php",
+            url: "../productos/get_products_sell.php",
             getValue: function(element){
                 var name=element.producto_sku+' '+element.producto_name;			
                 return name;
@@ -252,7 +252,7 @@ $(document).ready(function()
                 showLoaderOnConfirm: true
             }, function(){                
                 $.ajax({
-                    url: "/proveedores/ajax/removePuntoVenta.php",
+                    url: "<?php echo $raizProy?>proveedores/ajax/removePuntoVenta.php",
                     type: "post",
                     data: {                        
                         sku : $("#"+id).data('sku')                    
@@ -272,7 +272,7 @@ $(document).ready(function()
 function saveCart(id, sku, modelo, cantidad, precio, imagen){
 
     $.ajax({
-        url: "/proveedores/ajax/addPuntoVenta.php",
+        url: "<?php echo $raizProy?>proveedores/ajax/addPuntoVenta.php",
         type: "post",
         data: {
             id: id,
@@ -306,7 +306,7 @@ function removeAll(){
             showLoaderOnConfirm: true
         }, function(){
             $.ajax({
-                url: "/proveedores/ajax/removePuntoVenta.php",
+                url: "<?php echo $raizProy?>proveedores/ajax/removePuntoVenta.php",
                 type: "post",
                 data: {            
                     deleteAll: 1

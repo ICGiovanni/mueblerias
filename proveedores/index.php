@@ -7,7 +7,7 @@ require_once $pathProy.'/menu.php';
 
 <div class="row wrapper border-bottom white-bg page-heading">
     <div class="col-sm-4">
-        <h2>Lista de Proveedores</h2>
+        <h2>Proveedores</h2>
         <ol class="breadcrumb">
             <li>
                 <a href="">Proveedores</a>
@@ -19,16 +19,14 @@ require_once $pathProy.'/menu.php';
     </div>
     <div class="col-sm-8">
         <div class="title-action">
-                <button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myModal" >
+                <a href='<?php echo $ruta.'proveedores/nuevoProveedor.php'?>' class="btn btn-primary btn-xs" >
                 + Nuevo Proveedor 
-                </button>
+                </a>                
         </div>
     </div>
 </div>
 
-
-
-<div class="wrapper wrapper-content animated fadeInRight">
+<div class="wrapper wrapper-content animated fadeIn">
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox-content">
@@ -36,11 +34,13 @@ require_once $pathProy.'/menu.php';
                     <table id="tablaProveedores" class="table table-striped table-bordered table-hover dataTables-example" >
                         <thead>
                         <tr>                            
-                            <th>Nombre</th>
+                            <th>Nombre Comercial</th>
+                            <th>Nombre Fiscal</th>
+                            <th>Representante</th>
                             <th>Telefono</th>
                             <th>E-mail</th>
                             <th width='120px'><center>Dirección</center></th>
-                            <th width='120px'><center>Accion</center></th>                            
+                            <th width='60px'><center>Accion</center></th>                            
                         </tr>
                         </thead>
                         <tbody id='listaProveedores'></tbody>

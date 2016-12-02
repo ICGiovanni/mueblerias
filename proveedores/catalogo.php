@@ -21,7 +21,7 @@ $list = $proveedores->GetDataProductProveedor($proveedorId);
 $proveedoresList = $proveedores->getProveedores(); 
 /*
 echo "<pre>";
-    print_r($infoProv);
+    print_r($list);
 echo "</pre>";  
 */
 foreach($list as $key => $value){
@@ -29,7 +29,7 @@ foreach($list as $key => $value){
     $categoria = array('category'); // $productos->GetProductCategory($productId);
     $material = array('material'); // $productos->GetProductMaterial($productId);
     $color = array('color'); // $productos->GetProductColor($productId);        
-    $galeria = $productos->GetImagesProduct($productId);
+    $galeria = $productos->GetImagesProduct($productId);    
     $list[$key]['categoria'] = implode(",", $categoria);
     $list[$key]['material'] = implode(",", $material);
     $list[$key]['color'] = implode(",", $color);
@@ -101,13 +101,37 @@ foreach($list as $key => $value){
                             
                             $infoProvItem = $proveedores->getProveedor($item['proveedor_id']);
                             $infoProvItem = end($infoProvItem);
+                            
+                            $data = json_decode($productos->GetDataProductsMainJson($item['producto_id']));
+                            
+                            
+                            $catego= $productos->GetProductCategory($item['producto_id']);
+                            $categoria = '';
+                            foreach($catego as $cat ){
+                                $categoria.= $cat;
+                            }
+                            
+                            $materiales = '';
+                            $colores = '';
+                            foreach($data as $dat){
+                                
+                                foreach($dat->materiales as $material){
+                                    $materiales .= $material->material_name;                                    
+                                }
+                                foreach($dat->colores as $col){
+                                    $colores .= $col->color_name;                                    
+                                }
+                                
+                            }
+                            
+                            if(count($data)>0){
                             echo "  <tr>
                                         <td>".$item['producto_sku']."</td>
                                         <td>".$item['producto_name']."</td>
-                                        <td>".$item['categoria']."</td>
-                                        <td>".$item['color']."</td>
-                                        <td>".$item['material']."</td>                                        
-                                        <td>".$item['producto_price_public']."</td>
+                                        <td>".$categoria."</td>
+                                        <td>".$colores."</td>
+                                        <td>".$materiales."</td>                                        
+                                        <td>".$item['producto_price_purchase']."</td>
                                         <td><a href='#' data-toggle='modal' data-target='#myModal4' data-galeria='".json_encode($item['galeria'])."' class='linkGalery'>galeria</a></td>    
                                         <td>
                                             <a href='".$raizProy."productos/editar_producto.php?id=".$item['producto_id']."'><i class='fa fa-edit' title='Editar'></i></a>
@@ -122,6 +146,7 @@ foreach($list as $key => $value){
                                                     class='nuevoPedido'>Pedido</a>
                                         </td>    
                                     </tr>";
+                            }
                         }
                         ?>    
                         </tbody>
