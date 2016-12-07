@@ -21,19 +21,19 @@
 </style>
     <div class="row wrapper border-bottom white-bg page-heading">
         <div class="col-sm-4">
-            <h2>Agregar Producto</h2>
+            <h2>Nuevo Producto</h2>
             <ol class="breadcrumb">
                 <li>
                     <a href="">Productos</a>
                 </li>
                 <li class="active">
-                    <strong>Agregar Producto</strong>
+                    <strong>Nuevo Producto</strong>
                 </li>
             </ol>
         </div>
         <div class="col-sm-8">
             <div class="title-action">
-                <a href="./index.php" class="btn btn-danger btn-xs"><i class="fa fa-arrow-left"></i> Regresar a listado</a>
+                <a href="./index.php" class="btn btn-warning btn-xs"><i class="fa fa-arrow-left"></i> Regresar a listado</a>
             </div>
         </div>
     </div>

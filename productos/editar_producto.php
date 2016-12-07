@@ -26,7 +26,7 @@
         </div>
         <div class="col-sm-8">
             <div class="title-action">
-                <a href="./index.php" class="btn btn-danger btn-xs"><i class="fa fa-arrow-left"></i> Regresar a listado</a>
+                <a href="./index.php" class="btn btn-warning btn-xs"><i class="fa fa-arrow-left"></i> Regresar a listado</a>
             </div>
         </div>
     </div>

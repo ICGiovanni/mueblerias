@@ -126,9 +126,17 @@ $(document).ready(function()
 
 	$.getJSON("states_json.php",function(result)
 	{
+		var id_estado=$("#id_estado").val();
         $.each(result, function(i, field)
 		{
-        	$("#estado").append('<option value="'+field.id_estado+'" >'+field.estado+'</option>');
+        	if(field.id_estado==id_estado)
+        	{
+        		$("#estado").append('<option value="'+field.id_estado+'" selected>'+field.estado+'</option>');
+        	}
+        	else
+        	{
+        		$("#estado").append('<option value="'+field.id_estado+'" >'+field.estado+'</option>');
+        	}
         });
     });
 

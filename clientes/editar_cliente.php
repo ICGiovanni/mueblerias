@@ -21,7 +21,7 @@
         </div>
         <div class="col-sm-8">
             <div class="title-action">
-                <a href="./index.php" class="btn btn-primary">Lista de Clientes</a>
+                <a href="./index.php" class="btn btn-warning btn-xs"><i class="fa fa-arrow-left"></i> Regresar a listado</a>
             </div>
         </div>
     </div>
@@ -69,9 +69,7 @@ $datos=$clientes->GetClientes($id_cliente);
 			<label class="col-sm-2 control-label">C.P.</label>
 			<div class="col-sm-2"><input type="text" class="form-control" id="codigoPostal" name="codigoPostal" value="<?php echo $datos[0]["codigo_postal"]?>"></div>
             </div>
-            <div class="form-group"><label class="col-sm-2 control-label">Municipio</label>
-			<div class="col-sm-6"><input type="text" class="form-control" id="municipio" name="municipio" value="<?php echo $datos[0]["municipio"]?>"></div>
-            </div>
+           
             <div class="form-group"><label class="col-sm-2 control-label">Estado</label>
 			<div class="col-sm-6">
 			<select id="estado" name="estado" class="form-control m-b">
@@ -79,6 +77,9 @@ $datos=$clientes->GetClientes($id_cliente);
             </select>
 			</div>
 			</div>
+			 <div class="form-group"><label class="col-sm-2 control-label">Municipio</label>
+			<div class="col-sm-6"><input type="text" class="form-control" id="municipio" name="municipio" value="<?php echo $datos[0]["municipio"]?>"></div>
+            </div>
             <div class="form-group">
             <?php
            	$phones=$clientes->GetPhonesClient($id_cliente);
@@ -124,6 +125,7 @@ $datos=$clientes->GetClientes($id_cliente);
            		{
            			$phonesC.='<div class="col-md-1">
                             <button class="btn btn-primary btn-xs" id="agregarTelefono" value="" placeholder="Telefono" type="button"><i class="fa fa-plus"></i></button></div>';
+           			die("entre");
            		}
            		else
            		{
@@ -135,12 +137,28 @@ $datos=$clientes->GetClientes($id_cliente);
            		$i++;
            	}
             
+           	if(!$phonesC)
+           	{
+           		$phonesC='<label class="col-sm-2 control-label">Telefono</label>
+           	<div class="col-sm-3 "><input class="form-control telefono_cliente" id="telefono" name="telefono[]" value="" type="text" onkeypress="return validateNumber(event)"></div><div class="col-md-2">
+                            <select id="phoneType" name="phoneType[]" class="form-control">
+                                <option value="1">Celular</option>
+                                <option value="2">Casa</option>
+                                <option value="3">Oficina</option>
+                                <option value="4">Otro</option>
+                            </select>
+                        </div>
+			<div class="col-md-1">                            
+                            <button class="btn btn-primary btn-xs" id="agregarTelefono" value="" placeholder="Telefono" type="button"><i class="fa fa-plus"></i></button>
+                        </div>    ';
+           	}
+           	
             echo $phonesC;
             ?>
             </div>
             <div id="newPhone"></div>
             
-          	<div class="form-group">
+          	
           	<?php 
           	$emails=$clientes->GetEmailsClient($id_cliente);
           	
@@ -184,7 +202,7 @@ $datos=$clientes->GetClientes($id_cliente);
           	echo $emailC;
           	?>
           	
-            </div>
+            
             <div id="newEmail"></div>
             
             <div class="form-group">

@@ -36,7 +36,7 @@
                     <div class="ibox-title">
                         <div class="ibox-tools">
                              
-                            <a class="dropdown-toggle" id="rating" data-toggle="modal" data-target="#ratingModal" href="#">
+                            <a class="dropdown-toggle btn btn-primary btn-xs" id="rating" data-toggle="modal" data-target="#ratingModal" href="#">
                                 Configurar Rating <i class="fa fa-wrench"></i>
                             </a>
                            <a class="collapse-link">
@@ -60,12 +60,14 @@
                         <th align="center">Telefono</th>
                         <th align="center">E-mail</th>
                         <th align="center">Rating</th>
-                        <th align="center"></th>
+                        <th align="center">Acciones</th>
                         
                     </tr>
                     </thead>
                     <tbody id="clientes">
                     <?php
+                    $clientes=new Clientes();
+                    
                    	$json=file_get_contents("json/lista_clientes.json");
                     $json=json_decode($json);
                     $tr="";
@@ -77,12 +79,25 @@
                     	$apellidoM=$d->apellidoM;
                     	$rfc=$d->rfc;
                     	$razon_social=$d->razon_social;
-                    	$telefono=$d->telefono;
+                    	
                     	$email=$d->email;
                     	$datos_fiscales="";
                     	$direccion="";
+                    	$telefono='';
                     	
-                    	$cliente=$nombre.' '.$apellidoP.' '.$apellidoM;
+                    	$i=0;
+                    	foreach($clientes->GetPhonesClient($id_cliente) as $p)
+                    	{
+                    		if($i>0)
+                    		{
+                    			$telefono.='<br>';
+                    		}
+                    		$telefono.='<b>'.$p['type'].':</b>'.$p['number'];
+                    		
+                    		$i++;
+                    	}
+                    	
+                    	$cliente='<b>'.$nombre.' '.$apellidoP.' '.$apellidoM.'</b>';
                     	
                     	if($rfc!='')
                     	{
@@ -143,7 +158,7 @@
                     	$tr.='<td>'.$telefono.'</td>';
                     	$tr.='<td align="center">'.$email.'</td>';
                     	$tr.='<td align="center"><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><span class="numero">'.$rating.'</span></td>';
-                    	$tr.='<td align="center"><div class="infont col-md-1 col-sm-1"><a href="editar_cliente.php?id='.$id_cliente.'"><i class="fa fa-pencil"></i></a><a href="#" onClick="borrar_cliente('.$id_cliente.');"><i class="fa fa-trash-o"></i></a></div></td>';
+                    	$tr.='<td align="center"><div class="infont col-md-1 col-sm-1"><a href="editar_cliente.php?id='.$id_cliente.'" title="Editar Cliente"><i class="fa fa-pencil"></i></a></div><div class="infont col-md-1 col-sm-1"><a href="#" onClick="borrar_cliente('.$id_cliente.');" title="Borrar Cliente"><i class="fa fa-trash-o"></i></a></div></td>';
                     	$tr.='</tr>';
                     	
                     }
@@ -160,7 +175,7 @@
                         <th align="center">Telefono</th>
                         <th align="center">E-mail</th>
                         <th align="center">Rating</th>
-                        <th align="center"></th>
+                        <th align="center">Acciones</th>
                     </tr>
                     </tfoot>
                     </table>
@@ -212,24 +227,10 @@
 
         	$('.dataTables-example').DataTable({
                 dom: '<"html5buttons"B>lTfgitp',
-                buttons: [
-                    { extend: 'copy'},
-                    {extend: 'csv'},
-                    {extend: 'excel', title: 'ExampleFile'},
-                    {extend: 'pdf', title: 'ExampleFile'},
-
-                    {extend: 'print',
-                     customize: function (win){
-                            $(win.document.body).addClass('white-bg');
-                            $(win.document.body).css('font-size', '10px');
-
-                            $(win.document.body).find('table')
-                                    .addClass('compact')
-                                    .css('font-size', 'inherit');
-                    }
-                    }
-                ]
-
+                buttons: [],
+                "language": {
+                    "url": "../js/plugins/dataTables/Spanish.json"
+            	}
             });
 
         	$( "#guardarRating" ).click(function()

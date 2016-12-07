@@ -9,19 +9,19 @@
 
     <div class="row wrapper border-bottom white-bg page-heading">
         <div class="col-sm-4">
-            <h2>Agregar Cliente</h2>
+            <h2>Nuevo Cliente</h2>
             <ol class="breadcrumb">
                 <li>
                     <a href="">Clientes</a>
                 </li>
                 <li class="active">
-                    <strong>Agregar Cliente</strong>
+                    <strong>Nuevo Cliente</strong>
                 </li>
             </ol>
         </div>
         <div class="col-sm-8">
             <div class="title-action">
-                <a href="./index.php" class="btn btn-danger btn-xs"><i class="fa fa-arrow-left"></i> Regresar a listado</a>
+                <a href="./index.php" class="btn btn-warning btn-xs"><i class="fa fa-arrow-left"></i> Regresar a listado</a>
             </div>
         </div>
     </div>
@@ -59,9 +59,6 @@
 			<label class="col-sm-2 control-label">C.P.</label>
 			<div class="col-sm-2"><input type="text" class="form-control" id="codigoPostal" name="codigoPostal"></div>
             </div>
-            <div class="form-group"><label class="col-sm-2 control-label">Municipio</label>
-			<div class="col-sm-6"><input type="text" class="form-control" id="municipio" name="municipio"></div>
-            </div>
             <div class="form-group"><label class="col-sm-2 control-label">Estado</label>
 			<div class="col-sm-6">
 			<select id="estado" name="estado" class="form-control m-b">
@@ -69,6 +66,9 @@
             </select>
 			</div>
 			</div>
+			<div class="form-group"><label class="col-sm-2 control-label">Municipio</label>
+			<div class="col-sm-6"><input type="text" class="form-control" id="municipio" name="municipio"></div>
+            </div>
             <div class="form-group">
            	<label class="col-sm-2 control-label">Telefono</label>
            	<div class="col-sm-3 "><input class="form-control telefono_cliente" id="telefono" name="telefono[]" value="" type="text" onkeypress="return validateNumber(event)"></div>

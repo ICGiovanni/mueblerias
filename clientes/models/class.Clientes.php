@@ -250,7 +250,7 @@ class Clientes
 		
 		$sql="SELECT c.id_cliente,c.nombre,c.apellidoP,c.apellidoM,c.razon_social,c.rfc,c.calle,c.num_exterior,
 				c.num_interior,c.colonia,c.codigo_postal,c.municipio,
-				e.estado
+				e.estado,e.id_estado
 				FROM clientes c
 				INNER JOIN estados e USING(id_estado)
 				$where
@@ -277,7 +277,7 @@ class Clientes
 	
 	public function GetPhonesClient($id_cliente)
 	{
-		$sql="SELECT ct.number,pt.phone_type_id
+		$sql="SELECT ct.number,pt.phone_type_id,pt.type
 				FROM cliente_telefono ct
 				INNER JOIN inv_phone_type pt USING(phone_type_id)
 				WHERE ct.id_cliente=:id_cliente";

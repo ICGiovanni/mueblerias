@@ -98,7 +98,7 @@ cursor: default;
 						</td>
 						<td>
 							<div class="form-group" id="data_nombre" >
-								Nombre<input type="text" id="nombre" name="nombre" class="form-control"> 
+								Modelo<input type="text" id="nombre" name="nombre" class="form-control"> 
 							</div>
 						</td>
 						<td>
@@ -192,13 +192,13 @@ cursor: default;
                     <thead>
                     <tr>
                     	<th>SKU</th>
-                        <th>Producto</th>
+                        <th>Modelo</th>
                         <th>Tipo</th>
                         <th>Color</th>
                         <th>Material</th>
                         <th>Categoria</th>
                         <th align="center">Inventario</th>
-                        <th></th>                        
+                        <th>Acciones</th>                        
                     </tr>
                     </thead>
                     <tbody id="productos">
@@ -283,7 +283,7 @@ cursor: default;
                     			$tr.='<div class="infont col-md-1 col-sm-1"><a href="#" class="modal_variaciones" data-toggle="modal" data-target="#modal_variaciones" data-id="'.$producto_id.'" data-json=\''.json_encode($p->variaciones).'\' data-root="'.$nombre.'" id="open_modal"><i class="fa fa-list-ul"></i></a></div>';
                     		}
                     	}
-                    	$tr.='<div class="infont col-md-1 col-sm-1"><a href="editar_producto.php?id='.$producto_id.'"><i class="fa fa-pencil"></i></a></div><div class="infont col-md-1 col-sm-1"><a href="#" onClick="borrar_producto('.$producto_id.');"><i class="fa fa-trash-o"></i></a></div></td>';
+                    	$tr.='<div class="infont col-md-1 col-sm-1"><a href="editar_producto.php?id='.$producto_id.'" title="Editar Producto"><i class="fa fa-pencil"></i></a></div><div class="infont col-md-1 col-sm-1"><a href="#" onClick="borrar_producto('.$producto_id.');" title="Borrar Producto"><i class="fa fa-trash-o"></i></a></div></td>';
                     	$tr.='</tr>';
                     	
                     }
@@ -301,7 +301,7 @@ cursor: default;
                         <th>Material</th>
                         <th>Categoria</th>
                         <th>Inventario</th>
-                        <th></th>                        
+                        <th>Acciones</th>                        
                     </tr>
                     </tfoot>
                     </table>
@@ -401,7 +401,7 @@ cursor: default;
 						<td>Material</td>
 						<td>Stock</td>
 						<td data-hide="all" style="text-align:right;display: none;"></td>
-						<td></td>
+						<td>Acciones</td>
 					</tr>
 				</thead>
 	           	<tbody id="products_variable">
@@ -436,7 +436,7 @@ cursor: default;
 						<td>Material</td>
 						<td>Stock</td>
 						<td data-hide="all" style="text-align:right;display: none;"></td>
-						<td></td>
+						<td>Acciones</td>
 					</tr>
 				</thead>
 	           	<tbody id="products_variable_stock">
@@ -468,23 +468,8 @@ cursor: default;
         	
         	var table=$('#tabla_productos').DataTable({
                 dom: '<"html5buttons"B>lTfgitp',
-                buttons: [
-                    { extend: 'copy'},
-                    {extend: 'csv'},
-                    {extend: 'excel', title: 'ExampleFile'},
-                    {extend: 'pdf', title: 'ExampleFile'},
-
-                    {extend: 'print',
-                     customize: function (win){
-                            $(win.document.body).addClass('white-bg');
-                            $(win.document.body).css('font-size', '10px');
-
-                            $(win.document.body).find('table')
-                                    .addClass('compact')
-                                    .css('font-size', 'inherit');
-                    }
-                    }
-                ],"language": {
+                buttons: [],
+                "language": {
                     "url": "../js/plugins/dataTables/Spanish.json"
             	}
 
@@ -538,7 +523,7 @@ cursor: default;
 							
 							filas+='<td align="center">$ '+item.producto_price_public+'</td>';
 							filas+='<td align="center">'+item.stock+'</td>';
-							filas+='<td><div class="infont col-md-1 col-sm-1"><a href="editar_producto.php?id='+item.producto_id+'"><i class="fa fa-pencil"></i></a></div><div class="infont col-md-1 col-sm-1"><a href="#" onClick="borrar_producto('+item.producto_id+');"><i class="fa fa-trash-o"></i></a></div></td>';
+							filas+='<td><div class="infont col-md-1 col-sm-1"><a href="editar_producto.php?id='+item.producto_id+'" title="Editar Producto"><i class="fa fa-pencil"></i></a></div><div class="infont col-md-1 col-sm-1"><a href="#" onClick="borrar_producto('+item.producto_id+');" title="Borrar Producto"><i class="fa fa-trash-o"></i></a></div></td>';
     		        		filas+='</tr>';
             	    	});
         		        $("#productos").append(filas);
@@ -546,23 +531,7 @@ cursor: default;
     		        	setTimeout(function(){
     		        		table=$('#tabla_productos').DataTable({
 	    		                dom: '<"html5buttons"B>lTfgitp',
-	    		                buttons: [
-	    		                    { extend: 'copy'},
-	    		                    {extend: 'csv'},
-	    		                    {extend: 'excel', title: 'ExampleFile'},
-	    		                    {extend: 'pdf', title: 'ExampleFile'},
-	
-	    		                    {extend: 'print',
-	    		                     customize: function (win){
-	    		                            $(win.document.body).addClass('white-bg');
-	    		                            $(win.document.body).css('font-size', '10px');
-	
-	    		                            $(win.document.body).find('table')
-	    		                                    .addClass('compact')
-	    		                                    .css('font-size', 'inherit');
-	    		                    }
-	    		                    }
-	    		                ],"language": {
+	    		                buttons: [],"language": {
 	    		                    "url": "../js/plugins/dataTables/Spanish.json"
 	    		            	}
 	
@@ -640,7 +609,7 @@ cursor: default;
 			        tr+=stock_sucursal;
 					tr+='</td>';
 					
-					tr+='<td>'+'<div class="infont col-md-1 col-sm-1"><a href="editar_producto.php?id='+producto_id+'"><i class="fa fa-pencil"></i></a></div><div class="infont col-md-1 col-sm-1"><a href="#" onClick="borrar_producto('+producto_id+');"><i class="fa fa-trash-o"></i></a></div>'+'</td>';
+					tr+='<td>'+'<div class="infont col-md-1 col-sm-1"><a href="editar_producto.php?id='+producto_id+'" title="Editar Producto"><i class="fa fa-pencil"></i></a></div><div class="infont col-md-1 col-sm-1"><a href="#" onClick="borrar_producto('+producto_id+');" title="Borrar Producto"><i class="fa fa-trash-o"></i></a></div>'+'</td>';
 					tr+='</tr>';
                 });
 
@@ -701,7 +670,7 @@ cursor: default;
         			        tr+=stock_sucursal;
         					tr+='</td>';
         					
-        					tr+='<td>'+'<div class="infont col-md-1 col-sm-1"><a href="editar_producto.php?id='+producto_id+'"><i class="fa fa-pencil"></i></a></div><div class="infont col-md-1 col-sm-1"><a href="#" onClick="borrar_producto('+producto_id+');"><i class="fa fa-trash-o"></i></a></div>'+'</td>';
+        					tr+='<td>'+'<div class="infont col-md-1 col-sm-1"><a href="editar_producto.php?id='+producto_id+'" title="Editar Producto"><i class="fa fa-pencil"></i></a></div><div class="infont col-md-1 col-sm-1"><a href="#" onClick="borrar_producto('+producto_id+');" title="Borrar Producto"><i class="fa fa-trash-o"></i></a></div>'+'</td>';
         					tr+='</tr>';
                         });
 
