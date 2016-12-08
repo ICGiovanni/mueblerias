@@ -38,8 +38,8 @@
                         <i role='button' class='active-user fa-2x ".$class."' id='".$user['login_id']."' data-status='".$user['status_id']."' aria-hidden='true'></i>&nbsp;    
                     </td>    
                     <td class='text-center'>                    
-                        <a href='editUser.php?id=".  base64_encode($user['login_id'])."'><i class='fa fa-pencil'></i></a>&nbsp;&nbsp;&nbsp;    
-                        <a href='#' class='borrar-user' id='".$user['login_id']."' data-name='".$user['firstName']."&nbsp;".$user['lastName']."'><i class='fa fa-trash-o'></i></a>
+                        <a href='editUser.php?id=".  base64_encode($user['login_id'])."'><i class='fa fa-pencil' title='Editar'></i></a>&nbsp;&nbsp;&nbsp;    
+                        <a href='#' class='borrar-user' id='".$user['login_id']."' data-name='".$user['firstName']."&nbsp;".$user['lastName']."'><i class='fa fa-trash-o' title='Borrar'></i></a>
                     </td>
                  </tr>";
         }                                                

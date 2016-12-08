@@ -20,13 +20,14 @@ require_once($_SERVER["REDIRECT_PATH_CONFIG"].'proveedores/models/class.Proveedo
             echo "  <tr>
                         <td>".$prov['proveedor_nombre']."</td>
                         <td>".$prov['proveedor_nombre_fiscal']."</td>
+                        <td align='center' width='200px'>".$prov['street']."&nbsp;".$prov['number']."&nbsp;".$prov['int_number']."&nbsp;".$prov['neighborhood']."</td>    
                         <td>".$prov['proveedor_representante']."</td>
                         <td>".$telefono."</td>
                         <td>".$prov['email']."</td>
-                        <td align='center'>".$prov['street']."&nbsp;".$prov['number']."&nbsp;".$prov['int_number']."&nbsp;".$prov['neighborhood']."</td>
+                        
                         <td align='center'>
                             <a href='#' data-toggle='modal' data-target='#myModal2'>
-                                <i class='fa fa-edit editProv' title='Editar' 
+                                <i class='fa fa-pencil editProv' title='Editar' 
                                     data-proveedor_id='".$prov['proveedor_id']."'
                                     data-address_id='".$prov['address_id']."'                                        
                                     data-nombre='".$prov['proveedor_nombre']."'
@@ -42,7 +43,7 @@ require_once($_SERVER["REDIRECT_PATH_CONFIG"].'proveedores/models/class.Proveedo
                                     data-estado='".$prov['state']."'     
                                 ></i>
                             </a>
-                            <a href='#'><i class='fa fa-trash deleteProv' title='Editar'
+                            <a href='#'><i class='fa fa-trash deleteProv' title='Borrar'
                                         data-nombre='".$prov['proveedor_nombre']."'
                                         data-proveedor_id='".$prov['proveedor_id']."'
                                         ></i></a>
