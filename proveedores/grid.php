@@ -153,6 +153,7 @@ echo "<pre>";*/
                                         </div>
                                         </a>
                                         <div class="product-desc">
+                                            <a href="'.$url.'.php?producto_id='.base64_encode($prod->producto_id).'">
                                             <span class="product-price">';
 
                                             if($prod->producto_type=='U'){
@@ -161,7 +162,7 @@ echo "<pre>";*/
                                                 echo '<small>ver modelos</small>';
                                             }
 
-                    echo '                  </span>
+                    echo '                  </span></a>
                                             <small class="text-muted">'.$prod->producto_sku.'</small>
                                             <div class="product-name" >'.$prod->producto_name.'</div>
                                             <div class="small m-t-xs" >'.$prod->producto_description_corta.'</div>
