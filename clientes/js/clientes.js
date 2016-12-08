@@ -178,7 +178,7 @@ $(document).ready(function()
      });
 
 	$("#agregarEmail").click(function(){
-        $("#newEmail").append('<div class="form-group"><label class="col-sm-2 control-label"></label><div class="col-sm-3 "><input class="form-control" id="email" name="email[]" value="" type="text"></div><div class="col-md-1"><button class="btn btn-danger btn-xs deleteEmail" id="agregarEmail" value="" placeholder="E-mail" type="button"><i class="fa fa-times"></i></button></div></div>');
+        $("#newEmail").append('<div class="form-group"><label class="col-sm-2 control-label"></label><div class="col-sm-5"><input class="form-control" id="email" name="email[]" value="" type="text"></div><div class="col-md-1"><button class="btn btn-danger btn-xs deleteEmail" id="agregarEmail" value="" placeholder="E-mail" type="button"><i class="fa fa-times"></i></button></div></div>');
 
         $(".deleteEmail").click(function(){            
             $(this).parent().parent().remove();

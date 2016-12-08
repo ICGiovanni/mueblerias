@@ -88,7 +88,7 @@
             
             <div class="form-group">
            	<label class="col-sm-2 control-label">E-mail</label>
-           	<div class="col-sm-3 "><input class="form-control" id="email" name="email[]" value="" type="text"></div>
+           	<div class="col-sm-5 "><input class="form-control" id="email" name="email[]" value="" type="text"></div>
 			<div class="col-md-1">                            
                             <button class="btn btn-primary btn-xs" id="agregarEmail" value="" placeholder="E-mail" type="button"><i class="fa fa-plus"></i></button>
                         </div>    

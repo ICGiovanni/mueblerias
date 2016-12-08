@@ -529,7 +529,7 @@ if($datos[0]["producto_type"]=='V')
             <div class="form-group">
 			<div class="col-sm-6 col-sm-offset-2" align="right"><br>
 			<button class="btn btn-danger btn-xs" id="cancelar" type="button">Cancelar</button>&nbsp;&nbsp;&nbsp;&nbsp;
-			<button class="btn btn-primary btn-xs" id="editar" type="button">Guardar Producto</button>
+			<button class="btn btn-primary btn-xs" id="editar" type="button">Guardar Cambio</button>
 			</div>
 			</div>
         

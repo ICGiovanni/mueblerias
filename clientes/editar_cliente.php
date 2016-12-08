@@ -125,7 +125,6 @@ $datos=$clientes->GetClientes($id_cliente);
            		{
            			$phonesC.='<div class="col-md-1">
                             <button class="btn btn-primary btn-xs" id="agregarTelefono" value="" placeholder="Telefono" type="button"><i class="fa fa-plus"></i></button></div>';
-           			die("entre");
            		}
            		else
            		{
@@ -171,7 +170,7 @@ $datos=$clientes->GetClientes($id_cliente);
 				if($i==0)
 				{
 					$emailC.='<label class="col-sm-2 control-label">E-mail</label>';
-					$emailC.='<div class="col-sm-3 "><input class="form-control" id="email" name="email[]" value="'.$email.'" type="text"></div>';
+					$emailC.='<div class="col-sm-5"><input class="form-control" id="email" name="email[]" value="'.$email.'" type="text"></div>';
 					$emailC.='<div class="col-md-1">                            
                             <button class="btn btn-primary btn-xs" id="agregarEmail" value="" placeholder="E-mail" type="button"><i class="fa fa-plus"></i></button>
                         </div>';
@@ -179,7 +178,7 @@ $datos=$clientes->GetClientes($id_cliente);
 				else 
 				{
 					$emailC.='<label class="col-sm-2 control-label">E-mail</label>';
-					$emailC.='<div class="col-sm-3 "><input class="form-control" id="email" name="email[]" value="'.$email.'" type="text"></div>';
+					$emailC.='<div class="col-sm-5"><input class="form-control" id="email" name="email[]" value="'.$email.'" type="text"></div>';
 					$emailC.='<div class="col-md-1">
                             <button class="btn btn-danger btn-xs deleteEmail" id="agregarEmail" value="" placeholder="E-mail" type="button"><i class="fa fa-times"></i></button>
                         </div>';
@@ -193,7 +192,7 @@ $datos=$clientes->GetClientes($id_cliente);
 			{
 				$emailC.='<div class="form-group">';
 				$emailC.='<label class="col-sm-2 control-label">E-mail</label>';
-				$emailC.='<div class="col-sm-3 "><input class="form-control" id="email" name="email[]" value="" type="text"></div>';
+				$emailC.='<div class="col-sm-5"><input class="form-control" id="email" name="email[]" value="" type="text"></div>';
 				$emailC.='<div class="col-md-1">
                             <button class="btn btn-danger btn-xs deleteEmail" id="agregarEmail" value="" placeholder="E-mail" type="button"><i class="fa fa-times"></i></button>
                         </div>';
@@ -208,7 +207,7 @@ $datos=$clientes->GetClientes($id_cliente);
             <div class="form-group">
 			<div class="col-sm-6 col-sm-offset-2" align="right"><br>
 			<button class="btn btn-danger btn-xs" id="cancelar" type="button">Cancelar</button>&nbsp;&nbsp;&nbsp;&nbsp;
-			<button class="btn btn-primary btn-xs" id="editar" type="button">Guardar Cliente</button>
+			<button class="btn btn-primary btn-xs" id="editar" type="button">Guardar Cambio</button>
 			</div>
 			</div>
             

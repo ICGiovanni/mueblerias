@@ -50,7 +50,11 @@ $(document).ready(function()
 	
 	$('.add_more').click(function(e){
         e.preventDefault();
-        $(this).before('<input name="upload[]" type="file" id="upload" accept="image/*"/>');
+        $("#newImage").append('<div class="form-group"><label class="col-sm-2 control-label"></label><div class="col-sm-4" ><input name="upload[]" type="file" id="upload" accept="image/*"/></div><div class="col-sm-2"><button class="btn btn-danger btn-xs delete_img" id="agregarEmail" value="" placeholder="E-mail" type="button"><i class="fa fa-times"></i></button></div></div>');
+        
+        $(".delete_img").click(function(){            
+        	$(this).parent().parent().remove();
+        });  
     });
     
 	toastr.options=
