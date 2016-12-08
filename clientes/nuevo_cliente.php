@@ -61,7 +61,7 @@
             </div>
             <div class="form-group"><label class="col-sm-2 control-label">Estado</label>
 			<div class="col-sm-6">
-			<select id="estado" name="estado" class="form-control m-b">
+			<select id="estado" name="estado" class="form-control">
             <option value="">Seleccione un Estado</option>
             </select>
 			</div>
