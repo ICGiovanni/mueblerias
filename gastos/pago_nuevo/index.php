@@ -57,7 +57,7 @@ while(list(,$dataGastoCategoria) = each($rowsGastosCategoria)){
 </style>
 <div class="row wrapper border-bottom white-bg page-heading">
 	<div class="col-sm-8">
-		<h2>Registrar Nuevo Pago a Gasto "<?=$rowGasto["gasto_no_documento"]?>"</h2>
+		<h2>Registrar Nuevo Pago a Gasto <span style="font-size:14px"><b>"<?=$rowGasto["gasto_no_documento"]?>"</b></span></h2>
 		<ol class="breadcrumb">
 			<li>
 				<a href="">Gastos</a>

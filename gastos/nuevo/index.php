@@ -81,125 +81,153 @@ while(list(,$dataLogin) = each($rowsLogin)){
 	</div>
 	<div class="col-sm-8">
 		<div class="title-action">
-			<button type="button" class="btn btn-danger btn-xs" onclick="location.href = '../';">Cancelar</button>&nbsp;&nbsp;
-            <button id="boton_crea_gasto" type="button" class="btn btn-primary btn-xs" onclick="crea_gasto();">Guardar Gasto</button> <span id="span_crea_gasto"></span>
+			<button type="button" class="btn btn-warning btn-xs" onclick="location.href = '../';"><i class="fa fa-arrow-left"></i> Regresar a listado</button>
 		</div>
 	</div>
 </div>
-		<div class="wrapper wrapper-content animated fadeInRight">
+		
             <div class="row">
                 <div class="col-lg-12">
-                <div class="ibox float-e-margins">
+				
+                <div class="wrapper wrapper-content animated fadeInRight form-horizontal">
                    
-                 <!--   <div class="ibox-content"> -->
+						<div class="form-group">                        
+							<label class="control-label col-md-2">No de documento</label>                        
+							<div class="col-md-5">
+								<input type="text" name="gasto_no_documento" id="gasto_no_documento" size="30" class="form-control"/>
+							</div>    
+						</div>
 
-						<div>
-						
-						<table class="table-form">
-							<tr>
-								<td>No de documento:</td>
-								<td><input type="text" name="gasto_no_documento" id="gasto_no_documento" size="30"/></td>
-							</tr>
-							<tr>
-								<td valign="top">Fecha de vencimiento:</td>
-								<td>
-									<div class="form-group" id="data_1" >
+						<div class="clear">&nbsp;</div>
+						<div class="form-group">                        
+							<label class="control-label col-md-2">Fecha de vencimiento</label>                        
+							<div class="col-md-3">
+								<div class="form-group" id="data_1" >
 										<div class="input-group date">
 											<span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" class="form-control" id="gasto_fecha_vencimiento" name="gasto_fecha_vencimiento" value="">
 										</div>
-									</div>
-									<div class="input-group clockpicker" data-autoclose="true">
-										<input name="gasto_hora_vencimiento" id ="gasto_hora_vencimiento" type="text" class="form-control" value="12:00" >
-										<span class="input-group-addon">
-											<span class="fa fa-clock-o"></span>
-										</span>
-									</div>
+								</div>
+								
+							</div>   
+							<div class="col-md-2">
+								<div class="input-group clockpicker" data-autoclose="true">
+									<input name="gasto_hora_vencimiento" id ="gasto_hora_vencimiento" type="text" class="form-control" value="12:00" >
+									<span class="input-group-addon">
+										<span class="fa fa-clock-o"></span>
+									</span>
+								</div>
+							</div>
+						</div>
 
-								</td>
-								<td valign="top"> <input type="checkbox" name="gasto_fecha_recordatorio_activo" id="gasto_fecha_recordatorio_activo" value="1"/> </td>
-								<td valign="top">Programar Recordatorio:</td>
-								
-								<td>
-									<div class="form-group" id="data_2" >
-										<div class="input-group date">
-											<span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" class="form-control" id="gasto_fecha_recordatorio" name="gasto_fecha_recordatorio" value="">
-										</div>
+<div class="clear">&nbsp;</div>
+						<div class="form-group">                        
+							<label class="control-label col-md-2"> Programar Recordatorio</label>                        
+							<div class="col-md-3">
+								<div class="form-group input-group m-b" id="data_2" >
+									<span class="input-group-addon">
+										<input type="checkbox" name="gasto_fecha_recordatorio_activo" id="gasto_fecha_recordatorio_activo" value="1"/>
+									</span>
+									<div class="input-group date">
+										<span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" class="form-control" id="gasto_fecha_recordatorio" name="gasto_fecha_recordatorio" value="">
 									</div>
-									<div class="input-group clockpicker" data-autoclose="true">
-										<input name="gasto_hora_recordatorio" id ="gasto_hora_recordatorio" type="text" class="form-control" value="12:00" >
-										<span class="input-group-addon">
-											<span class="fa fa-clock-o"></span>
-										</span>
-									</div>
-								</td>
+								</div>
 								
-							</tr>
-							<tr>
-								
-							</tr>
-							
-							<tr>
-							
-								<td>Concepto:</td>
-								<td><input type="text" name="gasto_concepto" id="gasto_concepto" value="" size="40"></td>
-								
-								<td colspan="2" align="right">Categoria:</td>
-								<td>
-									<select name="gasto_categoria_id" id="gasto_categoria_id" class="chosen-select"  onchange="update_sucursal();" >
-										<?=$options_gasto_categoria_id?>
-									</select>
-								</td>
-							</tr>
-							<tr>
-								
-							</tr>
-							<tr>
-								<td>Descripción:</td>
-								<td><textarea cols="40" name="gasto_descripcion" id="gasto_descripcion" ></textarea></td>
-								<td colspan="2" align="right">Sucursal:</td>
-								<td>
-									<select name="sucursal_id" id="sucursal_id">
-										<?=$options_sucursal_id?>
-									</select>
-								</td>
-							</tr>
-							<tr>
-								<td>Monto:</td>
-								<td>$ <input type="text" name="gasto_monto" id="gasto_monto" value="" size="10"></td>
-								<td colspan="2" align="right">Proveedor:</td>
-								<td>
-									<select name="proveedor_id" id="proveedor_id" onchange="update_beneficiary_from_proveedor();">
-										<?=$options_proveedor_id?>
-									</select>
-								</td>
-							</tr>
-							<tr>
-								<td>Beneficiario:</td>
-								<td><input type="text" name="gasto_beneficiario" id="gasto_beneficiario" value="" size="40"></td>
-								<td colspan="2" align="right">Empleado:</td>
-								<td>
-									<select name="login_id" id="login_id" onchange="update_beneficiary_from_login();">
-										<?=$options_login_id?>
-									</select>
-								</td>
-							</tr>
-							<tr>
-								<td></td>
-								<td></td>
-								<td colspan="3" align="right"><input type="checkbox" name="pago_automatico" id="pago_automatico" /> REGISTRAR PAGO TOTAL EN AUTOMATICO</td>
-							</tr>
-							
-					  </table>
-		
-                    
-                        </div>
-
-                   <!-- </div> -->
+							</div>   
+							<div class="col-md-2">
+								<div class="input-group clockpicker" data-autoclose="true">
+									<input name="gasto_hora_recordatorio" id ="gasto_hora_recordatorio" type="text" class="form-control" value="12:00" >
+									<span class="input-group-addon">
+										<span class="fa fa-clock-o"></span>
+									</span>
+								</div>
+							</div>
+						</div>	
+<div class="clear">&nbsp;</div>
+                    <div class="form-group">                        
+                        <label class="control-label col-md-2">Concepto</label>                        
+                        <div class="col-md-5">
+                            <input type="text" name="gasto_concepto" id="gasto_concepto" value="" size="40" class="form-control">
+                        </div>    
+                    </div>
+<div class="clear">&nbsp;</div>
+                    <div class="form-group">                        
+                        <label class="control-label col-md-2">Categoria</label>                        
+                        <div class="col-md-5">
+                            <select name="gasto_categoria_id" id="gasto_categoria_id" class="chosen-select"  onchange="update_sucursal();" >
+								<?=$options_gasto_categoria_id?>
+							</select>
+                        </div>    
+                    </div>
+<div class="clear">&nbsp;</div>
+                    <div class="form-group">                        
+                        <label class="control-label col-md-2">Descripción</label>                        
+                        <div class="col-md-5">
+                            <textarea cols="40" name="gasto_descripcion" id="gasto_descripcion" class="form-control" ></textarea>
+                        </div>    
+                    </div>
+<div class="clear">&nbsp;</div>
+                    <div class="form-group">                        
+                        <label class="control-label col-md-2">Sucursal</label>                        
+                        <div class="col-md-5">
+                            <select name="sucursal_id" id="sucursal_id" class="chosen-select" >
+								<?=$options_sucursal_id?>
+							</select>
+                        </div>    
+                    </div>
+<div class="clear">&nbsp;</div>
+                    <div class="form-group">                        
+                        <label class="control-label col-md-2">Monto</label>                        
+                        <div class="col-md-5 input-group m-b">
+                            <span class="input-group-addon">$</span>
+ <input type="text" name="gasto_monto" id="gasto_monto" value="" size="10" class="form-control">
+                        </div>    
+                    </div>
+<div class="clear">&nbsp;</div>
+                    <div class="form-group">                        
+                        <label class="control-label col-md-2">Proveedor</label>                        
+                        <div class="col-md-5">
+                            <select name="proveedor_id" id="proveedor_id"  class="chosen-select" onchange="update_beneficiary_from_proveedor();">
+								<?=$options_proveedor_id?>
+							</select>
+                        </div>    
+                    </div>
+<div class="clear">&nbsp;</div>
+                    <div class="form-group">                        
+                        <label class="control-label col-md-2">Beneficiario</label>                        
+                        <div class="col-md-5">
+                            <input type="text" name="gasto_beneficiario" id="gasto_beneficiario" value="" size="40" class="form-control">
+                        </div>    
+                    </div>
+<div class="clear">&nbsp;</div>
+                    <div class="form-group">                        
+                        <label class="control-label col-md-2">Empleado</label>                        
+                        <div class="col-md-5">
+                            <select name="login_id" id="login_id"  class="chosen-select" onchange="update_beneficiary_from_login();">
+								<?=$options_login_id?>
+							</select>
+                        </div>    
+                    </div>
+<div class="clear">&nbsp;</div>
+                    <div class="form-group">                        
+                        <label class="control-label col-md-2">Registrar el pago total en automático</label>                        
+                        <div class="col-md-5">
+                            <input type="checkbox" name="pago_automatico" id="pago_automatico" /> 
+                        </div>    
+                    </div>
+<div class="clear">&nbsp;</div>
+                    <div class="form-group">                        
+                                             
+                        <div class="col-md-7" align="right">
+                            <button type="button" class="btn btn-danger btn-xs" onclick="location.href = '../';">Cancelar</button>&nbsp;&nbsp;
+									<button id="boton_crea_gasto" type="button" class="btn btn-primary btn-xs" onclick="crea_gasto();">Guardar Gasto</button> <span id="span_crea_gasto"></span>
+                        </div>    
+                    </div>
+						
                 </div>
             </div>
             </div>
             
-        </div>
+       
         <div class="footer">
             <div>
                 <strong>Copyright</strong> 
@@ -236,6 +264,10 @@ $(document).ready(function(){
      $.fn.datepicker.defaults.language = 'es';
 	 $('.clockpicker').clockpicker();
 	 $('#gasto_categoria_id').chosen();
+	 $('#sucursal_id').chosen();
+	 $('#proveedor_id').chosen();
+	 $('#login_id').chosen();
+	 
 });
 
 

@@ -94,7 +94,7 @@ while(list(,$dataGastoCategoria) = each($rowsGastosCategoria)){
 	</div>
 	<div class="col-sm-4">
 		<div class="title-action">
-			<button type="button" class="btn btn-danger btn-xs" onclick="location.href = '../';"><i class="fa fa-arrow-left"></i> Regresar a listado</button>
+			<button type="button" class="btn btn-warning btn-xs" onclick="location.href = '../';"><i class="fa fa-arrow-left"></i> Regresar a listado</button>
 		</div>
 	</div>
 </div>

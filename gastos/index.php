@@ -43,7 +43,7 @@ $rowsGastosSucursal = $objGasto->getGastosSucursal();
 
 
 $asoccGastoCategoria = array();
-$options_gasto_categoria_id = '<option value="0">-- Elige un Categoria --</option>';
+$options_gasto_categoria_id = '<option value="0">-- Elige un Categoría --</option>';
 while(list(,$dataGastoCategoria) = each($rowsGastosCategoria)){
 	$selected = '';
 	if(isset($_GET["filtro_categoria_id"]) && $_GET["filtro_categoria_id"] == $dataGastoCategoria["gasto_categoria_id"]){
@@ -172,7 +172,7 @@ while(list(,$dataGasto) = each($rows)){
 	<div class="col-sm-8">
 		<div class="title-action">
 			<button type="button" class="btn btn-primary btn-xs"  onclick="location.href = 'nuevo/';" >
-			Nuevo Gasto
+			+ Nuevo Gasto
 			</button>
 		</div>
 	</div>
@@ -218,7 +218,7 @@ while(list(,$dataGasto) = each($rows)){
 										</div>
 									</td>
 									<td valign="top">
-										<input type="checkbox" name="filtro_categoria_activo" id="filtro_categoria_activo" value="1" <?=$filtro_categoria_activo_checked?>/> <b>Categoria</b><br><br>
+										<input type="checkbox" name="filtro_categoria_activo" id="filtro_categoria_activo" value="1" <?=$filtro_categoria_activo_checked?>/> <b>Categoría</b><br><br>
 										<select name="filtro_categoria_id" id="filtro_categoria_id">
 											<?=$options_gasto_categoria_id?>
 										</select>
@@ -235,12 +235,15 @@ while(list(,$dataGasto) = each($rows)){
 											<?=$options_sucursal_id?>
 										</select>
 									</td>
-									<td><br>
+								</tr>
+								<tr>
+									<td colspan="5" align="right">
 										<button type="submit" class="btn btn-primary btn-xs"  onclick="" >Filtrar</button> &nbsp;&nbsp;&nbsp;
 										<button type="button" class="btn btn-warning btn-xs"  onclick="location.href = '.';" >Limpiar Filtros</button>
 									</td>
-								</tr>
+								<tr>
 							</table>
+							
 						</form>	
 							
 							
@@ -254,12 +257,12 @@ while(list(,$dataGasto) = each($rows)){
 						<th>Folio</th>
                         <th>No Documento</th>
                         <th>Fecha Vencimiento</th>
-						<th>Categoria</th>
+						<th>Categoría</th>
                         <th>Concepto</th>
 						<th>Sucursal</th>
                         <th>Cantidad Total</th>
 						<th>Pagado</th>
-						<th>Ultimo Pago</th>
+						<th>Último Pago</th>
 						<th>Restan</th>
                         <th>Status</th> 
 						<th style="text-align:center;">Acción</th>
@@ -328,6 +331,7 @@ $(document).ready(function(){
 					"infoFiltered": "(filtered from _MAX_ total records)"
 				},
                 buttons: [
+				/*
                     { extend: 'copy'},
                     {extend: 'csv'},
                     {extend: 'excel', title: 'ExampleFile'},
@@ -342,6 +346,7 @@ $(document).ready(function(){
                                     .css('font-size', 'inherit');
                     }
                     }
+				*/
                 ]
 
             });
