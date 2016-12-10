@@ -320,11 +320,15 @@
             
             
             <div class="form-group"><label class="col-sm-2 control-label">Imagenes</label>
-			<div class="col-sm-6" >
+			<div class="col-sm-4" >
 			<input name="upload[]" type="file" id="upload" accept='image/*'/>
-    		<button class="add_more btn btn-primary btn-xs">Agregar</button>
+			</div>
+			<div class="col-sm-2" >
+			<button class="btn btn-primary btn-xs add_more" id="agregarImg" value="" placeholder="Imagen" type="button"><i class="fa fa-plus"></i></button>
 			</div>
             </div>
+            
+            <div id="newImage"></div>
             
             <div id="div_check_conjunto">
             <div class="form-group">

@@ -27,7 +27,7 @@
         <div class="col-sm-8">
             <div class="title-action">
                 <button class="btn btn-danger btn-xs" id="cancelar" type="button">Cancelar</button>&nbsp;&nbsp;
-				<button class="btn btn-primary btn-xs" id="guardar" type="button">Guardar Campaña</button>
+				<button class="btn btn-primary btn-xs" id="guardar" type="button">Guardar Cambio</button>
             </div>
         </div>
     </div>
