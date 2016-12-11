@@ -81,9 +81,17 @@
                         <ul class="nav nav-second-level">
 							<li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/productos/index.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'productos/'?>" >Lista de productos</a></li>
 							<li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/productos/nuevo_producto.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'productos/nuevo_producto.php'?>" >Nuevo producto</a></li>
-                            <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/productos/materiales/index.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'productos/materiales/'?>" >Materiales</a></li>
+							<li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/gastos/nomina/index.php'){ echo 'active';}?>">
+							 <a href="<?php echo $ruta.'productos/'?>" >Atributos <span class="fa arrow"></span></a>
+							 
+							 <ul class="nav nav-third-level" >
+							 	<li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/productos/materiales/index.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'productos/materiales/'?>" >Materiales</a></li>
                             <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/productos/colores/index.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'productos/colores/'?>" >Colores</a></li>                                                                                                                                
                             <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/productos/categorias/index.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'productos/categorias/'?>" >Categorias</a></li>    
+                            <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/productos/versiones/index.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'productos/versiones/'?>" >Versiones</a></li>
+							 </ul>
+							 
+							</li>
                         </ul>
                     </li>
 					
