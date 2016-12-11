@@ -54,83 +54,87 @@ if($rowEvento["evento_recordatorio_activo"]==1){
 	</div>
 	<div class="col-sm-8">
 		<div class="title-action">
-			<button type="button" class="btn btn-danger btn-xs" onclick="location.href = '../';"><i class="fa fa-arrow-left"></i> Regresar a Calendario</button>&nbsp;&nbsp;
-			<button type="button" class="btn btn-danger btn-xs" onclick="confirmDelete('<?=$rowEvento["evento_id"]?>'); ">BORRAR EVENTO</button>&nbsp;&nbsp;
-            <button id="boton_crea_evento" type="button" class="btn btn-primary btn-xs" onclick="edita_evento();">Guardar Evento</button> <span id="span_crea_evento"></span>
+			<button type="button" class="btn btn-warning btn-xs" onclick="location.href = '../';"><i class="fa fa-arrow-left"></i> Regresar a vista mensual</button>
 		</div>
 	</div>
 </div>
-		<div class="wrapper wrapper-content animated fadeInRight">
+		
             <div class="row">
                 <div class="col-lg-12">
-                <div class="ibox float-e-margins">
+                <div class="wrapper wrapper-content animated fadeInRight form-horizontal">
                    
-                    <div class="ibox-content">
+						<div class="form-group">
+							<label class="control-label col-md-2">Nombre del evento</label>                        
+							<div class="col-md-5">
+								<input type="text" name="evento_nombre" id="evento_nombre" size="30" class="form-control" value="<?=$rowEvento["evento_nombre"]?>"/>
+							</div>    
+						</div>
 					
-					
-					
-						<div class="table-responsive">
+						<div class="form-group">                        
+							<label class="control-label col-md-2">Fecha del evento</label>                        
+							<div class="col-md-3" style="padding-left:30px; height:35px;">
+								<div class="form-group" id="data_1" >
+									<div class="input-group date">
+										<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+										<input type="text" class="form-control" id="evento_fecha" name="evento_fecha" value="">
+									</div>
+								</div>
+							</div>
+							<div class="col-md-2">
+								<div class="input-group clockpicker" data-autoclose="true">
+									<input name="evento_hora" id ="evento_hora" type="text" class="form-control" value="<?=$evento_hora_h_m?>" >
+									<span class="input-group-addon">
+										<span class="fa fa-clock-o"></span>
+									</span>
+								</div>
+							</div>    
+						</div>
 						
-						<table class="table-form">
-							<tr>
-								<td>Nombre del evento:</td>
-								<td><input type="text" name="evento_nombre" id="evento_nombre" size="30" value="<?=$rowEvento["evento_nombre"]?>"/></td>
-							</tr>
-							<tr>
-								<td valign="top">Fecha del evento:</td>
-								<td>
-									<div class="form-group" id="data_1" >
-										<div class="input-group date">
-											<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-											<input type="text" class="form-control" id="evento_fecha" name="evento_fecha" value="">
-										</div>
+						<div class="form-group">                        
+							<label class="control-label col-md-2">Recordatorio</label>                        
+							<div class="col-md-3" style="padding:0px 0px 0px 30px; height:35px;">
+								<div class="form-group input-group m-b" id="data_2" >
+									<span class="input-group-addon">
+										<input type="checkbox" name="evento_recordatorio_activo" id="evento_recordatorio_activo" value="1" <?=$evento_recordatorio_checked?>/>
+									</span>
+									<div class="input-group date">
+										<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+										<input type="text" class="form-control" id="evento_recordatorio_fecha" name="evento_recordatorio_fecha" value="">
 									</div>
-									<div class="input-group clockpicker" data-autoclose="true">
-										<input name="evento_hora" id ="evento_hora" type="text" class="form-control" value="<?=$evento_hora_h_m?>" >
-										<span class="input-group-addon">
-											<span class="fa fa-clock-o"></span>
-										</span>
-									</div>
-
-								</td>
-								<td valign="top"> <input type="checkbox" name="evento_recordatorio_activo" id="evento_recordatorio_activo" value="1" <?=$evento_recordatorio_checked?> /> </td>
-								<td valign="top">Programar Recordatorio:</td>
-								
-								<td>
-									<div class="form-group" id="data_2" >
-										<div class="input-group date">
-											<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-											<input type="text" class="form-control" id="evento_recordatorio_fecha" name="evento_recordatorio_fecha" value="">
-										</div>
-									</div>
-									<div class="input-group clockpicker" data-autoclose="true">
-										<input name="evento_recordatorio_hora" id ="evento_recordatorio_hora" type="text" class="form-control" value="<?=$evento_recordatorio_hora_h_m?>" >
-										<span class="input-group-addon">
-											<span class="fa fa-clock-o"></span>
-										</span>
-									</div>
-								</td>
-								
-							</tr>
-							
-							<tr>
-							
-								<td>Descripción:</td>
-								<td><textarea  name="evento_desc" id="evento_desc" cols="35" rows="5" ><?=$rowEvento["evento_desc"]?></textarea></td>
-								
-								
-							</tr>
-					  </table>
+								</div>
+							</div>
+							<div class="col-md-2">
+								<div class="input-group clockpicker" data-autoclose="true">
+									<input name="evento_recordatorio_hora" id ="evento_recordatorio_hora" type="text" class="form-control"  value="<?=$evento_recordatorio_hora_h_m?>" >
+									<span class="input-group-addon">
+										<span class="fa fa-clock-o"></span>
+									</span>
+								</div>
+							</div>    
+						</div>
+						
+						<div class="form-group">                        
+							<label class="control-label col-md-2">Descripción</label>                        
+							<div class="col-md-5">
+								<textarea  name="evento_desc" id="evento_desc" rows="5" class="form-control" ><?=$rowEvento["evento_desc"]?></textarea>
+							</div>    
+						</div>
+						
+						<div class="form-group"> 
+							<div class="col-md-7" align="right">								
+								<button type="button" class="btn btn-danger btn-xs" onclick="confirmDelete('<?=$rowEvento["evento_id"]?>'); ">BORRAR EVENTO</button>&nbsp;&nbsp;
+								<button type="button" class="btn btn-danger btn-xs" onclick="location.href = '../';">Cancelar</button>&nbsp;&nbsp;
+								<button id="boton_crea_evento" type="button" class="btn btn-primary btn-xs" onclick="edita_evento();">Guardar Evento</button> <span id="span_crea_evento"></span>
+							</div>    
+						</div>
 		
-                    
-                        </div>
 
-                    </div>
+                   
                 </div>
             </div>
             </div>
             
-        </div>
+        
         <div class="footer">
             <div>
                 <strong>Copyright</strong> 

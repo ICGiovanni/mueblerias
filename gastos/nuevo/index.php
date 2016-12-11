@@ -97,17 +97,14 @@ while(list(,$dataLogin) = each($rowsLogin)){
 								<input type="text" name="gasto_no_documento" id="gasto_no_documento" size="30" class="form-control"/>
 							</div>    
 						</div>
-
-						<div class="clear">&nbsp;</div>
-						<div class="form-group">                        
+						<div class="form-group">
 							<label class="control-label col-md-2">Fecha de vencimiento</label>                        
-							<div class="col-md-3">
+							<div class="col-md-3" style="padding-left:30px; height:35px;">
 								<div class="form-group" id="data_1" >
 										<div class="input-group date">
 											<span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" class="form-control" id="gasto_fecha_vencimiento" name="gasto_fecha_vencimiento" value="">
 										</div>
 								</div>
-								
 							</div>   
 							<div class="col-md-2">
 								<div class="input-group clockpicker" data-autoclose="true">
@@ -119,10 +116,9 @@ while(list(,$dataLogin) = each($rowsLogin)){
 							</div>
 						</div>
 
-<div class="clear">&nbsp;</div>
 						<div class="form-group">                        
-							<label class="control-label col-md-2"> Programar Recordatorio</label>                        
-							<div class="col-md-3">
+							<label class="control-label col-md-2"> Recordatorio</label>                        
+							<div class="col-md-3" style="padding:0px 0px 0px 30px; height:35px;">
 								<div class="form-group input-group m-b" id="data_2" >
 									<span class="input-group-addon">
 										<input type="checkbox" name="gasto_fecha_recordatorio_activo" id="gasto_fecha_recordatorio_activo" value="1"/>
@@ -142,30 +138,35 @@ while(list(,$dataLogin) = each($rowsLogin)){
 								</div>
 							</div>
 						</div>	
-<div class="clear">&nbsp;</div>
+
                     <div class="form-group">                        
                         <label class="control-label col-md-2">Concepto</label>                        
                         <div class="col-md-5">
                             <input type="text" name="gasto_concepto" id="gasto_concepto" value="" size="40" class="form-control">
                         </div>    
                     </div>
-<div class="clear">&nbsp;</div>
-                    <div class="form-group">                        
-                        <label class="control-label col-md-2">Categoria</label>                        
-                        <div class="col-md-5">
-                            <select name="gasto_categoria_id" id="gasto_categoria_id" class="chosen-select"  onchange="update_sucursal();" >
-								<?=$options_gasto_categoria_id?>
-							</select>
-                        </div>    
-                    </div>
-<div class="clear">&nbsp;</div>
-                    <div class="form-group">                        
+					<div class="form-group">                        
                         <label class="control-label col-md-2">Descripción</label>                        
                         <div class="col-md-5">
                             <textarea cols="40" name="gasto_descripcion" id="gasto_descripcion" class="form-control" ></textarea>
                         </div>    
                     </div>
-<div class="clear">&nbsp;</div>
+					 <div class="form-group">                        
+                        <label class="control-label col-md-2">Monto</label>                        
+                        <div class="col-md-5 input-group m-b" style="padding:0px 15px; height:35px; margin-bottom:1px;">
+                            <span class="input-group-addon">$</span>
+							<input type="text" name="gasto_monto" id="gasto_monto" value="" size="10" class="form-control">
+                        </div>    
+                    </div>
+                    <div class="form-group">                        
+                        <label class="control-label col-md-2">Categoria</label>                        
+                        <div class="col-md-5">
+                            <select name="gasto_categoria_id" id="gasto_categoria_id" class="chosen-select" onchange="update_sucursal();" >
+								<?=$options_gasto_categoria_id?>
+							</select>
+                        </div>    
+                    </div>
+
                     <div class="form-group">                        
                         <label class="control-label col-md-2">Sucursal</label>                        
                         <div class="col-md-5">
@@ -174,15 +175,7 @@ while(list(,$dataLogin) = each($rowsLogin)){
 							</select>
                         </div>    
                     </div>
-<div class="clear">&nbsp;</div>
-                    <div class="form-group">                        
-                        <label class="control-label col-md-2">Monto</label>                        
-                        <div class="col-md-5 input-group m-b">
-                            <span class="input-group-addon">$</span>
- <input type="text" name="gasto_monto" id="gasto_monto" value="" size="10" class="form-control">
-                        </div>    
-                    </div>
-<div class="clear">&nbsp;</div>
+                   
                     <div class="form-group">                        
                         <label class="control-label col-md-2">Proveedor</label>                        
                         <div class="col-md-5">
@@ -191,14 +184,7 @@ while(list(,$dataLogin) = each($rowsLogin)){
 							</select>
                         </div>    
                     </div>
-<div class="clear">&nbsp;</div>
-                    <div class="form-group">                        
-                        <label class="control-label col-md-2">Beneficiario</label>                        
-                        <div class="col-md-5">
-                            <input type="text" name="gasto_beneficiario" id="gasto_beneficiario" value="" size="40" class="form-control">
-                        </div>    
-                    </div>
-<div class="clear">&nbsp;</div>
+
                     <div class="form-group">                        
                         <label class="control-label col-md-2">Empleado</label>                        
                         <div class="col-md-5">
@@ -207,16 +193,20 @@ while(list(,$dataLogin) = each($rowsLogin)){
 							</select>
                         </div>    
                     </div>
-<div class="clear">&nbsp;</div>
+					<div class="form-group">                        
+                        <label class="control-label col-md-2">Beneficiario</label>                        
+                        <div class="col-md-5">
+                            <input type="text" name="gasto_beneficiario" id="gasto_beneficiario" value="" size="40" class="form-control">
+                        </div>    
+                    </div>
                     <div class="form-group">                        
-                        <label class="control-label col-md-2">Registrar el pago total en automático</label>                        
+                        <label class="control-label col-md-2">Registrar Pago en automático</label>                        
                         <div class="col-md-5">
                             <input type="checkbox" name="pago_automatico" id="pago_automatico" /> 
                         </div>    
                     </div>
-<div class="clear">&nbsp;</div>
-                    <div class="form-group">                        
-                                             
+
+                    <div class="form-group"> 
                         <div class="col-md-7" align="right">
                             <button type="button" class="btn btn-danger btn-xs" onclick="location.href = '../';">Cancelar</button>&nbsp;&nbsp;
 									<button id="boton_crea_gasto" type="button" class="btn btn-primary btn-xs" onclick="crea_gasto();">Guardar Gasto</button> <span id="span_crea_gasto"></span>
@@ -227,13 +217,13 @@ while(list(,$dataLogin) = each($rowsLogin)){
             </div>
             </div>
             
-       
+       <!--
         <div class="footer">
             <div>
                 <strong>Copyright</strong> 
             </div>
         </div>
-
+		-->
         </div>
         </div>
 		

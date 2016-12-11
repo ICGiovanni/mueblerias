@@ -154,22 +154,22 @@ class Gasto {
 		//print_r($params);
 		
 		$where = array();
-		if(isset($params["filtro_fecha_activo"]) && $params["filtro_fecha_activo"] == 1){ //add fechas
+		if(isset($params["filtro_fecha_inicio"]) && !empty($params["filtro_fecha_inicio"])){ //add fechas
 		
 			list($filtro_fecha_inicio_dia,$filtro_fecha_inicio_mes,$filtro_fecha_inicio_ano)=explode("/",$params["filtro_fecha_inicio"]);
 			list($filtro_fecha_fin_dia,$filtro_fecha_fin_mes,$filtro_fecha_fin_ano)=explode("/",$params["filtro_fecha_fin"]);
 			$where[]=" gasto_fecha_vencimiento BETWEEN '".$filtro_fecha_inicio_ano."-".$filtro_fecha_inicio_mes."-".$filtro_fecha_inicio_dia."' AND '".$filtro_fecha_fin_ano."-".$filtro_fecha_fin_mes."-".$filtro_fecha_fin_dia."' ";
 	
 		}
-		if(isset($params["filtro_categoria_activo"]) && $params["filtro_categoria_activo"] == 1){ //add fechas
+		if(isset($params["filtro_categoria_id"]) && $params["filtro_categoria_id"] != 0){ //add fechas
 			//echo "add categoria";
 			$where[]=" gasto_categoria_id = '".$params["filtro_categoria_id"]."'";
 		}
-		if(isset($params["filtro_status_activo"]) && $params["filtro_status_activo"] == 1){ //add fechas
+		if(isset($params["filtro_status_id"]) && $params["filtro_status_id"] != 0){ //add fechas
 			//echo "add status";
 			$where[]=" gasto_status_id = '".$params["filtro_status_id"]."'";
 		}
-		if(isset($params["filtro_sucursal_activo"]) && $params["filtro_sucursal_activo"] == 1){ //add fechas
+		if(isset($params["filtro_sucursal_id"]) && $params["filtro_sucursal_id"] != 0){ //add fechas
 			//echo "add status";
 			$where[]=" sucursal_id = '".$params["filtro_sucursal_id"]."'";
 		}
