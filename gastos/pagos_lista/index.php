@@ -8,8 +8,11 @@ if(empty($_GET["gasto_id"])){
 require_once $pathProy.'/header.php';
 require_once $pathProy.'/menu.php';
 require_once($_SERVER["REDIRECT_PATH_CONFIG"].'gastos/models/class.Gastos.php');
+require_once($_SERVER["REDIRECT_PATH_CONFIG"].'models/general/class.General.php');
 
 $objGasto = new Gasto();
+$objGeneral = new General();
+
 $rowGasto = $objGasto->getGasto($_GET["gasto_id"]);
 $rowGasto=$rowGasto[0];
 
@@ -29,15 +32,28 @@ while( list(,$dataPagoDetalle)=each($rowPagosDetalle) ){
 	
 	if($dataPagoDetalle["gastos_pagos_es_fiscal"] == "1"){
 		$es_fiscal = "Sí";
-		$gastos_pagos_monto_sin_iva = '$ '.number_format($dataPagoDetalle["gastos_pagos_monto_sin_iva"],2);
-		$gastos_pagos_iva = '$ '.number_format($dataPagoDetalle["gastos_pagos_iva"],2);
+		$gastos_pagos_monto_sin_iva = '$'.number_format($dataPagoDetalle["gastos_pagos_monto_sin_iva"],2);
+		$gastos_pagos_iva = '$'.number_format($dataPagoDetalle["gastos_pagos_iva"],2);
 	} else {
 		$es_fiscal = "No";
 		$gastos_pagos_monto_sin_iva = 'N/A';
 		$gastos_pagos_iva = 'N/A';
 	}
+	$restan_parcial = str_replace(",","",$restan_parcial);
 	//$dataPagoDetalle["gastos_pagos_id"]
-	$rowsDataPagoDetalle.='<tr><td align="center">'.$_GET["gasto_id"].'.'.$folioInterno.'</td><td >'.$dataPagoDetalle["firstName"].' '.$dataPagoDetalle["lastName"].'</td><td align="right">$ '.number_format($dataPagoDetalle["gastos_pagos_monto"],2).'</td><td align="right">'.$gastos_pagos_monto_sin_iva.'</td><td align="right">'.$gastos_pagos_iva.'</td><td align="center">'.$es_fiscal.'</td><td>'.$dataPagoDetalle["gastos_pagos_forma_de_pago_desc"].'</td><td>'.$dataPagoDetalle["gastos_pagos_referencia"].'</td><td align="center">'.$dataPagoDetalle["gastos_pagos_fecha"].'</td><td align="right">$ '.number_format($restan_parcial,2).'</td> <td align="center"><i class="fa fa-trash" onclick="borra_pago(\''.$dataPagoDetalle["gastos_pagos_id"].'\',\''.$_GET["gasto_id"].'\')"></i></td></tr>';
+	$rowsDataPagoDetalle.='<tr>
+							<td align="center">'.$_GET["gasto_id"].'.'.$folioInterno.'</td>
+							<td >'.$dataPagoDetalle["firstName"].' '.$dataPagoDetalle["lastName"].'</td>
+							<td align="right">$'.number_format($dataPagoDetalle["gastos_pagos_monto"],2).'</td>
+							<td align="right">'.$gastos_pagos_monto_sin_iva.'</td>
+							<td align="right">'.$gastos_pagos_iva.'</td>
+							<td align="center">'.$es_fiscal.'</td>
+							<td>'.$dataPagoDetalle["gastos_pagos_forma_de_pago_desc"].'</td>
+							<td>'.$dataPagoDetalle["gastos_pagos_referencia"].'</td>
+							<td align="center">'.$objGeneral->getDate($dataPagoDetalle["gastos_pagos_fecha"]).'</td>
+							<td align="right">$'.number_format($restan_parcial,2).'</td>
+							<td align="center"><i class="fa fa-trash" title="Borrar Pago" onclick="borra_pago(\''.$dataPagoDetalle["gastos_pagos_id"].'\',\''.$_GET["gasto_id"].'\')"></i></td>
+						</tr>';
 	$restan_parcial+=$dataPagoDetalle["gastos_pagos_monto"];
 	$folioInterno--;
 }
@@ -82,13 +98,13 @@ while(list(,$dataGastoCategoria) = each($rowsGastosCategoria)){
 </style>
 <div class="row wrapper border-bottom white-bg page-heading">
 	<div class="col-sm-8">
-		<h2>Detalle de Pagos a Gasto "<?=$rowGasto["gasto_no_documento"]?>"</h2>
+		<h2>Lista de Pagos a Gasto <span style="font-size:14px"><b>"<?=$rowGasto["gasto_no_documento"]?>"</b></span></h2>
 		<ol class="breadcrumb">
 			<li>
 				<a href="">Gastos</a>
 			</li>
 			<li class="active">
-				<strong>Detalle de Pagos a Gasto</strong>
+				<strong>Lista de Pagos a Gasto</strong>
 			</li>
 		</ol>
 	</div>
@@ -98,20 +114,32 @@ while(list(,$dataGastoCategoria) = each($rowsGastosCategoria)){
 		</div>
 	</div>
 </div>
-		<div class="wrapper wrapper-content animated fadeInRight">
+		
             <div class="row">
                 <div class="col-lg-12">
-                <div class="ibox float-e-margins">
-                    <div class="ibox-content">
+                <div class="wrapper wrapper-content animated fadeInRight form-horizontal">
+                    
+					<div class="form-group">
+						<div class="col-md-2" align="right"><b>Monto a cubir</b></div>                        
+						<div class="col-md-1" align="right">
+							<b>$<?=number_format($rowGasto["gasto_monto"],2)?></b>
+						</div>    
+					</div>
+					<div class="form-group">
+						<div class="col-md-2" align="right"><b>Pagos Realizados</b></div>                        
+						<div class="col-md-1" align="right">
+							<b style="color:green;">$<?=number_format($rowPagos["gastos_pagos_monto"],2)?></b>
+						</div>    
+					</div>
+					<div class="form-group">
+						<div class="col-md-2" align="right"><b>Restan</b></div>                        
+						<div class="col-md-1" align="right">
+							<b style="color:red;">$<?=$restan_global?></b>
+						</div>    
+					</div>
 					
-						<div class="table-responsive">
-						<table class="table">
-							<tr>
-								<td>MONTO A PAGAR: <b>$ <?=number_format($rowGasto["gasto_monto"],2)?></b></td>
-								<td>PAGADO: <b style="color:green;">$ <?=number_format($rowPagos["gastos_pagos_monto"],2)?></b></td>
-								<td>RESTAN: <b style="color:red;">$ <?=$restan_global?></b></td>
-							</tr>
-						</table>
+					<div class="table-responsive col-md-12">
+						
 						        
 						<table class="table table-striped">
 							<tr>
@@ -125,20 +153,20 @@ while(list(,$dataGastoCategoria) = each($rowsGastosCategoria)){
 								<th>Referencia</th>
 								<th style="text-align:center">Fecha del pago</th>
 								<th style="text-align:right">Restan</th>
-								<th style="text-align:right">Borrar Pago</th>
+								<th style="text-align:center">Borrar Pago</th>
 							</tr>
 							<?=$rowsDataPagoDetalle?>
 						</table>
 		
                     
-                        </div>
-
                     </div>
+
+                   
                 </div>
             </div>
             </div>
             
-        </div>
+        
         <div class="footer">
             <div>
                 <strong>Copyright</strong> 

@@ -267,7 +267,7 @@ while(list(,$dataGasto) = each($rows)){
 }
 </style>
 <div class="row wrapper border-bottom white-bg page-heading">
-	<div class="col-sm-8">
+	<div class="col-sm-9">
 		<h2>Nomina Semana <?=$semana?> - <span style="font-size:14px">Del <?="Sab"?> <b><?=$general->getOnlyDate($primerDia)?></b> al <?="Vie"?> <b><?=$general->getOnlyDate($ultimoDia)?></b></span></h2> 
 		<ol class="breadcrumb">
 			<li>
@@ -278,20 +278,21 @@ while(list(,$dataGasto) = each($rows)){
 			</li>
 		</ol>
 	</div>
-	<div class="col-sm-4">
+	<div class="col-sm-3">
 		<div class="title-action">
 			<button type="button" class="btn btn-primary btn-xs"  onclick="location.href = './?semana=<?=($semana-1)?>&grupo=<?=$_GET["grupo"]?>';" >
-			<i class="fa fa-arrow-left"></i> semana atras 
+			<i class="fa fa-arrow-left"></i> atras 
 			</button>
 			<?php
 			if($semana < date("W")){
 			?>
-			<button type="button" class="btn btn-primary btn-xs"  onclick="location.href = './?semana=<?=($semana+1)?>&grupo=<?=$_GET["grupo"]?>';" >
-			semana adelante <i class="fa fa-arrow-right"></i>
-			</button>
 			<button type="button" class="btn btn-primary btn-xs"  onclick="location.href = './?grupo=<?=$_GET["grupo"]?>';" >
 			semana actual
 			</button>
+			<button type="button" class="btn btn-primary btn-xs"  onclick="location.href = './?semana=<?=($semana+1)?>&grupo=<?=$_GET["grupo"]?>';" >
+			adelante <i class="fa fa-arrow-right"></i>
+			</button>
+			
 			<?php
 			}
 			?>

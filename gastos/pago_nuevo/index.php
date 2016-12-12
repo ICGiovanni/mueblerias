@@ -34,7 +34,7 @@ while(list(,$dataGastoCategoria) = each($rowsGastosCategoria)){
 <!-- Data picker -->
 <link href="<?=$raizProy?>css/plugins/datapicker/datepicker3.css" rel="stylesheet">
 <link href="<?=$raizProy?>css/plugins/clockpicker/clockpicker.css" rel="stylesheet">
-
+<link href="<?=$raizProy?>css/plugins/chosen/chosen.css" rel="stylesheet">
 
 <style>
 .glyphicon-refresh-animate {
@@ -57,107 +57,115 @@ while(list(,$dataGastoCategoria) = each($rowsGastosCategoria)){
 </style>
 <div class="row wrapper border-bottom white-bg page-heading">
 	<div class="col-sm-8">
-		<h2>Registrar Nuevo Pago a Gasto <span style="font-size:14px"><b>"<?=$rowGasto["gasto_no_documento"]?>"</b></span></h2>
+		<h2>Nuevo Pago a Gasto <span style="font-size:14px"><b>"<?=$rowGasto["gasto_no_documento"]?>"</b></span></h2>
 		<ol class="breadcrumb">
 			<li>
 				<a href="">Gastos</a>
 			</li>
 			<li class="active">
-				<strong>Registrar Nuevo Pago a Gasto</strong>
+				<strong>Nuevo Pago a Gasto</strong>
 			</li>
 		</ol>
 	</div>
 	<div class="col-sm-4">
 		<div class="title-action">
-			<button type="button" class="btn btn-danger btn-xs" onclick="location.href = '../';">Cancelar</button>&nbsp;&nbsp;
-            <button id="boton_crea_registro" type="button" class="btn btn-primary btn-xs" onclick="crea_pago();"> Guardar Pago</button> <span id="span_crea_registro"></span>
+			<button type="button" class="btn btn-warning btn-xs" onclick="location.href = '../';"><i class="fa fa-arrow-left"></i> Regresar a listado</button>
 		</div>
 	</div>
 </div>
-		<div class="wrapper wrapper-content animated fadeInRight">
-            <div class="row">
-                <div class="col-lg-12">
-                <div class="ibox float-e-margins">
-                    
-                    <div class="ibox-content">
-					
-						<div class="table-responsive">
-						<table class="table ">
-							<tr>
-								<td>Monto total a cubir: <b>$ <?=number_format($rowGasto["gasto_monto"],2)?></b></td>
-								<td>Suma total de pagos realizados: <b style="color:green;">$ <?=number_format($rowPagos["gastos_pagos_monto"],2)?></b></td>
-								<td>Saldo restante vigente a cubrir: <b style="color:red;">$ <?=number_format(($rowGasto["gasto_monto"]-$rowPagos["gastos_pagos_monto"]),2)?></b></td>
-							</tr>
-						</table>
-						        
-						<table class="table-form">
-							<tr>
-								<td align="right">Monto del pago a registrar: $</td>
-								<td><input type="text" name="gastos_pagos_monto" id="gastos_pagos_monto" size="30" onchange="valida_pago(this);"/></td>
-								<td align="right">Forma del pago:</td>
-								<td>
-									<select name="gastos_pagos_forma_de_pago_id" id="gastos_pagos_forma_de_pago_id">
-										<?=$options_gastos_pagos_forma_de_pago_id?>
-									</select>
-								</td>
-							</tr>
-							<tr>
-							
-								<td align="right">
-									<input type="checkbox" name="gastos_pagos_es_fiscal" id="gastos_pagos_es_fiscal" value="1" onclick="update_iva();"/> 
-								</td>
-								<td>Es fiscal</td>
-								<td align="right">
-									Referencia:
-								</td>
-								<td rowspan="5">
-									<textarea rows="10" name="gastos_pagos_referencia" cols="25" id="gastos_pagos_referencia"></textarea>
-								</td>
-							</tr>
-							<tr>
-								
-							</tr>
-							<tr>
-							
-								<td align="right">Monto del pago sin iva: $</td>
-								<td><input type="text" name="gastos_pagos_monto_sin_iva" id="gastos_pagos_monto_sin_iva" value="" size="30" disabled></td>
-								<td colspan="2"></td>
-								
-							</tr>
-							<tr>
-							
-								<td align="right">IVA: $</td>
-								<td><input type="text" name="gastos_pagos_iva" id="gastos_pagos_iva" value="" size="30" disabled></td>
 
-							</tr>
-							<tr>
-								<td valign="top">Fecha en que fue realizado el pago:</td>
-								<td>
-									<div class="form-group" id="data_1" >
-										<div class="input-group date">
-											<span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" class="form-control" id="gastos_pagos_fecha" name="gastos_pagos_fecha" value="">
-										</div>
-									</div>
-									<div class="input-group clockpicker" data-autoclose="true">
-										<input name="gastos_pagos_hora" id ="gastos_pagos_hora" type="text" class="form-control" value="<?=date("H:m")?>" >
-										<span class="input-group-addon">
-											<span class="fa fa-clock-o"></span>
-										</span>
-									</div>
-
-								</td>
-							</tr>
-					  </table>
+<div class="row">
+	<div class="col-lg-12">
+		<div class="wrapper wrapper-content animated fadeInRight form-horizontal">
 		
-                    
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-            </div>
-            
-        </div>
+			<div class="form-group">
+				<div class="col-md-2" align="right"><b>Monto a cubir</b></div>                        
+				<div class="col-md-5">
+					<b>$<?=number_format($rowGasto["gasto_monto"],2)?></b>
+				</div>    
+			</div>
+			<div class="form-group">
+				<div class="col-md-2" align="right"><b>Pagos Realizados</b></div>                        
+				<div class="col-md-5">
+					<b style="color:green;">$<?=number_format($rowPagos["gastos_pagos_monto"],2)?></b>
+				</div>    
+			</div>
+			<div class="form-group">
+				<div class="col-md-2" align="right"><b>Restan</b></div>                        
+				<div class="col-md-5">
+					<b style="color:red;">$<?=number_format(($rowGasto["gasto_monto"]-$rowPagos["gastos_pagos_monto"]),2)?></b>
+				</div>    
+			</div>
+			<div class="form-group">
+				<label class="control-label col-md-2">Monto del pago</label>                        
+				<div class="col-md-5 input-group m-b" style="padding:0px 15px; height:35px; margin-bottom:1px;">
+					 <span class="input-group-addon">$</span>
+					<input type="text" name="gastos_pagos_monto" id="gastos_pagos_monto" size="30" onchange="valida_pago(this);" class="form-control"/>
+				</div>    
+			</div>
+			<div class="form-group">
+				<label class="control-label col-md-2">Es fiscal</label>                        
+				<div class="col-md-5">
+					<input type="checkbox" name="gastos_pagos_es_fiscal" id="gastos_pagos_es_fiscal" value="1" onclick="update_iva();"/> 
+				</div>    
+			</div>
+			<div class="form-group">
+				<label class="control-label col-md-2">Monto del pago sin IVA</label>                        
+				<div class="col-md-5 input-group m-b" style="padding:0px 15px; height:35px; margin-bottom:1px;">
+				<span class="input-group-addon">$</span>
+					<input type="text" name="gastos_pagos_monto_sin_iva" id="gastos_pagos_monto_sin_iva" value="" size="30" disabled class="form-control"/>
+				</div>    
+			</div>	
+			<div class="form-group">
+				<label class="control-label col-md-2">IVA</label>                        
+				<div class="col-md-5 input-group m-b" style="padding:0px 15px; height:35px; margin-bottom:1px;">
+				<span class="input-group-addon">$</span>
+					<input type="text" name="gastos_pagos_iva" id="gastos_pagos_iva" value="" size="30" disabled class="form-control"/>
+				</div>    
+			</div>
+			<div class="form-group">
+				<label class="control-label col-md-2">Método de pago</label>                        
+				<div class="col-md-5">
+					<select name="gastos_pagos_forma_de_pago_id" id="gastos_pagos_forma_de_pago_id" class="chosen-select">
+						<?=$options_gastos_pagos_forma_de_pago_id?>
+					</select>
+				</div>    
+			</div>
+			<div class="form-group">
+				<label class="control-label col-md-2">Referencia</label>                        
+				<div class="col-md-5">
+					<textarea rows="1" name="gastos_pagos_referencia" id="gastos_pagos_referencia" class="form-control"></textarea>
+				</div>    
+			</div>
+			<div class="form-group">
+				<label class="control-label col-md-2">Fecha de pago</label>                        
+				<div class="col-md-3" style="padding-left:30px; height:35px;">
+					<div class="form-group" id="data_1" >
+						<div class="input-group date">
+							<span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" class="form-control" id="gastos_pagos_fecha" name="gastos_pagos_fecha" value="">
+						</div>
+					</div>
+				</div>   
+				<div class="col-md-2">
+					<div class="input-group clockpicker" data-autoclose="true">
+						<input name="gastos_pagos_hora" id ="gastos_pagos_hora" type="text" class="form-control" value="<?=date("H:m")?>" >
+						<span class="input-group-addon">
+							<span class="fa fa-clock-o"></span>
+						</span>
+					</div>
+				</div>
+			</div>	
+			<div class="form-group"> 
+				<div class="col-md-7" align="right">
+					<button type="button" class="btn btn-danger btn-xs" onclick="location.href = '../';">Cancelar</button>&nbsp;&nbsp;
+					<button id="boton_crea_registro" type="button" class="btn btn-primary btn-xs" onclick="crea_pago();"> Guardar Pago</button> <span id="span_crea_registro"></span>
+				</div>    
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
         <div class="footer">
             <div>
                 <strong>Copyright</strong> 
@@ -188,6 +196,7 @@ while(list(,$dataGastoCategoria) = each($rowsGastosCategoria)){
     <script src="<?=$raizProy?>js/plugins/pace/pace.min.js"></script>
 
     <!-- Page-Level Scripts -->
+	<script src="<?=$raizProy?>js/plugins/chosen/chosen.jquery.js"></script>
 
 <script>
 saldo_actual = '<?=($rowGasto["gasto_monto"]-$rowPagos["gastos_pagos_monto"])?>';
@@ -222,6 +231,7 @@ $(document).ready(function(){
 	
      $.fn.datepicker.defaults.language = 'es';
 	 $('.clockpicker').clockpicker();
+	 $('#gastos_pagos_forma_de_pago_id').chosen();
 });
 
 

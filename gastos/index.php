@@ -231,13 +231,7 @@ while(list(,$dataGasto) = each($rows)){
                 <div class="ibox float-e-margins">
 				
                     <div class="ibox-content">
-						<div id="">
-							
 						
-							
-							
-							
-						</div>
 					
 					<div class="table-responsive">
                     <table class="table table-striped table-bordered table-hover dataTables-example" >

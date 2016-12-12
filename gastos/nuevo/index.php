@@ -179,7 +179,7 @@ while(list(,$dataLogin) = each($rowsLogin)){
                     <div class="form-group">                        
                         <label class="control-label col-md-2">Proveedor</label>                        
                         <div class="col-md-5">
-                            <select name="proveedor_id" id="proveedor_id"  class="chosen-select" onchange="update_beneficiary_from_proveedor();">
+                            <select name="proveedor_id" id="proveedor_id" class="chosen-select" onchange="update_beneficiary_from_proveedor();">
 								<?=$options_proveedor_id?>
 							</select>
                         </div>    
