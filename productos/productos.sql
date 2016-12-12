@@ -39,7 +39,20 @@ ALTER TABLE `materiales`
 ALTER TABLE `materiales`
   MODIFY `material_id` int(11) NOT NULL AUTO_INCREMENT;
 
+DROP TABLE IF EXISTS `versiones`;
+CREATE TABLE IF NOT EXISTS `versiones` (
+  `version_id` int(11) NOT NULL,
+  `version_name` varchar(64) DEFAULT NULL,
+  `version_abrev` varchar(10) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+ALTER TABLE `versiones`
+  ADD PRIMARY KEY (`version_id`);
+  
+ALTER TABLE `versiones`
+  MODIFY `version_id` int(11) NOT NULL AUTO_INCREMENT;
+  
+  
 CREATE TABLE IF NOT EXISTS productos
 (
 	producto_id INT NOT NULL AUTO_INCREMENT,
