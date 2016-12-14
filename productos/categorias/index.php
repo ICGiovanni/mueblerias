@@ -19,7 +19,7 @@ while(list(,$dataGeneric) = each($rows) ){
 		$boton_borrar = ' &nbsp;<a href="javascript:void(0)" data-toggle="modal" data-target="#myModal8" onclick="load_'.strtolower($administracion).'_d(\''.$dataGeneric[strtolower($administracion).'_id'].'\');"><i class="fa fa-trash" title="Borrar"></i></a>';
 	}
 	
-	$boton_editar = ' &nbsp;<a href="javascript:void(0)" data-toggle="modal" data-target="#myModal7" onclick="load_'.strtolower($administracion).'(\''.$dataGeneric[strtolower($administracion).'_id'].'\');"><i class="fa fa-edit" title="Editar"></i></a>';
+	$boton_editar = ' &nbsp;<a href="javascript:void(0)" data-toggle="modal" data-target="#myModal7" onclick="load_'.strtolower($administracion).'(\''.$dataGeneric[strtolower($administracion).'_id'].'\');"><i class="fa fa-pencil" title="Editar"></i></a>';
 	
 	$html_rows.= '<tr>
 		<td>'.$dataGeneric[strtolower($administracion).'_id'].'</td>
@@ -66,7 +66,7 @@ while(list(,$dataGeneric) = each($rows) ){
                     <table class="table table-striped table-bordered table-hover dataTables-example" >
 						<thead>
 						<tr>
-							<th><?=$administracion?> ID</th>
+							<th>ID de <?=$administracion?></th>
 							<th><?=$administracion?> Nombre</th>
 							<th><?=$administracion?> Abreviacion o Clave</th>
 							<th>Accion</th>

@@ -52,7 +52,7 @@ while( list(,$dataPagoDetalle)=each($rowPagosDetalle) ){
 							<td>'.$dataPagoDetalle["gastos_pagos_referencia"].'</td>
 							<td align="center">'.$objGeneral->getDate($dataPagoDetalle["gastos_pagos_fecha"]).'</td>
 							<td align="right">$'.number_format($restan_parcial,2).'</td>
-							<td align="center"><i class="fa fa-trash" title="Borrar Pago" onclick="borra_pago(\''.$dataPagoDetalle["gastos_pagos_id"].'\',\''.$_GET["gasto_id"].'\')"></i></td>
+							<td align="center"><a><i class="fa fa-trash" title="Borrar Pago" onclick="confirmDelete(\''.$dataPagoDetalle["gastos_pagos_id"].'\',\''.$_GET["gasto_id"].'\')"></i></a></td>
 						</tr>';
 	$restan_parcial+=$dataPagoDetalle["gastos_pagos_monto"];
 	$folioInterno--;
@@ -75,7 +75,7 @@ while(list(,$dataGastoCategoria) = each($rowsGastosCategoria)){
 <!-- Data picker -->
 <link href="<?=$raizProy?>css/plugins/datapicker/datepicker3.css" rel="stylesheet">
 <link href="<?=$raizProy?>css/plugins/clockpicker/clockpicker.css" rel="stylesheet">
-
+<link href="<?=$raizProy?>css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
 
 <style>
 .glyphicon-refresh-animate {
@@ -184,7 +184,7 @@ while(list(,$dataGastoCategoria) = each($rowsGastosCategoria)){
     <script src="<?=$raizProy?>js/plugins/metisMenu/jquery.metisMenu.js"></script>
     <script src="<?=$raizProy?>js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
     <script src="<?=$raizProy?>js/plugins/jeditable/jquery.jeditable.js"></script>
-
+	<script src="<?=$raizProy?>js/plugins/sweetalert/sweetalert.min.js"></script>
     <script src="<?=$raizProy?>js/plugins/dataTables/datatables.min.js"></script>
 	
 
@@ -261,21 +261,42 @@ function crea_pago(){
 		data: {gasto_id:gasto_id,gastos_pagos_monto:gastos_pagos_monto,gastos_pagos_forma_de_pago_id:gastos_pagos_forma_de_pago_id,gastos_pagos_es_fiscal:gastos_pagos_es_fiscal,gastos_pagos_monto_sin_iva:gastos_pagos_monto_sin_iva,gastos_pagos_iva:gastos_pagos_iva,gastos_pagos_fecha:gastos_pagos_fecha,gastos_pagos_hora:gastos_pagos_hora},
 		success: function(msg){
 			location.href = '../';
-			//$("#myModal").modal('hide');
-			//$("#boton_crea_registro").removeClass().addClass("btn btn-primary");
-			//$("#span_crea_registro").removeClass();
 		}		
 	});
 }
 
+function confirmDelete(gastos_pagos_id,gasto_id){
+	swal({
+	  title: "¿ Estás seguro ?",
+	  text: "Se eliminará el pago del gasto",
+	  type: "warning",
+	  showCancelButton: true,
+	  confirmButtonColor: "#DD6B55",
+	  confirmButtonText: "Borrar",
+	  cancelButtonText: "Cancelar",
+	  closeOnConfirm: false,
+	},
+	function(isConfirm){
+		if (isConfirm) {
+			borra_pago(gastos_pagos_id,gasto_id);
+			swal({
+				title: "Borrado!", 
+				text: "Se ha borrado el pago del gasto", 
+				type: "success"			
+			}, function () {
+				location.href = './?gasto_id=<?=$_GET["gasto_id"]?>';
+			});
+		}
+	});
+}
+
 function borra_pago(gastos_pagos_id,gasto_id){
-	
 	$.ajax({
 		type: "GET",
 		url: "../ajax/borra_pago.php",			
 		data: {gastos_pagos_id:gastos_pagos_id, gasto_id:gasto_id},
 		success: function(msg){
-			location.href = '../';			
+					
 		}		
 	});
 }

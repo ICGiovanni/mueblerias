@@ -118,7 +118,7 @@ while(list(,$dataLogin) = each($rowsLogin)){
 
 						<div class="form-group">                        
 							<label class="control-label col-md-2"> Recordatorio</label>                        
-							<div class="col-md-3" style="padding:0px 0px 0px 30px; height:35px;">
+							<div class="col-md-3" style="padding:0px 15px 0px 30px; height:35px;">
 								<div class="form-group input-group m-b" id="data_2" >
 									<span class="input-group-addon">
 										<input type="checkbox" name="gasto_fecha_recordatorio_activo" id="gasto_fecha_recordatorio_activo" value="1"/>
@@ -247,9 +247,27 @@ while(list(,$dataLogin) = each($rowsLogin)){
 
     <!-- Page-Level Scripts -->
 	<script src="<?=$raizProy?>js/plugins/chosen/chosen.jquery.js"></script>
+	<script src="<?=$raizProy?>js/plugins/toastr/toastr.min.js"></script>
 <script>
 
 $(document).ready(function(){
+	
+	toastr.options={
+	  "closeButton": true,
+	  "debug": false,
+	  "progressBar": true,
+	  "preventDuplicates": false,
+	  "positionClass": "toast-top-right",
+	  "onclick": null,
+	  "showDuration": "400",
+	  "hideDuration": "1000",
+	  "timeOut": "7000",
+	  "extendedTimeOut": "1000",
+	  "showEasing": "swing",
+	  "hideEasing": "linear",
+	  "showMethod": "fadeIn",
+	  "hideMethod": "fadeOut"
+	}
 	
      $.fn.datepicker.defaults.language = 'es';
 	 $('.clockpicker').clockpicker();
@@ -260,6 +278,61 @@ $(document).ready(function(){
 	 
 });
 
+function validate_form(){
+	var email_regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i;
+	var bandera=true;
+
+	
+	login_id=$("#login_id").val();
+	if( (gasto_categoria_id == '13' || gasto_categoria_id == '2') && login_id == '0' ){ //gasto inputable a empleados
+		toastr.error("Debe elegir un Empleado");
+		bandera=false;
+	}
+	
+	proveedor_id=$("#proveedor_id").val();
+	if( (gasto_categoria_id == '15') &&  proveedor_id == '0'){ //gasto inputable a proveedores
+		toastr.error("Debe elegir un Proveedor");
+		bandera=false;
+	}
+	
+	sucursal_id=$("#sucursal_id").val();
+	if(sucursal_id == '0'){
+		toastr.error("Debe elegir una Sucursal");
+		bandera=false;
+	}
+	
+	gasto_categoria_id=$("#gasto_categoria_id" ).val();
+	if(gasto_categoria_id == '0'){
+		toastr.error("Debe elegir una Categoria");
+		$("#gasto_categoria_id").focus();
+		bandera=false;
+	}
+	
+	if($("#gasto_monto").val()=='')
+	{
+		toastr.error('Debe de agregar un Monto');
+		$("#gasto_monto").val('');
+		$("#gasto_monto").focus();
+		bandera=false;
+	}
+	
+	if($("#gasto_concepto").val()=='')
+	{
+		toastr.error('Debe de agregar un Concepto');
+		$("#gasto_concepto").val('');
+		$("#gasto_concepto").focus();
+		bandera=false;
+	}
+	
+	if($("#gasto_no_documento").val()=='')
+	{
+		toastr.error('Debe de agregar un No de documento');
+		$("#gasto_no_documento").val('');
+		$("#gasto_no_documento").focus();
+		bandera=false;
+	}	
+	return bandera;
+}
 
 $('#data_1 .input-group.date').datepicker({
 	keyboardNavigation: false,
@@ -280,6 +353,11 @@ $('#data_2 .input-group.date').datepicker({
 
 function crea_gasto(){
 	
+	var validate = validate_form();
+	if(!validate){
+		return;
+	}
+	
 	gasto_no_documento=$("#gasto_no_documento").val();
 	gasto_fecha_vencimiento=$("#gasto_fecha_vencimiento").val();
 	if ( $("#gasto_fecha_recordatorio_activo").is(':checked') ){
@@ -299,25 +377,6 @@ function crea_gasto(){
 	login_id=$("#login_id").val();
 	gasto_status_id = '1';
 	gasto_beneficiario=$("#gasto_beneficiario").val();
-	
-	if(gasto_categoria_id == '0'){
-		alert("Es necesario elegir una categoria");
-		return;
-	}
-	if(sucursal_id == '0'){
-		alert("Es necesario elegir una sucursal");
-		return;
-	}
-	
-	if( (gasto_categoria_id == '15') &&  proveedor_id == '0'){ //gasto inputable a proveedores
-		alert("Es necesario elegir un proveedor");
-		return;
-	}
-	
-	if( (gasto_categoria_id == '13' || gasto_categoria_id == '2') && login_id == '0' ){ //gasto inputable a empleados
-		alert("Es necesario elegir un empleado");
-		return;
-	}
 	
 	$("#boton_crea_gasto").addClass("disabled");
 	$("#span_crea_gasto").addClass("glyphicon glyphicon-refresh glyphicon-refresh-animate");
@@ -416,8 +475,9 @@ function update_beneficiary_from_proveedor(){
 
 function update_sucursal(){
 	gasto_categoria_id = $("#gasto_categoria_id option:selected").val();
+	//alert(gasto_categoria_id);
 	if(gasto_categoria_id == "2"){ //si es prestamo 
-		$("#sucursal_id").val("1"); // se le atribuye el gasto a la oficina central
+		$("#sucursal_id").val("1").trigger('chosen:updated');; // se le atribuye el gasto a la oficina central
 		
 	}
 }

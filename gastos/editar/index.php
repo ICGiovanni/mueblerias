@@ -185,7 +185,7 @@ if($rowEvento["evento_recordatorio_activo"] == "1"){
 					</div>
 					<div class="form-group">                        
 						<label class="control-label col-md-2">Recordatorio</label>                        
-						<div class="col-md-3"  style="padding:0px 0px 0px 30px; height:35px;">
+						<div class="col-md-3"  style="padding:0px 15px 0px 30px; height:35px;">
 							<div class="form-group input-group m-b" id="data_2" >
 								<span class="input-group-addon">
 									<input type="checkbox" name="gasto_fecha_recordatorio_activo" id="gasto_fecha_recordatorio_activo" value="1" <?=$recordatorio_activo_checked?>/>

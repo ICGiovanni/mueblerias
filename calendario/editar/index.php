@@ -165,15 +165,45 @@ if($rowEvento["evento_recordatorio_activo"]==1){
     <script src="<?=$raizProy?>js/plugins/pace/pace.min.js"></script>
 
     <!-- Page-Level Scripts -->
-
+	<script src="<?=$raizProy?>js/plugins/toastr/toastr.min.js"></script>
 <script>
 
+toastr.options={
+	  "closeButton": true,
+	  "debug": false,
+	  "progressBar": true,
+	  "preventDuplicates": false,
+	  "positionClass": "toast-top-right",
+	  "onclick": null,
+	  "showDuration": "400",
+	  "hideDuration": "1000",
+	  "timeOut": "7000",
+	  "extendedTimeOut": "1000",
+	  "showEasing": "swing",
+	  "hideEasing": "linear",
+	  "showMethod": "fadeIn",
+	  "hideMethod": "fadeOut"
+}
+
 $(document).ready(function(){
-		
      $.fn.datepicker.defaults.language = 'es';
 	 $('.clockpicker').clockpicker();
+	 $("#evento_nombre").focus();
 });
 
+function validate_form(){
+	var email_regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i;
+	var bandera=true;
+
+	if($("#evento_nombre").val()=='')
+	{
+		toastr.error('Debe de agregar un Nombre del evento');
+		$("#evento_nombre").val('');
+		$("#evento_nombre").focus();
+		bandera=false;
+	}
+	return bandera;
+}
 
 $('#data_1 .input-group.date').datepicker({
 	keyboardNavigation: false,
@@ -229,6 +259,12 @@ function borrar_actividad(evento_id){
 }
 
 function edita_evento(){
+	
+	var validate = validate_form();
+	if(!validate){
+		return;
+	}
+	
 	evento_id='<?=$_GET["evento_id"]?>';
 	evento_nombre=$("#evento_nombre").val();
 	

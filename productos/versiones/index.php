@@ -66,7 +66,7 @@ while(list(,$dataGeneric) = each($rows) ){
                     <table class="table table-striped table-bordered table-hover dataTables-example" >
 						<thead>
 						<tr>
-							<th>ID <?=$administracion?></th>
+							<th>ID de <?=$administracion?></th>
 							<th><?=$administracion?></th>
 							<th>Abreviacion o Clave</th>
 							<th>Accion</th>

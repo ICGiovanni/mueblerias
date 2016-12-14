@@ -106,7 +106,7 @@ while(list(,$dataGasto) = each($rows)){
 	//echo $_SESSION["login_session"]["profile_id"].".";
 	if($_SESSION["login_session"]["profile_id"] == "1"){ // profile_director
 		//$boton_borrar = ' &nbsp;<a href="borrar/?gasto_id='.$dataGasto["gasto_id"].'"><i class="fa fa-trash" title="Borrar"></i></a>';
-		$boton_borrar = ' &nbsp;<i class="fa fa-trash" title="Borrar" onclick="confirmDelete('.$dataGasto["gasto_id"].');"></i>';
+		$boton_borrar = ' &nbsp;<a><i class="fa fa-trash" title="Borrar" onclick="confirmDelete('.$dataGasto["gasto_id"].');"></i></a>';
 	}
 	
 	$dataGasto["gasto_saldo"]=$dataGasto["gasto_monto"] - $rowPagos["gastos_pagos_monto"];
@@ -123,7 +123,7 @@ while(list(,$dataGasto) = each($rows)){
 		<td>'.$rowUltimoPago["gastos_pagos_fecha"].'</td>
 		<td>$'.number_format($dataGasto["gasto_saldo"],2).'</td>
 		<td>'.$asoccGastoStatus[$dataGasto["gasto_status_id"]].'</td>
-		<td align="center"><a href="pago_nuevo/?gasto_id='.$dataGasto["gasto_id"].'"><i class="fa fa-dollar" title="Realizar Pago"></i></a> &nbsp;<a href="pagos_lista/?gasto_id='.$dataGasto["gasto_id"].'"><i class="fa fa-list-ul" title="Ver detalle de pagos"></i></a> &nbsp;<a href="editar/?gasto_id='.$dataGasto["gasto_id"].'"><i class="fa fa-edit" title="Editar"></i></a>'.$boton_borrar.'</td>
+		<td align="center"><a href="pago_nuevo/?gasto_id='.$dataGasto["gasto_id"].'"><i class="fa fa-dollar" title="Realizar Pago"></i></a> &nbsp;<a href="pagos_lista/?gasto_id='.$dataGasto["gasto_id"].'"><i class="fa fa-list-ul" title="Ver detalle de pagos"></i></a> &nbsp;<a href="editar/?gasto_id='.$dataGasto["gasto_id"].'"><i class="fa fa-pencil" title="Editar"></i></a>'.$boton_borrar.'</td>
 	</tr>';
 }
 

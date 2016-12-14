@@ -11,6 +11,7 @@ $objCalendario = new Calendario();
 <!-- Data picker -->
 <link href="<?=$raizProy?>css/plugins/datapicker/datepicker3.css" rel="stylesheet">
 <link href="<?=$raizProy?>css/plugins/clockpicker/clockpicker.css" rel="stylesheet">
+
 <style>
 
 .table-form td, th{
@@ -69,7 +70,7 @@ $objCalendario = new Calendario();
 						
 						<div class="form-group">                        
 							<label class="control-label col-md-2">Recordatorio</label>                        
-							<div class="col-md-3" style="padding:0px 0px 0px 30px; height:35px;">
+							<div class="col-md-3" style="padding:0px 15px 0px 30px; height:35px;">
 								<div class="form-group input-group m-b" id="data_2" >
 									<span class="input-group-addon">
 										<input type="checkbox" name="evento_recordatorio_activo" id="evento_recordatorio_activo" value="1"/>
@@ -125,7 +126,6 @@ $objCalendario = new Calendario();
     <script src="<?=$raizProy?>js/plugins/metisMenu/jquery.metisMenu.js"></script>
     <script src="<?=$raizProy?>js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
     <script src="<?=$raizProy?>js/plugins/jeditable/jquery.jeditable.js"></script>
-
     <script src="<?=$raizProy?>js/plugins/dataTables/datatables.min.js"></script>
 	
 
@@ -138,15 +138,47 @@ $objCalendario = new Calendario();
     <script src="<?=$raizProy?>js/plugins/pace/pace.min.js"></script>
 
     <!-- Page-Level Scripts -->
+	<script src="<?=$raizProy?>js/plugins/toastr/toastr.min.js"></script>
+
 
 <script>
 
+toastr.options={
+	  "closeButton": true,
+	  "debug": false,
+	  "progressBar": true,
+	  "preventDuplicates": false,
+	  "positionClass": "toast-top-right",
+	  "onclick": null,
+	  "showDuration": "400",
+	  "hideDuration": "1000",
+	  "timeOut": "7000",
+	  "extendedTimeOut": "1000",
+	  "showEasing": "swing",
+	  "hideEasing": "linear",
+	  "showMethod": "fadeIn",
+	  "hideMethod": "fadeOut"
+}
+
 $(document).ready(function(){
-		
-     $.fn.datepicker.defaults.language = 'es';
-	 $('.clockpicker').clockpicker();
+	$.fn.datepicker.defaults.language = 'es';
+	$('.clockpicker').clockpicker();
+	$("#evento_nombre").focus();
 });
 
+function validate_form(){
+	var email_regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i;
+	var bandera=true;
+
+	if($("#evento_nombre").val()=='')
+	{
+		toastr.error('Debe de agregar un Nombre del evento');
+		$("#evento_nombre").val('');
+		$("#evento_nombre").focus();
+		bandera=false;
+	}
+	return bandera;
+}
 
 $('#data_1 .input-group.date').datepicker({
 	keyboardNavigation: false,
@@ -162,10 +194,12 @@ $('#data_2 .input-group.date').datepicker({
 	language: 'es'
 }).datepicker("setDate", "0");
 
-
-
-
 function crea_evento(){
+	
+	var validate = validate_form();
+	if(!validate){
+		return;
+	}
 	
 	evento_nombre=$("#evento_nombre").val();
 	
@@ -205,7 +239,6 @@ function crea_evento(){
 		},
 		success: function(msg){
 			location.href = '../';
-			//$("#myModal").modal('hide');
 		}		
 	});
 }
