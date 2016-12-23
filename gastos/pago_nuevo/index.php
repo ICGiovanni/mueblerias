@@ -204,6 +204,8 @@ saldo_actual = '<?=($rowGasto["gasto_monto"]-$rowPagos["gastos_pagos_monto"])?>'
 saldo_actual = Number(saldo_actual);
 cierra_gasto = '0';
 
+
+
 $(document).ready(function(){
 	
 	$('.dataTables-example').DataTable({
@@ -233,6 +235,23 @@ $(document).ready(function(){
      $.fn.datepicker.defaults.language = 'es';
 	 $('.clockpicker').clockpicker();
 	 $('#gastos_pagos_forma_de_pago_id').chosen();
+	 
+	 toastr.options={
+	  "closeButton": true,
+	  "debug": false,
+	  "progressBar": true,
+	  "preventDuplicates": false,
+	  "positionClass": "toast-top-right",
+	  "onclick": null,
+	  "showDuration": "400",
+	  "hideDuration": "1000",
+	  "timeOut": "7000",
+	  "extendedTimeOut": "1000",
+	  "showEasing": "swing",
+	  "hideEasing": "linear",
+	  "showMethod": "fadeIn",
+	  "hideMethod": "fadeOut"
+	}
 });
 
 
