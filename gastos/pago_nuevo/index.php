@@ -197,6 +197,7 @@ while(list(,$dataGastoCategoria) = each($rowsGastosCategoria)){
 
     <!-- Page-Level Scripts -->
 	<script src="<?=$raizProy?>js/plugins/chosen/chosen.jquery.js"></script>
+	<script src="<?=$raizProy?>js/plugins/toastr/toastr.min.js"></script>
 
 <script>
 saldo_actual = '<?=($rowGasto["gasto_monto"]-$rowPagos["gastos_pagos_monto"])?>';
@@ -242,22 +243,42 @@ $('#data_1 .input-group.date').datepicker({
 	language: 'es'
 }).datepicker("setDate", "0");
 
+
+function validate_form(){
+	var email_regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i;
+	var bandera=true;
+
+	gastos_pagos_forma_de_pago_id=$("#gastos_pagos_forma_de_pago_id").val();
+	if( gastos_pagos_forma_de_pago_id == '0' ){
+		toastr.error("Debe elegir un Método de Pago");
+		bandera=false;
+	}
+
+	gastos_pagos_referencia=$("textarea#gastos_pagos_referencia").val();
+	if( (gastos_pagos_forma_de_pago_id == '2' || gastos_pagos_forma_de_pago_id == '3' || gastos_pagos_forma_de_pago_id == '4' || gastos_pagos_forma_de_pago_id == '6' || gastos_pagos_forma_de_pago_id == '7') && gastos_pagos_referencia =='' ){
+		toastr.error("Debe agregar una Referencia de Pago");
+		bandera=false;
+	}
+
+	gastos_pagos_monto=$("#gastos_pagos_monto").val();
+	if( gastos_pagos_monto == '' ){
+		toastr.error("Debe agregar un Monto");
+		bandera=false;
+	}
+	return bandera;
+}
+
 function crea_pago(){
+	
+	var validate = validate_form();
+	if(!validate){
+		return;
+	}
 	
 	gasto_id = '<?=$_GET["gasto_id"]?>';
 	gastos_pagos_monto=$("#gastos_pagos_monto").val();
 	gastos_pagos_forma_de_pago_id=$("#gastos_pagos_forma_de_pago_id").val();
 	gastos_pagos_referencia=$("textarea#gastos_pagos_referencia").val();
-	
-	if(gastos_pagos_forma_de_pago_id == '0'){
-		alert("Es necesario elegir un metodo de pago");
-		return;
-	}
-	
-	if((gastos_pagos_forma_de_pago_id == '2' || gastos_pagos_forma_de_pago_id == '3' || gastos_pagos_forma_de_pago_id == '4' || gastos_pagos_forma_de_pago_id == '6' || gastos_pagos_forma_de_pago_id == '7') && gastos_pagos_referencia ==''){
-		alert("Es necesario ingresar una referencia para el metodo de pago seleccionado");
-		return;
-	}
 	
 	
 	if ( $("#gastos_pagos_es_fiscal").is(':checked') ){
@@ -269,14 +290,11 @@ function crea_pago(){
 	gastos_pagos_iva=$("#gastos_pagos_iva").val();
 	gastos_pagos_fecha=$("#gastos_pagos_fecha").val();
 	gastos_pagos_hora=$("#gastos_pagos_hora").val();
-	
-	
+
 	login_id = '<?=$_SESSION["login_session"]["login_id"]?>';
 	
 	$("#boton_crea_registro").addClass("disabled");
 	$("#span_crea_registro").addClass("glyphicon glyphicon-refresh glyphicon-refresh-animate");
-	
-	//alert(cierra_gasto);
 	
 		$.ajax({
 			type: "GET",
@@ -322,7 +340,7 @@ function valida_pago(obj){
 	pago_actual = Number(obj.value);
 	
 	if( pago_actual > saldo_actual){
-		alert("Pago invalido");
+		toastr.error("El pago no puede ser mayor a $"+saldo_actual);
 		obj.value = "0";
 	}
 	if( pago_actual == saldo_actual){
