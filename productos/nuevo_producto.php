@@ -8,6 +8,7 @@
 ?>
 <link href="<?php echo $raizProy?>css/plugins/chosen/chosen.css" rel="stylesheet">
 <link href="<?php echo $raizProy?>css/plugins/easy-autocomplete/easy-autocomplete.min.css" rel="stylesheet">
+<link href="<?php echo $raizProy?>css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
 
 <style>
 #product_list
@@ -67,11 +68,7 @@
 			</div>
             </div>
             <div id="div_principal">
-            <div class="form-group">
-            <label class="col-sm-2 control-label">Version</label>
-			<div class="col-sm-2 "><input type="text" class="form-control" id="version" name="version"></div>
-			</div>
-			
+            		
 			<div class="form-group">
             <label class="col-sm-2 control-label">Medida</label>
 			<div class="col-sm-2 "><input type="text" class="form-control" id="medida" name="medida"></div>
@@ -172,6 +169,29 @@
             </div>
             <div id="div_variacion">
             
+             <div class="form-group">
+            <label class="col-sm-2 control-label">Version(es)</label>
+			<div class="col-sm-6" >
+				<select data-placeholder="Selecciona una versión" class="chosen-select" style="width:300px;" tabindex="4" id="version" name="version">
+	            <option value="" data-abrev=""></option>
+	            <?php 
+	            $productos=new Productos();
+	            
+	            $result=$productos->GetVersions();
+	            
+	            $list="";
+	            foreach($result as $r)
+	            {
+	            	$list.='<option value="'.$r['version_id'].'" data-abrev="'.$r['version_abrev'].'">'.$r['version_name'].'</option>';
+	            }
+	            
+	            echo $list;
+	            
+	            ?>
+				</select>
+			</div>
+            </div>
+            
             <div class="form-group">
             <label class="col-sm-2 control-label">Color(es)</label>
 			<div class="col-sm-6" >
@@ -219,6 +239,12 @@
             </div>
            
             
+            <div class="col-lg-11">
+			<div class="panel panel-default">
+            <div class="panel-heading">
+            <label class="control-label">Precio Lista</label>
+			</div>
+            <div class="panel-body">
             	
             <div class="form-group">
             <label class="col-sm-2 control-label">P.L.</label>
@@ -252,6 +278,19 @@
             </div>
             
             <div id="newDiscount"></div>
+            
+            
+            </div>
+			</div>
+            </div>
+            
+            
+            <div class="col-lg-11">
+			<div class="panel panel-default">
+            <div class="panel-heading">
+            <label class="control-label">Precio Público</label>
+			</div>
+            <div class="panel-body">
             
             
             <div class="form-group">
@@ -314,6 +353,10 @@
 			</div>
             </div>
             
+             </div>
+			</div>
+            </div>
+            
             </div>
             
             
@@ -337,7 +380,7 @@
 				<input type="checkbox" name="conjunto" id="conjunto" value="1">
 			</div>
 			<div class="col-sm-6 ">
-				 <label class="control-label">* Son productos que conforman otro y pueden ser vendidos por separado</label>
+				 * Son productos que conforman otro y pueden ser vendidos por separado
 			</div>
             </div>
             </div>
@@ -385,7 +428,7 @@
 <script src="<?php echo $raizProy?>js/plugins/chosen/chosen.jquery.js"></script>
 <script src="<?php echo $raizProy?>js/plugins/easy-autocomplete/jquery.easy-autocomplete.min.js"></script>
 <script src="<?php echo $raizProy?>productos/js/productos.js"></script>
-  
+<script src="<?php echo $raizProy?>js/plugins/sweetalert/sweetalert.min.js"></script>  
 
 <?php
     include $pathProy.'footer.php';

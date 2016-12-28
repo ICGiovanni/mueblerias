@@ -113,19 +113,19 @@ $(document).ready(function()
 			$("#descripcion").val('');
 			$("#descripcion").focus();
 		}
-		else if($("#color").val()==undefined && (tipo_producto=='U' || tipo_producto=='V'))
+		else if($("#color").val()=='' && (tipo_producto=='U' || tipo_producto=='V'))
 		{
 			toastr.error('Debe de agregar un Color');
 			$("#color").val('');
 			$("#color").focus();		
 		}
-		else if($("#material").val()==undefined && (tipo_producto=='U' || tipo_producto=='V'))
+		else if($("#material").val()=='' && (tipo_producto=='U' || tipo_producto=='V'))
 		{
 			toastr.error('Debe de agregar un tipo de Material');
 			$("#material").val('');
 			$("#material").focus();		
 		}
-		else if($("#categoria").val()==undefined && (tipo_producto=='U' || tipo_producto=='P'))
+		else if($("#categoria").val()=='' && (tipo_producto=='U' || tipo_producto=='P'))
 		{
 			toastr.error('Debe de agregar un tipo de Categoria');
 			$("#categoria").val('');
@@ -209,9 +209,13 @@ $(document).ready(function()
 					        {
 					        	if(tipo_producto!='P')
 						        {
-						            alert("El Producto ha sido agregado");
-						            var url="index.php";
-						    		$(location).attr("href", url);
+					        		swal({
+						                title: "Guardado!",
+						                text: "Producto guardado correctamente!",
+						                type: "success"
+						            }, function () {
+						                window.location.href = 'index.php';
+						            });
 						        }
 					        },
 					        cache: false,
@@ -250,9 +254,13 @@ $(document).ready(function()
 					        dataType: "json",
 					        success: function (data)
 					        {
-					            alert("El Producto ha sido agregado");
-					            var url="index.php";
-					    		$(location).attr("href", url);
+					        	swal({
+					                title: "Guardado!",
+					                text: "Producto guardado correctamente!",
+					                type: "success"
+					            }, function () {
+					                window.location.href = 'index.php';
+					            });
 					        },
 					        cache: false,
 					        contentType: false,
@@ -311,6 +319,12 @@ $(document).ready(function()
 			toastr.error('Debe de agregar un Color');
 			$("#color").val('');
 			$("#color").focus();		
+		}
+		else if($("#version").val()==undefined && (tipo_producto=='U' || tipo_producto=='V'))
+		{
+			toastr.error('Debe de agregar una Versión');
+			$("#version").val('');
+			$("#version").focus();		
 		}
 		else if($("#material").val()==undefined && (tipo_producto=='U' || tipo_producto=='V'))
 		{
@@ -403,9 +417,13 @@ $(document).ready(function()
 							        {
 							        	if(tipo_producto!='P')
 								        {
-								        	alert("El Producto ha sido actualizado");
-								            var url="index.php";
-								    		$(location).attr("href", url);
+							        		swal({
+								                title: "Guardado!",
+								                text: "Producto guardado correctamente!",
+								                type: "success"
+								            }, function () {
+								                window.location.href = 'index.php';
+								            });
 								        }
 							        },
 							        cache: false,
@@ -415,9 +433,13 @@ $(document).ready(function()
 					        }
 					        else if(tipo_producto!='P')
 					        {
-					        	alert("El Producto ha sido actualizado");
-					            var url="index.php";
-					    		$(location).attr("href", url);
+					        	swal({
+					                title: "Guardado!",
+					                text: "Producto guardado correctamente!",
+					                type: "success"
+					            }, function () {
+					                window.location.href = 'index.php';
+					            });
 					        }
 					        
 					        if(tipo_producto=='P')
@@ -444,9 +466,13 @@ $(document).ready(function()
 							        dataType: "json",
 							        success: function (data)
 							        {
-							            alert("El Producto ha sido agregado");
-							            var url="index.php";
-							    		$(location).attr("href", url);
+							        	swal({
+							                title: "Guardado!",
+							                text: "Producto guardado correctamente!",
+							                type: "success"
+							            }, function () {
+							                window.location.href = 'index.php';
+							            });
 							        },
 							        cache: false,
 							        contentType: false,
@@ -614,6 +640,8 @@ $(document).ready(function()
 			$("#div_variantes").hide();
 			$('#color').chosen("destroy");
 			$('#color').chosen();
+			$('#version').chosen("destroy");
+			$('#version').chosen();
 			$('#material').chosen("destroy");
 			$("#material").chosen();
 			$('#proveedor').chosen("destroy");
@@ -630,6 +658,8 @@ $(document).ready(function()
 			$("#categoria").chosen();
 			$('#color').chosen("destroy");
 			$('#color').chosen();
+			$('#version').chosen("destroy");
+			$('#version').chosen();
 			$('#material').chosen("destroy");
 			$("#material").chosen();
 			$('#proveedor').chosen("destroy");
@@ -934,6 +964,7 @@ $(document).ready(function()
 	$("#material").chosen();
 	$("#categoria").chosen();
 	$("#proveedor").chosen();
+	$("#version").chosen();
 	
 	if(!$("#id_producto").val())
 	{

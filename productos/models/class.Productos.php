@@ -25,6 +25,19 @@ class Productos
 		return $result;
 	}
 	
+	public function GetVersions()
+	{
+		$sql="SELECT v.version_id,v.version_name,version_abrev
+				FROM versiones v
+				ORDER BY v.version_name";
+	
+		$statement=$this->connect->prepare($sql);
+		$statement->execute();
+		$result=$statement->fetchAll(PDO::FETCH_ASSOC);
+	
+		return $result;
+	}
+	
 	public function GetMaterials()
 	{
 		$sql="SELECT m.material_id,m.material_name,material_abrev
@@ -420,7 +433,7 @@ class Productos
 		$sql="SELECT p.producto_id,p.producto_name,p.producto_sku,
 				p.producto_description,p.producto_price_purchase,p.producto_price_public,
 				p.proveedor_id,IF(p.producto_conjunto='0','&Uacute;nico','Conjunto') AS producto_conjunto,
-				p.producto_type AS type,p.producto_version,p.producto_medida,p.color_id,p.material_id,producto_price_purchase_discount,
+				p.producto_type AS type,p.version_id,p.producto_medida,p.color_id,p.material_id,producto_price_purchase_discount,
 				producto_price_public_discount,producto_price_public_min,
 				IF((SELECT SUM(cantidad) AS stock
 				FROM inventario_productos ip
@@ -602,7 +615,7 @@ class Productos
 		
 		$this->DeleteProductGroup($params['id_producto']);
 		
-		$sql="UPDATE productos SET producto_name=:nombre,producto_sku=:sku,producto_description=:descripcion,producto_price_purchase=:precio_utilitario,producto_price_public=:precio_publico,proveedor_id=:proveedor,color_id=:color,material_id=:material,producto_version=:version,	producto_medida=:medida,producto_price_purchase_discount=:precio_utilitario_descuento,producto_price_public_min=:precio_publico_min,producto_price_public_discount=:producto_price_public_discount,producto_conjunto=:conjunto,producto_description_corta=:descripcionC,producto_price_purchase_percent=:porcentaje_utilidad,producto_price_min_public_percent=:producto_price_min_public_percent
+		$sql="UPDATE productos SET producto_name=:nombre,producto_sku=:sku,producto_description=:descripcion,producto_price_purchase=:precio_utilitario,producto_price_public=:precio_publico,proveedor_id=:proveedor,color_id=:color,material_id=:material,version_id=:version,	producto_medida=:medida,producto_price_purchase_discount=:precio_utilitario_descuento,producto_price_public_min=:precio_publico_min,producto_price_public_discount=:producto_price_public_discount,producto_conjunto=:conjunto,producto_description_corta=:descripcionC,producto_price_purchase_percent=:porcentaje_utilidad,producto_price_min_public_percent=:producto_price_min_public_percent
 				WHERE producto_id=:producto";
 		
 		

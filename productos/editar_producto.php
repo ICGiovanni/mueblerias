@@ -11,6 +11,7 @@
 <link href="<?php echo $raizProy?>css/plugins/blueimp/css/blueimp-gallery.min.css" rel="stylesheet">
 <link href="<?php echo $raizProy?>css/animate.css" rel="stylesheet">
 <link href="<?php echo $raizProy?>css/plugins/easy-autocomplete/easy-autocomplete.min.css" rel="stylesheet">
+<link href="<?php echo $raizProy?>css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
 
     <div class="row wrapper border-bottom white-bg page-heading">
         <div class="col-sm-4">
@@ -82,11 +83,7 @@ if($datos[0]["producto_type"]=='V')
 			</div>
             </div>
             <div id="div_principal" style="<?php echo ($datos[0]['producto_type']!='P' && $datos[0]['producto_type']!='U') ? "display:none;" : ''; ?>">
-            <div class="form-group">
-            <label class="col-sm-2 control-label">Version</label>
-			<div class="col-sm-2 "><input type="text" class="form-control" id="version" name="version" value="<?php echo $datos[0]['producto_version'];?>"></div>
-			</div>
-			
+            			
 			<div class="form-group">
             <label class="col-sm-2 control-label">Medida</label>
 			<div class="col-sm-2 "><input type="text" class="form-control" id="medida" name="medida" value="<?php echo $datos[0]['producto_medida'];?>"></div>
@@ -215,6 +212,38 @@ if($datos[0]["producto_type"]=='V')
             </div>
             
             <div id="div_variacion" style="<?php echo ($datos[0]['producto_type']!='P') ? '' : "display:none;"; ?>">
+            
+            <div class="form-group">
+            <label class="col-sm-2 control-label">Version(es)</label>
+			<div class="col-sm-6" >
+				<select data-placeholder="Selecciona una versión" class="chosen-select" style="width:300px;" tabindex="4" id="version" name="version">
+	            <option value="" data-abrev=""></option>
+	            <?php 
+	            $productos=new Productos();
+	            
+	            $result=$productos->GetVersions();
+	            
+	            $list="";
+	            foreach($result as $r)
+	            {
+	            	if($datos[0]['version_id']==$r['version_id'])
+	            	{
+	            		$list.='<option value="'.$r['version_id'].'" data-abrev="'.$r['version_abrev'].'" selected>'.$r['version_name'].'</option>';
+	            	}
+	            	else
+	            	{
+	            		$list.='<option value="'.$r['version_id'].'" data-abrev="'.$r['version_abrev'].'">'.$r['version_name'].'</option>';
+	            	}
+	            }
+	            
+	            echo $list;
+	            
+	            ?>
+				</select>
+			</div>
+            </div>
+            
+            
             <div class="form-group">
             <label class="col-sm-2 control-label">Color(es)</label>
 			<div class="col-sm-6" >
@@ -541,6 +570,7 @@ if($datos[0]["producto_type"]=='V')
 <script src="<?php echo $raizProy?>js/plugins/chosen/chosen.jquery.js"></script>
 <script src="<?php echo $raizProy?>js/plugins/blueimp/jquery.blueimp-gallery.min.js"></script>
 <script src="<?php echo $raizProy?>js/plugins/easy-autocomplete/jquery.easy-autocomplete.min.js"></script>
+<script src="<?php echo $raizProy?>js/plugins/sweetalert/sweetalert.min.js"></script>
 
 <script src="<?php echo $raizProy?>productos/js/productos.js"></script>
 
