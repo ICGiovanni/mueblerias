@@ -22,7 +22,7 @@
         <div class="col-sm-8">
             <div class="title-action">
                 <a href="./nuevo_cliente.php" class="btn btn-primary btn-xs">+ Nuevo Cliente</a>
-                <!--<a href="#" id="rating" data-toggle="modal" data-target="#ratingModal" class="btn btn-primary btn-xs">Configurar Rating</a>-->
+                <!--<a href="#" id="rating" data-toggle="modal" data-target="#ratingModal" class="btn btn-success btn-xs">Configurar Rating</a>-->
             </div>
             
         </div>
@@ -36,7 +36,7 @@
                     <div class="ibox-title">
                         <div class="ibox-tools">
                              
-                            <a class="dropdown-toggle btn btn-primary btn-xs" id="rating" data-toggle="modal" data-target="#ratingModal" href="#">
+                            <a class="dropdown-toggle btn btn-success btn-xs" style="color:#FFFFFF" id="rating" data-toggle="modal" data-target="#ratingModal" href="#">
                                 Configurar Rating <i class="fa fa-wrench"></i>
                             </a>
                            <a class="collapse-link">
