@@ -305,18 +305,24 @@ if($datos[0]["producto_type"]=='V')
             </div>
             
             
+            <div class="col-lg-11">
+			<div class="panel panel-default">
+            <div class="panel-heading">
+            <label class="control-label">Precio Lista</label>
+			</div>
+            <div class="panel-body">
+            
             <div class="form-group">
-            <label class="col-sm-2 control-label">P.L.</label>
+            <label class="col-sm-2 control-label">Precio</label>
 			<div class="col-sm-2 ">
 			<div class="input-group m-b">
-			<span class="input-group-addon">P.L.D.</span>
 			<span class="input-group-addon">$</span>
 			<input type="text" class="form-control" id="precioU" name="precioU" onkeypress="return validateNumber(event)" value="<?php echo $datos[0]['producto_price_purchase'];?>">
 			</div>
 			</div>
-			<div class="col-sm-2 ">
+			<div class="col-sm-5">
 			<div class="input-group m-b">
-			<label class="col-sm-2 control-label">P.L.D.</label>
+			<span class="input-group-addon" style="font-size:13px !important;"><label class="control-label">Precio con Descuento</label></span>
 			<span class="input-group-addon">-$</span>
 			<input type="text" class="form-control" id="precioUD" name="precioUD" readonly="readonly" value="<?php echo $datos[0]['producto_price_purchase_discount'];?>">
 			
@@ -335,7 +341,7 @@ if($datos[0]["producto_type"]=='V')
 				$descuentosA.='<div class="form-group">';
 				if($i==0)
 				{
-					$descuentosA.='<label class="col-sm-2 control-label">D.</label>';
+					$descuentosA.='<label class="col-sm-2 control-label">Descuento</label>';
 					$descuentosA.='<div class="col-sm-2 "><div class="input-group m-b"><input class="form-control discount" id="descuento" name="descuento[]" value="'.(100*$descuento).'" type="text" onkeypress="return validateNumber(event)"><span class="input-group-addon">%</span></div></div>';
 					$descuentosA.='<div class="col-md-1"><button class="btn btn-primary btn-xs" id="agregarDescuento" value="" placeholder="Descuento" type="button"><i class="fa fa-plus"></i></button></div>';
 			
@@ -354,7 +360,7 @@ if($datos[0]["producto_type"]=='V')
 			if(!$descuentosA)
 			{
 				$descuentosA.='<div class="form-group">';
-				$descuentosA.='<label class="col-sm-2 control-label">D.</label>';
+				$descuentosA.='<label class="col-sm-2 control-label">Descuento</label>';
 				$descuentosA.='<div class="col-sm-2 "><div class="input-group m-b"><input class="form-control discount" id="descuento" name="descuento[]" value="" type="text" onkeypress="return validateNumber(event)"><span class="input-group-addon">%</span></div></div>';
 				$descuentosA.='<div class="col-md-1"><button class="btn btn-primary btn-xs" id="agregarDescuento" value="" placeholder="Descuento" type="button"><i class="fa fa-plus"></i></button></div>';
 				$descuentosA.='</div>';
@@ -363,9 +369,20 @@ if($datos[0]["producto_type"]=='V')
 			?>
            
             <div id="newDiscount"></div>
+            
+            </div>
+			</div>
+            </div>
+            
+            <div class="col-lg-11">
+			<div class="panel panel-default">
+            <div class="panel-heading">
+            <label class="control-label">Precio Público</label>
+			</div>
+            <div class="panel-body">
                         
             <div class="form-group">
-            <label class="col-sm-2 control-label">P.</label>
+            <label class="col-sm-2 control-label">Porcentaje de Utilidad</label>
 			<div class="col-sm-2">
 			<div class="input-group m-b">
 			<input type="text" class="form-control" id="precioPUP" name="precioPUP" onkeypress="return validateCantidad(event)" value="<?php echo $datos[0]['producto_price_purchase_percent'];?>">
@@ -373,22 +390,26 @@ if($datos[0]["producto_type"]=='V')
 			</div>			
 			</div>
 			
-			<div class="col-sm-2 ">
+			<div class="col-sm-5">
 			<div class="input-group m-b">
-			<span class="input-group-addon">P.V.P.</span>
+			<span class="input-group-addon" style="font-size:13px !important;"><label class="control-label">Venta Público</label></span>
 			<span class="input-group-addon">$</span>
-			<input type="text" class="form-control" id="precioP" name="precioP" onkeypress="return validateCantidad(event)" readonly="readonly" value="<?php echo $datos[0]['producto_price_public'];?>">
+			<input type="text" class="form-control" id="precioP" name="precioP" onkeypress="return validateCantidad(event)" value="<?php echo $datos[0]['producto_price_public'];?>">
 			</div>
 			</div>
 			
-			 <div class="col-sm-2 ">
-			 <div class="input-group m-b">
-			 <span class="input-group-addon">P.V.P.D.</span>
+			
+            </div>
+            
+            <div class="form-group">
+            <label class="col-sm-2 control-label">Venta Público con Descuento</label>
+            <div class="col-sm-2 ">
+            <div class="input-group m-b">
 			 <span class="input-group-addon">-$</span>
 			 <input type="text" class="form-control" id="precioPD" name="precioPD" onkeypress="return validateCantidad(event)" readonly="readonly" value="<?php echo $datos[0]['producto_price_public_discount'];?>">
 			 </div>
-			</div>
-            </div>
+			 </div>
+            </div> 
             
             
             <?php 
@@ -402,7 +423,7 @@ if($datos[0]["producto_type"]=='V')
 				$descuentosA.='<div class="form-group">';
 				if($i==0)
 				{
-					$descuentosA.='<label class="col-sm-2 control-label">D.</label>';
+					$descuentosA.='<label class="col-sm-2 control-label">Descuento</label>';
 					$descuentosA.='<div class="col-sm-2 ">
            	 <div class="input-group m-b">
            	<input class="form-control discountP" id="descuentoP" name="descuentoP[]" value="'.(100*$descuento).'" type="text" onkeypress="return validateNumber(event)">
@@ -429,7 +450,7 @@ if($datos[0]["producto_type"]=='V')
 			if(!$descuentosA)
 			{
 				$descuentosA.='<div class="form-group">';
-				$descuentosA.='<label class="col-sm-2 control-label">D.</label>';
+				$descuentosA.='<label class="col-sm-2 control-label">Descuento</label>';
 				$descuentosA.='<div class="col-sm-2 ">
            	 <div class="input-group m-b">
            	<input class="form-control discountP" id="descuentoP" name="descuentoP[]" value="" type="text" onkeypress="return validateNumber(event)">
@@ -458,11 +479,15 @@ if($datos[0]["producto_type"]=='V')
 			</div>			
 			</div>
             
-			<div class="col-sm-2 ">
+			<div class="col-sm-3">
 			<div class="input-group m-b">
 			<span class="input-group-addon">$</span>
-			<input type="text" class="form-control" id="precioPM" name="precioPM" onkeypress="return validateCantidad(event)" readonly="readonly" value="<?php echo $datos[0]['producto_price_public_min'];?>">
+			<input type="text" class="form-control" id="precioPM" name="precioPM" onkeypress="return validateCantidad(event)" value="<?php echo $datos[0]['producto_price_public_min'];?>">
 			</div>
+			</div>
+            </div>
+            
+            </div>
 			</div>
             </div>
             

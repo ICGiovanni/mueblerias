@@ -247,16 +247,16 @@
             <div class="panel-body">
             	
             <div class="form-group">
-            <label class="col-sm-2 control-label">P.L.</label>
+            <label class="col-sm-2 control-label">Precio</label>
 			<div class="col-sm-2 ">
 			<div class="input-group m-b">
 			<span class="input-group-addon">$</span>
 			<input type="text" class="form-control" id="precioU" name="precioU" onkeypress="return validateNumber(event)">
 			</div>
 			</div>
-			<div class="col-sm-3 ">
+			<div class="col-sm-5 ">
 			<div class="input-group m-b">
-			<span class="input-group-addon">P.L.D.</span>
+			<span class="input-group-addon" style="font-size:13px !important;"><label class="control-label">Precio con Descuento</label></span>
 			<span class="input-group-addon">-$</span>
 			<input type="text" class="form-control" id="precioUD" name="precioUD" readonly="readonly">
 			
@@ -265,7 +265,7 @@
             </div>
             
             <div class="form-group">
-           	<label class="col-sm-2 control-label">P.L.D.</label>
+           	<label class="col-sm-2 control-label">Descuento</label>
            	<div class="col-sm-2 ">
            	<div class="input-group m-b">
            	<input class="form-control discount" id="descuento" name="descuento[]" value="" type="text" onkeypress="return validateNumber(event)">
@@ -294,7 +294,7 @@
             
             
             <div class="form-group">
-            <label class="col-sm-2 control-label">P.</label>
+            <label class="col-sm-2 control-label">Porcentaje de Utilidad</label>
 			<div class="col-sm-2">
 			<div class="input-group m-b">
 			<input type="text" class="form-control" id="precioPUP" name="precioPUP" onkeypress="return validateCantidad(event)" value="65">
@@ -302,26 +302,30 @@
 			</div>			
 			</div>
 			
-			<div class="col-sm-3">
+			<div class="col-sm-5">
 			<div class="input-group m-b">
-			<span class="input-group-addon">P.V.P.</span>
+			<span class="input-group-addon" style="font-size:13px !important;"><label class="control-label">Venta Público</label></span>
 			<span class="input-group-addon">$</span>
-			<input type="text" class="form-control" id="precioP" name="precioP" onkeypress="return validateCantidad(event)" readonly="readonly">
+			<input type="text" class="form-control" id="precioP" name="precioP" onkeypress="return validateCantidad(event)">
 			</div>
 			</div>
 			
-			 <div class="col-sm-3">
-			 <div class="input-group m-b">
-			 <span class="input-group-addon">P.V.P.D.</span>
+			
+            </div>
+            
+            <div class="form-group">
+            <label class="col-sm-2 control-label">Venta Público con Descuento</label>
+            <div class="col-sm-2 ">
+            <div class="input-group m-b">
 			 <span class="input-group-addon">-$</span>
 			 <input type="text" class="form-control" id="precioPD" name="precioPD" onkeypress="return validateCantidad(event)" readonly="readonly">
 			 </div>
-			</div>
+			 </div>
             </div>            
             
             
             <div class="form-group">
-           	<label class="col-sm-2 control-label">D.</label>
+           	<label class="col-sm-2 control-label">Descuento</label>
            	<div class="col-sm-2 ">
            	 <div class="input-group m-b">
            	<input class="form-control discountP" id="descuentoP" name="descuentoP[]" value="" type="text" onkeypress="return validateNumber(event)">
@@ -336,7 +340,7 @@
             
             
             <div class="form-group">
-            <label class="col-sm-2 control-label">P.P.M.</label>
+            <label class="col-sm-2 control-label">Precio Público Minímo</label>
             
             <div class="col-sm-3">
 			<div class="input-group m-b">
@@ -345,10 +349,10 @@
 			</div>			
 			</div>
             
-			<div class="col-sm-2 ">
+			<div class="col-sm-3">
 			<div class="input-group m-b">
 			<span class="input-group-addon">$</span>
-			<input type="text" class="form-control" id="precioPM" name="precioPM" onkeypress="return validateCantidad(event)" readonly="readonly">
+			<input type="text" class="form-control" id="precioPM" name="precioPM" onkeypress="return validateCantidad(event)">
 			</div>
 			</div>
             </div>
