@@ -521,7 +521,6 @@ cursor: default;
 			    	    	filas+='</ul>';
 			    	    	filas+='</td>';
 							
-							filas+='<td align="center">$ '+item.producto_price_public+'</td>';
 							filas+='<td align="center">'+item.stock+'</td>';
 							filas+='<td><div class="infont col-md-1 col-sm-1"><a href="editar_producto.php?id='+item.producto_id+'" title="Editar Producto"><i class="fa fa-pencil"></i></a></div><div class="infont col-md-1 col-sm-1"><a href="#" onClick="borrar_producto('+item.producto_id+');" title="Borrar Producto"><i class="fa fa-trash-o"></i></a></div></td>';
     		        		filas+='</tr>';
