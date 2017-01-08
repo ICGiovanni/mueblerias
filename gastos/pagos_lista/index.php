@@ -52,7 +52,7 @@ while( list(,$dataPagoDetalle)=each($rowPagosDetalle) ){
 							<td>'.$dataPagoDetalle["gastos_pagos_referencia"].'</td>
 							<td align="center">'.$objGeneral->getDate($dataPagoDetalle["gastos_pagos_fecha"]).'</td>
 							<td align="right">$'.number_format($restan_parcial,2).'</td>
-							<td align="center"><a><i class="fa fa-trash" title="Borrar Pago" onclick="confirmDelete(\''.$dataPagoDetalle["gastos_pagos_id"].'\',\''.$_GET["gasto_id"].'\')"></i></a></td>
+							<td align="center"><a href="../pago_editar/?gasto_id='.$_GET["gasto_id"].'&gastos_pagos_id='.$dataPagoDetalle["gastos_pagos_id"].'"><i class="fa fa-pencil" title="Editar Pago" ></i></a> &nbsp;&nbsp; <a><i class="fa fa-trash" title="Borrar Pago" onclick="confirmDelete(\''.$dataPagoDetalle["gastos_pagos_id"].'\',\''.$_GET["gasto_id"].'\')"></i></a></td>
 						</tr>';
 	$restan_parcial+=$dataPagoDetalle["gastos_pagos_monto"];
 	$folioInterno--;

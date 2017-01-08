@@ -11,7 +11,7 @@ $objCalendario = new Calendario();
 <!-- Data picker -->
 <link href="<?=$raizProy?>css/plugins/datapicker/datepicker3.css" rel="stylesheet">
 <link href="<?=$raizProy?>css/plugins/clockpicker/clockpicker.css" rel="stylesheet">
-
+<link href="<?=$raizProy?>css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
 <style>
 
 .table-form td, th{
@@ -127,7 +127,7 @@ $objCalendario = new Calendario();
     <script src="<?=$raizProy?>js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
     <script src="<?=$raizProy?>js/plugins/jeditable/jquery.jeditable.js"></script>
     <script src="<?=$raizProy?>js/plugins/dataTables/datatables.min.js"></script>
-	
+	<script src="<?=$raizProy?>js/plugins/sweetalert/sweetalert.min.js"></script>
 
 	<script src="<?=$raizProy?>js/plugins/datapicker/bootstrap-datepicker.js"></script>
 	<script src="<?=$raizProy?>js/plugins/datapicker/bootstrap-datepicker.es.js"></script>
@@ -238,7 +238,13 @@ function crea_evento(){
 			login_id:login_id
 		},
 		success: function(msg){
-			location.href = '../';
+			swal({
+				title: "Guardado!",
+				text: "Evento guardado correctamente!",
+				type: "success"
+			}, function () {
+				location.href = '../';
+			});
 		}		
 	});
 }

@@ -1,7 +1,7 @@
 <?php
 require_once $_SERVER['REDIRECT_PATH_CONFIG'].'config.php';
 require_once($_SERVER["REDIRECT_PATH_CONFIG"].'login/session.php');
-if(empty($_GET["gasto_id"])){
+if(empty($_GET["gasto_id"]) || empty($_GET["gastos_pagos_id"])){
 	die("dato insuficiente");
 }
 
@@ -16,19 +16,44 @@ $rowGasto=$rowGasto[0];
 $rowPagos = $objGasto->getPagosSum($_GET["gasto_id"]);
 $rowPagos=$rowPagos[0];
 
+$rowPago = $objGasto->getGastoPago($_GET["gastos_pagos_id"]);
+$rowPago=$rowPago[0];
 
-$rowsGastosCategoria = $objGasto->getGastosCategoria();
+//print_r($rowPago);
+
+$fiscal_checked = '';
+if($rowPago["gastos_pagos_es_fiscal"] == "1"){
+	$fiscal_checked = ' checked';
+}
+
+$sin_iva_disabled = ' disabled';
+if($rowPago["gastos_pagos_monto_sin_iva"] != "0"){
+	$sin_iva_disabled = '';
+}
+
+$pago_iva_disabled = ' disabled';
+if($rowPago["gastos_pagos_iva"] != "0"){
+	$pago_iva_disabled = '';
+}
+
+list($pago_fecha,$pago_hora)=explode(" ",$rowPago["gastos_pagos_fecha"]);
+list($pago_fecha_ano,$pago_fecha_mes,$pago_fecha_dia)=explode("-",$pago_fecha);
+$pago_hora = substr($pago_hora, 0, -3);
+
+$rowPagos["gastos_pagos_monto"] = $rowPagos["gastos_pagos_monto"] - $rowPago["gastos_pagos_monto"];
+
+//$rowsGastosCategoria = $objGasto->getGastosCategoria();
 $rowsFormasPago = $objGasto->getFormasPago();
 
 $options_gastos_pagos_forma_de_pago_id = '<option value="0">-- Elige un Metodo de Pago --</option>';
 while(list(,$dataFormasPago) = each($rowsFormasPago)){
-	$options_gastos_pagos_forma_de_pago_id.='<option value="'.$dataFormasPago["gastos_pagos_forma_de_pago_id"].'">'.$dataFormasPago["gastos_pagos_forma_de_pago_desc"].'</option>';
+	$selected = '';
+	if($dataFormasPago["gastos_pagos_forma_de_pago_id"] == $rowPago["gastos_pagos_forma_de_pago_id"]){
+		$selected = ' selected';
+	}
+	$options_gastos_pagos_forma_de_pago_id.='<option value="'.$dataFormasPago["gastos_pagos_forma_de_pago_id"].'" '.$selected.'>'.$dataFormasPago["gastos_pagos_forma_de_pago_desc"].'</option>';
 }
 
-$options_gasto_categoria_id = '';
-while(list(,$dataGastoCategoria) = each($rowsGastosCategoria)){
-	$options_gasto_categoria_id.='<option value="'.$dataGastoCategoria["gasto_categoria_id"].'">'.$dataGastoCategoria["gasto_categoria_desc"].'</option>';
-}
 
 ?>
 <!-- Data picker -->
@@ -57,19 +82,19 @@ while(list(,$dataGastoCategoria) = each($rowsGastosCategoria)){
 </style>
 <div class="row wrapper border-bottom white-bg page-heading">
 	<div class="col-sm-8">
-		<h2>Nuevo Pago a Gasto <span style="font-size:14px"><b>"<?=$rowGasto["gasto_no_documento"]?>"</b></span></h2>
+		<h2>Editar Pago de Gasto <span style="font-size:14px"><b>"<?=$rowGasto["gasto_no_documento"]?>"</b></span></h2>
 		<ol class="breadcrumb">
 			<li>
 				<a href="">Gastos</a>
 			</li>
 			<li class="active">
-				<strong>Nuevo Pago a Gasto</strong>
+				<strong>Editar Pago de Gasto</strong>
 			</li>
 		</ol>
 	</div>
 	<div class="col-sm-4">
 		<div class="title-action">
-			<button type="button" class="btn btn-warning btn-xs" onclick="location.href = '../';"><i class="fa fa-arrow-left"></i> Regresar a listado</button>
+			<button type="button" class="btn btn-warning btn-xs" onclick="location.href = '../pagos_lista/?gasto_id=<?=$_GET["gasto_id"]?>';"><i class="fa fa-arrow-left"></i> Regresar a listado</button>
 		</div>
 	</div>
 </div>
@@ -100,27 +125,27 @@ while(list(,$dataGastoCategoria) = each($rowsGastosCategoria)){
 				<label class="control-label col-md-2">Monto del pago</label>                        
 				<div class="col-md-5 input-group m-b" style="padding:0px 15px; height:35px; margin-bottom:1px;">
 					 <span class="input-group-addon">$</span>
-					<input type="text" name="gastos_pagos_monto" id="gastos_pagos_monto" size="30" onchange="valida_pago(this);" class="form-control"/>
+					<input type="text" name="gastos_pagos_monto" id="gastos_pagos_monto" size="30" onchange="valida_pago(this);" class="form-control" value="<?=$rowPago["gastos_pagos_monto"]?>"/>
 				</div>    
 			</div>
 			<div class="form-group">
 				<label class="control-label col-md-2">Es fiscal</label>                        
 				<div class="col-md-5">
-					<input type="checkbox" name="gastos_pagos_es_fiscal" id="gastos_pagos_es_fiscal" value="1" onclick="update_iva();"/> 
+					<input type="checkbox" name="gastos_pagos_es_fiscal" id="gastos_pagos_es_fiscal" value="1" onclick="update_iva();" <?=$fiscal_checked?>/> 
 				</div>    
 			</div>
 			<div class="form-group">
 				<label class="control-label col-md-2">Monto del pago sin IVA</label>                        
 				<div class="col-md-5 input-group m-b" style="padding:0px 15px; height:35px; margin-bottom:1px;">
 				<span class="input-group-addon">$</span>
-					<input type="text" name="gastos_pagos_monto_sin_iva" id="gastos_pagos_monto_sin_iva" value="" size="30" disabled class="form-control"/>
+					<input type="text" name="gastos_pagos_monto_sin_iva" id="gastos_pagos_monto_sin_iva" value="" size="30" <?=$sin_iva_disabled?> class="form-control" value="<?=$rowPago["gastos_pagos_monto_sin_iva"]?>"/>
 				</div>    
 			</div>	
 			<div class="form-group">
 				<label class="control-label col-md-2">IVA</label>                        
 				<div class="col-md-5 input-group m-b" style="padding:0px 15px; height:35px; margin-bottom:1px;">
 				<span class="input-group-addon">$</span>
-					<input type="text" name="gastos_pagos_iva" id="gastos_pagos_iva" value="" size="30" disabled class="form-control"/>
+					<input type="text" name="gastos_pagos_iva" id="gastos_pagos_iva" value="" size="30" <?=$pago_iva_disabled?> class="form-control" value="<?=$rowPago["gastos_pagos_iva"]?>"/>
 				</div>    
 			</div>
 			<div class="form-group">
@@ -134,7 +159,7 @@ while(list(,$dataGastoCategoria) = each($rowsGastosCategoria)){
 			<div class="form-group">
 				<label class="control-label col-md-2">Referencia</label>                        
 				<div class="col-md-5">
-					<textarea rows="1" name="gastos_pagos_referencia" id="gastos_pagos_referencia" class="form-control"></textarea>
+					<textarea rows="1" name="gastos_pagos_referencia" id="gastos_pagos_referencia" class="form-control"><?=$rowPago["gastos_pagos_referencia"]?></textarea>
 				</div>    
 			</div>
 			<div class="form-group">
@@ -142,13 +167,13 @@ while(list(,$dataGastoCategoria) = each($rowsGastosCategoria)){
 				<div class="col-md-3" style="padding-left:30px; height:35px;">
 					<div class="form-group" id="data_1" >
 						<div class="input-group date">
-							<span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" class="form-control" id="gastos_pagos_fecha" name="gastos_pagos_fecha" value="">
+							<span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" class="form-control" id="gastos_pagos_fecha" name="gastos_pagos_fecha" value="<?=$pago_fecha_dia.'/'.$pago_fecha_mes.'/'.$pago_fecha_ano?>">
 						</div>
 					</div>
 				</div>   
 				<div class="col-md-2">
 					<div class="input-group clockpicker" data-autoclose="true">
-						<input name="gastos_pagos_hora" id ="gastos_pagos_hora" type="text" class="form-control" value="<?=date("H:m")?>" >
+						<input name="gastos_pagos_hora" id ="gastos_pagos_hora" type="text" class="form-control" value="<?=$pago_hora?>" >
 						<span class="input-group-addon">
 							<span class="fa fa-clock-o"></span>
 						</span>
@@ -158,7 +183,7 @@ while(list(,$dataGastoCategoria) = each($rowsGastosCategoria)){
 			<div class="form-group"> 
 				<div class="col-md-7" align="right">
 					<button type="button" class="btn btn-danger btn-xs" onclick="location.href = '../';">Cancelar</button>&nbsp;&nbsp;
-					<button id="boton_crea_registro" type="button" class="btn btn-primary btn-xs" onclick="crea_pago();"> Guardar Pago</button> <span id="span_crea_registro"></span>
+					<button id="boton_crea_registro" type="button" class="btn btn-primary btn-xs" onclick="edita_pago();"> Guardar Pago</button> <span id="span_crea_registro"></span>
 				</div>    
 			</div>
 			
@@ -259,7 +284,7 @@ $('#data_1 .input-group.date').datepicker({
 	forceParse: false,
 	autoclose: true,
 	language: 'es'
-}).datepicker("setDate", "0");
+});
 
 
 function validate_form(){
@@ -286,7 +311,7 @@ function validate_form(){
 	return bandera;
 }
 
-function crea_pago(){
+function edita_pago(){
 	
 	var validate = validate_form();
 	if(!validate){
@@ -294,6 +319,7 @@ function crea_pago(){
 	}
 	
 	gasto_id = '<?=$_GET["gasto_id"]?>';
+	gastos_pagos_id = '<?=$_GET["gastos_pagos_id"]?>';
 	gastos_pagos_monto=$("#gastos_pagos_monto").val();
 	gastos_pagos_forma_de_pago_id=$("#gastos_pagos_forma_de_pago_id").val();
 	gastos_pagos_referencia=$("textarea#gastos_pagos_referencia").val();
@@ -309,16 +335,17 @@ function crea_pago(){
 	gastos_pagos_fecha=$("#gastos_pagos_fecha").val();
 	gastos_pagos_hora=$("#gastos_pagos_hora").val();
 
-	login_id = '<?=$_SESSION["login_session"]["login_id"]?>';
+	//login_id = '<?=$_SESSION["login_session"]["login_id"]?>';
 	
 	$("#boton_crea_registro").addClass("disabled");
 	$("#span_crea_registro").addClass("glyphicon glyphicon-refresh glyphicon-refresh-animate");
 	
 		$.ajax({
 			type: "GET",
-			url: "../ajax/crea_pago.php",			
+			url: "../ajax/edita_pago.php",			
 			data: {
 				gasto_id:gasto_id,
+				gastos_pagos_id:gastos_pagos_id,
 				gastos_pagos_monto:gastos_pagos_monto,
 				gastos_pagos_forma_de_pago_id:gastos_pagos_forma_de_pago_id,
 				gastos_pagos_es_fiscal:gastos_pagos_es_fiscal,
@@ -327,16 +354,15 @@ function crea_pago(){
 				gastos_pagos_fecha:gastos_pagos_fecha,
 				gastos_pagos_hora:gastos_pagos_hora,
 				gastos_pagos_referencia:gastos_pagos_referencia,
-				cierra_gasto:cierra_gasto,
-				login_id:login_id
+				cierra_gasto:cierra_gasto
 			},
 			success: function(msg){
 				swal({
-					title: "Guardado!",
-					text: "Pago guardado correctamente!",
+					title: "Actualizado!",
+					text: "Pago actualizado correctamente!",
 					type: "success"
 				}, function () {
-					location.href = '../';
+					location.href = '../pagos_lista/?gasto_id=<?=$_GET["gasto_id"]?>';
 				});
 			}		
 		});

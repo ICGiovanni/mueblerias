@@ -115,7 +115,7 @@ if($rowEvento["evento_recordatorio_activo"] == "1"){
 <link href="<?=$raizProy?>css/plugins/datapicker/datepicker3.css" rel="stylesheet">
 <link href="<?=$raizProy?>css/plugins/clockpicker/clockpicker.css" rel="stylesheet">
 <link href="<?=$raizProy?>css/plugins/chosen/chosen.css" rel="stylesheet">
-
+<link href="<?=$raizProy?>css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
 <style>
 .glyphicon-refresh-animate {
     -animation: spin .9s infinite linear;
@@ -227,7 +227,7 @@ if($rowEvento["evento_recordatorio_activo"] == "1"){
 					 <div class="form-group">                        
                         <label class="control-label col-md-2">Categoria</label>                        
                         <div class="col-md-5">
-                            <select name="gasto_categoria_id" id="gasto_categoria_id" class="chosen-select"  onchange="update_sucursal();" >
+                            <select name="gasto_categoria_id" id="gasto_categoria_id" class="form-control chosen-select"  onchange="update_sucursal();" >
 								<?=$options_gasto_categoria_id?>
 							</select>
                         </div>    
@@ -235,7 +235,7 @@ if($rowEvento["evento_recordatorio_activo"] == "1"){
 					 <div class="form-group">                        
                         <label class="control-label col-md-2">Sucursal</label>                        
                         <div class="col-md-5">
-                            <select name="sucursal_id" id="sucursal_id" class="chosen-select" >
+                            <select name="sucursal_id" id="sucursal_id" class="form-control chosen-select" >
 								<?=$options_sucursal_id?>
 							</select>
                         </div>    
@@ -243,7 +243,7 @@ if($rowEvento["evento_recordatorio_activo"] == "1"){
 					 <div class="form-group">                        
                         <label class="control-label col-md-2">Proveedor</label>                        
                         <div class="col-md-5">
-                            <select name="proveedor_id" id="proveedor_id"  class="chosen-select" onchange="update_beneficiary_from_proveedor();">
+                            <select name="proveedor_id" id="proveedor_id"  class="form-control chosen-select" onchange="update_beneficiary_from_proveedor();">
 								<?=$options_proveedor_id?>
 							</select>
                         </div>    
@@ -251,7 +251,7 @@ if($rowEvento["evento_recordatorio_activo"] == "1"){
                     <div class="form-group">                        
                         <label class="control-label col-md-2">Empleado</label>                        
                         <div class="col-md-5">
-                            <select name="login_id" id="login_id"  class="chosen-select" onchange="update_beneficiary_from_login();">
+                            <select name="login_id" id="login_id"  class="form-control chosen-select" onchange="update_beneficiary_from_login();">
 								<?=$options_login_id?>
 							</select>
                         </div>    
@@ -259,7 +259,7 @@ if($rowEvento["evento_recordatorio_activo"] == "1"){
 					<div class="form-group">                        
                         <label class="control-label col-md-2">Status</label>                        
                         <div class="col-md-5">
-                            <select name="gasto_status_id" id="gasto_status_id" class="chosen-select">
+                            <select name="gasto_status_id" id="gasto_status_id" class="form-control chosen-select">
 								<?=$options_gasto_status_id?>
 							</select>
                         </div>    
@@ -298,7 +298,7 @@ if($rowEvento["evento_recordatorio_activo"] == "1"){
     <script src="<?=$raizProy?>js/plugins/metisMenu/jquery.metisMenu.js"></script>
     <script src="<?=$raizProy?>js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
     <script src="<?=$raizProy?>js/plugins/jeditable/jquery.jeditable.js"></script>
-
+	<script src="<?=$raizProy?>js/plugins/sweetalert/sweetalert.min.js"></script>
     <script src="<?=$raizProy?>js/plugins/dataTables/datatables.min.js"></script>
 	
 
@@ -312,9 +312,28 @@ if($rowEvento["evento_recordatorio_activo"] == "1"){
 
     <!-- Page-Level Scripts -->
 	<script src="<?=$raizProy?>js/plugins/chosen/chosen.jquery.js"></script>
+	<script src="<?=$raizProy?>js/plugins/toastr/toastr.min.js"></script>
 <script>
 
-$(document).ready(function(){	
+$(document).ready(function(){
+	
+	toastr.options={
+	  "closeButton": true,
+	  "debug": false,
+	  "progressBar": true,
+	  "preventDuplicates": false,
+	  "positionClass": "toast-top-right",
+	  "onclick": null,
+	  "showDuration": "400",
+	  "hideDuration": "1000",
+	  "timeOut": "7000",
+	  "extendedTimeOut": "1000",
+	  "showEasing": "swing",
+	  "hideEasing": "linear",
+	  "showMethod": "fadeIn",
+	  "hideMethod": "fadeOut"
+	}
+	
      $.fn.datepicker.defaults.language = 'es';
 	 $('.clockpicker').clockpicker();
 	 $('#gasto_categoria_id').chosen();
@@ -324,6 +343,61 @@ $(document).ready(function(){
 	 $('#gasto_status_id').chosen();
 });
 
+function validate_form(){
+	var email_regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i;
+	var bandera=true;
+
+	
+	login_id=$("#login_id").val();
+	if( (gasto_categoria_id == '13' || gasto_categoria_id == '2') && login_id == '0' ){ //gasto inputable a empleados
+		toastr.error("Debe elegir un Empleado");
+		bandera=false;
+	}
+	
+	proveedor_id=$("#proveedor_id").val();
+	if( (gasto_categoria_id == '15') &&  proveedor_id == '0'){ //gasto inputable a proveedores
+		toastr.error("Debe elegir un Proveedor");
+		bandera=false;
+	}
+	
+	sucursal_id=$("#sucursal_id").val();
+	if(sucursal_id == '0'){
+		toastr.error("Debe elegir una Sucursal");
+		bandera=false;
+	}
+	
+	gasto_categoria_id=$("#gasto_categoria_id" ).val();
+	if(gasto_categoria_id == '0'){
+		toastr.error("Debe elegir una Categoria");
+		$("#gasto_categoria_id").focus();
+		bandera=false;
+	}
+	
+	if($("#gasto_monto").val()=='')
+	{
+		toastr.error('Debe de agregar un Monto');
+		$("#gasto_monto").val('');
+		$("#gasto_monto").focus();
+		bandera=false;
+	}
+	
+	if($("#gasto_concepto").val()=='')
+	{
+		toastr.error('Debe de agregar un Concepto');
+		$("#gasto_concepto").val('');
+		$("#gasto_concepto").focus();
+		bandera=false;
+	}
+	
+	if($("#gasto_no_documento").val()=='')
+	{
+		toastr.error('Debe de agregar un No de documento');
+		$("#gasto_no_documento").val('');
+		$("#gasto_no_documento").focus();
+		bandera=false;
+	}	
+	return bandera;
+}
 
 $('#data_1 .input-group.date').datepicker({
 	keyboardNavigation: false,
@@ -339,10 +413,12 @@ $('#data_2 .input-group.date').datepicker({
 	language: 'es'
 });
 
-
-
-
 function edita_gasto(gasto_id){
+	
+	var validate = validate_form();
+	if(!validate){
+		return;
+	}
 	
 	gasto_no_documento=$("#gasto_no_documento").val();
 	gasto_fecha_vencimiento=$("#gasto_fecha_vencimiento").val();
@@ -408,10 +484,13 @@ function edita_gasto(gasto_id){
 			gasto_beneficiario:gasto_beneficiario
 		},
 		success: function(msg){
-			location.href = '../';
-			//$("#myModal").modal('hide');
-			//$("#boton_crea_gasto").removeClass().addClass("btn btn-primary");
-			//$("#span_crea_gasto").removeClass();
+			swal({
+				title: "Actualización!",
+				text: "Gasto actualizado correctamente!",
+				type: "success"
+			}, function () {
+				location.href = '../';
+			});
 		}		
 	});
 }
