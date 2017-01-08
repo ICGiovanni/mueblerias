@@ -301,8 +301,13 @@ function edita_evento(){
 			evento_id:evento_id
 		},
 		success: function(msg){
-			location.href = '../';
-			//$("#myModal").modal('hide');
+			swal({
+				title: "Actualización!",
+				text: "Evento actualizado correctamente!",
+				type: "success"
+			}, function () {
+				location.href = '../';
+			});
 		}		
 	});
 }

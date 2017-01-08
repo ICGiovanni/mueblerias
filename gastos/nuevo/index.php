@@ -46,7 +46,7 @@ while(list(,$dataLogin) = each($rowsLogin)){
 <link href="<?=$raizProy?>css/plugins/datapicker/datepicker3.css" rel="stylesheet">
 <link href="<?=$raizProy?>css/plugins/clockpicker/clockpicker.css" rel="stylesheet">
 <link href="<?=$raizProy?>css/plugins/chosen/chosen.css" rel="stylesheet">
-
+<link href="<?=$raizProy?>css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
 <style>
 .glyphicon-refresh-animate {
     -animation: spin .9s infinite linear;
@@ -161,7 +161,7 @@ while(list(,$dataLogin) = each($rowsLogin)){
                     <div class="form-group">                        
                         <label class="control-label col-md-2">Categoria</label>                        
                         <div class="col-md-5">
-                            <select name="gasto_categoria_id" id="gasto_categoria_id" class="chosen-select" onchange="update_sucursal();" >
+                            <select name="gasto_categoria_id" id="gasto_categoria_id" class="form-control chosen-select" onchange="update_sucursal();" >
 								<?=$options_gasto_categoria_id?>
 							</select>
                         </div>    
@@ -170,7 +170,7 @@ while(list(,$dataLogin) = each($rowsLogin)){
                     <div class="form-group">                        
                         <label class="control-label col-md-2">Sucursal</label>                        
                         <div class="col-md-5">
-                            <select name="sucursal_id" id="sucursal_id" class="chosen-select" >
+                            <select name="sucursal_id" id="sucursal_id" class="form-control chosen-select" >
 								<?=$options_sucursal_id?>
 							</select>
                         </div>    
@@ -179,7 +179,7 @@ while(list(,$dataLogin) = each($rowsLogin)){
                     <div class="form-group">                        
                         <label class="control-label col-md-2">Proveedor</label>                        
                         <div class="col-md-5">
-                            <select name="proveedor_id" id="proveedor_id" class="chosen-select" onchange="update_beneficiary_from_proveedor();">
+                            <select name="proveedor_id" id="proveedor_id" class="form-control chosen-select" onchange="update_beneficiary_from_proveedor();">
 								<?=$options_proveedor_id?>
 							</select>
                         </div>    
@@ -188,7 +188,7 @@ while(list(,$dataLogin) = each($rowsLogin)){
                     <div class="form-group">                        
                         <label class="control-label col-md-2">Empleado</label>                        
                         <div class="col-md-5">
-                            <select name="login_id" id="login_id"  class="chosen-select" onchange="update_beneficiary_from_login();">
+                            <select name="login_id" id="login_id"  class="form-control chosen-select" onchange="update_beneficiary_from_login();">
 								<?=$options_login_id?>
 							</select>
                         </div>    
@@ -200,9 +200,14 @@ while(list(,$dataLogin) = each($rowsLogin)){
                         </div>    
                     </div>
                     <div class="form-group">                        
-                        <label class="control-label col-md-2">Registrar Pago en automático</label>                        
-                        <div class="col-md-5">
-                            <input type="checkbox" name="pago_automatico" id="pago_automatico" /> 
+                        <label class="control-label col-md-2">Registrar su pago</label>                        
+                        <div class="col-md-1" style="height:35px; padding-left:0px;">
+							<div class="form-group input-group m-b" >
+								<span class="input-group-addon" style="border-left:1px solid #E5E6E7; border-right:1px solid #E5E6E7;">
+									 <input type="checkbox" name="pago_automatico" id="pago_automatico" />
+								</span>
+							</div>
+							
                         </div>    
                     </div>
 
@@ -233,7 +238,7 @@ while(list(,$dataLogin) = each($rowsLogin)){
     <script src="<?=$raizProy?>js/plugins/metisMenu/jquery.metisMenu.js"></script>
     <script src="<?=$raizProy?>js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
     <script src="<?=$raizProy?>js/plugins/jeditable/jquery.jeditable.js"></script>
-
+	<script src="<?=$raizProy?>js/plugins/sweetalert/sweetalert.min.js"></script>
     <script src="<?=$raizProy?>js/plugins/dataTables/datatables.min.js"></script>
 	
 
@@ -348,9 +353,6 @@ $('#data_2 .input-group.date').datepicker({
 	language: 'es'
 }).datepicker("setDate", "0");
 
-
-
-
 function crea_gasto(){
 	
 	var validate = validate_form();
@@ -428,7 +430,13 @@ function crea_gasto(){
 				login_id_quien_registra:login_id_quien_registra // login_id de quien registra el pago
 			},
 			success: function(msg){
-				location.href = '../';
+				swal({
+					title: "Guardado!",
+					text: "Gasto guardado correctamente!",
+					type: "success"
+				}, function () {
+					location.href = '../';
+				});				
 			}		
 		});
 		
@@ -457,7 +465,13 @@ function crea_gasto(){
 				gasto_beneficiario:gasto_beneficiario
 			},
 			success: function(msg){
-				location.href = '../';
+				swal({
+					title: "Guardado!",
+					text: "Gasto guardado correctamente!",
+					type: "success"
+				}, function () {
+					location.href = '../';
+				});
 			}		
 		});
 	}
