@@ -102,6 +102,12 @@ class Inventarios
 		return $result;
 	}
 	
+	
+	public function InsertProductDB($product_id,$sucursal_id,$cantidad)
+	{
+		
+	}
+	
 	public function ProductInventory($producto_id,$sucursal_id,$cantidad,$type='E')
 	{
 		if($type=='E')
