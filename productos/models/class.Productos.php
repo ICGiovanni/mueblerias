@@ -451,7 +451,8 @@ class Productos
 				FROM productos
 				WHERE producto_id=p.producto_parent),'') AS producto_principal,
 				producto_description_corta,producto_price_min_public_percent,
-				producto_price_purchase_percent
+				producto_price_purchase_percent,
+				p.producto_conjunto AS conjunto
 				FROM productos p
 				INNER JOIN proveedores pr USING(proveedor_id)".
 				$where.

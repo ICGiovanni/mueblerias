@@ -1,5 +1,6 @@
 <?php
 require_once($_SERVER["REDIRECT_PATH_CONFIG"].'models/connection/class.Connection.php');
+require_once($_SERVER["REDIRECT_PATH_CONFIG"].'productos/models/connection/class.Productos.php');
 
 class Inventarios
 {
@@ -105,14 +106,121 @@ class Inventarios
 	
 	public function InsertProductDB($product_id,$sucursal_id,$cantidad)
 	{
+		$productos=new Productos();
 		
+		$r=$productos->GetDataProduct($product_id);
+		$conjunto=$r['conjunto'];
+		
+		if($conjunto)
+		{
+			$sql="SELECT producto_conjunto_id,cantidad
+					FROM productos_conjunto
+					WHERE producto_id='$product_id' ";
+			
+			$statement=$this->connect->prepare($sql);
+			$statement->execute();
+			$result=$statement->fetchAll(PDO::FETCH_ASSOC);
+			
+			foreach($result as $r)
+			{
+				$producto_id=$r['producto_conjunto_id'];
+				$cantidad=$cantidad*$r['cantidad'];
+				
+				
+				$result=$this->GetProductSucursal($producto_id, $sucursal_id);
+				
+				if(isset($result[0]['producto_id']))
+				{
+					$sql="UPDATE inventario_productos SET cantidad=cantidad+$cantidad WHERE producto_id='$producto_id' AND sucursal_id='$sucursal_id'";
+						
+					$statement=$this->connect->prepare($sql);
+					$statement->execute();
+				}
+				else
+				{
+					$sql="INSERT INTO inventario_productos VALUES('',:producto,:sucursal,:cantidad)";
+						
+					$statement=$this->connect->prepare($sql);
+						
+					$statement->bindParam(':producto', $producto_id, PDO::PARAM_STR);
+					$statement->bindParam(':sucursal', $sucursal_id, PDO::PARAM_STR);
+					$statement->bindParam(':cantidad', $cantidad, PDO::PARAM_STR);
+						
+					$statement->execute();
+				}
+				
+			}
+		}
+		else 
+		{
+			$result=$this->GetProductSucursal($producto_id, $sucursal_id);
+				
+			if(isset($result[0]['producto_id']))
+			{
+				$sql="UPDATE inventario_productos SET cantidad=cantidad+$cantidad WHERE producto_id='$producto_id' AND sucursal_id='$sucursal_id'";
+			
+				$statement=$this->connect->prepare($sql);
+				$statement->execute();
+			}
+			else
+			{
+				$sql="INSERT INTO inventario_productos VALUES('',:producto,:sucursal,:cantidad)";
+					
+				$statement=$this->connect->prepare($sql);
+					
+				$statement->bindParam(':producto', $producto_id, PDO::PARAM_STR);
+				$statement->bindParam(':sucursal', $sucursal_id, PDO::PARAM_STR);
+				$statement->bindParam(':cantidad', $cantidad, PDO::PARAM_STR);
+					
+				$statement->execute();
+			}
+		}
+		
+	}
+	
+	public function DiscountInventaryDB($product_id,$sucursal_id,$cantidad)
+	{
+		$productos=new Productos();
+		
+		$r=$productos->GetDataProduct($product_id);
+		$conjunto=$r['conjunto'];
+		
+		if($conjunto)
+		{
+			$sql="SELECT producto_conjunto_id,cantidad
+			FROM productos_conjunto
+			WHERE producto_id='$product_id' ";
+				
+			$statement=$this->connect->prepare($sql);
+			$statement->execute();
+			$result=$statement->fetchAll(PDO::FETCH_ASSOC);
+				
+			foreach($result as $r)
+			{
+				$producto_id=$r['producto_conjunto_id'];
+				$cantidad=$cantidad*$r['cantidad'];
+				
+				$sql="UPDATE inventario_productos SET cantidad=cantidad-$cantidad WHERE producto_id='$producto_id' AND sucursal_id='$sucursal_id'";
+					
+				$statement=$this->connect->prepare($sql);
+				$statement->execute();
+			}
+		}
+		else
+		{
+			$sql="UPDATE inventario_productos SET cantidad=cantidad-$cantidad WHERE producto_id='$producto_id' AND sucursal_id='$sucursal_id'";
+				
+			$statement=$this->connect->prepare($sql);
+			$statement->execute();
+		}
 	}
 	
 	public function ProductInventory($producto_id,$sucursal_id,$cantidad,$type='E')
 	{
 		if($type=='E')
 		{
-			$result=$this->GetProductSucursal($producto_id, $sucursal_id);
+			$this->InsertProductDB($product_id, $sucursal_id, $cantidad);
+			/*$result=$this->GetProductSucursal($producto_id, $sucursal_id);
 			
 			if(isset($result[0]['producto_id']))
 			{
@@ -132,14 +240,16 @@ class Inventarios
 				$statement->bindParam(':cantidad', $cantidad, PDO::PARAM_STR);
 					
 				$statement->execute();
-			}
+			}*/
 		}
 		else if($type=='S')
 		{
-			$sql="UPDATE inventario_productos SET cantidad=cantidad-$cantidad WHERE producto_id='$producto_id' AND sucursal_id='$sucursal_id'";
+			
+			$this->DiscountInventaryDB($product_id, $sucursal_id, $cantidad);
+			/*$sql="UPDATE inventario_productos SET cantidad=cantidad-$cantidad WHERE producto_id='$producto_id' AND sucursal_id='$sucursal_id'";
 			
 			$statement=$this->connect->prepare($sql);
-			$statement->execute();
+			$statement->execute();*/
 		}
 	}
 	
