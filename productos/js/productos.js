@@ -225,9 +225,13 @@ $(document).ready(function()
 			        }
 			        else if(tipo_producto!='P')
 			        {
-			        	alert("El Producto ha sido agregado");
-			            var url="index.php";
-			    		$(location).attr("href", url);
+			        	swal({
+			                title: "Guardado!",
+			                text: "Producto guardado correctamente!",
+			                type: "success"
+			            }, function () {
+			                window.location.href = 'index.php';
+			            });
 			        }
 
 			        if(tipo_producto=='P')

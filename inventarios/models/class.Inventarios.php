@@ -104,18 +104,18 @@ class Inventarios
 	}
 	
 	
-	public function InsertProductDB($product_id,$sucursal_id,$cantidad)
+	public function InsertProductDB($producto_id,$sucursal_id,$cantidad)
 	{
 		$productos=new Productos();
 		
-		$r=$productos->GetDataProduct($product_id);
-		$conjunto=$r['conjunto'];
+		$r=$productos->GetDataProduct($producto_id);
+		$conjunto=$r[0]['conjunto'];
 		
 		if($conjunto)
 		{
 			$sql="SELECT producto_conjunto_id,cantidad
 					FROM productos_conjunto
-					WHERE producto_id='$product_id' ";
+					WHERE producto_id='$producto_id' ";
 			
 			$statement=$this->connect->prepare($sql);
 			$statement->execute();
@@ -178,18 +178,18 @@ class Inventarios
 		
 	}
 	
-	public function DiscountInventaryDB($product_id,$sucursal_id,$cantidad)
+	public function DiscountInventaryDB($producto_id,$sucursal_id,$cantidad)
 	{
 		$productos=new Productos();
 		
-		$r=$productos->GetDataProduct($product_id);
-		$conjunto=$r['conjunto'];
+		$r=$productos->GetDataProduct($producto_id);
+		$conjunto=$r[0]['conjunto'];
 		
 		if($conjunto)
 		{
 			$sql="SELECT producto_conjunto_id,cantidad
 			FROM productos_conjunto
-			WHERE producto_id='$product_id' ";
+			WHERE producto_id='$producto_id' ";
 				
 			$statement=$this->connect->prepare($sql);
 			$statement->execute();
@@ -219,7 +219,7 @@ class Inventarios
 	{
 		if($type=='E')
 		{
-			$this->InsertProductDB($product_id, $sucursal_id, $cantidad);
+			$this->InsertProductDB($producto_id, $sucursal_id, $cantidad);
 			/*$result=$this->GetProductSucursal($producto_id, $sucursal_id);
 			
 			if(isset($result[0]['producto_id']))
@@ -245,7 +245,7 @@ class Inventarios
 		else if($type=='S')
 		{
 			
-			$this->DiscountInventaryDB($product_id, $sucursal_id, $cantidad);
+			$this->DiscountInventaryDB($producto_id, $sucursal_id, $cantidad);
 			/*$sql="UPDATE inventario_productos SET cantidad=cantidad-$cantidad WHERE producto_id='$producto_id' AND sucursal_id='$sucursal_id'";
 			
 			$statement=$this->connect->prepare($sql);

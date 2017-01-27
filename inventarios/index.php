@@ -11,6 +11,9 @@
 ?>
 <link href="<?php echo $raizProy?>css/plugins/chosen/chosen.css" rel="stylesheet">
 <link href="<?php echo $raizProy?>css/plugins/easy-autocomplete/easy-autocomplete.min.css" rel="stylesheet">
+<link href="<?php echo $raizProy?>css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+<link href="<?php echo $raizProy?>css/plugins/chosen/chosen.css" rel="stylesheet">
+
 <style>
 a.href_colores{
 pointer-events: none;
@@ -338,8 +341,8 @@ cursor: default;
         </div>
     </div>
 </div>
-    
-
+<script src="<?php echo $raizProy?>js/plugins/sweetalert/sweetalert.min.js"></script>    
+<script src="<?php echo $raizProy?>js/plugins/chosen/chosen.jquery.js"></script>
     <!-- Page-Level Scripts -->
     <script>
         $(document).ready(function(){
@@ -438,9 +441,13 @@ cursor: default;
     		        success: function (data)
     		        {
     		        	$('#modal_check').modal('hide');
-    		        	alert("El Movimiento ha sido realizado");
-			            var url="index.php";
-			    		$(location).attr("href", url);
+    		        	swal({
+			                title: "Guardado!",
+			                text: "Movimiento guardado correctamente!",
+			                type: "success"
+			            }, function () {
+			                window.location.href = 'index.php';
+			            });
     				}
     		
     			});
@@ -463,9 +470,13 @@ cursor: default;
 			        data: {id:producto_id}, // serializes the form's elements.
 			        success: function(data)
 			        {
-			        	alert("El Producto ha sido borrado"); // show response from the php script.
-			        	var url="index.php";
-			    		$(location).attr("href", url);
+			        	swal({
+			                title: "Guardado!",
+			                text: "Movimiento guardado correctamente!",
+			                type: "success"
+			            }, function () {
+			                window.location.href = 'index.php';
+			            });
 					}
 				});
         	}

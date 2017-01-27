@@ -94,6 +94,7 @@ $inventarios=new Inventarios();
 	<input type="hidden" class="form-control" id="producto_id" name="producto_id">		            
     </form>
 </div>
+
 <script>
 $(document).ready(function()
 {
@@ -130,7 +131,7 @@ $(document).ready(function()
 		{
 			$("#producto").focus();
 			$("#producto").val('');
-			alert("El producto ya ha sido agregado");
+			toastr.error('El Producto ya ha sido agregado');
 		}
 	};
 	
@@ -245,10 +246,6 @@ $(document).ready(function()
 			$("#producto").val('');
 			$("#producto").focus();
 		}
-		else if(banderaE==false)
-		{
-
-		}
 		else
 		{
 			
@@ -290,9 +287,15 @@ $(document).ready(function()
 				        success: function (data)
 				        {
 					        $("#modal_nuevo_inventario").hide();
-				            alert("El Movimiento ha sido agregado");
-				            var url="index.php";
-				    		$(location).attr("href", url);
+
+					        swal({
+				                title: "Guardado!",
+				                text: "Movimiento guardado correctamente!",
+				                type: "success"
+				            }, function () {
+				                window.location.href = 'index.php';
+				            });
+					       
 				        },
 				        cache: false,
 				        contentType: false,
