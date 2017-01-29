@@ -124,8 +124,7 @@ class Inventarios
 			foreach($result as $r)
 			{
 				$producto_id=$r['producto_conjunto_id'];
-				$cantidad=$cantidad*$r['cantidad'];
-				
+				$cantidad=$cantidad*$r['cantidad'];				
 				
 				$result=$this->GetProductSucursal($producto_id, $sucursal_id);
 				
@@ -363,27 +362,106 @@ class Inventarios
 		}
 	}
 	
-	public function GetStockbySucursal($product_id,$sucursal_id="")
+	public function CheckStock($data,$sucursal_id)
 	{
-		$where="";
+		$productos=new Productos();
 		
-		if($sucursal_id)
+		foreach($data as $d)
 		{
-			$where=" AND sucursal_id='$sucursal_id'";
+			$producto_id=$d['id'];
+			$cantidad=$d['cantidad'];
+			
+			$stock=$this->GetStockbySucursal($producto_id,$sucursal_id);
+			
+			if($stock<$cantidad)
+			{
+				$r=$productos->GetDataProduct($producto_id);
+				
+				return array("producto_id"=>$producto_id,"producto_name"=>$r[0]['producto_name'],"producto_sku"=>$r[0]['producto_sku'],"stock"=>$stock);
+			}
 		}
 		
-		$sql="SELECT p.producto_id,ivs.sucursal_name,SUM(ip.cantidad) AS stock
+		return false;
+	}
+	
+	public function GetStockbySucursal($product_id,$sucursal_id="")
+	{
+		$productos=new Productos();
+		
+		$r=$productos->GetDataProduct($product_id);
+		$conjunto=$r[0]['conjunto'];
+		
+		if($conjunto)
+		{
+			$sql="SELECT producto_conjunto_id,cantidad
+			FROM productos_conjunto
+			WHERE producto_id='$product_id' ";
+				
+			$statement=$this->connect->prepare($sql);
+			$statement->execute();
+			$result=$statement->fetchAll(PDO::FETCH_ASSOC);
+			$array_stock=array();
+			
+			foreach($result as $r)
+			{
+				$producto_id=$r['producto_conjunto_id'];
+				$cantidad=$r['cantidad'];
+				
+				if($sucursal_id)
+				{
+					$where=" AND sucursal_id='$sucursal_id'";
+				}
+				
+				$sql="SELECT p.producto_id,ivs.sucursal_name,SUM(ip.cantidad) AS stock
 				FROM productos p
 				INNER JOIN inventario_productos ip USING(producto_id)
 				INNER JOIN inv_sucursales ivs USING(sucursal_id)
-				WHERE p.producto_id='$product_id'".
+				WHERE p.producto_id='$producto_id'".
 				$where;
+				
+				$statement=$this->connect->prepare($sql);
+				$statement->execute();
+				$result=$statement->fetchAll(PDO::FETCH_ASSOC);
+				
+				$cantidad_inv=$result[0]['stock'];
+				
+				$cantidad=$cantidad_inv/$cantidad;
+				
+				$c=explode('.',$cantidad);
+				$cantidad=$c[0];
+				
+				if(!in_array($cantidad,$array_stock))
+				{
+					array_push($array_stock,$cantidad);
+				}
+			}
+			
+			$cantidad=min($array_stock);
+			
+			return $cantidad;
+		}
+		else
+		{
+			$where="";
 		
-		$statement=$this->connect->prepare($sql);
-		$statement->execute();
-		$result=$statement->fetchAll(PDO::FETCH_ASSOC);
-		
-		return $result;
+			if($sucursal_id)
+			{
+				$where=" AND sucursal_id='$sucursal_id'";
+			}
+			
+			$sql="SELECT p.producto_id,ivs.sucursal_name,SUM(ip.cantidad) AS stock
+					FROM productos p
+					INNER JOIN inventario_productos ip USING(producto_id)
+					INNER JOIN inv_sucursales ivs USING(sucursal_id)
+					WHERE p.producto_id='$product_id'".
+					$where;
+			
+			$statement=$this->connect->prepare($sql);
+			$statement->execute();
+			$result=$statement->fetchAll(PDO::FETCH_ASSOC);
+			
+			return $result[0]['stock'];
+		}				
 	}
 		
 }

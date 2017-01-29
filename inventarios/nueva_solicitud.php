@@ -189,6 +189,67 @@ $(document).ready(function()
 		$("#producto").easyAutocomplete(options);
 	});
 
+	var guardar_inventario=function()
+	{
+		var url="inventario.php?t=n";
+		
+		var formData = new FormData($("#form_inventario")[0]);
+
+	    $.ajax({
+	        url: url,
+	        type: 'POST',
+	        data: formData,
+	        async: false,
+	        success: function (data)
+	        {
+		        var movimiento_id=data;
+		        var url="inventario.php?t=p&id="+movimiento_id;
+			    var products=new Array();
+			        
+			    $.each($('.products'), function (index, value)
+	            {
+		        	var p={};
+		        	var id=$(value).val();
+		        	var cantidad=$("#cantidad_"+id).val();
+		        	p.id=id;
+		        	p.cantidad=cantidad;
+		        	products.push(p);
+            	});	
+
+		        var jsonProducts=JSON.stringify(products);
+		        
+	        	$.ajax(
+				{
+			        url: url,
+			        type: 'POST',
+			        data:  jsonProducts,
+			        contentType: "application/json; charset=utf-8",
+			        async: false,
+			        dataType: "json",
+			        success: function (data)
+			        {
+				        $("#modal_nuevo_inventario").hide();
+
+				        swal({
+			                title: "Guardado!",
+			                text: "Movimiento guardado correctamente!",
+			                type: "success"
+			            }, function () {
+			                window.location.href = 'index.php';
+			            });
+				       
+			        },
+			        cache: false,
+			        contentType: false,
+			        processData: false
+			    });
+	        },
+	        cache: false,
+	        contentType: false,
+	        processData: false
+	    });
+	};
+
 	$("#guardar_inventario").click(function()
 	{
 		var bandera=false;
@@ -199,7 +260,7 @@ $(document).ready(function()
 			var sucursal=$("#origen").val();
 			var cantidad=$("#cantidad_"+id).val();
 			
-    		if(sucursal!='')
+    		/*if(sucursal!='')
 			{
     			var url="inventario.php";
 			    $.ajax(
@@ -216,11 +277,11 @@ $(document).ready(function()
 						}
 					}
 				});
-			}
+			}*/
     		
     		bandera=true;
-    	});	
-		
+    	});
+
 		if($("#origen").val()=='')
 		{
 			toastr.error('Debe de agregar el origen del stock');
@@ -248,64 +309,69 @@ $(document).ready(function()
 		}
 		else
 		{
-			
-			var url="inventario.php?t=n";
-	
-			var formData = new FormData($("#form_inventario")[0]);
-	
-		    $.ajax({
-		        url: url,
-		        type: 'POST',
-		        data: formData,
-		        async: false,
-		        success: function (data)
-		        {
-			        var movimiento_id=data;
-			        var url="inventario.php?t=p&id="+movimiento_id;
-				    var products=new Array();
-				        
-				    $.each($('.products'), function (index, value)
-		            {
-			        	var p={};
-			        	var id=$(value).val();
-			        	var cantidad=$("#cantidad_"+id).val();
-			        	p.id=id;
-			        	p.cantidad=cantidad;
-			        	products.push(p);
-	            	});	
-	
-			        var jsonProducts=JSON.stringify(products);
-			        
-		        	$.ajax(
-					{
-				        url: url,
-				        type: 'POST',
-				        data:  jsonProducts,
-				        contentType: "application/json; charset=utf-8",
-				        async: false,
-				        dataType: "json",
-				        success: function (data)
-				        {
-					        $("#modal_nuevo_inventario").hide();
+			var sucursal=$("#origen").val();
 
-					        swal({
-				                title: "Guardado!",
-				                text: "Movimiento guardado correctamente!",
-				                type: "success"
-				            }, function () {
-				                window.location.href = 'index.php';
-				            });
-					       
-				        },
-				        cache: false,
-				        contentType: false,
-				        processData: false
-				    });
-		        },
-		        cache: false,
-		        contentType: false,
-		        processData: false
-		    });
+			if(sucursal!='')
+			{
+				var products=new Array();
+			        
+			    $.each($('.products'), function (index, value)
+	            {
+		        	var p={};
+		        	var id=$(value).val();
+		        	var cantidad=$("#cantidad_"+id).val();
+		        	p.id=id;
+		        	p.cantidad=cantidad;
+		        	products.push(p);
+            	});	
+
+		        var jsonProducts=JSON.stringify(products);
+		        var url="inventario.php?t=ci&su="+sucursal;
+
+		        $.ajax(
+				{
+			        url: url,
+			        type: 'POST',
+			        data:  jsonProducts,
+			        contentType: "application/json; charset=utf-8",
+			        async: false,
+			        dataType: "json",
+			        success: function (data)
+			        {
+				       	if(data)
+				       	{
+					       	var producto_name=data.producto_name;
+					       	var producto_sku=data.producto_sku;
+					       	var stock=data.stock;
+					       	var text='';
+
+					       	if(stock<=1)
+					       	{
+								text='producto';
+					       	}
+					       	else
+					       	{
+								text='productos';
+					       	}
+					       	
+					       	toastr.error('El producto '+producto_sku+' '+producto_name+', solo tiene '+stock+' '+text+' en existencia');
+							
+				       	}
+				       	else
+				       	{
+				       		guardar_inventario();
+				       	}
+			        },
+			        cache: false,
+			        contentType: false,
+			        processData: false
+			    });
+			}
+			else
+			{
+				guardar_inventario();
+			}
+			
 		}
 		
 	});

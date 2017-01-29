@@ -49,7 +49,7 @@ else if($type=='cp')
 	$sucursal_id=$_REQUEST['su'];
 	$cantidad=$_REQUEST['c'];
 	
-	$stock=$inventarios->GetStockbySucursal($product_id.$sucursal_id);
+	$stock=$inventarios->GetStockbySucursal($product_id,$sucursal_id);
 	
 	if($stock>=$cantidad)
 	{
@@ -66,5 +66,18 @@ else if($type=='ns')
 	
 	$result=$inventarios->GetMoves($move_id);
 	echo json_encode($result);
+}
+else if($type=='ci')
+{
+	$data=json_decode(file_get_contents('php://input'), true);
+	$sucursal_id=$_REQUEST['su'];
+	
+	$result=$inventarios->CheckStock($data,$sucursal_id);
+	
+	if($result)
+	{
+		echo json_encode($result);
+	}
+	
 }
 ?>
