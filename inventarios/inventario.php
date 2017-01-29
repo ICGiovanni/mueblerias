@@ -78,6 +78,9 @@ else if($type=='ci')
 	{
 		echo json_encode($result);
 	}
-	
+	else
+	{
+		echo 0;
+	}
 }
 ?>

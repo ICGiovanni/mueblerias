@@ -338,11 +338,12 @@ $(document).ready(function()
 			        dataType: "json",
 			        success: function (data)
 			        {
-				       	if(data)
+			        	if(data!=0)
 				       	{
 					       	var producto_name=data.producto_name;
 					       	var producto_sku=data.producto_sku;
 					       	var stock=data.stock;
+					       	var solicitado=data.solicitado;
 					       	var text='';
 
 					       	if(stock<=1)
@@ -354,12 +355,12 @@ $(document).ready(function()
 								text='productos';
 					       	}
 					       	
-					       	toastr.error('El producto '+producto_sku+' '+producto_name+', solo tiene '+stock+' '+text+' en existencia');
+					       	toastr.error('El producto '+producto_sku+' '+producto_name+', solo tiene '+stock+' '+text+' en existencia y necesita '+solicitado);
 							
 				       	}
 				       	else
 				       	{
-				       		guardar_inventario();
+					       guardar_inventario();
 				       	}
 			        },
 			        cache: false,

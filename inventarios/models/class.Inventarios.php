@@ -366,7 +366,72 @@ class Inventarios
 	{
 		$productos=new Productos();
 		
+		$producto=array();
+		
 		foreach($data as $d)
+		{
+			$producto_id=$d['id'];
+			$cantidad=$d['cantidad'];
+			
+			$r=$productos->GetDataProduct($producto_id);
+			$conjunto=$r[0]['conjunto'];
+			
+			if($conjunto)
+			{
+				$sql="SELECT producto_conjunto_id,cantidad
+				FROM productos_conjunto
+				WHERE producto_id='$producto_id' ";
+				
+				$statement=$this->connect->prepare($sql);
+				$statement->execute();
+				$result=$statement->fetchAll(PDO::FETCH_ASSOC);
+				$array_stock=array();
+					
+				foreach($result as $r)
+				{
+					$producto_id=$r['producto_conjunto_id'];
+					$cantidad_n=$r['cantidad'];
+					
+					$cantidad=$cantidad_n*$cantidad;
+					
+					if(array_key_exists($producto_id,$producto))
+					{
+						$producto[$producto_id]=$producto[$producto_id]+$cantidad;
+					}
+					else
+					{
+						$producto[$producto_id]=$cantidad;
+					}
+				}
+			}
+			else
+			{
+				if(array_key_exists($producto_id,$producto))
+				{
+					$producto[$producto_id]=$producto[$producto_id]+$cantidad;
+				}
+				else
+				{
+					$producto[$producto_id]=$cantidad;
+				}
+			}			
+		}
+		
+		
+		foreach($producto as $producto_id=>$p)
+		{
+			$cantidad=$p;
+			$stock=$this->GetStockbySucursal($producto_id,$sucursal_id);
+				
+			if($stock<$cantidad)
+			{
+				$r=$productos->GetDataProduct($producto_id);
+			
+				return array("producto_id"=>$producto_id,"producto_name"=>$r[0]['producto_name'],"producto_sku"=>$r[0]['producto_sku'],"stock"=>$stock,"solicitado"=>$cantidad);
+			}
+		}
+		
+		/*foreach($data as $d)
 		{
 			$producto_id=$d['id'];
 			$cantidad=$d['cantidad'];
@@ -379,7 +444,7 @@ class Inventarios
 				
 				return array("producto_id"=>$producto_id,"producto_name"=>$r[0]['producto_name'],"producto_sku"=>$r[0]['producto_sku'],"stock"=>$stock);
 			}
-		}
+		}*/
 		
 		return false;
 	}
