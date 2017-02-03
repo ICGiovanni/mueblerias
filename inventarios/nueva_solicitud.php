@@ -137,7 +137,7 @@ $(document).ready(function()
 	
 	var options=
 	{
-		url: "../productos/get_products_unique.php",
+		url: "../productos/get_products_inventary.php",
 		getValue: function(element)
 		{
 			var name=element.producto_sku+' '+element.producto_name;
@@ -311,7 +311,7 @@ $(document).ready(function()
 		{
 			var sucursal=$("#origen").val();
 
-			if(sucursal!='')
+			if(sucursal!='0')
 			{
 				var products=new Array();
 			        

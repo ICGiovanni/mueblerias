@@ -448,7 +448,7 @@ class Inventarios
 		
 		return false;
 	}
-	
+		
 	public function GetStockbySucursal($product_id,$sucursal_id="")
 	{
 		$productos=new Productos();
@@ -472,6 +472,7 @@ class Inventarios
 				$producto_id=$r['producto_conjunto_id'];
 				$cantidad=$r['cantidad'];
 				
+				$where="";
 				if($sucursal_id)
 				{
 					$where=" AND sucursal_id='$sucursal_id'";
@@ -527,6 +528,25 @@ class Inventarios
 			
 			return $result[0]['stock'];
 		}				
+	}
+	
+	public function GetStockVariation($producto_id)
+	{
+		$sql="SELECT p.producto_id
+		FROM productos p
+		WHERE producto_parent='$producto_id'";
+		
+		$statement=$this->connect->prepare($sql);
+		$statement->execute();
+		$result_variation=$statement->fetchAll(PDO::FETCH_ASSOC);
+		
+		$stock="";
+		foreach($result_variation as $v)
+		{
+			$stock=$stock+($this->GetStockbySucursal($v['producto_id']));
+		}
+		
+		return $stock;
 	}
 		
 }

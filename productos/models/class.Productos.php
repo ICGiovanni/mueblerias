@@ -722,6 +722,31 @@ class Productos
 		return $result;
 	}
 	
+	public function GetProductsInventary()
+	{
+		$sql="SELECT p.producto_id,p.producto_sku,p.producto_name,
+				IF((SELECT imagen_route
+				FROM imagenes_productos ip
+				WHERE ip.producto_id=p.producto_id
+				ORDER BY imagen_id ASC
+				limit 0,1)!='',
+				(SELECT imagen_route
+				FROM imagenes_productos ip
+				WHERE ip.producto_id=p.producto_id
+				ORDER BY imagen_id ASC
+				limit 0,1),'".FINAL_URL."img/imagen-no.png') AS imagen,
+				producto_price_public,producto_description
+				FROM productos p
+				WHERE producto_type IN('U','V')
+				ORDER BY p.producto_name ASC";
+	
+		$statement=$this->connect->prepare($sql);
+		$statement->execute();
+		$result=$statement->fetchAll(PDO::FETCH_ASSOC);
+	
+		return $result;
+	}
+	
 	public function GetProductsSell()
 	{
 		$sql="SELECT p.producto_id,p.producto_sku,p.producto_name,
@@ -755,13 +780,7 @@ class Productos
 				c.color_id,c.color_name,c.color_abrev,
 				m.material_id,m.material_name,m.material_abrev,
 				p.producto_price_public,p.producto_price_public_min,
-				p.producto_price_public_discount,
-				IF((SELECT SUM(cantidad)
-				FROM inventario_productos
-				WHERE producto_id=p.producto_id)!='',
-				(SELECT SUM(cantidad)
-				FROM inventario_productos
-				WHERE producto_id=p.producto_id),0) AS stock
+				p.producto_price_public_discount
 				FROM productos p
 				INNER JOIN colores c USING(color_id)
 				INNER JOIN materiales m USING(material_id)
@@ -777,7 +796,37 @@ class Productos
 		{
 			$stock=$inventarios->GetStockbySucursal($r['producto_id']);
 			
-			$arrayStock=array();
+			$result[$key]['stock']=$stock;
+			
+			$sql="SELECT s.sucursal_id,s.sucursal_name,s.sucursal_abrev
+					FROM inv_sucursales s";
+			
+			$statement=$this->connect->prepare($sql);
+			$statement->execute();
+			$sucursales=$statement->fetchAll(PDO::FETCH_ASSOC);
+			
+			$i=0;
+			foreach($sucursales as $s)
+			{
+				$stock=$inventarios->GetStockbySucursal($r['producto_id'],$s['sucursal_id']);
+				
+				if($stock)
+				{
+					$result[$key]['stock_sucursal'][$i]['sucursal_id']=$s['sucursal_id'];
+					$result[$key]['stock_sucursal'][$i]['sucursal_name']=$s['sucursal_name'];
+					$result[$key]['stock_sucursal'][$i]['sucursal_abrev']=$s['sucursal_abrev'];
+					$result[$key]['stock_sucursal'][$i]['stock']=$stock;
+					
+					$i++;
+				}
+			}
+			
+			if($i==0)
+			{
+				$result[$key]['stock_sucursal']=array();
+			}
+			
+			/*$arrayStock=array();
 			foreach($stock as $k=>$s)
 			{
 				if($s['sucursal_name']!='')
@@ -792,7 +841,7 @@ class Productos
 			{
 				$result[$key]['stock_sucursal']=array();
 			}
-			
+			*/
 			$conjunto=$this->GetConjuntosProduct($r['producto_id']);
 			
 			if(count($conjunto))
@@ -891,18 +940,6 @@ class Productos
 				WHEN 'V' THEN 'GENERAL'
 				END AS producto_type_name,producto_type,
 				producto_conjunto,
-				IF(producto_type='P',
-				(SELECT SUM(cantidad)
-				FROM inventario_productos
-				WHERE producto_id IN(SELECT producto_id
-				FROM productos
-				WHERE producto_parent=p.producto_id)),
-				IF((SELECT SUM(cantidad)
-				FROM inventario_productos
-				WHERE producto_id=p.producto_id)!='',
-				(SELECT SUM(cantidad)
-				FROM inventario_productos
-				WHERE producto_id=p.producto_id),0)) AS stock,
 				producto_description_corta,producto_description
 				FROM productos p
 				WHERE producto_type IN('U','P')
