@@ -204,6 +204,7 @@ cursor: default;
                     <tbody id="productos">
                     <?php
                     $producto=new Productos();
+                    
                     $productos=$producto->GetDataProductsMainJson();
                     
                    	$productos=json_decode($productos);
@@ -220,9 +221,8 @@ cursor: default;
                     	$description=$p->producto_description;
                     	$price_utilitarian=$p->producto_price_purchase;
                     	$price_public=$p->producto_price_public;
-                    	$stock=$p->stock;
                     	
-                    	
+                    	                    	
                     	$color="";
                     	foreach($p->colores as $c)
                     	{
@@ -256,6 +256,16 @@ cursor: default;
                     	$tr.='<td>'.$color.'</td>';
                     	$tr.='<td>'.$material.'</td>';
                     	$tr.='<td>'.$categoria.'</td>';
+                    	
+                    	if($tipo_abbrev=='P')
+                    	{
+                    		$stock=$inventarios->GetStockVariation($producto_id);                    		
+                    	}
+                    	else if($tipo_abbrev=='U') 
+                    	{
+                    		$stock=$inventarios->GetStockbySucursal($producto_id);
+                    	}
+                    	
                     	                    	
                     	if($stock>0 && $tipo_abbrev!='P')
                     	{
@@ -271,7 +281,7 @@ cursor: default;
                     		{
                     			$stock=0;
                     		}
-                    		
+                    		$stock="-";
                     		$tr.='<td align="center">'.$stock.'</td>';
                     	}
                     	$tr.='<td>';
@@ -288,7 +298,7 @@ cursor: default;
                     	
                     }
                     
-                    echo $tr;         
+                    echo $tr;      
                     ?>
                    
                     </tbody>
