@@ -90,7 +90,7 @@ foreach($list as $key => $value){
                             <th>Categoria</th>                            
                             <th>Color</th>
                             <th>Material</th>                                                        
-                            <th>Precio</th>
+                            <th>Precio Lista</th>
                             <th>Galeria</th>
                             <th>Acciones</th>                            
                         </tr>

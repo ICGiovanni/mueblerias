@@ -21,10 +21,8 @@
 		</ol>
 	</div>
 	<div class="col-sm-8">
-		<div class="title-action">
-			<button type="button" class="btn btn-primary btn-xs"  onclick="location.href = 'newUser.php';" >
-			Nuevo Usuario
-			</button>
+		<div class="title-action">			
+                    <a href="newUser.php" class="btn btn-primary btn-xs">+ Nuevo Usuario</a>			
 		</div>
 	</div>
 </div>

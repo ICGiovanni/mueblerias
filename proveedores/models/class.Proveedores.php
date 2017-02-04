@@ -275,11 +275,13 @@ class Proveedor {
     {
         $where = '';
         if($proveedor_id!=''){
-            $where = " WHERE p.proveedor_id='$proveedor_id'";
+            $where = " AND p.proveedor_id='$proveedor_id'";
         }
         $sql="SELECT p.producto_id,p.producto_name,p.producto_sku,
                         p.producto_price_purchase,p.producto_price_public,p.proveedor_id
-                        FROM productos p".
+                        FROM productos p
+                        WHERE producto_type IN ('V', 'U')
+                        ".
                         $where.
                         " ORDER BY p.producto_id";
 
