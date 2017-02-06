@@ -335,11 +335,11 @@ cursor: default;
 	           	
 	           	<div class="col-sm-12" >
 	           	           	
-	           	<table class="table table-striped">
+	           	<table class="footable table table-bordered dataTables-example toggle-square">
 	           	<thead>
 					<tr>
-						<td>Sucursal</td>
-						<td>Cantidad</td>
+						<td style="text-align:center;">Sucursal</td>
+						<td style="text-align:center;">Cantidad</td>
 					</tr>
 				</thead>
 	           	<tbody id="products_table_list">
@@ -562,8 +562,10 @@ cursor: default;
         			$.each(result, function(i, field)
         			{
         				tr+='<tr>';
-        				tr+='<td>'+field.sucursal_name+'</td>';
-        				tr+='<td>'+field.stock+'</td>';
+        				tr+='<td style="text-align:center;">'+field.sucursal_name+'</td>';
+        				tr+='<td style="text-align:center;">';
+        				tr+='<label>'+field.stock+'</label>';
+        				tr+='</td>';
         				tr+='</tr>';
         						
 					});

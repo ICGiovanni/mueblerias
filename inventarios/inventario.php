@@ -40,7 +40,7 @@ else if($type=='c')
 else if($type=='is')
 {
 	$product_id=$_REQUEST['id'];
-	$result=$inventarios->GetStockbySucursal($product_id);
+	$result=$inventarios->GetStockSucursalbyProduct($product_id);
 	echo json_encode($result);
 }
 else if($type=='cp')

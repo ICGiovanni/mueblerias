@@ -548,5 +548,35 @@ class Inventarios
 		
 		return $stock;
 	}
+	
+	public function GetStockSucursalbyProduct($producto_id)
+	{
+		$result=array();
+		
+		$sql="SELECT s.sucursal_id,s.sucursal_name,s.sucursal_abrev
+					FROM inv_sucursales s";
+			
+		$statement=$this->connect->prepare($sql);
+		$statement->execute();
+		$sucursales=$statement->fetchAll(PDO::FETCH_ASSOC);
+			
+		$i=0;
+		foreach($sucursales as $s)
+		{
+			$stock=$this->GetStockbySucursal($producto_id,$s['sucursal_id']);
+			
+			if($stock)
+			{
+				$result[$i]['sucursal_id']=$s['sucursal_id'];
+				$result[$i]['sucursal_name']=$s['sucursal_name'];
+				$result[$i]['sucursal_abrev']=$s['sucursal_abrev'];
+				$result[$i]['stock']=$stock;
+					
+				$i++;
+			}
+		}
+		
+		return $result;
+	}
 		
 }
