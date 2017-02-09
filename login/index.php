@@ -17,7 +17,7 @@
             <div class="clear"></div>
             <form class="m-t" method="post" role="form" action="login.php">
                 <div class="input-group m-b">
-                    <div style="display: inline-block; vertical-align: middle; width: 55%">
+                    <div style="display: inline-block; vertical-align: middle; width: 63%">
                         <input type="text" name="email" value="<?php if (isset($_GET['email'])){echo base64_decode($_GET['email']);}?>" placeholder="Usuario" class="form-control" autocomplete="off">
                     </div>    
                     <div style="display: inline-block; vertical-align: middle; font-size: 14px">&nbsp;@globmint.com</div>

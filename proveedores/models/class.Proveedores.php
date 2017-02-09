@@ -87,10 +87,12 @@ class Proveedor {
 	
     public function getProveedor($proveedor_id)
     {
-        $sql="SELECT 
+        $sql="SELECT
         proveedor_id,
-        proveedor_nombre, 
-        telefono, 
+        proveedor_nombre,
+        proveedor_nombre_fiscal,
+        proveedor_representante,
+        telefono,
         email,
         address_id
         FROM ".$this->name_table." WHERE proveedor_id = :proveedor_id";

@@ -36,10 +36,10 @@ require_once $pathProy.'/menu.php';
                         <tr>                            
                             <th>Nombre Comercial</th>
                             <th>Nombre Fiscal</th>
+                            <th width='120px'><center>Dirección</center></th>
                             <th>Representante</th>
                             <th>Telefono</th>
-                            <th>E-mail</th>
-                            <th width='120px'><center>Dirección</center></th>
+                            <th>E-mail</th>                            
                             <th width='60px'><center>Accion</center></th>                            
                         </tr>
                         </thead>
