@@ -5,8 +5,12 @@ require_once $pathProy.'/menu.php';
 require_once $pathProy.'/clientes/models/class.Clientes.php';
 
 $insClientes = new Clientes();
-?>
 
+$phones = '';
+foreach($insClientes->GetTypesPhones() as $type){
+    $phones .= '<option value="'.$type['phone_type_id'].'">'.$type['type'].'</option>';
+}
+?>  
 <div class="row wrapper border-bottom white-bg page-heading">
     <div class="col-sm-4">
         <h2>Proveedores</h2>
@@ -58,7 +62,7 @@ $insClientes = new Clientes();
                 </div>                                                     
                 <div class="form-group">                      
                     <label class="control-label col-md-2">Telefono:</label>                        
-                        <div class="col-md-2">                            
+                        <div class="col-md-3">                            
                             <input class="form-control" id="telefono" name="telefono[]" value="" type="text">                                            
                         </div>    
                         <div class="col-md-2">
@@ -115,7 +119,17 @@ $insClientes = new Clientes();
                     <div class="col-md-6">                        
                         <select id="estado" name="estado" class="form-control m-b">
                             <option value="0">Selecciona un estado</option>
-                        </select>
+                            <?php 
+                            $estados = json_decode(file_get_contents($ruta.'/clientes/json/states_json.php'));                            
+                            foreach($estados as $estado){
+                                $selected = '';
+                                if($estado->id_estado == $addres['state']){
+                                    $selected = 'selected = "selected"';
+                                }
+                                echo "<option value='".$estado->id_estado."' ".$selected.">".$estado->estado."</option>";                            
+                            }
+                            ?>    
+                        </select>  
                     </div>                            
                 </div>  
                 <div class="form-group">                      
@@ -137,9 +151,18 @@ $insClientes = new Clientes();
 ?>
 
 <script src="<?php echo $raizProy?>js/plugins/sweetalert/sweetalert.min.js"></script>
+<script src="<?php echo $raizProy?>js/plugins/chosen/chosen.jquery.js"></script>
 
+<link href="<?php echo $raizProy?>css/plugins/chosen/chosen.css" rel="stylesheet">
 <link href="<?php echo $raizProy?>css/plugins/dataTables/datatables.min.css" rel="stylesheet">
 <link href="<?php echo $raizProy?>css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
 
 <script src="js/proveedores.js"></script>
 
+<script>
+ $(document).ready(function(){
+    $("#estado").chosen();
+    phones = '<?php echo $phones ?>';
+ });   
+ 
+</script>

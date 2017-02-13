@@ -15,12 +15,13 @@ require_once($_SERVER["REDIRECT_PATH_CONFIG"].'productos/models/class.Productos.
 $productos = new Productos();
 
 $images = $productos->GetImagesProduct($producto_id);
-$dataProduct = end(json_decode($productos->GetDataProductsMainJson($producto_id)));
-/*
+$getDataP= json_decode($productos->GetDataProductsMainJson($producto_id));
+$dataProduct = end($getDataP);
+
 echo "<pre>";
     print_r($dataProduct);
 echo "</pre>";
-*/
+
 ?>
 <link href="<?php echo $raizProy?>css/plugins/slick/slick.css" rel="stylesheet">
 <link href="<?php echo $raizProy?>css/plugins/slick/slick-theme.css" rel="stylesheet">

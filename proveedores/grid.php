@@ -100,7 +100,7 @@ echo "<pre>";*/
                                 </select>
                             </div>
 			</td>                    
-                        <td colspan="2">
+                        <td colspan="2" style='padding: 5px; vertical-align: top;'>
                             <button type="button" class="btn btn-primary btn-xs" id="filtar">Filtrar</button> &nbsp;&nbsp;&nbsp;
                             <button type="button" class="btn btn-warning btn-xs"  onclick="location.href = 'grid.php';" >Limpiar</button>
 			</td>

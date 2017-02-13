@@ -15,11 +15,15 @@ require_once $pathProy.'/login/models/class.Login.php';
 $insClientes = new Clientes();
 $insProveedores = new Proveedor();
 $insLogin = new Login();
-
-$proveedor = end($insProveedores->getProveedor($id));
+$infoProv = $insProveedores->getProveedor($id);
+$proveedor = end($infoProv);
 $addres = $insLogin->getAddress($proveedor['address_id']);
 $telefonos = $insProveedores->getProveedorPhone($id);
 
+$phones = '';
+foreach($insClientes->GetTypesPhones() as $type){
+    $phones .= '<option value="'.$type['phone_type_id'].'">'.$type['type'].'</option>';
+}
 ?>
 
 <div class="row wrapper border-bottom white-bg page-heading">
@@ -95,8 +99,14 @@ $telefonos = $insProveedores->getProveedorPhone($id);
                     <div class="col-md-2">
                         <select id="phoneType" name="phoneType[]" class="form-control">
                              <?php 
+                                                                                                
                                 foreach($insClientes->GetTypesPhones() as $type){
-                                    echo '<option value="'.$type['phone_type_id'].'">'.$type['type'].'</option>';
+                                    $selected = '';
+                                    if($type['phone_type_id'] == $telefono['phone_type_id']){
+                                        $selected = 'selected = "selected"';
+                                        
+                                    }
+                                    echo '<option value="'.$type['phone_type_id'].'" '.$selected.'>'.$type['type'].'</option>';
                                 }
                             ?>   
                         </select>
@@ -179,7 +189,7 @@ $telefonos = $insProveedores->getProveedorPhone($id);
                 <div class="form-group">                      
                     <div class="col-md-8 text-right">                                                
                         <a href='<?php echo $ruta.'proveedores/'?>' class="btn btn-danger btn-xs" >Cancelar</a> 
-                        <button type="button" class="btn btn-primary btn-xs" id="btn_guardar_proveedor" >Guardar</button>
+                        <button type="button" class="btn btn-primary btn-xs" id="btn_editar_proveedor" >Guardar</button>
                     </div>                            
                 </div> 
             </div> 
@@ -195,9 +205,17 @@ $telefonos = $insProveedores->getProveedorPhone($id);
 ?>
 
 <script src="<?php echo $raizProy?>js/plugins/sweetalert/sweetalert.min.js"></script>
+<script src="<?php echo $raizProy?>js/plugins/chosen/chosen.jquery.js"></script>
 
+<link href="<?php echo $raizProy?>css/plugins/chosen/chosen.css" rel="stylesheet">
 <link href="<?php echo $raizProy?>css/plugins/dataTables/datatables.min.css" rel="stylesheet">
 <link href="<?php echo $raizProy?>css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
 
 <script src="js/proveedores.js"></script>
-
+<script>
+ $(document).ready(function(){
+    $("#estadoEdit").chosen();
+    phones = '<?php echo $phones ?>';
+ });   
+ 
+</script>

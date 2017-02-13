@@ -35,7 +35,7 @@
                     
                     <li class="<?php if (stristr($_SERVER['SCRIPT_NAME'],'/gastos/')){ echo 'active';}?>">
                         <a href="<?php echo $ruta.'gastos/'?>">
-                            <i class="fa fa-user"></i> <span class="nav-label">Gastos</span>
+                            <i class="fa fa-money"></i> <span class="nav-label">Gastos</span>
                         </a>
                         <ul class="nav nav-second-level">
                             <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/gastos/index.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'gastos/'?>" >Lista de Gastos</a></li>
@@ -56,7 +56,7 @@
 					
                    <li class="<?php if (stristr($_SERVER['SCRIPT_NAME'],'/clientes/')){ echo 'active';}?>">
                         <a href="<?php echo $ruta.'clientes/'?>">
-                            <i class="fa fa-user"></i> <span class="nav-label">Clientes</span>
+                            <i class="fa fa-users"></i> <span class="nav-label">Clientes</span>
                         </a>
                         <ul class="nav nav-second-level">
                             <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/clientes/index.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'clientes/index.php'?>" >Lista de Clientes</a></li>
@@ -65,7 +65,7 @@
                     </li>  
 					<li class="<?php if (stristr($_SERVER['SCRIPT_NAME'],'/publicidad/')){ echo 'active';}?>">
                         <a href="<?php echo $ruta.'publicidad/'?>">
-                            <i class="fa fa-user"></i> <span class="nav-label">Campañas</span>
+                            <i class="fa fa-envelope"></i> <span class="nav-label">Campañas</span>
                         </a>
                         <ul class="nav nav-second-level">
                             <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/publicidad/index.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'publicidad/index.php'?>" >Lista de campañas</a></li>
@@ -76,7 +76,7 @@
 					
 					<li class="<?php if (stristr($_SERVER['SCRIPT_NAME'],'/productos/')){ echo 'active';}?>">
                         <a href="<?php echo $ruta.'productos/'?>">
-                            <i class="fa fa-user"></i> <span class="nav-label">Productos</span>
+                            <i class="fa fa-cubes"></i> <span class="nav-label">Productos</span>
                         </a>
                         <ul class="nav nav-second-level">
 							<li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/productos/index.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'productos/'?>" >Lista de productos</a></li>
@@ -97,7 +97,7 @@
 					
                     <li class="<?php if (stristr($_SERVER['SCRIPT_NAME'],'/inventarios/')){ echo 'active';}?>">
                         <a href="<?php echo $ruta.'inventarios/'?>">
-                            <i class="fa fa-user"></i> <span class="nav-label">Inventarios</span>
+                            <i class="fa fa-line-chart"></i> <span class="nav-label">Inventarios</span>
                         </a>
                         <ul class="nav nav-second-level">
                             <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/inventarios/index.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'inventarios/'?>" >Lista</a></li>							
@@ -107,7 +107,7 @@
 					
                     <li class="<?php if (stristr($_SERVER['SCRIPT_NAME'],'/proveedores/')){ echo 'active';}?>">
                         <a href="<?php echo $ruta.'proveedores/'?>">
-                            <i class="fa fa-user"></i> <span class="nav-label">Catalogos</span>
+                            <i class="fa fa-list"></i> <span class="nav-label">Catalogos</span>
                         </a>
                         <ul class="nav nav-second-level">
                             <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/proveedores/index.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'proveedores/'?>" >Lista de proveedores</a></li>                            
@@ -116,10 +116,17 @@
                             <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/proveedores/grid.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'proveedores/grid.php'?>" >Catalogo de productos</a></li>                            
                         </ul>
                     </li>
-                    
+                    <li class="<?php if (stristr($_SERVER['SCRIPT_NAME'],'/ventas/')){ echo 'active';}?>">
+                        <a href="<?php echo $ruta.'ventas/'?>">
+                            <i class="fa fa-shopping-cart"></i> <span class="nav-label">Ventas</span>
+                        </a>
+                        <ul class="nav nav-second-level">
+                            <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/ventas/index.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'ventas/index.php'?>" >Realizar Venta</a></li>                                                                                    
+                        </ul>
+                    </li>
                     <li class="<?php if (stristr($_SERVER['SCRIPT_NAME'],'/calendario/')){ echo 'active';}?>">
                         <a href="<?php echo $ruta.'calendario/'?>">
-                            <i class="fa fa-user"></i> <span class="nav-label">Calendario</span>
+                            <i class="fa fa-calendar"></i> <span class="nav-label">Calendario</span>
                         </a>
                         <ul class="nav nav-second-level">
                             <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/calendario/index.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'calendario/index.php'?>" >Vista Mensual</a></li>                                                        

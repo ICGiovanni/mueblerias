@@ -30,6 +30,9 @@ $listaPedidos = $pedidos->getPedidos();
     </div>
     <div class="col-sm-8">
         <div class="title-action">
+            <a href='<?php echo $ruta.'proveedores/nuevoPedido.php'?>' class="btn btn-primary btn-xs" >
+                + Nuevo Pedido 
+            </a>
         </div>
     </div>
 </div>

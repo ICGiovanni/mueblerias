@@ -1,7 +1,7 @@
 
 $(document).ready(function(){                        
     
-    $('#data_1 .input-group.date').datepicker({
+    $('.input-group.date').datepicker({
         todayBtn: "linked",
         keyboardNavigation: false,
         forceParse: false,
@@ -10,23 +10,19 @@ $(document).ready(function(){
     });
     
     $("#agregarTelefono").click(function(){
-        $("#newPhone").append("<div>"+
-                                "<div class='clear'>&nbsp;</div>"+
-                                "<div class='row'><div class='col-md-2'>&nbsp;</div>"+
-                                "<div class='col-md-2'><input class='form-control' name='telefono[]' value='' type='text'></div>"+
+        $("#newPhone").append(  "<div class='form-group'>"+
+                                "<div class='col-sm-2'>&nbsp;</div>"+
+                                "<div class='col-md-3'><input class='form-control' name='telefono[]' value='' type='text'></div>"+
                                 "<div class='col-md-2'>"+
                                     "<select id='phoneType' name='phoneType[]' class='form-control'>"+
-                                        "<option value='1'>Celular</option>"+
-                                        "<option value='2'>Casa</option>"+
-                                        "<option value='3'>Oficina</option>"+
-                                        "<option value='4'>Otro</option>"+
+                                        phones+                                        
                                     "</select>"+
                                 "</div>"+
-                                "<div class='col-md-1'><button class='btn btn-danger btn-xs deletePhone' value='' type='button'><i class='fa fa-times'></i></button></div>"+
-                               "</div></div>");
+                                "<div class='col-md-1' style='padding-top: 5px'><button class='btn btn-danger btn-xs deletePhone' value='' type='button'><i class='fa fa-times'></i></button></div>"+
+                               "</div>");
                        
         $(".deletePhone").click(function(){            
-            $(this).parent().parent().parent().remove();
+            $(this).parent().parent().remove();
         });               
     });
     
@@ -44,7 +40,8 @@ $(document).ready(function(){
     $.getJSON("../clientes/json/states_json.php",function(result){        
         $.each(result, function(i, field){
             $("#estado").append('<option value="'+field.id_estado+'" >'+field.estado+'</option>');
-        });        
+        }); 
+        $("#estado").chosen();
     });
 
 });

@@ -12,8 +12,8 @@ $(document).ready(function(){
     $("#agregarTelefono").click(function(){
         $("#newPhone").append("<div>"+
                                 "<div class='clear'>&nbsp;</div>"+
-                                "<div class='row'><div class='col-md-3'>&nbsp;</div>"+
-                                "<div class='col-md-2'><input class='form-control' name='telefono[]' value='' type='text'></div>"+
+                                "<div class='row'><div class='col-md-2'>&nbsp;</div>"+
+                                "<div class='col-md-3'><input class='form-control' name='telefono[]' value='' type='text' style='margin-left: 10px;width: 225px;'></div>"+
                                 "<div class='col-md-2'>"+
                                     "<select id='phoneType' name='phoneType[]' class='form-control'>"+
                                         "<option value='1'>Celular</option>"+
@@ -22,7 +22,7 @@ $(document).ready(function(){
                                         "<option value='4'>Otro</option>"+
                                     "</select>"+
                                 "</div>"+
-                                "<div class='col-md-1'><button class='btn btn-danger btn-xs deletePhone' value='' type='button'><i class='fa fa-times'></i></button></div>"+
+                                "<div class='col-md-1' style='padding-top: 5px'><button class='btn btn-danger btn-xs deletePhone' value='' type='button'><i class='fa fa-times'></i></button></div>"+
                                "</div></div>");
                        
         $(".deletePhone").click(function(){            

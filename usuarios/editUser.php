@@ -2,7 +2,15 @@
 
         include $pathProy.'login/models/class.Login.php';
         require_once($_SERVER["REDIRECT_PATH_CONFIG"].'models/general/class.General.php');
-                
+        require_once $pathProy.'/clientes/models/class.Clientes.php';
+        
+        $insClientes = new Clientes();
+        $phones = '';
+        foreach($insClientes->GetTypesPhones() as $type){
+            $phones .= '<option value="'.$type['phone_type_id'].'">'.$type['type'].'</option>';
+        }
+        
+            
         $userLogin = new Login();
         
         $profiles = $userLogin->getProfiles();
@@ -42,65 +50,48 @@
         </ol>
     </div>
     <div class="col-sm-8">
-        <div class="title-action">
-
+        <div class="title-action">			
+            <a href="./index.php" class="btn btn-warning btn-xs"><i class="fa fa-arrow-left"></i> Regresar a listado</a>            
         </div>
     </div>
 </div> 
 <div class="clear">&nbsp;</div>      
 <div class="row">    
-    <div class="col-lg-12">        
-        <div class="animated fadeIn">                                    
-            <div class="row">
-                <div class="col-md-3 text-right">
-                    <label for="firstName" class="control-label">Nombre:</label>
-                </div>
-                <div class="col-md-5">
+    <div class="col-lg-12">           
+        <div class="wrapper wrapper-content animated fadeInRight form-horizontal">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Nombre</label>
+		<div class="col-sm-6" >
                     <input type="text" id="firstName" value="<?php echo $infoUser['firstName'] ?>" class="form-control" >
-                </div>    
-            </div>
-            <div class="clear">&nbsp;</div>
-            <div class="row">
-                <div class="col-md-3 text-right">
-                    <label class="control-label">Apellido paterno:</label>
                 </div>
-                <div class="col-md-5">
+            </div>                        
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Apellido Paterno</label>
+		<div class="col-sm-6" >
                     <input type="text" id="lastName" value="<?php echo $infoUser['lastName'] ?>"  class="form-control" >
-                </div>    
-            </div>                    
-            <div class="clear">&nbsp;</div>
-            <div class="row">
-                <div class="col-md-3 text-right">
-                    <label class="control-label">Apellido materno:</label>
                 </div>
-                <div class="col-md-5">
+            </div>  
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Apellido Materno</label>
+		<div class="col-sm-6" >
                     <input type="text" id="secondLastName" value="<?php echo $infoUser['secondLastName'] ?>"  class="form-control" >
-                </div>    
-            </div>
-            <div class="clear">&nbsp;</div>
-            <div class="row">
-                <div class="col-md-3 text-right">
-                    <label class="control-label">Correo electrónico:</label>
                 </div>
-                <div class="col-md-5">
+            </div>  
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Correo Electrónico</label>
+		<div class="col-sm-6" >
                     <input type="text" id="email" value="<?php echo $infoUser['email'] ?>" class="form-control" >
-                </div>    
-            </div>
-            <div class="clear">&nbsp;</div>
-            <div class="row">
-                <div class="col-md-3 text-right">
-                    <label class="control-label">Contraseña:</label>
                 </div>
-                <div class="col-md-5">
+            </div>  
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Contraseña</label>
+		<div class="col-sm-6" >
                     <input type="password" id="password" value="******" class="form-control" >
-                </div>    
-            </div>                    
-            <div class="clear">&nbsp;</div>            
-            <div class="row">
-                <div class="col-md-3 text-right">
-                    <label class="control-label">Perfil:</label>
                 </div>
-                <div class="col-md-5">
+            </div>  
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Perfil</label>
+		<div class="col-sm-6" >
                     <select id="perfil" class="form-control">                        
                         <?php 
                         foreach($profiles as $profile){
@@ -112,14 +103,11 @@
                         }
                         ?>                        
                     </select>
-                </div>    
-            </div>                    
-            <div class="clear">&nbsp;</div>
-            <div class="row">
-                <div class="col-md-3 text-right">
-                    <label class="control-label">Sucursal:</label>
                 </div>
-                <div class="col-md-5">
+            </div>  
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Sucursal</label>
+		<div class="col-sm-6" >
                     <select id="sucursal" class="form-control">
                         <option value="0">Selecciona una sucursal</option>
                         <option value="0">Sin Sucursal</option>
@@ -133,50 +121,46 @@
                         }
                         ?> 
                     </select>
-                </div>    
-            </div>                                                        
-            <div class="clear">&nbsp;</div>
-            <div class="row">
-                <div class="col-md-3 text-right">
-                    <label class="control-label">Comision:</label>
                 </div>
-                <div class="col-md-5">
+            </div>  
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Comision</label>
+		<div class="col-sm-6" >
                     <input class="form-control" id="comision" value="<?php echo $infoUser['comision'] ?>" placeholder="%" type="text">
-                </div>    
-            </div>                    
-            <div class="clear">&nbsp;</div>
-            <div class="row">
-                <div class="col-md-3 text-right">
-                    <label class="control-label">Salario:</label>
                 </div>
-                <div class="col-md-5">
+            </div>  
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Salario</label>
+		<div class="col-sm-6" >
                     <input class="form-control" id="salario" value="<?php echo $infoUser['salary'] ?>" type="text">
-                </div>                            
-            </div>
-            <div class="clear">&nbsp;</div>            
-            <div class="row">
-                <div class="col-md-3 text-right">
-                    <label class="control-label">Periodicidad de pago:</label>
                 </div>
-                <div class="col-md-5">
+            </div>  
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Periodicidad de pago</label>
+		<div class="col-sm-6" >
                     <select id="periodicidad" class="form-control">                        
                        <option value="0">Selecciona una opción</option>
                         <option value="1" <?php if( $infoUser['salary_periodicity']==1){ echo "selected";} ?>>Semanal</option>
                         <option value="2" <?php if( $infoUser['salary_periodicity']==2){ echo "selected";} ?>>Quincenal</option>
                         <option value="3" <?php if( $infoUser['salary_periodicity']==3){ echo "selected";} ?>>Mensual</option>                   
                     </select>
-                </div>    
-            </div> 
+                </div>
+            </div>                                      
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Salario</label>
+		<div class="col-sm-6" >
+                    <input class="form-control" id="salario" value="<?php echo $infoUser['salary'] ?>" type="text">
+                </div>
+            </div>                              
                                              
             <?php 
             $i=0;
             if(is_array($telefonos))
             foreach($telefonos as $telefono){
             ?>
-            <div>
-            <div class="clear">&nbsp;</div>
+            <div>            
             <div class="row">
-                <div class="col-md-3 text-right">
+                <div class="col-md-2 text-right">
                     <?php 
                         if($i==0){
                     ?>
@@ -185,7 +169,7 @@
                         }
                     ?>    
                 </div>
-                <div class="col-md-2">                            
+                <div class="col-md-3">                            
                     <input class="form-control" id="telefono" name="telefono[]" value="<?php echo $telefono['number'] ?>" type="text">                                            
                 </div>    
                 <div class="col-md-2">
@@ -196,7 +180,7 @@
                         <option value="4" <?php if($telefono['phone_type_id']==4){echo "selected";}?>>Otro</option>
                     </select>
                 </div>
-                <div class="col-md-1">                            
+                <div class="col-md-1" style='padding-top: 5px'>                            
                     <?php 
                         if($i==0){
                     ?>
@@ -216,82 +200,54 @@
             $i++;
             }
             ?> 
-            <div>
+             
+            <div class="form-group" id="newPhone"></div>
             
-            </div>  
-            <div class="row" id="newPhone">
-
-            </div>
-            <div class="clear">&nbsp;</div>
-            <div class="row">
-                <div class="col-md-3 text-right">
-                    <label class="control-label">Fecha de nacimiento:</label>
-                </div>
-                <div class="col-md-5">
-                    <div class="form-group" id="data_1">            
-                        <div class="input-group date">
-                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span><input class="form-control" value="<?php echo $infoUser['birthdate'] ?>" type="text" id="fechaNacimiento">
-                        </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Fecha de nacimiento</label>
+		<div class="col-sm-6" id="data_1">
+                    <div class="input-group date">
+                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span><input class="form-control" value="<?php echo $infoUser['birthdate'] ?>" type="text" id="fechaNacimiento">
                     </div>
-                </div>                            
-            </div>
-            <div class="clear">&nbsp;</div>
-            <div class="row">
-                <div class="col-md-3 text-right">
-                    <label class="control-label">Calle:</label>
                 </div>
-                <div class="col-md-5">                            
+            </div> 
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Calle</label>
+                <div class="col-sm-6" >
                     <input class="form-control" id="calle" name="calle" value="<?php echo $address['street'] ?>" type="text">                            
-                </div>                            
-            </div>
-            <div class="clear">&nbsp;</div>
-            <div class="row">
-                <div class="col-md-3 text-right">
-                    <label class="control-label">No. Exterior:</label>
                 </div>
-                <div class="col-md-1">                            
+            </div>             
+            <div class="form-group">
+                <label class="col-sm-2 control-label">No. Exterior</label>
+                <div class="col-sm-2" >
                     <input class="form-control" id="numExt" name="numExt" value=" <?php echo $address['number'] ?>" type="text">                            
-                </div>                                                    
-                <div class="col-md-2 text-right">
-                    <label class="control-label">No. Interior:</label>
                 </div>
-                <div class="col-md-1">                            
+                <label class="col-sm-2 control-label">No. Interior</label>
+                <div class="col-sm-2" >
                     <input class="form-control" id="numInt" name="numInt" value="<?php echo $address['int_number'] ?>" type="text">                            
                 </div>
             </div>
-            <div class="clear">&nbsp;</div>
-            <div class="row">
-                <div class="col-md-3 text-right">
-                    <label class="control-label">Colonia:</label>
-                </div>
-                <div class="col-md-5">                            
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Colonia</label>
+                <div class="col-sm-6" >
                     <input class="form-control" id="colonia" name="colonia" value="<?php echo $address['neighborhood'] ?>" type="text">                            
-                </div>                            
-            </div>
-            <div class="clear">&nbsp;</div>
-            <div class="row">
-                <div class="col-md-3 text-right">
-                    <label class="control-label">C.P.</label>
                 </div>
-                <div class="col-md-5">                            
+            </div> 
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Código Postal</label>
+                <div class="col-sm-2" >
                     <input class="form-control" id="cp" name="cp" value="<?php echo $address['zip_code'] ?>" type="text">                            
-                </div>                            
-            </div>
-            <div class="clear">&nbsp;</div>
-            <div class="row">
-                <div class="col-md-3 text-right">
-                    <label class="control-label">Municipio</label>
                 </div>
-                <div class="col-md-5">                            
+            </div> 
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Municipio</label>
+                <div class="col-sm-6" >
                     <input class="form-control" id="municipio" name="municipio" value="<?php echo $address['municipality'] ?>" type="text">                            
-                </div>                            
-            </div>
-            <div class="clear">&nbsp;</div>
-            <div class="row">
-                <div class="col-md-3 text-right">
-                    <label class="control-label">Estado</label>
                 </div>
-                <div class="col-md-5">                            
+            </div> 
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Estado</label>
+                <div class="col-sm-6" >
                     <select id="estado" name="estado" class="form-control m-b">
                         <option value="0">Selecciona un estado</option>
                         <?php 
@@ -304,9 +260,8 @@
                         }
                         ?>
                     </select>
-                </div>                            
-            </div>                                   
-            <div class="clear">&nbsp;</div>            
+                </div>
+            </div>                                 
             <div class="row ">  
                <div class="col-lg-3">&nbsp;</div>
                <div class="col-lg-5 text-right">
@@ -329,6 +284,18 @@
 <script src="<?php echo $raizProy?>usuarios/js/editUsers.js"></script>    
 <script src="<?php echo $raizProy?>js/plugins/datapicker/bootstrap-datepicker.js"></script>
 <script src="<?php echo $raizProy?>js/plugins/sweetalert/sweetalert.min.js"></script>
+<script src="<?php echo $raizProy?>js/plugins/chosen/chosen.jquery.js"></script>
 
+<link href="<?php echo $raizProy?>css/plugins/chosen/chosen.css" rel="stylesheet">
 <link href="<?php echo $raizProy?>css/plugins/datapicker/datepicker3.css" rel="stylesheet">
 <link href="<?php echo $raizProy?>css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+
+<script>
+    $(document).ready(function(){
+        $("#periodicidad").chosen();
+        $("#perfil").chosen();
+        $("#sucursal").chosen();
+        $("#estado").chosen();
+        phones = '<?php echo $phones ?>';
+    });        
+</script>    

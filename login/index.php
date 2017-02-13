@@ -17,7 +17,7 @@
             <div class="clear"></div>
             <form class="m-t" method="post" role="form" action="login.php">
                 <div class="input-group m-b">
-                    <div style="display: inline-block; vertical-align: middle; width: 63%">
+                    <div style="display: inline-block; vertical-align: middle; width: 184px">
                         <input type="text" name="email" value="<?php if (isset($_GET['email'])){echo base64_decode($_GET['email']);}?>" placeholder="Usuario" class="form-control" autocomplete="off">
                     </div>    
                     <div style="display: inline-block; vertical-align: middle; font-size: 14px">&nbsp;@globmint.com</div>
@@ -31,7 +31,7 @@
                         if (isset($_GET['error'])){                         
                     ?>
                     <div class="alert alert-danger alert-dismissable">
-                        <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                        <button aria-hidden="true" data-dismiss="alert" class="close" type="button">Ã—</button>
                         <?php echo base64_decode ($_GET['error']); ?>
                     </div>
                     <?php                            
