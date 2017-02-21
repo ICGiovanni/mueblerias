@@ -16,10 +16,7 @@ class Pedidos {
     {
 
         $sql="SELECT * FROM ".$this->name_table." 
-                inner join productos_pedido using(pedido_id)
-                inner join productos using(producto_id) 
-                inner join colores using(color_id)
-                inner join materiales using(material_id)
+                inner join productos_pedido using(pedido_id)                
                 inner join proveedores on pedidos.proveedor_id = proveedores.proveedor_id
                 where pedidos.status = 1           
                 group by pedido_id
@@ -34,6 +31,23 @@ class Pedidos {
         return $result;
     }
 	
+    public function getProductosPedido($id_pedido)
+    {
+
+        $sql="SELECT * FROM ".$this->name_table." 
+                inner join productos_pedido using(pedido_id) 
+                inner join productos using(producto_id)
+                where pedidos.pedido_id = '".$id_pedido."'";
+
+        $statement=$this->connect->prepare($sql);
+        //$statement->bindParam(':gasto_id', $idGasto, PDO::PARAM_STR);
+
+        $statement->execute();
+        $result=$statement->fetchAll(PDO::FETCH_ASSOC);
+
+        return $result;
+    }
+    
     public function deletePedido($data){
         $sql = "UPDATE pedidos 
 		SET
@@ -100,4 +114,17 @@ class Pedidos {
         return "Saved";
     }
     
+     public function updatePedidoStatus($pedidoId){
+       $sql = "UPDATE pedidos 
+		SET
+		status = 2                
+		WHERE
+		pedido_id = :pedido_id";
+				
+	$statement=$this->connect->prepare($sql);			
+	$statement->bindParam(':pedido_id', $pedidoId, PDO::PARAM_STR);	        
+        $statement->execute();
+        
+        return "updated";
+    }
 }

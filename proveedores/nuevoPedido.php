@@ -183,5 +183,7 @@ $sucursalesList = $inventarios->GetSucursales();
     $(document).ready(function(){
         $("#proveedor").chosen();
         $("#productos").chosen();
+        $("#selectProducto").chosen();
+        $("#selectSucursal").chosen();
     });
 </script>    
