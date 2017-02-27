@@ -124,13 +124,13 @@ class Inventarios
 			foreach($result as $r)
 			{
 				$producto_id=$r['producto_conjunto_id'];
-				$cantidad=$cantidad*$r['cantidad'];				
+				$cantidadR=$cantidad*$r['cantidad'];				
 				
 				$result=$this->GetProductSucursal($producto_id, $sucursal_id);
 				
 				if(isset($result[0]['producto_id']))
 				{
-					$sql="UPDATE inventario_productos SET cantidad=cantidad+$cantidad WHERE producto_id='$producto_id' AND sucursal_id='$sucursal_id'";
+					$sql="UPDATE inventario_productos SET cantidad=cantidad+$cantidadR WHERE producto_id='$producto_id' AND sucursal_id='$sucursal_id'";
 						
 					$statement=$this->connect->prepare($sql);
 					$statement->execute();
@@ -143,7 +143,7 @@ class Inventarios
 						
 					$statement->bindParam(':producto', $producto_id, PDO::PARAM_STR);
 					$statement->bindParam(':sucursal', $sucursal_id, PDO::PARAM_STR);
-					$statement->bindParam(':cantidad', $cantidad, PDO::PARAM_STR);
+					$statement->bindParam(':cantidad', $cantidadR, PDO::PARAM_STR);
 						
 					$statement->execute();
 				}
@@ -197,9 +197,9 @@ class Inventarios
 			foreach($result as $r)
 			{
 				$producto_id=$r['producto_conjunto_id'];
-				$cantidad=$cantidad*$r['cantidad'];
+				$cantidadR=$cantidad*$r['cantidad'];
 				
-				$sql="UPDATE inventario_productos SET cantidad=cantidad-$cantidad WHERE producto_id='$producto_id' AND sucursal_id='$sucursal_id'";
+				$sql="UPDATE inventario_productos SET cantidad=cantidad-$cantidadR WHERE producto_id='$producto_id' AND sucursal_id='$sucursal_id'";
 					
 				$statement=$this->connect->prepare($sql);
 				$statement->execute();
@@ -392,15 +392,15 @@ class Inventarios
 					$producto_id=$r['producto_conjunto_id'];
 					$cantidad_n=$r['cantidad'];
 					
-					$cantidad=$cantidad_n*$cantidad;
+					$cantidadR=$cantidad_n*$cantidad;
 					
 					if(array_key_exists($producto_id,$producto))
 					{
-						$producto[$producto_id]=$producto[$producto_id]+$cantidad;
+						$producto[$producto_id]=$producto[$producto_id]+$cantidadR;
 					}
 					else
 					{
-						$producto[$producto_id]=$cantidad;
+						$producto[$producto_id]=$cantidadR;
 					}
 				}
 			}
