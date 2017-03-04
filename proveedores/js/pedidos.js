@@ -133,7 +133,7 @@ function savePedidosInventario(idPedido, productos){
                 text: "Productos registrados en inventario correctamente!",
                 type: "success"
             }, function () {                                        
-                //location.reload();                 
+                location.reload();                 
             });            
             
         },

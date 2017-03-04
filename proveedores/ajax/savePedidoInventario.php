@@ -9,9 +9,8 @@ $instInventario = new Inventarios();
 
 $productos = $_POST['productos'];
 $pedidoId = $_POST['pedido_id'];
-foreach($productos as $prod){
-    echo $prod['producto_id']. $prod['sucursal_id']. $prod['stock'];
-    var_dump($instInventario->InsertProductDB($prod['producto_id'], $prod['sucursal_id'], $prod['stock']));
+foreach(json_decode($productos) as $prod){    
+    var_dump($instInventario->InsertProductDB($prod->producto_id, $prod->sucursal_id, $prod->stock));
 }
 
 $insPedidos->updatePedidoStatus($pedidoId);
