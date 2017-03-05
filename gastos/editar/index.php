@@ -160,7 +160,7 @@ if($rowEvento["evento_recordatorio_activo"] == "1"){
                     
 					<div class="form-group">                        
 						<label class="control-label col-md-2">No de documento</label>                        
-						<div class="col-md-5">
+						<div class="col-md-6">
 							<input type="text" name="gasto_no_documento" id="gasto_no_documento" size="30" class="form-control" value="<?=$rowGasto["gasto_no_documento"]?>"/>
 						</div>    
 					</div>
@@ -207,66 +207,71 @@ if($rowEvento["evento_recordatorio_activo"] == "1"){
 					</div>	
 					<div class="form-group">                        
                         <label class="control-label col-md-2">Concepto</label>                        
-                        <div class="col-md-5">
+                        <div class="col-md-6">
                             <input type="text" name="gasto_concepto" id="gasto_concepto" value="" size="40" class="form-control" value="<?=$rowGasto["gasto_concepto"]?>">
                         </div>    
                     </div>
 					<div class="form-group">                        
                         <label class="control-label col-md-2">Descripción</label>                        
-                        <div class="col-md-5">
+                        <div class="col-md-6">
                             <textarea cols="40" name="gasto_descripcion" id="gasto_descripcion" class="form-control" ><?=$rowGasto["gasto_descripcion"]?></textarea>
                         </div>    
                     </div>
 					<div class="form-group">                        
                         <label class="control-label col-md-2">Monto</label>                        
-                        <div class="col-md-5 input-group m-b" style="padding:0px 15px; height:35px; margin-bottom:1px;">
+                        <div class="col-md-6 input-group m-b" style="padding:0px 15px; height:35px; margin-bottom:1px;">
                             <span class="input-group-addon">$</span>
 							<input type="text" name="gasto_monto" id="gasto_monto" size="10" class="form-control" value="<?=$rowGasto["gasto_monto"]?>">
                         </div>    
                     </div>
 					 <div class="form-group">                        
                         <label class="control-label col-md-2">Categoria</label>                        
-                        <div class="col-md-5">
-                            <select name="gasto_categoria_id" id="gasto_categoria_id" class="form-control chosen-select"  onchange="update_sucursal();" >
+                        <div class="col-md-6">
+                            <select data-placeholder="Selecciona una categoria" class="chosen-select" style="width:300px;" tabindex="4" id="gasto_categoria_id" name="gasto_categoria_id" onchange="update_sucursal();">
+                            	<option value=""></option>
 								<?=$options_gasto_categoria_id?>
 							</select>
                         </div>    
                     </div>
 					 <div class="form-group">                        
                         <label class="control-label col-md-2">Sucursal</label>                        
-                        <div class="col-md-5">
-                            <select name="sucursal_id" id="sucursal_id" class="form-control chosen-select" >
+                        <div class="col-md-6">
+                        <select data-placeholder="Selecciona una sucursal" class="chosen-select" style="width:300px;" tabindex="4" id="sucursal_id" name="sucursal_id">
+								<option value=""></option>
 								<?=$options_sucursal_id?>
 							</select>
                         </div>    
                     </div>
 					 <div class="form-group">                        
                         <label class="control-label col-md-2">Proveedor</label>                        
-                        <div class="col-md-5">
-                            <select name="proveedor_id" id="proveedor_id"  class="form-control chosen-select" onchange="update_beneficiary_from_proveedor();">
+                        <div class="col-md-6">
+                        	<select data-placeholder="Selecciona un proveedor" class="chosen-select" style="width:300px;" tabindex="4" id="proveedor_id" name="proveedor_id" onchange="update_beneficiary_from_proveedor();">
+								<option value=""></option>
 								<?=$options_proveedor_id?>
 							</select>
                         </div>    
                     </div>
                     <div class="form-group">                        
                         <label class="control-label col-md-2">Empleado</label>                        
-                        <div class="col-md-5">
-                            <select name="login_id" id="login_id"  class="form-control chosen-select" onchange="update_beneficiary_from_login();">
+                        <div class="col-md-6">
+                        	<select data-placeholder="Selecciona un empleado" class="chosen-select" style="width:300px;" tabindex="4" id="login_id" name="login_id" onchange="update_beneficiary_from_login();">
+                            	<option value=""></option>
 								<?=$options_login_id?>
 							</select>
                         </div>    
                     </div>
 					<div class="form-group">                        
                         <label class="control-label col-md-2">Status</label>                        
-                        <div class="col-md-5">
-                            <select name="gasto_status_id" id="gasto_status_id" class="form-control chosen-select">
+                        <div class="col-md-6">
+                        	<select data-placeholder="Selecciona un Status" class="chosen-select" style="width:300px;" tabindex="4" id="gasto_status_id" name="gasto_status_id">
+                        		<option value=""></option>
 								<?=$options_gasto_status_id?>
 							</select>
                         </div>    
                     </div>
 					<div class="form-group">                        
                         <label class="control-label col-md-2">Beneficiario</label>                        
-                        <div class="col-md-5">
+                        <div class="col-md-6">
                             <input type="text" name="gasto_beneficiario" id="gasto_beneficiario" value="" size="40" class="form-control" value="<?=$rowGasto["gasto_beneficiario"]?>">
                         </div>    
                     </div>

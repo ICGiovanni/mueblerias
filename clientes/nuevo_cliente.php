@@ -5,6 +5,7 @@
     include $pathProy.'/menu.php';
 ?>
 <link href="<?php echo $raizProy?>css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+<link href="<?=$raizProy?>css/plugins/chosen/chosen.css" rel="stylesheet">
 
 
     <div class="row wrapper border-bottom white-bg page-heading">
@@ -61,8 +62,8 @@
             </div>
             <div class="form-group"><label class="col-sm-2 control-label">Estado</label>
 			<div class="col-sm-6">
-			<select id="estado" name="estado" class="form-control">
-            <option value="">Seleccione un Estado</option>
+			<select data-placeholder="Selecciona un estado" class="chosen-select" style="width:300px;" tabindex="4" id="estado" name="estado">
+            <option value=""></option>
             </select>
 			</div>
 			</div>
@@ -106,7 +107,8 @@
 	</div>
 <script src="<?php echo $raizProy?>js/plugins/sweetalert/sweetalert.min.js"></script>
 <script src="<?php echo $raizProy?>js/plugins/toastr/toastr.min.js"></script>
-<script src="<?php echo $raizProy?>clientes/js/clientes.js"></script>   
+<script src="<?php echo $raizProy?>clientes/js/clientes.js"></script>
+<script src="<?=$raizProy?>js/plugins/chosen/chosen.jquery.js"></script>
 
 <?php
     include $pathProy.'footer.php';
