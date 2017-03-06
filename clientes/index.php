@@ -4,6 +4,7 @@
    // include $pathProy.'login/session.php';
     include $pathProy.'/header.php';
     include $pathProy.'/menu.php';
+    
 ?>
 
 	<link rel="stylesheet" type="text/css" href="../css/clientes.css">
