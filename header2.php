@@ -15,8 +15,7 @@
 
     <link href="<?php echo $raizProy?>css/animate.css" rel="stylesheet">
     <link href="<?php echo $raizProy?>css/style.css" rel="stylesheet">
-    <link href="<?php echo $raizProy?>css/plugins/summernote/summernote.css" rel="stylesheet">
-    <link href="<?php echo $raizProy?>css/plugins/summernote/summernote-bs3.css" rel="stylesheet">    
+    <link href="<?php echo $raizProy?>css/plugins/summernote/summernote.css" rel="stylesheet">  
     
 </head>
 

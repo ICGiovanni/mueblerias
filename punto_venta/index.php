@@ -2,20 +2,17 @@
 require_once $_SERVER['REDIRECT_PATH_CONFIG'].'config.php';
 require_once $pathProy.'/header2.php';
 require_once $pathProy.'/menu.php';
-?>
-
-    
-
-   
-    <link href="/css/plugins/iCheck/custom.css" rel="stylesheet">
-    <link href="/css/plugins/steps/jquery.steps.css" rel="stylesheet">
-	<link href="/css/plugins/chosen/chosen.css" rel="stylesheet">
-
+?>   
+<link href="<?=$raizProy?>css/plugins/iCheck/custom.css" rel="stylesheet">
+<link href="<?=$raizProy?>css/plugins/steps/jquery.steps.css" rel="stylesheet">
+<link href="<?=$raizProy?>css/plugins/chosen/chosen.css" rel="stylesheet">
 
 <style>
 .wizard > .content > .body  position: relative; 
 .wizard > .content { min-height: 350px; overflow: scroll;}
 .wizard-big.wizard > .content { min-height: 350px; overflow: scroll; }
+.wizard > .steps > ul > li { width: 10% !important; }
+
 
 </style>
         
@@ -45,41 +42,16 @@ require_once $pathProy.'/menu.php';
                            
 
                             <form id="form" action="#" class="wizard-big">
-                                <h1>Método de Pago</h1>
+								<h1><i class="fa fa-credit-card"></i></h1>
 								<!-- INICIA METODO DE PAGO -->
                                 <fieldset>
                                     <!-- <h2>Account Information</h2> -->
                                     <div class="row">
 										<div class="col-lg-4">
-											
-											<div class="form-group" style='height: 100px'>   
-												<label>Opciones de compra</label><br />
-												<input type="checkbox" name="envio" id="envio" /> Envío <br>
-												<input type="checkbox" name="factura" id="factura" />Factura
-											</div> 
-											
-											<div class="form-group">   
-												<label>Agregar Cliente</label>
-												<table class="table">
-													<tr>
-														<td><input id="busqueda_cliente" name="busqueda_cliente" type="text" class="form-control"> </td>
-														<td></td>
-													</tr>
-												</table>                                                 
-												<table class="table">
-													<tr>
-														<td><input id="busqueda_cliente" name="busqueda_cliente" type="text" class="form-control"> </td>
-														<td></td>
-													</tr>
-												</table>
-                                            </div>
-										</div>
-									
-                                        <div class="col-lg-4">
-                                            
-                                            <div class="form-group">
-                                                <label>Método de Pago </label>
-												<div style="float: right; margin-right:10px;"> <button type="button" class="btn btn-info btn-xs" > <b>+</b> </button> </div>
+											<font style="font-size:30px;">MÉTODO DE PAGO</font>
+											<br>
+											<div class="form-group">
+												
                                                 <table class="table">
 													<tr>
 														<td>
@@ -95,20 +67,33 @@ require_once $pathProy.'/menu.php';
 													
 												</table>
                                             </div>
-                                        </div>
-										<div class="col-lg-4">                                            
-                                            <div class="form-group">
-											<label> Totales </label>
 											
-                                                <table class="table table-striped table-bordered">
+											
+										</div>
+										
+										<div class="col-lg-4" align="center">  <br><br><br>                                   
+                                            <div class="form-group">
+											<div style=""> <button type="button" class="btn btn-info" > <b>+ Agregar método de pago</b> </button> </div>
+											<br>
+											
+                                               
+												
+												
+                                            </div>
+                                        </div>
+										
+										<div class="col-lg-4">          <br><br><br>                                   
+                                           
+												<table class="table table-striped table-bordered" style="font-size:25px;">
 													<tr>
-														<td align="right">
-															Subtotal
+														<td align="left">
+															Total venta
 														</td>
 														<td>
 															$ 8,123.00
 														</td>
 													</tr>
+													<!--
 													<tr>
 														<td align="right">
 															IVA
@@ -117,16 +102,10 @@ require_once $pathProy.'/menu.php';
 															$ 800.12
 														</td>
 													</tr>
+													-->
+													
 													<tr>
-														<td align="right">
-															Total
-														</td>
-														<td>
-															$ 10,921.12
-														</td>
-													</tr>
-													<tr>
-														<td align="right">
+														<td align="left">
 															<span style="color:red;" >Restan</span>
 														</td>
 														<td>
@@ -134,184 +113,147 @@ require_once $pathProy.'/menu.php';
 														</td>
 													</tr>
 												</table>
+											
+										</div>
+                                        
+                                    </div>
+
+                                </fieldset>
+								<!-- FINALIZA METODO DE PAGO -->
+							
+                                <h1><i class="fa fa-credit-card"></i></h1>
+								<!-- INICIA METODO DE PAGO -->
+                                <fieldset>
+                                    <!-- <h2>Account Information</h2> -->
+                                    <div class="row">
+										<div class="col-lg-4">
+											<font style="font-size:30px;">MÉTODO DE PAGO</font>
+											<br>
+											<div class="form-group">
+												
+                                                <table class="table">
+													<tr>
+														<td>
+															<select data-placeholder="Selecciona un material" class="chosen-select" id="sel_metodo_pago_01" style="width:100px;"> 
+																<option>efectivo</option>
+																<option>tarjeta</option>
+															</select>
+														</td>
+														<td>
+															<input type="text" name="metodo_01" class="form-control " placeholder="$" />
+														</td>
+													</tr>
+													
+												</table>
+                                            </div>
+											
+											
+										</div>
+										
+										<div class="col-lg-4" align="center">  <br><br><br>                                   
+                                            <div class="form-group">
+											<div style=""> <button type="button" class="btn btn-info" > <b>+ Agregar método de pago</b> </button> </div>
+											<br>
+											
+                                               
 												
 												
                                             </div>
                                         </div>
+										
+										<div class="col-lg-4">          <br><br><br>                                   
+                                           
+												<table class="table table-striped table-bordered" style="font-size:25px;">
+													<tr>
+														<td align="left">
+															Total venta
+														</td>
+														<td>
+															$ 8,123.00
+														</td>
+													</tr>
+													<!--
+													<tr>
+														<td align="right">
+															IVA
+														</td>
+														<td>
+															$ 800.12
+														</td>
+													</tr>
+													-->
+													
+													<tr>
+														<td align="left">
+															<span style="color:red;" >Restan</span>
+														</td>
+														<td>
+															<span style="color:red;" >$ 700.12</span>
+														</td>
+													</tr>
+												</table>
+											
+										</div>
                                         
                                     </div>
 
                                 </fieldset>
 								<!-- FINALIZA METODO DE PAGO -->
 								
-                                
-								
-                                <h1>Envío</h1>
+                                <h1><i class="fa fa-truck"></i></h1>
 								<!-- INICIA SELECCION ENVIO -->
                                 <fieldset>
                                    
 									<div class="form-group">
 										
-										<div class="col-lg-4">
-										<div align="left"></div>
-											<table class="table">
-												<tr>
-													<td><label>Calle: </label></td>
-													<td><input type="text" name="calle" id="calle"></td>
-												</tr>
-												<tr>
-													<td><label>Num Ext: </label></td>
-													<td><input type="text" name="num_ext" id="num_ext"></td>
-												</tr>
-												<tr>
-													<td><label>Num Int: </label></td>
-													<td><input type="text" name="num_int" id="num_int"></td>
-												</tr>
-												<tr>
-													<td><label>Colonia: </label></td>
-													<td><input type="text" name="colonia" id="colonia"></td>
-												</tr>
-												<tr>
-													<td><label>Delegacion: </label></td>
-													<td><input type="text" name="delegacion" id="delegacion"></td>
-												</tr>
-												<tr>
-													<td><label>Estado: </label></td>
-													<td><select name="estado" id="estado"></select></td>
-												</tr>
-											</table>											
+										<div class="col-lg-12">
+											<div align="center"><font style="font-size:30px;">¿ENVÍO A DOMICILIO?</font></div>
+											<br><br><br><div align="center">
+													
+													<table>
+														<tr>
+															<td><button class="btn btn-primary dim btn-large-dim" type="button" data-toggle="modal" data-target="#modalBuscaCliente">SÍ</button></td>
+															<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+															<td><button class="btn btn-danger dim btn-large-dim" type="button">NO</button></td>
+														</tr>
+											</div>	</table>
 										</div>
-										<div class="col-lg-5">
-										<br>
-											<table class="table">
-												
-												<tr>
-													<td><label>Codigo Postal: </label></td>
-													<td><input type="text" name="c_p" id="c_p"></td>
-												</tr>
-												<tr>
-													<td><label>Quien Recibe: </label></td>
-													<td><input type="text" name="quien_recibe" id="quien_recibe"></td>
-												</tr>
-												<tr>
-													<td><label>Telefono Contacto: </label></td>
-													<td><input type="text" name="telefono_contacto" id="telefono_contacto"></td>
-												</tr>
-												<tr>
-													<td><label>Entre Calles y/o Referencia: </label></td>
-													<td>
-														<textarea name="calles_y_referencia" id="calles_y_referencia" rows="5"></textarea>
-													</td>
-												</tr>
-											</table>
-										</div>
-										<div class="col-lg-3">
-										<div align="right"><button type="button" class="btn btn-warning btn-xs" > Usar Dirección del Cliente </button></div>
-											<table class="table">
-												<tr>
-													<td><label>Fecha de entrega: </label></td>													
-												</tr>
-												<tr>
-													<td>
-														<div class="form-group" id="data_rango_inicio" >
-															<div class="input-group date">
-																<span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" class="form-control" id="filtro_fecha_inicio" name="filtro_fecha_inicio" value="">
-															</div>
-														</div>
-													</td>
-												</tr>
-												<tr>
-													<td><label>Hora de entrega: </label></td>
-												</tr>
-												<tr>
-													<td>
-														<div class="input-group clockpicker" data-autoclose="true">
-															<input name="gasto_hora_vencimiento" id ="gasto_hora_vencimiento" type="text" class="form-control" value="12:00" >
-															<span class="input-group-addon">
-																<span class="fa fa-clock-o"></span>
-															</span>
-														</div>
-													</td>
-												</tr>
-											</table>
-										</div>
+										
+										
 									</div>
 								   
                                 </fieldset>
+								
+								
+							
 								<!-- FINALIZA SELECCION ENVIO -->
 								
-                                <h1>Factura</h1>
+                                <h1><i class="fa fa-dollar"></i></h1>
 								<!-- INICIA SELECCION FACTURA -->
                                 <fieldset>
-								<div class="row">
-									<div class="col-lg-4">
-										<div align="left"></div>
+								
+									<div class="form-group">
 										
-										<table class="table">
-										<tr>
-												<td><label>Razon Social: </label></td>
-												<td><label id="razon_social" >Luis Mario Rodriguez</label></td>
-											</tr>
-											<tr>
-												<td><label>RFC: </label></td>
-												<td><label id="rfc" >LRM0234234RTT</label></td>
-											</tr>
-											<tr>
-												<td><label>Calle: </label></td>
-												<td><input type="text" name="calle" id="calle"></td>
-											</tr>
-											<tr>
-												<td><label>Num Ext: </label></td>
-												<td><input type="text" name="num_ext" id="num_ext"></td>
-											</tr>
-											<tr>
-												<td><label>Num Int: </label></td>
-												<td><input type="text" name="num_int" id="num_int"></td>
-											</tr>
-											<tr>
-												<td><label>Colonia: </label></td>
-												<td><input type="text" name="colonia" id="colonia"></td>
-											</tr>
-											
-											
-										</table>
-									</div>
-									<div class="col-lg-5">
-									<br>
-										<table class="table">
-											<tr>
-												<td><label>Delegacion: </label></td>
-												<td><input type="text" name="delegacion" id="delegacion"></td>
-											</tr>
-											<tr>
-												<td><label>Estado: </label></td>
-												<td><select name="estado" id="estado"></select></td>
-											</tr>
-												<tr>
-													<td><label>Codigo Postal: </label></td>
-													<td><input type="text" name="c_p" id="c_p"></td>
-												</tr>
-												<tr>
-													<td><label>Correo Electrónico: </label></td>
-													<td><input type="text" name="email" id="email"></td>
-												</tr>
-											</table>
-									</div>
-									<div class="col-lg-2">
-										<div align="left"><button type="button" class="btn btn-warning btn-xs" > Usar Dirección del Cliente </button></div>
-										<br>
-										<div class="text-center">
+										<div class="col-lg-12">
+											<div align="center"><font style="font-size:30px;">¿REQUIERE FACTURA?</font></div>
+											<br><br><br><div align="center">
+													
+													<table>
+														<tr>
+															<td><button class="btn btn-primary dim btn-large-dim" type="button"  data-toggle="modal" data-target="#modalBuscaCliente">SÍ</button></td>
+															<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+															<td><button class="btn btn-danger dim btn-large-dim" type="button">NO</button></td>
+														</tr>
+											</div>	</table>
+										</div>
 										
-                                                <div style="">
-                                                    <i class="fa fa-sign-in" style="font-size: 100px;color: #e5e5e5 "></i>
-                                                </div>
-                                            </div>
+										
 									</div>
-								</div>
+								
                                 </fieldset>
 								<!-- FINALIZA SELECCION FACTURA -->
 								
-								<h1>Resumen de Compra</h1>
+								<h1><i class="fa fa-th-list"></i></h1>
 								<!-- INICIA RESUMEN DE COMPRA -->
                                 <fieldset>
 									<div class="col-lg-12" >
@@ -397,89 +339,127 @@ require_once $pathProy.'/menu.php';
         </div>
 
 <!-- ini modals -->
-<div class="modal inmodal" id="myModal2" tabindex="-1" role="dialog" aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content animated flipInY">
+
+
+<div class="modal inmodal fade" id="modalBuscaCliente" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title">Buscar cliente</h4>
+			</div>
+			<div class="modal-body">
+				<div class="form-group"><input type="email" placeholder="Nombre, email, numero telefonico" class="form-control"></div>
+			</div>
+			<div class="modal-footer">
+				<button data-toggle="modal" href="#ModalClienteNuevo"  type="button" class="btn btn-warning"  data-toggle="modal" data-target="#modalNuevoCliente">+ Nuevo Cliente</button>
+				<button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+				<button type="button" class="btn btn-primary">Ligar Cliente</button>
+			</div>
+		</div>
+	</div>
+</div>
+								
+<div class="modal inmodal fade" id="modalNuevoCliente" tabindex="-1" role="dialog"  aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 				<h4 class="modal-title">Nuevo Cliente</h4>
 			</div>
 			<div class="modal-body">
-				<form method="get" class="form-horizontal" action="/" id="form_cliente">
-					<div class="form-group"><label class="col-sm-3 control-label">Nombre</label>
-					<div class="col-sm-8" ><input type="text" class="form-control" id="nombre" name="nombre"></div>
-					</div>
-					<div class="form-group"><label class="col-sm-3 control-label">Apellido Paterno</label>
-					<div class="col-sm-8" ><input type="text" class="form-control" id="apellidoP" name="apellidoP"></div>
-					</div>
-					<div class="form-group"><label class="col-sm-3 control-label">Apellido Materno</label>
-					<div class="col-sm-8" ><input type="text" class="form-control" id="apellidoM" name="apellidoM"></div>
-					</div>
-					<div class="form-group"><label class="col-sm-3 control-label">Raz&oacute;n Social</label>
-					<div class="col-sm-8"><input type="text" class="form-control" id="razonS" name="razonS"></div>
-					</div>
-					<div class="form-group"><label class="col-sm-3 control-label">RFC</label>
-					<div class="col-sm-8"><input type="text" class="form-control" id="rfc" name="rfc"></div>
-					</div>
-					<div class="form-group"><label class="col-sm-3 control-label">Calle</label>
-					<div class="col-sm-8"><input type="text" class="form-control" id="calle" name="calle"></div>
-					</div>
-					<div class="form-group">
-					<label class="col-sm-3 control-label">No. Exterior</label>
-					<div class="col-sm-3"><input type="text" class="form-control" id="noExt" name="noExt"></div>
-					<label class="col-sm-2 control-label">No. Interior</label>
-					<div class="col-sm-3"><input type="text" class="form-control" id="noInt" name="noInt"></div>
-					</div>
-					<div class="form-group"><label class="col-sm-3 control-label">Colonia</label>
-					<div class="col-sm-8"><input type="text" class="form-control" id="colonia" name="colonia"></div>
-					</div>
-					<div class="form-group">
-					<label class="col-sm-3 control-label">C.P.</label>
-					<div class="col-sm-8"><input type="text" class="form-control" id="codigoPostal" name="codigoPostal"></div>
-					</div>
-					<div class="form-group"><label class="col-sm-3 control-label">Municipio</label>
-					<div class="col-sm-8"><input type="text" class="form-control" id="municipio" name="municipio"></div>
-					</div>
-					<div class="form-group"><label class="col-sm-3 control-label">Estado</label>
-					<div class="col-sm-8">
-						<select id="estado" name="estado" class="form-control m-b">
-							<option value="">Seleccione un Estado</option>
+				<p>
+				<div class="wrapper wrapper-content animated fadeInRight">
+					<form method="get" class="form-horizontal" action="/" id="form_cliente">
+						<div class="form-group"><label class="col-sm-2 control-label">Nombre</label>
+						<div class="col-sm-6" ><input type="text" class="form-control" id="nombre" name="nombre"></div>
+						</div>
+						<div class="form-group"><label class="col-sm-2 control-label">Apellido Paterno</label>
+						<div class="col-sm-6" ><input type="text" class="form-control" id="apellidoP" name="apellidoP"></div>
+						</div>
+						<div class="form-group"><label class="col-sm-2 control-label">Apellido Materno</label>
+						<div class="col-sm-6" ><input type="text" class="form-control" id="apellidoM" name="apellidoM"></div>
+						</div>
+						<div class="form-group"><label class="col-sm-2 control-label">Raz&oacute;n Social</label>
+						<div class="col-sm-6"><input type="text" class="form-control" id="razonS" name="razonS"></div>
+						</div>
+						<div class="form-group"><label class="col-sm-2 control-label">RFC</label>
+						<div class="col-sm-6"><input type="text" class="form-control" id="rfc" name="rfc"></div>
+						</div>
+						<div class="form-group"><label class="col-sm-2 control-label">Calle</label>
+						<div class="col-sm-6"><input type="text" class="form-control" id="calle" name="calle"></div>
+						</div>
+						<div class="form-group">
+						<label class="col-sm-2 control-label">No. Exterior</label>
+						<div class="col-sm-2"><input type="text" class="form-control" id="noExt" name="noExt"></div>
+						<label class="col-sm-2 control-label">No. Interior</label>
+						<div class="col-sm-2"><input type="text" class="form-control" id="noInt" name="noInt"></div>
+						</div>
+						<div class="form-group"><label class="col-sm-2 control-label">Colonia</label>
+						<div class="col-sm-6"><input type="text" class="form-control" id="colonia" name="colonia"></div>
+						</div>
+						<div class="form-group">
+						<label class="col-sm-2 control-label">C.P.</label>
+						<div class="col-sm-2"><input type="text" class="form-control" id="codigoPostal" name="codigoPostal"></div>
+						</div>
+						<div class="form-group"><label class="col-sm-2 control-label">Estado</label>
+						<div class="col-sm-6">
+						<select id="estado" name="estado" class="form-control">
+						<option value="">Seleccione un Estado</option>
 						</select>
-					</div>
-					</div>
-					<div class="form-group">
-					<label class="col-sm-3 control-label">Telefono</label>
-					<div class="col-sm-4 "><input class="form-control" id="telefono" name="telefono[]" value="" type="text"></div>
-					<div class="col-md-3">
-									<select id="phoneType" name="phoneType[]" class="form-control">
-										<option value="1">Celular</option>
-										<option value="2">Casa</option>
-										<option value="3">Oficina</option>
-										<option value="4">Otro</option>
-									</select>
-								</div>
-					<div class="col-md-1">                            
-									<button class="btn btn-primary btn-xs" id="agregarTelefono" value="" placeholder="Telefono" type="button"><i class="fa fa-plus"></i></button>
-								</div>    
-					</div>
-					<div id="newPhone"></div>
-					<div class="form-group"><label class="col-sm-3 control-label">E-mail</label>
-					<div class="col-sm-8" id="divEmail"><input type="text" class="form-control" id="email" name="email"></div>
-					</div>
-					<div class="form-group"><label class="col-sm-3 control-label">E-mail Alterno</label>
-						<div class="col-sm-8" id="divEmail"><input type="text" class="form-control" id="emailA" name="emailA"></div>
-					</div>
+						</div>
+						</div>
+						<div class="form-group"><label class="col-sm-2 control-label">Municipio</label>
+						<div class="col-sm-6"><input type="text" class="form-control" id="municipio" name="municipio"></div>
+						</div>
+						<div class="form-group">
+						<label class="col-sm-2 control-label">Telefono</label>
+						<div class="col-sm-3 "><input class="form-control telefono_cliente" id="telefono" name="telefono[]" value="" type="text" onkeypress="return validateNumber(event)"></div>
+						<div class="col-md-2">
+										<select id="phoneType" name="phoneType[]" class="form-control">
+											<option value="1">Celular</option>
+											<option value="2">Casa</option>
+											<option value="3">Oficina</option>
+											<option value="4">Otro</option>
+										</select>
+									</div>
+						<div class="col-md-1">                            
+										<button class="btn btn-primary btn-xs" id="agregarTelefono" value="" placeholder="Telefono" type="button"><i class="fa fa-plus"></i></button>
+									</div>    
+						</div>
+						<div id="newPhone"></div>
+						
+						<div class="form-group">
+						<label class="col-sm-2 control-label">E-mail</label>
+						<div class="col-sm-5 "><input class="form-control" id="email" name="email[]" value="" type="text"></div>
+						<div class="col-md-1">                            
+										<button class="btn btn-primary btn-xs" id="agregarEmail" value="" placeholder="E-mail" type="button"><i class="fa fa-plus"></i></button>
+									</div>    
+						</div>
+						<div id="newEmail"></div>
+						
+						<div class="form-group">
+						<div class="col-sm-6 col-sm-offset-2" align="right"><br>
+						<!--
+						<button class="btn btn-danger btn-xs" id="cancelar" type="button">Cancelar</button>&nbsp;&nbsp;&nbsp;&nbsp;
+						<button class="btn btn-primary btn-xs" id="guardar" type="button">Guardar Cliente</button>
+						-->
+						</div>
+						</div>
 					
-				
-				</form>
+					</form>
+				</div>
+				</p>
 			</div>
+
 			<div class="modal-footer">
-				<button type="button" class="btn btn-danger btn-xs" data-dismiss="modal">Cancelar</button>
-				<button type="button" class="btn btn-primary btn-xs">Guardar Cliente y Vincular</button>
+				<button type="button" class="btn btn-warning" data-dismiss="modal">Cerrar</button>
+				<button type="button" class="btn btn-primary">Guardar y Ligar Cliente</button>
 			</div>
 		</div>
 	</div>
 </div>
+
 <!-- fin modals -->
     <!-- Mainly scripts -->
     <script src="<?=$raizProy?>js/jquery-2.1.1.js"></script>
