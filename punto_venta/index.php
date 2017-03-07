@@ -42,84 +42,30 @@ require_once $pathProy.'/menu.php';
                            
 
                             <form id="form" action="#" class="wizard-big">
-								<h1><i class="fa fa-credit-card"></i></h1>
-								<!-- INICIA METODO DE PAGO -->
+								<h1><i class="fa fa-user"></i></h1>
+								<!-- INICIA DATOS DEL CLIENTE -->
                                 <fieldset>
                                     <!-- <h2>Account Information</h2> -->
                                     <div class="row">
-										<div class="col-lg-4">
-											<font style="font-size:30px;">MÉTODO DE PAGO</font>
+										<div class="col-lg-8">
+											<font style="font-size:30px;">DATOS DEL CLIENTE</font>
 											<br>
-											<div class="form-group">
-												
-                                                <table class="table">
-													<tr>
-														<td>
-															<select data-placeholder="Selecciona un material" class="chosen-select" id="sel_metodo_pago_01" style="width:100px;"> 
-																<option>efectivo</option>
-																<option>tarjeta</option>
-															</select>
-														</td>
-														<td>
-															<input type="text" name="metodo_01" class="form-control " placeholder="$" />
-														</td>
-													</tr>
-													
-												</table>
+											<div class="form-group"><br>
+												<div class="form-group"><input type="email" placeholder="Nombre, email, numero telefonico" class="form-control"></div>
                                             </div>
-											
-											
 										</div>
 										
 										<div class="col-lg-4" align="center">  <br><br><br>                                   
                                             <div class="form-group">
-											<div style=""> <button type="button" class="btn btn-info" > <b>+ Agregar método de pago</b> </button> </div>
-											<br>
-											
-                                               
-												
-												
-                                            </div>
+												<div style=""> <button type="button" class="btn btn-warning" > <b>+ Nuevo Cliente</b> </button> </div>
+											</div>
                                         </div>
 										
-										<div class="col-lg-4">          <br><br><br>                                   
-                                           
-												<table class="table table-striped table-bordered" style="font-size:25px;">
-													<tr>
-														<td align="left">
-															Total venta
-														</td>
-														<td>
-															$ 8,123.00
-														</td>
-													</tr>
-													<!--
-													<tr>
-														<td align="right">
-															IVA
-														</td>
-														<td>
-															$ 800.12
-														</td>
-													</tr>
-													-->
-													
-													<tr>
-														<td align="left">
-															<span style="color:red;" >Restan</span>
-														</td>
-														<td>
-															<span style="color:red;" >$ 700.12</span>
-														</td>
-													</tr>
-												</table>
-											
-										</div>
                                         
                                     </div>
 
                                 </fieldset>
-								<!-- FINALIZA METODO DE PAGO -->
+								<!-- FINALIZA DATOS DEL CLIENTE -->
 							
                                 <h1><i class="fa fa-credit-card"></i></h1>
 								<!-- INICIA METODO DE PAGO -->
@@ -134,7 +80,7 @@ require_once $pathProy.'/menu.php';
                                                 <table class="table">
 													<tr>
 														<td>
-															<select data-placeholder="Selecciona un material" class="chosen-select" id="sel_metodo_pago_01" style="width:100px;"> 
+															<select data-placeholder="Selecciona un metodo de pago" class="chosen-select" id="" style="width:150px;"> 
 																<option>efectivo</option>
 																<option>tarjeta</option>
 															</select>
@@ -484,7 +430,10 @@ require_once $pathProy.'/menu.php';
 	
 	
         $(document).ready(function(){
-            $("#wizard").steps();
+			
+			$("#wizard").steps();
+		
+		
 			
             $("#form").steps({
                 bodyTag: "fieldset",
@@ -496,6 +445,9 @@ require_once $pathProy.'/menu.php';
 				},
                 onStepChanging: function (event, currentIndex, newIndex)
                 {
+					if(newIndex == 1){
+						$("#sel_metodo_pago_01").chosen();
+					}
                     // Always allow going backward even if the current step contains invalid fields!
                     if (currentIndex > newIndex)
                     {
@@ -570,9 +522,10 @@ require_once $pathProy.'/menu.php';
                         }
                     });
 					
-			$("#sel_metodo_pago_01").chosen();
-			$("#sel_metodo_pago_02").chosen();
-			$("#sel_metodo_pago_03").chosen();
+					
+					
+			
+			
 			
 			/*FUNCIONES PARA CLIENTE NUEVO*/
 			$( "#guardar" ).click(function(){
@@ -642,7 +595,10 @@ require_once $pathProy.'/menu.php';
 				});
 			 });
 			/*FUNCIONES PARA CLIENTE NUEVO*/
+			
        });
+	   
+	   
     </script>
 
 </body>
