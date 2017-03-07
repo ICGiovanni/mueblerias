@@ -52,10 +52,7 @@ $listaPedidos = $pedidos->getPedidos();
                         <tr>                            
                             <th>Pedido</th>
                             <th>Proveedor</th>
-                            <th>Producto</th>                                                     
-                            <th>Color</th>                            
-                            <th>Material</th>
-                            <th>Cantidad</th>
+                            <th>Productos</th>                                                                                 
                             <th>Fecha de entrega</th> 
                             <th>Telefono</th>
                             <th>Acciones</th>                            
@@ -65,7 +62,7 @@ $listaPedidos = $pedidos->getPedidos();
                         <?php                                 
                         
                         foreach($listaPedidos as $item){
-                            $productId = $item['producto_id'];                                                        
+                            
                             
                             $date1=date_create(date('Y-m-d'));
                             $date2=date_create($item['fecha_entrega']);
@@ -82,32 +79,22 @@ $listaPedidos = $pedidos->getPedidos();
                                 $colorRow = 'success';
                             }
                             
+                            $productosPedido = $pedidos->getProductosPedido($item['pedido_id']);
+                            
+                            $productosList = '';
+                            
+                            foreach($productosPedido as $pp){
+                                $productosList.= $pp['stock']."&nbsp;".$pp['producto_name'].'<br />';
+                            }
                             echo "  <tr class='".$colorRow."'>
                                         <td>".$item['pedido_id']."</td>
-                                        <td>".$item['proveedor_nombre']."</td>
-                                        <td>".$item['producto_name']."</td>                                                                                
-                                        <td>".$item['color_name']."</td>
-                                        <td>".$item['material_name']."</td> 
-                                        <td>".$item['stock']."</td> 
-                                            
+                                        <td>".$item['proveedor_nombre']."</td>                                                                                    
+                                        <td>".$productosList."</td>                                                                                    
                                         <td>".$general->getDate($item['fecha_entrega'])."</td> 
                                         <td>".$item['telefono']."</td>    
                                         <td>
-                                            <a href='#' data-toggle='modal' data-target='#myModal'>
-                                                <i class='fa fa-edit editPedido'
-                                                    data-proveedor='".$item['proveedor_nombre']."'                                                    
-                                                    data-colores='".$item['color_name']."'
-                                                    data-materiales='".$item['material_name']."'
-                                                    data-telefono='".$item['telefono']."'
-                                                    data-stock='".$item['stock']."'
-                                                    data-fecha='".substr($item['fecha_entrega'],0,10)."'   
-                                                    data-costo='".$item['costo_total']."'   
-                                                    data-observaciones='".$item['observaciones']."'  
-                                                    data-pedido='".$item['pedido_id']."'  
-                                                        
-                                                    title='Editar'></i>
-                                            </a>
-                                            <a href='#'><i class='fa fa-trash deletePedido' data-producto='".$item['producto_name']."' data-pedido='".$item['pedido_id']."' title='Borrar'></i></a>                                            
+                                            <a href='#' data-toggle='modal' data-target='#myModal'><i class='fa fa-check editPedido' data-productos='".json_encode($productosPedido)."' data-pedido='".$item['pedido_id']."'></i></a>
+                                            <a href='#'><i class='fa fa-trash deletePedido' data-pedido='".$item['pedido_id']."' title='Borrar'></i></a>                                            
                                         </td>    
                                     </tr>";
                         }
@@ -128,15 +115,27 @@ $listaPedidos = $pedidos->getPedidos();
         <div class="modal-content">
             <div class="modal-header" style="padding: 15px">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Cerrar</span></button>
-                <h3 class="modal-title">Editar Pedido </h3>
+                <h3 class="modal-title">Recibir Pedido </h3>
             </div>
             <div class="modal-body" style="padding-bottom: 0px !important; margin-bottom: -15px !important">    
                 <input type="hidden" id="pedido_id" val='' />
-                <?php include 'pedidoTemplate.php' ?>
+                <textarea id='productos_ped' style='display: none'></textarea>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Cantidad</th>
+                            <th>&nbsp;SKU</th>
+                            <th>&nbsp;Modelo</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productosEnPedido"></tbody>
+                </table>
+                
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger btn-xs" data-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary btn-xs" id="btn_editar_pedido" >Guardar</button>
+                <button type="button" class="btn btn-primary btn-xs" id="recibir_pedido" >Guardar</button>
             </div>
         </div>
     </div>

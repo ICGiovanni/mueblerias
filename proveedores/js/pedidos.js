@@ -52,6 +52,13 @@ $(document).ready(function(){
         }
     });
     
+    $("#recibir_pedido").click(function(){
+        var idPedido = $("#pedido_id").val();
+        var productos = $("#productos_ped").val();
+        
+        savePedidosInventario(idPedido, productos);
+    });
+    
     $("#crearPedido").click(function(){
         
         var proveedor = $("#proveedor").val();
@@ -75,7 +82,13 @@ $(document).ready(function(){
             },
             success: function (response) {            
                 console.log(response);
-                
+                swal({
+                    title: "Guardado!",
+                    text: "Pedido guardado correctamente!",
+                    type: "success"
+                }, function () {                    
+                    window.location.href = 'pedidos.php';
+                });
             },
             error: function(jqXHR, textStatus, errorThrown) {
                //console.log('error al cargar los proveedores loadProveedores()/index.php');
@@ -101,6 +114,33 @@ function agregarProductoPedido(idProd){
                                 );
     $("#totalPedido").html(totalPedido.toFixed(2));   
     productosPedido.push(idProd);        
+}
+
+function savePedidosInventario(idPedido, productos){
+    
+    $.ajax({
+        url: "ajax/savePedidoInventario.php",
+        type: "post",
+        data: {
+            pedido_id : idPedido,
+            productos : productos            
+        },
+        success: function (response) {            
+            console.log('response'+response);
+            
+            swal({
+                title: "Registrado!",
+                text: "Productos registrados en inventario correctamente!",
+                type: "success"
+            }, function () {                                        
+                location.reload();                 
+            });            
+            
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+           //console.log('error al cargar los proveedores loadProveedores()/index.php');
+        }
+    });
 }
 
 function updatePedido(){
@@ -138,32 +178,23 @@ function updatePedido(){
 }
 
 function loadDataUpdate(element){
-    var proveedor = $(element).data("proveedor");
-    $("#nombre_proveedor").html(proveedor);
-        
-    var colores = $(element).data("colores");
-    $("#color_mueble").html(colores);
-    var materiales = $(element).data("materiales");
-    $("#material_mueble").html(materiales);
     
-    var telefono = $(element).data("telefono");
-    $("#telefono").html(telefono);
-    
-    var stock = $(element).data("stock");
-    $("#cantidad").val(stock);
-    
-    var fecha = $(element).data("fecha");
-    $("#fecha").val(fecha);
-    
-    var observaciones = $(element).data("observaciones");
-    $("#observaciones").val(observaciones);
-    
-    var costo = $(element).data("costo");
-    $("#costo").val(costo);
-    
+    var productos = $(element).data("productos");    
     var pedido_id = $(element).data("pedido");
-    $("#pedido_id").val(pedido_id);
     
+    $("#pedido_id").val('');
+    $("#productos_ped").val('');
+    
+    $("#pedido_id").val(pedido_id);
+    $("#productos_ped").val(JSON.stringify(productos));
+    
+    var html = '';
+    $.each(productos, function( index, value ) {
+        console.log(value);
+        html += ('<tr><td>'+value.stock+'</td><td>&nbsp;'+value.producto_sku+'</td><td>&nbsp;'+value.producto_name+'</td></tr>');
+    });
+    
+    $("#productosEnPedido").html(html);
     
 }
 
@@ -173,7 +204,7 @@ function deletePedido(element){
     
     swal({
         title: "¿Esta usted seguro?",
-        text: "Se va a eliminar el pedido de " + producto ,
+        text: "Se va a eliminar el pedido " + pedido_id ,
         type: "warning",
         showCancelButton: true,
         cancelButtonText: 'Cancelar',
@@ -181,7 +212,7 @@ function deletePedido(element){
         confirmButtonText: "Borrar",
         closeOnConfirm: false
     }, function () {
-        swal("Borrado!", "Se ha borrado el pedido de " + producto, "success", "#DD6B55");
+        swal("Borrado!", "Se ha borrado el pedido " + pedido_id, "success", "#DD6B55");
         deletePedidoAction(pedido_id);
         $(element).parent().parent().parent().remove();
     });

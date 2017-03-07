@@ -12,12 +12,12 @@ $objGasto = new Gasto();
 $rowsGastosCategoria = $objGasto->getGastosCategoria();
 $rowsGastosSucursal = $objGasto->getGastosSucursal();
 
-$options_gasto_categoria_id = '<option value="0">-- Elige un Categoria --</option>';
+$options_gasto_categoria_id = '';
 while(list(,$dataGastoCategoria) = each($rowsGastosCategoria)){
 	$options_gasto_categoria_id.='<option value="'.$dataGastoCategoria["gasto_categoria_id"].'">'.$dataGastoCategoria["gasto_categoria_desc"].'</option>';
 }
 
-$options_sucursal_id = '<option value="0">-- Elige una Sucursal --</option>';
+$options_sucursal_id = '';
 while(list(,$dataGastoSucursal) = each($rowsGastosSucursal)){
 	$options_sucursal_id.='<option value="'.$dataGastoSucursal["sucursal_id"].'">'.$dataGastoSucursal["sucursal_name"].'</option>';
 }
@@ -26,7 +26,7 @@ while(list(,$dataGastoSucursal) = each($rowsGastosSucursal)){
 /* INICIA SECUENCIA PARA PROVEEDORES */
 $objProveedor = new Proveedor();
 $rowsProveedores = $objProveedor->getProveedores();
-$options_proveedor_id = '<option value="0">-- Elige un Proveedor --</option>';
+$options_proveedor_id = '';
 while(list(,$dataProveedor) = each($rowsProveedores)){
 	$options_proveedor_id.='<option value="'.$dataProveedor["proveedor_id"].'">'.$dataProveedor["proveedor_nombre"].'</option>';
 }
@@ -36,7 +36,7 @@ while(list(,$dataProveedor) = each($rowsProveedores)){
 $objLogin = new Login();
 $rowsLogin = $objLogin->getUsers("");
 //print_r($rowsLogin);
-$options_login_id = '<option value="0">-- Elige un Empleado --</option>';
+$options_login_id = '';
 while(list(,$dataLogin) = each($rowsLogin)){
 	$options_login_id.='<option value="'.$dataLogin["login_id"].'">'.$dataLogin["firstName"].' '.$dataLogin["lastName"].'</option>';
 }
@@ -93,7 +93,7 @@ while(list(,$dataLogin) = each($rowsLogin)){
                    
 						<div class="form-group">                        
 							<label class="control-label col-md-2">No de documento</label>                        
-							<div class="col-md-5">
+							<div class="col-md-6">
 								<input type="text" name="gasto_no_documento" id="gasto_no_documento" size="30" class="form-control"/>
 							</div>    
 						</div>
@@ -141,19 +141,19 @@ while(list(,$dataLogin) = each($rowsLogin)){
 
                     <div class="form-group">                        
                         <label class="control-label col-md-2">Concepto</label>                        
-                        <div class="col-md-5">
+                        <div class="col-md-6">
                             <input type="text" name="gasto_concepto" id="gasto_concepto" value="" size="40" class="form-control">
                         </div>    
                     </div>
 					<div class="form-group">                        
                         <label class="control-label col-md-2">Descripción</label>                        
-                        <div class="col-md-5">
+                        <div class="col-md-6">
                             <textarea cols="40" name="gasto_descripcion" id="gasto_descripcion" class="form-control" ></textarea>
                         </div>    
                     </div>
 					 <div class="form-group">                        
                         <label class="control-label col-md-2">Monto</label>                        
-                        <div class="col-md-5 input-group m-b" style="padding:0px 15px; height:35px; margin-bottom:1px;">
+                        <div class="col-md-6 input-group m-b" style="padding:0px 15px; height:35px; margin-bottom:1px;">
                             <span class="input-group-addon">$</span>
 							<input type="text" name="gasto_monto" id="gasto_monto" value="" size="10" class="form-control">
                         </div>    
@@ -161,7 +161,8 @@ while(list(,$dataLogin) = each($rowsLogin)){
                     <div class="form-group">                        
                         <label class="control-label col-md-2">Categoria</label>                        
                         <div class="col-md-5">
-                            <select name="gasto_categoria_id" id="gasto_categoria_id" class="form-control chosen-select" onchange="update_sucursal();" >
+                            <select data-placeholder="Selecciona una categoria" class="chosen-select" style="width:300px;" tabindex="4" id="gasto_categoria_id" name="gasto_categoria_id" onchange="update_sucursal();">
+                            <option value=""></option>
 								<?=$options_gasto_categoria_id?>
 							</select>
                         </div>    
@@ -170,7 +171,8 @@ while(list(,$dataLogin) = each($rowsLogin)){
                     <div class="form-group">                        
                         <label class="control-label col-md-2">Sucursal</label>                        
                         <div class="col-md-5">
-                            <select name="sucursal_id" id="sucursal_id" class="form-control chosen-select" >
+                            <select data-placeholder="Selecciona una sucursal" class="chosen-select" style="width:300px;" tabindex="4" id="sucursal_id" name="sucursal_id">
+								<option value=""></option>
 								<?=$options_sucursal_id?>
 							</select>
                         </div>    
@@ -179,7 +181,8 @@ while(list(,$dataLogin) = each($rowsLogin)){
                     <div class="form-group">                        
                         <label class="control-label col-md-2">Proveedor</label>                        
                         <div class="col-md-5">
-                            <select name="proveedor_id" id="proveedor_id" class="form-control chosen-select" onchange="update_beneficiary_from_proveedor();">
+                       		<select data-placeholder="Selecciona un proveedor" class="chosen-select" style="width:300px;" tabindex="4" id="proveedor_id" name="proveedor_id" onchange="update_beneficiary_from_proveedor();">
+								<option value=""></option>
 								<?=$options_proveedor_id?>
 							</select>
                         </div>    
@@ -188,14 +191,15 @@ while(list(,$dataLogin) = each($rowsLogin)){
                     <div class="form-group">                        
                         <label class="control-label col-md-2">Empleado</label>                        
                         <div class="col-md-5">
-                            <select name="login_id" id="login_id"  class="form-control chosen-select" onchange="update_beneficiary_from_login();">
+                            <select data-placeholder="Selecciona un empleado" class="chosen-select" style="width:300px;" tabindex="4" id="login_id" name="login_id" onchange="update_beneficiary_from_login();">
+                            	<option value=""></option>                            
 								<?=$options_login_id?>
 							</select>
                         </div>    
                     </div>
 					<div class="form-group">                        
                         <label class="control-label col-md-2">Beneficiario</label>                        
-                        <div class="col-md-5">
+                        <div class="col-md-6">
                             <input type="text" name="gasto_beneficiario" id="gasto_beneficiario" value="" size="40" class="form-control">
                         </div>    
                     </div>
