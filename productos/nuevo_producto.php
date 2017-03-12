@@ -265,7 +265,7 @@
             </div>
             
             <div class="form-group">
-           	<label class="col-sm-2 control-label">Descuento</label>
+           	<label class="col-sm-2 control-label">Porcentaje de Descuento</label>
            	<div class="col-sm-2 ">
            	<div class="input-group m-b">
            	<input class="form-control discount" id="descuento" name="descuento[]" value="" type="text" onkeypress="return validateNumber(event)">
@@ -325,7 +325,7 @@
             
             
             <div class="form-group">
-           	<label class="col-sm-2 control-label">Descuento</label>
+           	<label class="col-sm-2 control-label">Porcentaje de Descuento</label>
            	<div class="col-sm-2 ">
            	 <div class="input-group m-b">
            	<input class="form-control discountP" id="descuentoP" name="descuentoP[]" value="" type="text" onkeypress="return validateNumber(event)">

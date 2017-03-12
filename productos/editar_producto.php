@@ -341,7 +341,7 @@ if($datos[0]["producto_type"]=='V')
 				$descuentosA.='<div class="form-group">';
 				if($i==0)
 				{
-					$descuentosA.='<label class="col-sm-2 control-label">Descuento</label>';
+					$descuentosA.='<label class="col-sm-2 control-label">Porcentaje de Descuento</label>';
 					$descuentosA.='<div class="col-sm-2 "><div class="input-group m-b"><input class="form-control discount" id="descuento" name="descuento[]" value="'.(100*$descuento).'" type="text" onkeypress="return validateNumber(event)"><span class="input-group-addon">%</span></div></div>';
 					$descuentosA.='<div class="col-md-1"><button class="btn btn-primary btn-xs" id="agregarDescuento" value="" placeholder="Descuento" type="button"><i class="fa fa-plus"></i></button></div>';
 			
@@ -360,7 +360,7 @@ if($datos[0]["producto_type"]=='V')
 			if(!$descuentosA)
 			{
 				$descuentosA.='<div class="form-group">';
-				$descuentosA.='<label class="col-sm-2 control-label">Descuento</label>';
+				$descuentosA.='<label class="col-sm-2 control-label">Porcentaje de Descuento</label>';
 				$descuentosA.='<div class="col-sm-2 "><div class="input-group m-b"><input class="form-control discount" id="descuento" name="descuento[]" value="" type="text" onkeypress="return validateNumber(event)"><span class="input-group-addon">%</span></div></div>';
 				$descuentosA.='<div class="col-md-1"><button class="btn btn-primary btn-xs" id="agregarDescuento" value="" placeholder="Descuento" type="button"><i class="fa fa-plus"></i></button></div>';
 				$descuentosA.='</div>';
@@ -423,7 +423,7 @@ if($datos[0]["producto_type"]=='V')
 				$descuentosA.='<div class="form-group">';
 				if($i==0)
 				{
-					$descuentosA.='<label class="col-sm-2 control-label">Descuento</label>';
+					$descuentosA.='<label class="col-sm-2 control-label">Porcentaje de Descuento</label>';
 					$descuentosA.='<div class="col-sm-2 ">
            	 <div class="input-group m-b">
            	<input class="form-control discountP" id="descuentoP" name="descuentoP[]" value="'.(100*$descuento).'" type="text" onkeypress="return validateNumber(event)">
@@ -450,7 +450,7 @@ if($datos[0]["producto_type"]=='V')
 			if(!$descuentosA)
 			{
 				$descuentosA.='<div class="form-group">';
-				$descuentosA.='<label class="col-sm-2 control-label">Descuento</label>';
+				$descuentosA.='<label class="col-sm-2 control-label">Porcentaje de Descuento</label>';
 				$descuentosA.='<div class="col-sm-2 ">
            	 <div class="input-group m-b">
            	<input class="form-control discountP" id="descuentoP" name="descuentoP[]" value="" type="text" onkeypress="return validateNumber(event)">
