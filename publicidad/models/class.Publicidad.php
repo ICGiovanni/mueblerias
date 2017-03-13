@@ -170,31 +170,28 @@ class Publicidad
 		$mail->Username = "umedina86@gmail.com";
 		$mail->Password = "More1989";*/
 		//
-				
-		$id_cliente="";
+		
+		$mail=new PHPMailer();
 		foreach($clientesE as $c)
 		{
-			if(!$id_cliente)
+			$result=$clientes->GetEmailsClient($c["id"]);
+			foreach($result as $r)
 			{
-				$id_cliente.=$c["id"];
-			}
-			else
-			{
-				$id_cliente.=",".$c["id"];
+				echo $r["email"]."\n";
+				$mail->AddAddress($r["email"], "");
 			}
 		}
 		
-		$result=$clientes->GetClientes($id_cliente);
+		$mail->setFrom('info@globmint.com','Info Globmint');
+		$mail->Subject=utf8_decode($nombre);
+		$mail->MsgHTML(utf8_decode($mensaje));
 		
-		
-		foreach($result as $r)
-		{
-			$mail=new PHPMailer();
-			$mail->AddAddress($r["email"], "");
-			$mail->setFrom('info@globmint.com','Info Globmint');
-			$mail->Subject=utf8_decode($nombre);
-			$mail->MsgHTML(utf8_decode($mensaje));
-			$mail->Send();
+		if(!$mail->send()) {
+			echo 'Message could not be sent.';
+			echo 'Mailer Error: ' . $mail->ErrorInfo;
+		} else {
+			echo 'Message has been sent';
 		}
+		
 	}
 }

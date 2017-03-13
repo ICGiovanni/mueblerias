@@ -30,7 +30,7 @@
 
     <div class="wrapper wrapper-content animated fadeInRight">
             <div class="row">
-                <div class="col-lg-7">
+                <div class="col-lg-6">
                 <div class="ibox float-e-margins">
                     <div class="ibox-title">
                         <div class="ibox-tools">
@@ -96,7 +96,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-5">
+            <div class="col-lg-6">
                 <div class="ibox float-e-margins">
                    <div class="ibox-title">
                         <div class="ibox-tools">
@@ -173,18 +173,20 @@
         $(document).ready(function(){
 
         	$('#tabla_clientes').DataTable({
-                dom: '<"html5buttons"B>lTfgitp',
-                buttons: [
-                    
-                ]
+        		dom: '<"html5buttons"B>lTfgitp',
+                buttons: [],
+                "language": {
+                    "url": "../js/plugins/dataTables/Spanish.json"
+            	}
 
             });
 
         	$('#tabla_publicidad').DataTable({
-                dom: '<"html5buttons"B>lTfgitp',
-                buttons: [
-                    
-                ]
+        		dom: '<"html5buttons"B>lTfgitp',
+                buttons: [],
+                "language": {
+                    "url": "../js/plugins/dataTables/Spanish.json"
+            	}
 
             });
             

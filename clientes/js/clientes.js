@@ -138,6 +138,8 @@ $(document).ready(function()
         		$("#estado").append('<option value="'+field.id_estado+'" >'+field.estado+'</option>');
         	}
         });
+        
+        $('#estado').chosen();
     });
 
 	$("#agregarTelefono").click(function(){
@@ -180,10 +182,15 @@ $(document).ready(function()
 	$("#agregarEmail").click(function(){
         $("#newEmail").append('<div class="form-group"><label class="col-sm-2 control-label"></label><div class="col-sm-5"><input class="form-control" id="email" name="email[]" value="" type="text"></div><div class="col-md-1"><button class="btn btn-danger btn-xs deleteEmail" id="agregarEmail" value="" placeholder="E-mail" type="button"><i class="fa fa-times"></i></button></div></div>');
 
-        $(".deleteEmail").click(function(){            
+        $(".deleteEmail").click(function(){   
+        	console.log("ebtre");
             $(this).parent().parent().remove();
         });  
      });
+	
+	$(".deleteEmail").click(function(){   
+        $(this).parent().parent().remove();
+    });
 	
 	$(".telefono_cliente").keyup(function(event)
 	{
@@ -213,7 +220,7 @@ $(document).ready(function()
 			$(this).val(cad);
 		}
 	});
-	
+		
 });
 
 function validateNumber(evt)
