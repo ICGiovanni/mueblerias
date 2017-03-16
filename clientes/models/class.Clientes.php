@@ -305,4 +305,41 @@ class Clientes
 	
 		return $result;
 	}
+	
+	public function GetClientsSearch(){
+		$sql="SELECT id_cliente, concat(nombre,' ',apellidoP,' ',apellidoM) AS nombre
+			FROM clientes
+			WHERE 1";
+	
+		$statement=$this->connect->prepare($sql);
+		$statement->execute();
+		$result=$statement->fetchAll(PDO::FETCH_ASSOC);
+		
+		
+		while ( list($key, $values) = each ($result) ){
+			/////
+			$emails = $this->GetEmailsClient($values["id_cliente"]);
+			
+			$txtEmails = array();
+			while ( list($keyE, $valueE) = each($emails) ){
+				$txtEmails[]=$valueE["email"];	
+			}
+			$txtEmails = implode(",",$txtEmails);
+			/////
+			$numbers = $this->GetPhonesClient($values["id_cliente"]);
+			
+			$txtNumbers = array();
+			while ( list($keyN, $valueN) = each($numbers) ){
+				$txtNumbers[]=$valueN["number"];	
+			}
+			$txtNumbers = implode(",",$txtNumbers);
+			/////
+			$result[$key]["emails"]=$txtEmails;
+			$result[$key]["numbers"]=$txtNumbers;
+		}
+		//print_r($result);
+		return $result;
+	}
+	
+	
 }

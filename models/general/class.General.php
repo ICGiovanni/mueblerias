@@ -40,6 +40,18 @@ class General
 		return $result;
 	}
 	
+	function getMetodosPago(){
+		$sql="SELECT general_forma_de_pago_id, general_forma_de_pago_desc
+				FROM general_formas_de_pago
+				WHERE 1";
+		
+		$statement=$this->connect->prepare($sql);		
+		$statement->execute();
+		$result=$statement->fetchAll(PDO::FETCH_ASSOC);
+		
+		return $result;
+	}
+	
 	public function getDate($date)
 	{
 		$dateformat= new DateTime($date);

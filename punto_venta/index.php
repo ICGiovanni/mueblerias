@@ -1,17 +1,30 @@
 <?php
 require_once $_SERVER['REDIRECT_PATH_CONFIG'].'config.php';
+require_once($_SERVER["REDIRECT_PATH_CONFIG"].'models/general/class.General.php');
 require_once $pathProy.'/header2.php';
 require_once $pathProy.'/menu.php';
+
+$objGeneral = new General();
+$arrayMetodosPago = $objGeneral->getMetodosPago();
+
+$rowsMetodosPago = '';
+while( list ($KeyMP, $valueMP) = each($arrayMetodosPago) ){
+	$rowsMetodosPago.='<option value="'.$valueMP["general_forma_de_pago_id"].'">'.$valueMP["general_forma_de_pago_desc"].'</option>';
+}
+
+
 ?>   
 <link href="<?=$raizProy?>css/plugins/iCheck/custom.css" rel="stylesheet">
 <link href="<?=$raizProy?>css/plugins/steps/jquery.steps.css" rel="stylesheet">
 <link href="<?=$raizProy?>css/plugins/chosen/chosen.css" rel="stylesheet">
+<link href="<?=$raizProy?>css/plugins/easy-autocomplete/easy-autocomplete.min.css" rel="stylesheet">
 
 <style>
 .wizard > .content > .body  position: relative; 
 .wizard > .content { min-height: 350px; overflow: scroll;}
 .wizard-big.wizard > .content { min-height: 350px; overflow: scroll; }
 .wizard > .steps > ul > li { width: 10% !important; }
+#inputBuscaCliente { width: 830px !important;}
 
 
 </style>
@@ -42,22 +55,24 @@ require_once $pathProy.'/menu.php';
                            
 
                             <form id="form" action="#" class="wizard-big">
+							
 								<h1><i class="fa fa-user"></i></h1>
 								<!-- INICIA DATOS DEL CLIENTE -->
                                 <fieldset>
                                     <!-- <h2>Account Information</h2> -->
                                     <div class="row">
-										<div class="col-lg-8">
+										<div class="col-lg-10">
 											<font style="font-size:30px;">DATOS DEL CLIENTE</font>
 											<br>
 											<div class="form-group"><br>
-												<div class="form-group"><input type="email" placeholder="Nombre, email, numero telefonico" class="form-control"></div>
+												<div class="form-group"><input type="text" placeholder="Nombre, email, numero telefonico" class="form-control" id="inputBuscaCliente_0" name="inputBuscaCliente_0" ></div>
+												<div class="form-group" id="divBuscaCliente_0" >Resultado de Busqueda</div>
                                             </div>
 										</div>
 										
-										<div class="col-lg-4" align="center">  <br><br><br>                                   
+										<div class="col-lg-2" align="center">  <br><br><br>                                   
                                             <div class="form-group">
-												<div style=""> <button type="button" class="btn btn-warning" > <b>+ Nuevo Cliente</b> </button> </div>
+												<div style=""> <button type="button" class="btn btn-sm btn-warning"  data-toggle="modal" data-target="#modalNuevoCliente"> <b>+ Nuevo Cliente</b> </button> </div>
 											</div>
                                         </div>
 										
@@ -67,84 +82,7 @@ require_once $pathProy.'/menu.php';
                                 </fieldset>
 								<!-- FINALIZA DATOS DEL CLIENTE -->
 							
-                                <h1><i class="fa fa-credit-card"></i></h1>
-								<!-- INICIA METODO DE PAGO -->
-                                <fieldset>
-                                    <!-- <h2>Account Information</h2> -->
-                                    <div class="row">
-										<div class="col-lg-4">
-											<font style="font-size:30px;">MÉTODO DE PAGO</font>
-											<br>
-											<div class="form-group">
-												
-                                                <table class="table">
-													<tr>
-														<td>
-															<select data-placeholder="Selecciona un metodo de pago" class="chosen-select" id="" style="width:150px;"> 
-																<option>efectivo</option>
-																<option>tarjeta</option>
-															</select>
-														</td>
-														<td>
-															<input type="text" name="metodo_01" class="form-control " placeholder="$" />
-														</td>
-													</tr>
-													
-												</table>
-                                            </div>
-											
-											
-										</div>
-										
-										<div class="col-lg-4" align="center">  <br><br><br>                                   
-                                            <div class="form-group">
-											<div style=""> <button type="button" class="btn btn-info" > <b>+ Agregar método de pago</b> </button> </div>
-											<br>
-											
-                                               
-												
-												
-                                            </div>
-                                        </div>
-										
-										<div class="col-lg-4">          <br><br><br>                                   
-                                           
-												<table class="table table-striped table-bordered" style="font-size:25px;">
-													<tr>
-														<td align="left">
-															Total venta
-														</td>
-														<td>
-															$ 8,123.00
-														</td>
-													</tr>
-													<!--
-													<tr>
-														<td align="right">
-															IVA
-														</td>
-														<td>
-															$ 800.12
-														</td>
-													</tr>
-													-->
-													
-													<tr>
-														<td align="left">
-															<span style="color:red;" >Restan</span>
-														</td>
-														<td>
-															<span style="color:red;" >$ 700.12</span>
-														</td>
-													</tr>
-												</table>
-											
-										</div>
-                                        
-                                    </div>
-
-                                </fieldset>
-								<!-- FINALIZA METODO DE PAGO -->
+                               
 								
                                 <h1><i class="fa fa-truck"></i></h1>
 								<!-- INICIA SELECCION ENVIO -->
@@ -198,6 +136,77 @@ require_once $pathProy.'/menu.php';
 								
                                 </fieldset>
 								<!-- FINALIZA SELECCION FACTURA -->
+								
+								 <h1><i class="fa fa-credit-card"></i></h1>
+								<!-- INICIA METODO DE PAGO -->
+                                <fieldset>
+                                    <!-- <h2>Account Information</h2> -->
+                                    <div class="row">
+										<div class="col-lg-5">
+											<font style="font-size:30px;">MÉTODO DE PAGO</font>
+											<br>
+											<div class="form-group">
+												
+                                                <table class="table">
+													<tr>
+														<td>
+															<select data-placeholder="Selecciona un metodo de pago" class="chosen-select" id="" style="width:150px;"> 
+																<?=$rowsMetodosPago?>
+															</select>
+														</td>
+														<td>
+															<input type="text" name="metodo_01" class="form-control " placeholder="$" /> 
+														</td>
+														<td>
+															<button class="btn btn-primary btn-xs" id="agregarMetodoPago" value="" placeholder="Metodo Pago" type="button"><i class="fa fa-plus"></i></button>
+														</td>
+													</tr>
+													
+												</table>
+                                            </div>
+											
+											
+										</div>
+										<div class="col-lg-2">
+										</div>
+										<div class="col-lg-5">          <br><br><br>                                   
+                                           
+												<table class="table table-bordered" style="font-size:20px;">
+													<tr>
+														<td align="left">
+															Total venta
+														</td>
+														<td>
+															$ 8,123.00
+														</td>
+													</tr>
+													<!--
+													<tr>
+														<td align="right">
+															IVA
+														</td>
+														<td>
+															$ 800.12
+														</td>
+													</tr>
+													-->
+													
+													<tr>
+														<td align="left">
+															<span style="color:red;" >Restan</span>
+														</td>
+														<td>
+															<span style="color:red;" >$ 700.12</span>
+														</td>
+													</tr>
+												</table>
+											
+										</div>
+                                        
+                                    </div>
+
+                                </fieldset>
+								<!-- FINALIZA METODO DE PAGO -->
 								
 								<h1><i class="fa fa-th-list"></i></h1>
 								<!-- INICIA RESUMEN DE COMPRA -->
@@ -295,10 +304,47 @@ require_once $pathProy.'/menu.php';
 				<h4 class="modal-title">Buscar cliente</h4>
 			</div>
 			<div class="modal-body">
-				<div class="form-group"><input type="email" placeholder="Nombre, email, numero telefonico" class="form-control"></div>
+				<div class="form-group"><input type="text" placeholder="Nombre, email, numero telefonico" class="form-control" id="inputBuscaCliente" name="inputBuscaCliente" ></div>
+				<div class="form-group" id="divBuscaCliente" ></div>
+				<div class="form-group"><div style="display: inline; width: 150px">selecciona zona de envío</div>
+										<select class="form-control" id="flete" style="display: inline; width: 200px">
+											<option value="0">Elige sección</option>
+											<option value="1">seccion 1</option>
+											<option value="2">seccion 2</option>
+											<option value="3">seccion 3</option>
+											<option value="4">seccion 4</option>
+										</select>
+										<input type="text" id="costoFlete" class="form-control" style="display: inline; width: 150px">
+										</div>
+				<div class="form-group">
+										<select class="form-control" id="planta">
+											<option value="0">Selecciona número de pisos</option>
+											<option value="1">Planta Baja</option>
+											<option value="2">Piso 1</option>
+											<option value="3">Piso 2</option>
+											<option value="4">Piso 3</option>
+											<option value="4">Piso 4</option>
+											<option value="4">Piso 5</option>
+											<option value="4">Piso 6</option>
+											<option value="4">Piso 7</option>
+											<option value="4">Piso 8</option>
+											<option value="4">Piso 9</option>
+											<option value="4">Piso 10</option>
+											<option value="4">Mas de 10</option>
+										</select></div>
+										
+										<div class="form-group">
+										<select class="form-control" id="planta">
+											<option value="0">Selecione donde se entregará la mercancia</option>
+											<option value="1">Al interior de la vivienda</option>										
+											<option value="1">A pie de puerta</option>
+											<option value="2">Require traslado a pie</option>
+											
+										</select></div>
+										
 			</div>
 			<div class="modal-footer">
-				<button data-toggle="modal" href="#ModalClienteNuevo"  type="button" class="btn btn-warning"  data-toggle="modal" data-target="#modalNuevoCliente">+ Nuevo Cliente</button>
+				<button data-toggle="modal" href="#ModalClienteNuevo"  type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalNuevoCliente">+ Nuevo Cliente</button>
 				<button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
 				<button type="button" class="btn btn-primary">Ligar Cliente</button>
 			</div>
@@ -423,6 +469,7 @@ require_once $pathProy.'/menu.php';
     <!-- Jquery Validate -->
     <script src="<?=$raizProy?>js/plugins/validate/jquery.validate.min.js"></script>
 	<script src="<?=$raizProy?>js/plugins/chosen/chosen.jquery.js"></script>
+	<script src="<?=$raizProy?>js/plugins/easy-autocomplete/jquery.easy-autocomplete.min.js"></script>
 
 
 
@@ -432,7 +479,7 @@ require_once $pathProy.'/menu.php';
         $(document).ready(function(){
 			
 			$("#wizard").steps();
-		
+			$("#metodosPago").chosen();
 		
 			
             $("#form").steps({
@@ -478,6 +525,11 @@ require_once $pathProy.'/menu.php';
                 },
                 onStepChanged: function (event, currentIndex, priorIndex)
                 {
+					setTimeout(function(){
+						$("#metodosPago").chosen();
+						$('#metodosPago').trigger("chosen:updated");
+						
+					}, 2000);
 					//alert(currentIndex);
                     // Suppress (skip) "Warning" step if the user is old enough.
 					/*
@@ -579,6 +631,9 @@ require_once $pathProy.'/menu.php';
 				}
 			});
 			
+			
+			
+			
 			$.getJSON("/clientes/states_json.php",function(result)
 			{
 				$.each(result, function(i, field)
@@ -595,6 +650,173 @@ require_once $pathProy.'/menu.php';
 				});
 			 });
 			/*FUNCIONES PARA CLIENTE NUEVO*/
+			
+			$("#flete").change(function(){
+				console.log("llega" + $(this).val());
+				if($(this).val()=='1'){
+					$("#costoFlete").val('666');
+				}
+				if($(this).val()=='2'){
+					$("#costoFlete").val('777');
+				}
+				if($(this).val()=='3'){
+					$("#costoFlete").val('888');
+				}
+				if($(this).val()=='4'){
+					$("#costoFlete").val('999');
+				}
+				
+			});
+			
+			
+			
+			
+			//FUNCIONES PARA BUSQUEDA DE CLIENTE
+    
+		var options={
+				url: "/clientes/get_clients_search.php",
+				getValue: function(element){
+					var name=element.nombre+' '+element.emails+' '+element.numbers;			
+					return name;
+				},
+				template: {
+					type: "custom",
+					method: function(value, item) {
+						return value;
+					}
+				},
+				list:{
+					match:{
+						enabled: true
+					},
+			showAnimation:{
+						type: "fade", //normal|slide|fade
+						time: 400,
+						callback: function() {}
+					},
+					hideAnimation: {
+						type: "slide", //normal|slide|fade
+						time: 400,
+						callback: function() {}
+			},
+			onChooseEvent:function(){
+						var id=$("#inputBuscaCliente").getSelectedItemData().id_cliente;						
+						var name=$("#inputBuscaCliente").getSelectedItemData().nombre;
+						var email=$("#inputBuscaCliente").getSelectedItemData().emails;
+						var number=$("#inputBuscaCliente").getSelectedItemData().numbers;
+						SelectedItemData(id, name, email, number);
+			}
+				}
+		};
+		
+		var options_0={
+				url: "/clientes/get_clients_search.php",
+				getValue: function(element){
+					var name=element.nombre+' '+element.emails+' '+element.numbers;			
+					return name;
+				},
+				template: {
+					type: "custom",
+					method: function(value, item) {
+						return value;
+					}
+				},
+				list:{
+					match:{
+						enabled: true
+					},
+			showAnimation:{
+						type: "fade", //normal|slide|fade
+						time: 400,
+						callback: function() {}
+					},
+					hideAnimation: {
+						type: "slide", //normal|slide|fade
+						time: 400,
+						callback: function() {}
+			},
+			onChooseEvent:function(){
+						var id=$("#inputBuscaCliente_0").getSelectedItemData().id_cliente;						
+						var name=$("#inputBuscaCliente_0").getSelectedItemData().nombre;
+						var email=$("#inputBuscaCliente_0").getSelectedItemData().emails;
+						var number=$("#inputBuscaCliente_0").getSelectedItemData().numbers;
+						SelectedItemData_0(id, name, email, number);
+			}
+				}
+		};
+
+		var SelectedItemData=function(id,name,email,number)
+		{
+			var table='<table ><tbody>';
+
+			var cliente=$("#cliente_"+id).val();
+			
+			if(cliente==undefined)
+			{
+							urlImage = '';
+							
+							table +='   <tr id="row_'+id+'"> '+
+											'<td class="desc" style="padding-right:50px;">'+
+												'<h3><a href="#" class="text-navy">'+name+'</a></h3>'+
+											'</td>'+
+											'<td style="padding-right:50px;"><h3>'+email+'<h3></td>'+									
+											'<td style="padding-right:50px;"><h3>'+number+'</h3></td>'+
+											'<td><h3><i class="fa fa-trash removeCart" role="button" id="removeCliente_'+id+'"></i></h3></td>'+
+											'</tr></tbody></table>';					
+		
+				$('#divBuscaCliente').html(table);
+		
+				$("#inputBuscaCliente").focus();
+				$("#inputBuscaCliente").val('');
+				//$("#product_list").fadeIn();
+							
+							//saveClienteEnVenta(id, sku, name, 1, price,urlImage);
+			}
+			else
+			{
+				$("#inputBuscaCliente").focus();
+				$("#inputBuscaCliente").val('');
+				alert("El cliente ya ha sido ligado");
+			}
+		}
+		
+		var SelectedItemData_0=function(id,name,email,number)
+		{
+			var table='<table ><tbody>';
+
+			var cliente=$("#cliente_"+id).val();
+			
+			if(cliente==undefined)
+			{
+							urlImage = '';
+							
+							table +='   <tr id="row_'+id+'"> '+
+											'<td class="desc" style="padding-right:50px;">'+
+												'<h3><a href="#" class="text-navy">'+name+'</a></h3>'+
+											'</td>'+
+											'<td style="padding-right:50px;"><h3>'+email+'<h3></td>'+									
+											'<td style="padding-right:50px;"><h3>'+number+'</h3></td>'+
+											'<td><h3><i class="fa fa-trash removeCart" role="button" id="removeCliente_'+id+'"></i></h3></td>'+
+											'</tr></tbody></table>';					
+		
+				$('#divBuscaCliente_0').html(table);
+		
+				$("#inputBuscaCliente_0").focus();
+				$("#inputBuscaCliente_0").val('');
+				//$("#product_list").fadeIn();
+							
+							//saveClienteEnVenta(id, sku, name, 1, price,urlImage);
+			}
+			else
+			{
+				$("#inputBuscaCliente_0").focus();
+				$("#inputBuscaCliente_0").val('');
+				alert("El cliente ya ha sido ligado");
+			}
+		}
+
+		$("#inputBuscaCliente").easyAutocomplete(options);		
+		$("#inputBuscaCliente_0").easyAutocomplete(options_0);
 			
        });
 	   
