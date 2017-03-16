@@ -117,6 +117,8 @@ class Clientes
 			}
 		}
 		
+		$this->BorrarEmail($cliente_id);
+		
 		$email=$_REQUEST['email'];
 		
 		foreach($email as $k=>$e)

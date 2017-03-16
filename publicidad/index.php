@@ -117,24 +117,11 @@
         $(document).ready(function(){
 
         	$('.dataTables-example').DataTable({
-                dom: '<"html5buttons"B>lTfgitp',
-                buttons: [
-                    { extend: 'copy'},
-                    {extend: 'csv'},
-                    {extend: 'excel', title: 'ExampleFile'},
-                    {extend: 'pdf', title: 'ExampleFile'},
-
-                    {extend: 'print',
-                     customize: function (win){
-                            $(win.document.body).addClass('white-bg');
-                            $(win.document.body).css('font-size', '10px');
-
-                            $(win.document.body).find('table')
-                                    .addClass('compact')
-                                    .css('font-size', 'inherit');
-                    }
-                    }
-                ]
+        		dom: '<"html5buttons"B>lTfgitp',
+                buttons: [],
+                "language": {
+                    "url": "../js/plugins/dataTables/Spanish.json"
+            	}
 
             });
             
@@ -151,9 +138,13 @@
 		        data: {id:id_publicidad}, // serializes the form's elements.
 		        success: function(data)
 		        {
-		        	alert("La Campaña ha sido borrada"); // show response from the php script.
-		        	var url="index.php";
-		    		$(location).attr("href", url);
+		        	swal({
+		                title: "Guardado!",
+		                text: "Campa\u00f1a borrada correctamente!",
+		                type: "success"
+		            }, function () {
+		                window.location.href = 'index.php';
+		            });
 				}
 			});
         }

@@ -29,7 +29,7 @@
 
 <div class="row wrapper border-bottom white-bg page-heading">
     <div class="col-sm-4">
-        <h2>Punto de Venta</h2>
+        <h2>Ventas</h2>
         <ol class="breadcrumb">
             <li>
                 <a href="">Punto de Venta</a>

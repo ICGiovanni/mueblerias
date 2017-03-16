@@ -121,7 +121,8 @@
                             <i class="fa fa-shopping-cart"></i> <span class="nav-label">Ventas</span>
                         </a>
                         <ul class="nav nav-second-level">
-                            <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/ventas/index.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'ventas/index.php'?>" >Realizar Venta</a></li>                                                                                    
+                            <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/ventas/index.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'ventas/index.php'?>" >Nueva Venta</a></li>
+                            <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/ventas/listaVentas.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'ventas/listaVentas.php'?>" >Lista de Ventas</a></li>
                         </ul>
                     </li>
                     <li class="<?php if (stristr($_SERVER['SCRIPT_NAME'],'/calendario/')){ echo 'active';}?>">
