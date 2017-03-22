@@ -343,5 +343,28 @@ class Clientes
 		return $result;
 	}
 	
-	
+	public function getClientAdresses($cliente_id){
+		$sql="SELECT 
+				cliente_direccion_id,
+				cliente_direccion_tipo_id,
+				cliente_direccion_calle,
+				cliente_direccion_numero_ext,
+				cliente_direccion_numero_int,
+				cliente_direccion_colonia,
+				cliente_direccion_municipio,
+				id_estado,
+				cliente_direccion_cp,
+				cliente_direccion_rfc,
+				cliente_direccion_razon_social,
+				cliente_direccion_entre_calles
+			FROM cliente_direccion
+			WHERE cliente_id = :cliente_id";
+		
+		$statement=$this->connect->prepare($sql);
+		$statement->bindParam(':cliente_id', $cliente_id, PDO::PARAM_STR);
+		
+		$statement->execute();
+		$result=$statement->fetchAll(PDO::FETCH_ASSOC);
+		return $result;
+	}
 }

@@ -12,7 +12,7 @@ while( list ($KeyMP, $valueMP) = each($arrayMetodosPago) ){
 	$rowsMetodosPago.='<option value="'.$valueMP["general_forma_de_pago_id"].'">'.$valueMP["general_forma_de_pago_desc"].'</option>';
 }
 
-
+print_r($_SESSION);
 ?>   
 <link href="<?=$raizProy?>css/plugins/iCheck/custom.css" rel="stylesheet">
 <link href="<?=$raizProy?>css/plugins/steps/jquery.steps.css" rel="stylesheet">
@@ -64,9 +64,12 @@ while( list ($KeyMP, $valueMP) = each($arrayMetodosPago) ){
 										<div class="col-lg-10">
 											<font style="font-size:30px;">DATOS DEL CLIENTE</font>
 											<br>
+											
+											
 											<div class="form-group"><br>
 												<div class="form-group"><input type="text" placeholder="Nombre, email, numero telefonico" class="form-control" id="inputBuscaCliente_0" name="inputBuscaCliente_0" ></div>
-												<div class="form-group" id="divBuscaCliente_0" >Resultado de Busqueda</div>
+												<div class="form-group" id="divBuscaCliente_0" ></div>
+												
                                             </div>
 										</div>
 										
@@ -124,7 +127,7 @@ while( list ($KeyMP, $valueMP) = each($arrayMetodosPago) ){
 													
 													<table>
 														<tr>
-															<td><button class="btn btn-primary dim btn-large-dim" type="button"  data-toggle="modal" data-target="#modalBuscaCliente">SÍ</button></td>
+															<td><button class="btn btn-primary dim btn-large-dim" type="button"  data-toggle="modal" data-target="#ModelDetalleFacturacion">SÍ</button></td>
 															<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 															<td><button class="btn btn-danger dim btn-large-dim" type="button">NO</button></td>
 														</tr>
@@ -301,11 +304,12 @@ while( list ($KeyMP, $valueMP) = each($arrayMetodosPago) ){
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-				<h4 class="modal-title">Buscar cliente</h4>
+				<h4 class="modal-title">Detalle de Envio</h4>
 			</div>
 			<div class="modal-body">
 				<div class="form-group"><input type="text" placeholder="Nombre, email, numero telefonico" class="form-control" id="inputBuscaCliente" name="inputBuscaCliente" ></div>
-				<div class="form-group" id="divBuscaCliente" ></div>
+				<div class="form-group" id="divBuscaClienteEnvio" ></div>
+				<div class="form-group" id="divDireciconesClienteEnvio" ></div>
 				<div class="form-group"><div style="display: inline; width: 150px">selecciona zona de envío</div>
 										<select class="form-control" id="flete" style="display: inline; width: 200px">
 											<option value="0">Elige sección</option>
@@ -346,7 +350,28 @@ while( list ($KeyMP, $valueMP) = each($arrayMetodosPago) ){
 			<div class="modal-footer">
 				<button data-toggle="modal" href="#ModalClienteNuevo"  type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalNuevoCliente">+ Nuevo Cliente</button>
 				<button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-				<button type="button" class="btn btn-primary">Ligar Cliente</button>
+				<button type="button" class="btn btn-primary">Guardar datos de envío</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal inmodal fade" id="ModelDetalleFacturacion" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title">Detalle de Facturación</h4>
+			</div>
+			<div class="modal-body">
+				<div class="form-group"><input type="text" placeholder="Nombre, email, numero telefonico" class="form-control" id="inputBuscaCliente" name="inputBuscaCliente" ></div>
+				<div class="form-group" id="divBuscaClienteFacturacion" ></div>
+				<div class="form-group" id="divDireciconesClienteFacturacion" ></div>										
+			</div>
+			<div class="modal-footer">
+				<button data-toggle="modal" href="#ModalClienteNuevo"  type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalNuevoCliente">+ Nuevo Cliente</button>
+				<button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+				<button type="button" class="btn btn-primary">Guardar datos de facturación</button>
 			</div>
 		</div>
 	</div>
@@ -740,7 +765,53 @@ while( list ($KeyMP, $valueMP) = each($arrayMetodosPago) ){
 						var name=$("#inputBuscaCliente_0").getSelectedItemData().nombre;
 						var email=$("#inputBuscaCliente_0").getSelectedItemData().emails;
 						var number=$("#inputBuscaCliente_0").getSelectedItemData().numbers;
+						
+						var url="/clientes/ajax_get_cliente_direcciones.php";
+						
 						SelectedItemData_0(id, name, email, number);
+						
+						$.ajax({
+							type: "POST",
+							url: url,
+							data: { cliente_id:id }, // serializes the form's elements.
+							success: function(data)
+							{
+								$('#divDireciconesClienteEnvio').html('');
+								$('#divDireciconesClienteFacturacion').html('');
+								
+								dataJson = JSON.parse(data);
+								newDivBtnsEnvio = '';
+								newDivBtnsFact = '';
+								
+								newDivsEnvio = '';
+								newDivsFact = '';
+								
+								jQuery.each(dataJson, function(i, val) {
+									
+									//separar botones de divs
+									if(val.cliente_direccion_tipo_id == 1 || val.cliente_direccion_tipo_id == 3){
+										newDivBtnsEnvio+= '<button type="button" class="btn btn-success" data-toggle="collapse" data-target="#demo_'+val.cliente_direccion_id+'">'+val.cliente_direccion_calle+' '+val.cliente_direccion_numero_ext+'...</button> ';
+										newDivsEnvio+= '<div id="demo_'+val.cliente_direccion_id+'" class="collapse">'+val.cliente_direccion_calle+' '+val.cliente_direccion_numero_ext+' '+val.cliente_direccion_numero_int+' '+val.cliente_direccion_colonia+' '+val.cliente_direccion_municipio+' C.P. '+val.cliente_direccion_cp+' <a href="javascript:void(0)" onclick="asociaDireccionEnvio('+val.cliente_direccion_id+');">elegir</a></div>';
+									}
+									if(val.cliente_direccion_tipo_id == 2 || val.cliente_direccion_tipo_id == 3){
+										newDivBtnsFact+= '<button type="button" class="btn btn-success" data-toggle="collapse" data-target="#demo_'+val.cliente_direccion_id+'">'+val.cliente_direccion_calle+' '+val.cliente_direccion_numero_ext+'...</button> ';
+										newDivsFact+= '<div id="demo_'+val.cliente_direccion_id+'" class="collapse">'+val.cliente_direccion_calle+' '+val.cliente_direccion_numero_ext+' '+val.cliente_direccion_numero_int+' '+val.cliente_direccion_colonia+' '+val.cliente_direccion_municipio+' C.P. '+val.cliente_direccion_cp+' <a href="javascript:void(0)" onclick="asociaDireccionFact('+val.cliente_direccion_id+');">elegir</a></div>';
+									}
+									
+								});
+								
+								newDivBtnsEnvio+= '<button type="button" class="btn btn-success" >+ Nueva direccion envío</button> ';
+								newDivBtnsFact+= '<button type="button" class="btn btn-success" >+ Nueva direccion facturación</button> ';
+								
+								$('#divDireciconesClienteEnvio').append(newDivBtnsEnvio+"<br><br>");
+								$('#divDireciconesClienteEnvio').append(newDivsEnvio);
+								
+								$('#divDireciconesClienteFacturacion').append(newDivBtnsFact+"<br><br>");
+								$('#divDireciconesClienteFacturacion').append(newDivsFact);
+							}
+						});
+						
+						
 			}
 				}
 		};
@@ -762,12 +833,14 @@ while( list ($KeyMP, $valueMP) = each($arrayMetodosPago) ){
 											'<td style="padding-right:50px;"><h3>'+email+'<h3></td>'+									
 											'<td style="padding-right:50px;"><h3>'+number+'</h3></td>'+
 											'<td><h3><i class="fa fa-trash removeCart" role="button" id="removeCliente_'+id+'"></i></h3></td>'+
-											'</tr></tbody></table>';					
-		
-				$('#divBuscaCliente').html(table);
-		
-				$("#inputBuscaCliente").focus();
-				$("#inputBuscaCliente").val('');
+											'</tr></tbody></table>';
+											
+				$('#divBuscaClienteEnvio_0').html(table);
+				$('#divBuscaClienteEnvio').html(table);
+				$('#divBuscaClienteFacturacion').html(table);
+				
+				$("#inputBuscaCliente").focus(); // foco a input
+				$("#inputBuscaCliente").val(''); // reset a input
 				//$("#product_list").fadeIn();
 							
 							//saveClienteEnVenta(id, sku, name, 1, price,urlImage);
@@ -800,6 +873,8 @@ while( list ($KeyMP, $valueMP) = each($arrayMetodosPago) ){
 											'</tr></tbody></table>';					
 		
 				$('#divBuscaCliente_0').html(table);
+				$('#divBuscaClienteEnvio').html(table);
+				$('#divBuscaClienteFacturacion').html(table);
 		
 				$("#inputBuscaCliente_0").focus();
 				$("#inputBuscaCliente_0").val('');
@@ -820,7 +895,33 @@ while( list ($KeyMP, $valueMP) = each($arrayMetodosPago) ){
 			
        });
 	   
+	   function asociaDireccionEnvio(cliente_direccion_id){
+		   var url="/clientes/ajax_asocia_direccion_envio.php";
+					 
+			$.ajax({
+				type: "POST",
+				url: url,
+				data: {cliente_direccion_id: cliente_direccion_id}, // serializes the form's elements.
+				success: function(data)
+				{
+					alert("Sweet Alert");
+				}
+			});
+	   }
 	   
+	   function asociaDireccionFact(cliente_direccion_id){
+		   var url="/clientes/ajax_asocia_direccion_fact.php";
+					 
+			$.ajax({
+				type: "POST",
+				url: url,
+				data: {cliente_direccion_id: cliente_direccion_id}, // serializes the form's elements.
+				success: function(data)
+				{
+					alert("Sweet Alert"); // show response from the php script.
+				}
+			});
+	   }
     </script>
 
 </body>
