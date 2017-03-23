@@ -124,12 +124,69 @@ $(document).ready(function()
 		$("#municipio").val('');
 	};
 	
-	$("#limpiar").click(function()
+	var edit_address=function(id)
+	{
+		$("#calle").val($("#calle_"+id).val());
+		$("#noExt").val($("#noExt_"+id).val());
+		$("#noInt").val($("#noInt_"+id).val());		
+		$("#colonia").val($("#colonia_"+id).val());
+		$("#codigoPostal").val($("#codigoPostal_"+id).val());
+		$("#estado").val($("#estado_"+id).val()).trigger('chosen:updated');
+		$("#municipio").val($("#municipio_"+id).val());
+		$("#address_current").val(id);
+		$("#addAddress").hide();
+		$("#aditAddress").show();
+	};
+	
+	$("#limpiar_address").click(function()
 	{
 		clean_address();
 	});
 	
-	$( "#agregar" ).click(function()
+	$("#aditAddress").click(function()
+	{
+		var validate=validar_direccion();
+		
+		if(validate)
+		{
+			var address=$("#address_current").val();
+			var calle=$("#calle").val();
+			var noExt=$("#noExt").val();
+			var noInt=$("#noInt").val();		
+			var colonia=$("#colonia").val();
+			var codigoPostal=$("#codigoPostal").val();
+			var estado=$("#estado").val();
+			var municipio=$("#municipio").val();
+			var addressComplete='';
+			
+			addressComplete+=calle+' '+noExt;
+			
+			if(noInt!='')
+			{
+				addressComplete+=' Int.'+noInt;
+			}
+			
+			addressComplete+=' '+colonia;
+			addressComplete+=' C.P.'+codigoPostal;
+			addressComplete+=' '+municipio+', '+$("#estado option:selected").html();
+			
+			$("#addres_div_"+address).html(addressComplete);
+			$("#calle_"+address).val(calle);
+			$("#noExt_"+address).val(noExt);
+			$("#noInt_"+address).val(noInt);		
+			$("#colonia_"+address).val(colonia);
+			$("#codigoPostal_"+address).val(codigoPostal);
+			$("#estado_"+address).val(estado);
+			$("#municipio_"+address).val(municipio);
+			
+			$("#addAddress").show();
+			$("#aditAddress").hide();
+			
+			clean_address();
+		}
+	});
+	
+	$( "#addAddress" ).click(function()
 	{
 		var validate=validar_direccion();
 		var table='';
@@ -166,8 +223,9 @@ $(document).ready(function()
 			table+='<input type="hidden" id="codigoPostal_'+address+'" name="codigoPostal_'+address+'" value="'+codigoPostal+'">';
 			table+='<input type="hidden" id="estado_'+address+'" name="estado_'+address+'" value="'+estado+'">';
 			table+='<input type="hidden" id="municipio_'+address+'" name="municipio_'+address+'" value="'+municipio+'">';
-			table+='<td>'+addressComplete+'</td>';
-			table+='<td class="text-left"><button class="btn btn-danger btn-xs deleteAddress" id="deleteA" value="" placeholder="Descuento" type="button"><i class="fa fa-times"></i></button></td>';
+			table+='<td><div id="addres_div_'+address+'">'+addressComplete+'</div></td>';
+			table+='<td class="text-left"><button class="btn btn-primary btn-xs editAddress" id="editA" value="" placeholder="" type="button" id-num="'+address+'"><i class="fa fa-pencil"></i></button>  ';
+			table+='<button class="btn btn-danger btn-xs deleteAddress" id="deleteA" value="" placeholder="" type="button"><i class="fa fa-trash-o"></i></button></td>';
 			table+='</tr>';
 			
 			$('#address_table').append(table);
@@ -179,48 +237,58 @@ $(document).ready(function()
 			
 			$(".deleteAddress").click(function()
 			{            
+				var bandera=false;
+				
 				$(this).parent().parent().remove();
 				
-				var address=parseInt($("#address").val());
-				
-				if(address>0)
+				$('#address_table > tr').each(function()
 				{
-					address=address-1;
-				}
+					bandera=true;
+				});
 				
-				if(address==0)
+				if(!bandera)
 				{
 					$("#address_list").hide();
 				}
-				
-				$("#address").val(address);
+			});
+			
+			$(".editAddress").click(function()
+			{            
+				 var id = $(this).attr('id-num');
+				 
+				 edit_address(id);
 			});
 		}
 	});
 	
+	$(".editAddress").click(function()
+	{            
+		 var id = $(this).attr('id-num');
+		 
+		 edit_address(id);
+	});
+	
 	$(".deleteAddress").click(function()
 	{            
+		var bandera=false;
+		
 		$(this).parent().parent().remove();
 		
-		var address=parseInt($("#address").val());
-		
-		if(address>0)
+		$('#address_table > tr').each(function()
 		{
-			address=address-1;
-		}
+			bandera=true;
+		});
 		
-		if(address==0)
+		if(!bandera)
 		{
 			$("#address_list").hide();
 		}
-		
-		$("#address").val(address);
 	});
 	
 	$( "#guardar" ).click(function()
 	{
 		var validate=validate_form();
-		
+				
 		if(validate)
 		{
 			var url="guardar_cliente.php";
@@ -232,13 +300,42 @@ $(document).ready(function()
 		        data: $("#form_cliente").serialize(), // serializes the form's elements.
 		        success: function(data)
 		        {
-		    		swal({
-		                title: "Guardado!",
-		                text: "Cliente guardado correctamente!",
-		                type: "success"
-		            }, function () {
-		                window.location.href = 'index.php';
-		            });
+		        	var idCliente=data;
+		        	var banderaAddress=false;
+		        	var addressArray=new Array();
+		        	
+		        	$(".editAddress").each(function (index) 
+        	        { 
+		        		banderaAddress=true;
+		        		var a={};
+        				var id = $(this).attr('id-num');
+        				
+        				a.calle=$("#calle_"+id).val();
+        				a.noExt=$("#noExt_"+id).val();
+        				a.noInt=$("#noInt_"+id).val();
+        				a.colonia=$("#colonia_"+id).val();
+        				a.codigoPostal=$("#codigoPostal_"+id).val();
+        				a.estado=$("#estado_"+id).val();
+        				a.municipio=$("#municipio_"+id).val();
+        				
+        				addressArray.push(a);
+        	        });
+		        	
+		        	if(!banderaAddress)
+		        	{
+		        		swal({
+			                title: "Guardado!",
+			                text: "Cliente guardado correctamente!",
+			                type: "success"
+			            }, function () {
+			                window.location.href = 'index.php';
+			            });
+		        	}
+		        	else
+		        	{
+		        		var jsonAddress=JSON.stringify(addressArray);
+		        		console.log(jsonAddress);
+		        	}
 				}
 			});
 		}

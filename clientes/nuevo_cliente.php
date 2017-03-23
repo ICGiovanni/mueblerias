@@ -30,6 +30,7 @@
     <div class="wrapper wrapper-content animated fadeInRight">
 		<form method="get" class="form-horizontal" action="/" id="form_cliente">
 			<input type="hidden" id="address" name="address" value="0">
+			<input type="hidden" id="address_current" name="address_current" value="">
 			<div class="form-group"><label class="col-sm-2 control-label">Nombre</label>
 			<div class="col-sm-6" ><input type="text" class="form-control" id="nombre" name="nombre"></div>
             </div>
@@ -82,8 +83,9 @@
             
             <div class="form-group">
 			<div class="col-sm-6 col-sm-offset-2" align="right"><br>
-			<button class="btn btn-danger btn-xs" id="limpiar" type="button">Limpiar</button>&nbsp;&nbsp;&nbsp;&nbsp;
-			<button class="btn btn-primary btn-xs" id="agregar" type="button">Agregar Dirección</button>
+			<button class="btn btn-danger btn-xs" id="limpiar_address" type="button">Limpiar</button>&nbsp;&nbsp;&nbsp;&nbsp;
+			<button class="btn btn-primary btn-xs" id="addAddress" type="button">Agregar Dirección</button>
+			<button class="btn btn-primary btn-xs" style="display: none;" id="aditAddress" type="button">Actualizar Dirección</button>
 			</div>
 			</div>
 			

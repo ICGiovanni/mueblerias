@@ -367,4 +367,9 @@ class Clientes
 		$result=$statement->fetchAll(PDO::FETCH_ASSOC);
 		return $result;
 	}
+	
+	public function InsertClientAddress($idCliente,$json)
+	{
+		
+	}
 }
