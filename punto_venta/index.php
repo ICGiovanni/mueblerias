@@ -7,12 +7,30 @@ require_once $pathProy.'/menu.php';
 $objGeneral = new General();
 $arrayMetodosPago = $objGeneral->getMetodosPago();
 
-$rowsMetodosPago = '';
+$rowsMetodosPago = '<option value="0">Selecciona un método de pago</option> ';
 while( list ($KeyMP, $valueMP) = each($arrayMetodosPago) ){
-	$rowsMetodosPago.='<option value="'.$valueMP["general_forma_de_pago_id"].'">'.$valueMP["general_forma_de_pago_desc"].'</option>';
+	$rowsMetodosPago.='<option value="'.$valueMP["general_forma_de_pago_id"].'">'.$valueMP["general_forma_de_pago_desc"].'</option> ';
 }
 
-print_r($_SESSION);
+
+if(!isset($_SESSION["punto_venta"])){
+	die("Agregar productos al carrito");
+}
+else{
+	$trProductos = '';
+	$totalVenta = 0;
+	while( list($keyP, $valueP) = each($_SESSION["punto_venta"]["Productos"])){
+		$trProductos.= '<tr>
+			<td>'.$valueP["SKU"].'</td>
+			<td>'.$valueP["Modelo"].'</td>
+			<td>'.$valueP["Cantidad"].'</td>
+			<td>'.$valueP["Precio"].'</td>
+			<td>'.$valueP["Subtotal"].'</td>
+		</tr>';
+		$totalVenta+=$valueP["Subtotal"];
+	}
+}
+//print_r($_SESSION);
 ?>   
 <link href="<?=$raizProy?>css/plugins/iCheck/custom.css" rel="stylesheet">
 <link href="<?=$raizProy?>css/plugins/steps/jquery.steps.css" rel="stylesheet">
@@ -62,7 +80,7 @@ print_r($_SESSION);
                                     <!-- <h2>Account Information</h2> -->
                                     <div class="row">
 										<div class="col-lg-10">
-											<font style="font-size:30px;">DATOS DEL CLIENTE</font>
+											<font style="font-size:25px;">Datos del cliente</font>
 											<br>
 											
 											
@@ -94,7 +112,7 @@ print_r($_SESSION);
 									<div class="form-group">
 										
 										<div class="col-lg-12">
-											<div align="center"><font style="font-size:30px;">¿ENVÍO A DOMICILIO?</font></div>
+											<div align="center"><font style="font-size:25px;">¿Requiere envío a domicilio?</font></div>
 											<br><br><br><div align="center">
 													
 													<table>
@@ -122,7 +140,7 @@ print_r($_SESSION);
 									<div class="form-group">
 										
 										<div class="col-lg-12">
-											<div align="center"><font style="font-size:30px;">¿REQUIERE FACTURA?</font></div>
+											<div align="center"><font style="font-size:25px;">¿Requiere factura?</font></div>
 											<br><br><br><div align="center">
 													
 													<table>
@@ -145,61 +163,54 @@ print_r($_SESSION);
                                 <fieldset>
                                     <!-- <h2>Account Information</h2> -->
                                     <div class="row">
-										<div class="col-lg-5">
-											<font style="font-size:30px;">MÉTODO DE PAGO</font>
+										<div class="col-lg-6">
+											<font style="font-size:25px;">Método de pago</font> <br>
 											<br>
 											<div class="form-group">
 												
-                                                <table class="table">
-													<tr>
+                                                <table class="table" id="tableMetodosDePago">
+													<tr id="trMetodo_1">
 														<td>
-															<select data-placeholder="Selecciona un metodo de pago" class="chosen-select" id="" style="width:150px;"> 
+															<select id="" style="height:35px; font-size:15px;">
 																<?=$rowsMetodosPago?>
 															</select>
 														</td>
 														<td>
-															<input type="text" name="metodo_01" class="form-control " placeholder="$" /> 
+															<div>
+																<input type="text" name="metodo_1" id="metodo_1" class="form-control" placeholder="$" onchange="recalculaRestaTotal(this);" /> 
+															</div>
 														</td>
 														<td>
-															<button class="btn btn-primary btn-xs" id="agregarMetodoPago" value="" placeholder="Metodo Pago" type="button"><i class="fa fa-plus"></i></button>
+															<button class="btn btn-primary btn-xs" id="agregarMetodoPago" value="" placeholder="Metodo Pago" type="button" style="margin-top:5px;"><i class="fa fa-plus" onclick="agregaNuevoMetodoPago();"></i></button>
 														</td>
 													</tr>
-													
 												</table>
                                             </div>
 											
 											
 										</div>
-										<div class="col-lg-2">
+										<div class="col-lg-1">
 										</div>
 										<div class="col-lg-5">          <br><br><br>                                   
                                            
 												<table class="table table-bordered" style="font-size:20px;">
 													<tr>
-														<td align="left">
-															Total venta
-														</td>
-														<td>
-															$ 8,123.00
-														</td>
+														<td align="left">Total venta</td>
+														<td>$ <?=$totalVenta?></td>
 													</tr>
 													<!--
-													<tr>
-														<td align="right">
-															IVA
-														</td>
-														<td>
-															$ 800.12
-														</td>
+													<tr> 
+														<td align="right">IVA</td>
+														<td>$ 800.12</td>
 													</tr>
 													-->
-													
 													<tr>
 														<td align="left">
 															<span style="color:red;" >Restan</span>
 														</td>
 														<td>
-															<span style="color:red;" >$ 700.12</span>
+															<span style="color:red;" id="spanRestanVenta" >$ <?=$totalVenta?></span>
+															<span style="display:none;" id="spanRestanVentaOriginal" ><?=$totalVenta?></span>
 														</td>
 													</tr>
 												</table>
@@ -215,28 +226,16 @@ print_r($_SESSION);
 								<!-- INICIA RESUMEN DE COMPRA -->
                                 <fieldset>
 									<div class="col-lg-12" >
+									<font style="font-size:25px;">Resumen de compra</font><br><br>
 										<table class="table table-striped table-bordered">
 											<tr>
-												<td>SKU</td>
-												<td>Modelo</td>
-												<td>Cantidad</td>
-												<td>Precio</td>
-												<td>Subtotal</td>
+												<th>SKU</th>
+												<th>Modelo</th>
+												<th>Cantidad</th>
+												<th>Precio</th>
+												<th>Subtotal</th>
 											</tr>
-											<tr>
-												<td>xxxxx</td>
-												<td>Recamara Italia</td>
-												<td>1</td>
-												<td>$ 2,500</td>
-												<td>$ 2,500</td>
-											</tr>
-											<tr>
-												<td>xxxxx</td>
-												<td>Comedor Rustico</td>
-												<td>2</td>
-												<td>$ 1,500</td>
-												<td>$ 3,000</td>
-											</tr>
+											<?=$trProductos?>
 										</table>
 									<div>
 									
@@ -260,21 +259,21 @@ print_r($_SESSION);
 									</div>
 									<div class="col-lg-4" >
 										<table class="table table-striped table-bordered">
-											<tr>
+										<!--	<tr>
 												<td>Subtotal</td>
 												<td>$ 4,500</td>												
 											</tr>
 											<tr>
 												<td>IVA</td>
 												<td>$ 800</td>												
-											</tr>
+											</tr> 
 											<tr>
 												<td>Descuento</td>
 												<td>$ 500</td>												
-											</tr>
+											</tr> -->
 											<tr>
 												<td>TOTAL</td>
-												<td>$ 4,000</td>												
+												<td>$ <?=$totalVenta?></td>												
 											</tr>
 										</table>
 									</div>
@@ -729,7 +728,52 @@ print_r($_SESSION);
 						var name=$("#inputBuscaCliente").getSelectedItemData().nombre;
 						var email=$("#inputBuscaCliente").getSelectedItemData().emails;
 						var number=$("#inputBuscaCliente").getSelectedItemData().numbers;
+						
+						var url="/clientes/ajax_get_cliente_direcciones.php";
+						
 						SelectedItemData(id, name, email, number);
+						
+						$.ajax({
+							type: "POST",
+							url: url,
+							data: { cliente_id:id }, // serializes the form's elements.
+							success: function(data)
+							{
+								$('#divDireciconesClienteEnvio').html('');
+								$('#divDireciconesClienteFacturacion').html('');
+								
+								dataJson = JSON.parse(data);
+								newDivBtnsEnvio = '';
+								newDivBtnsFact = '';
+								
+								newDivsEnvio = '';
+								newDivsFact = '';
+								
+								jQuery.each(dataJson, function(i, val) {
+									
+									//separar botones de divs
+									if(val.cliente_direccion_tipo_id == 1 || val.cliente_direccion_tipo_id == 3){
+										newDivBtnsEnvio+= '<button type="button" class="btn btn-success" data-toggle="collapse" data-target="#demo_'+val.cliente_direccion_id+'">'+val.cliente_direccion_calle+' '+val.cliente_direccion_numero_ext+'...</button> ';
+										newDivsEnvio+= '<div id="demo_'+val.cliente_direccion_id+'" class="collapse">'+val.cliente_direccion_calle+' '+val.cliente_direccion_numero_ext+' '+val.cliente_direccion_numero_int+' '+val.cliente_direccion_colonia+' '+val.cliente_direccion_municipio+' C.P. '+val.cliente_direccion_cp+' <a href="javascript:void(0)" onclick="asociaDireccionEnvio('+val.cliente_direccion_id+');">elegir</a></div>';
+									}
+									if(val.cliente_direccion_tipo_id == 2 || val.cliente_direccion_tipo_id == 3){
+										newDivBtnsFact+= '<button type="button" class="btn btn-success" data-toggle="collapse" data-target="#demo_'+val.cliente_direccion_id+'">'+val.cliente_direccion_calle+' '+val.cliente_direccion_numero_ext+'...</button> ';
+										newDivsFact+= '<div id="demo_'+val.cliente_direccion_id+'" class="collapse">'+val.cliente_direccion_calle+' '+val.cliente_direccion_numero_ext+' '+val.cliente_direccion_numero_int+' '+val.cliente_direccion_colonia+' '+val.cliente_direccion_municipio+' C.P. '+val.cliente_direccion_cp+' <a href="javascript:void(0)" onclick="asociaDireccionFact('+val.cliente_direccion_id+');">elegir</a></div>';
+									}
+									
+								});
+								
+								newDivBtnsEnvio+= '<button type="button" class="btn btn-success" >+ Nueva direccion envío</button> ';
+								newDivBtnsFact+= '<button type="button" class="btn btn-success" >+ Nueva direccion facturación</button> ';
+								
+								$('#divDireciconesClienteEnvio').append(newDivBtnsEnvio+"<br><br>");
+								$('#divDireciconesClienteEnvio').append(newDivsEnvio);
+								
+								$('#divDireciconesClienteFacturacion').append(newDivBtnsFact+"<br><br>");
+								$('#divDireciconesClienteFacturacion').append(newDivsFact);
+							}
+						});
+						
 			}
 				}
 		};
@@ -832,7 +876,7 @@ print_r($_SESSION);
 											'</td>'+
 											'<td style="padding-right:50px;"><h3>'+email+'<h3></td>'+									
 											'<td style="padding-right:50px;"><h3>'+number+'</h3></td>'+
-											'<td><h3><i class="fa fa-trash removeCart" role="button" id="removeCliente_'+id+'"></i></h3></td>'+
+											'<td><h3><i class="fa fa-trash removeCart" role="button" id="removeCliente_'+id+'" onclick="removeCliente('+id+');"></i></h3></td>'+
 											'</tr></tbody></table>';
 											
 				$('#divBuscaClienteEnvio_0').html(table);
@@ -869,7 +913,7 @@ print_r($_SESSION);
 											'</td>'+
 											'<td style="padding-right:50px;"><h3>'+email+'<h3></td>'+									
 											'<td style="padding-right:50px;"><h3>'+number+'</h3></td>'+
-											'<td><h3><i class="fa fa-trash removeCart" role="button" id="removeCliente_'+id+'"></i></h3></td>'+
+											'<td><h3><i class="fa fa-trash removeCart" role="button" id="removeCliente_'+id+'" onclick="removeCliente('+id+');"></i></h3></td>'+
 											'</tr></tbody></table>';					
 		
 				$('#divBuscaCliente_0').html(table);
@@ -921,6 +965,47 @@ print_r($_SESSION);
 					alert("Sweet Alert"); // show response from the php script.
 				}
 			});
+	   }
+	   
+	   function removeCliente(cliente_id){
+			$('#divBuscaCliente_0').html('');
+			$('#divBuscaClienteEnvio').html('');
+			$('#divBuscaClienteFacturacion').html('');
+			$('#divDireciconesClienteEnvio').html('');
+			$('#divDireciconesClienteFacturacion').html('');
+	   }
+	   
+	   function agregaNuevoMetodoPago(){
+			nuevoMetodoDePago = '<tr id="">';
+			nuevoMetodoDePago+= '	<td>';
+			nuevoMetodoDePago+= '		<select id="" style="height:35px; font-size:15px;">';
+			nuevoMetodoDePago+= '			<?=$rowsMetodosPago?>';
+			nuevoMetodoDePago+= '		</select>';
+			nuevoMetodoDePago+= '	</td>';
+			nuevoMetodoDePago+= '	<td>';
+			nuevoMetodoDePago+= '		<div>';
+			nuevoMetodoDePago+= '			<input type="text" name="metodo_01" class="form-control" placeholder="$" /> ';
+			nuevoMetodoDePago+= '		</div>';
+			nuevoMetodoDePago+= '	</td>';
+			nuevoMetodoDePago+= '	<td>';
+			nuevoMetodoDePago+= '		<button class="btn btn-danger btn-xs" id="agregarMetodoPago" value="" placeholder="Metodo Pago" type="button" style="margin-top:5px;"><i class="fa fa-minus" onclick="remueveNuevoMetodoPago();"></i></button>';
+			nuevoMetodoDePago+= '	</td>';
+			nuevoMetodoDePago+= '</tr>';
+		   $('#tableMetodosDePago').append(nuevoMetodoDePago);
+	   }
+	   
+	   function remueveNuevoMetodoPago(){
+		   
+	   }
+	   
+	   function recalculaRestaTotal(objTxt){
+		   numMetodoPago =  Number(objTxt.value);
+		   numNuevoRestan = $('#spanRestanVentaOriginal').html();
+		   numNuevoRestan = Number(numNuevoRestan);
+		   numNuevoRestan = numNuevoRestan - numMetodoPago;
+		   //$('#spanRestanVentaOriginal').html(numNuevoRestan);
+		   $('#spanRestanVenta').html('$ '+numNuevoRestan);
+		   
 	   }
     </script>
 
