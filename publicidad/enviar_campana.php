@@ -248,9 +248,13 @@
     				dataType: "json",
     				complete: function(data)
     				{
-    					alert("Envio de Campa\u00f1a exitoso");
-    			        var url="enviar_campana.php";
-						$(location).attr("href", url);
+						swal({
+			                title: "Guardado!",
+			                text: "Envio de Campa\u00f1a exitoso!",
+			                type: "success"
+			            }, function () {
+			                window.location.href = 'index.php';
+			            });
     					
     				},
     				failure: function(errMsg)
