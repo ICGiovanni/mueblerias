@@ -36,7 +36,7 @@ else{
 <link href="<?=$raizProy?>css/plugins/steps/jquery.steps.css" rel="stylesheet">
 <link href="<?=$raizProy?>css/plugins/chosen/chosen.css" rel="stylesheet">
 <link href="<?=$raizProy?>css/plugins/easy-autocomplete/easy-autocomplete.min.css" rel="stylesheet">
-
+<link href="<?=$raizProy?>css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
 <style>
 .wizard > .content > .body  position: relative; 
 .wizard > .content { min-height: 350px; overflow: scroll;}
@@ -482,6 +482,7 @@ else{
     <script src="<?=$raizProy?>js/bootstrap.min.js"></script>
     <script src="<?=$raizProy?>js/plugins/metisMenu/jquery.metisMenu.js"></script>
     <script src="<?=$raizProy?>js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+	<script src="<?=$raizProy?>js/plugins/sweetalert/sweetalert.min.js"></script>
 
     <!-- Custom and plugin javascript -->
     <script src="<?=$raizProy?>js/inspinia.js"></script>
@@ -948,7 +949,13 @@ else{
 				data: {cliente_direccion_id: cliente_direccion_id}, // serializes the form's elements.
 				success: function(data)
 				{
-					alert("Sweet Alert");
+					swal({
+						title: "Guardado!",
+						text: "Dirección de envío vinculada correctamente!",
+						type: "success"
+					}, function () {
+						
+					});
 				}
 			});
 	   }
@@ -962,7 +969,13 @@ else{
 				data: {cliente_direccion_id: cliente_direccion_id}, // serializes the form's elements.
 				success: function(data)
 				{
-					alert("Sweet Alert"); // show response from the php script.
+					swal({
+						title: "Guardado!",
+						text: "Dirección de facuración vinculada correctamente!",
+						type: "success"
+					}, function () {
+						
+					});
 				}
 			});
 	   }
