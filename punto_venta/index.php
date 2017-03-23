@@ -309,7 +309,7 @@ else{
 				<div class="form-group"><input type="text" placeholder="Nombre, email, numero telefonico" class="form-control" id="inputBuscaCliente" name="inputBuscaCliente" ></div>
 				<div class="form-group" id="divBuscaClienteEnvio" ></div>
 				<div class="form-group" id="divDireciconesClienteEnvio" ></div>
-				<div class="form-group"><div style="display: inline; width: 150px">selecciona zona de envío</div>
+				<div class="form-group"><div style="display: inline; width: 150px">Zona de envío</div>
 										<select class="form-control" id="flete" style="display: inline; width: 200px">
 											<option value="0">Elige sección</option>
 											<option value="1">seccion 1</option>
@@ -755,11 +755,11 @@ else{
 									//separar botones de divs
 									if(val.cliente_direccion_tipo_id == 1 || val.cliente_direccion_tipo_id == 3){
 										newDivBtnsEnvio+= '<button type="button" class="btn btn-success" data-toggle="collapse" data-target="#demo_'+val.cliente_direccion_id+'">'+val.cliente_direccion_calle+' '+val.cliente_direccion_numero_ext+'...</button> ';
-										newDivsEnvio+= '<div id="demo_'+val.cliente_direccion_id+'" class="collapse">'+val.cliente_direccion_calle+' '+val.cliente_direccion_numero_ext+' '+val.cliente_direccion_numero_int+' '+val.cliente_direccion_colonia+' '+val.cliente_direccion_municipio+' C.P. '+val.cliente_direccion_cp+' <a href="javascript:void(0)" onclick="asociaDireccionEnvio('+val.cliente_direccion_id+');">elegir</a></div>';
+										newDivsEnvio+= '<div id="demo_'+val.cliente_direccion_id+'" class="collapse" style="font-size:14px;">'+val.cliente_direccion_calle+' '+val.cliente_direccion_numero_ext+' '+val.cliente_direccion_numero_int+' '+val.cliente_direccion_colonia+' '+val.cliente_direccion_municipio+' C.P. '+val.cliente_direccion_cp+' <a href="javascript:void(0)" onclick="asociaDireccionEnvio('+val.cliente_direccion_id+');"> Elegir</a></div>';
 									}
 									if(val.cliente_direccion_tipo_id == 2 || val.cliente_direccion_tipo_id == 3){
 										newDivBtnsFact+= '<button type="button" class="btn btn-success" data-toggle="collapse" data-target="#demo_'+val.cliente_direccion_id+'">'+val.cliente_direccion_calle+' '+val.cliente_direccion_numero_ext+'...</button> ';
-										newDivsFact+= '<div id="demo_'+val.cliente_direccion_id+'" class="collapse">'+val.cliente_direccion_calle+' '+val.cliente_direccion_numero_ext+' '+val.cliente_direccion_numero_int+' '+val.cliente_direccion_colonia+' '+val.cliente_direccion_municipio+' C.P. '+val.cliente_direccion_cp+' <a href="javascript:void(0)" onclick="asociaDireccionFact('+val.cliente_direccion_id+');">elegir</a></div>';
+										newDivsFact+= '<div id="demo_'+val.cliente_direccion_id+'" class="collapse" style="font-size:14px;">'+val.cliente_direccion_calle+' '+val.cliente_direccion_numero_ext+' '+val.cliente_direccion_numero_int+' '+val.cliente_direccion_colonia+' '+val.cliente_direccion_municipio+' C.P. '+val.cliente_direccion_cp+' <a href="javascript:void(0)" onclick="asociaDireccionFact('+val.cliente_direccion_id+');"> Elegir</a></div>';
 									}
 									
 								});
@@ -836,11 +836,11 @@ else{
 									//separar botones de divs
 									if(val.cliente_direccion_tipo_id == 1 || val.cliente_direccion_tipo_id == 3){
 										newDivBtnsEnvio+= '<button type="button" class="btn btn-success" data-toggle="collapse" data-target="#demo_'+val.cliente_direccion_id+'">'+val.cliente_direccion_calle+' '+val.cliente_direccion_numero_ext+'...</button> ';
-										newDivsEnvio+= '<div id="demo_'+val.cliente_direccion_id+'" class="collapse">'+val.cliente_direccion_calle+' '+val.cliente_direccion_numero_ext+' '+val.cliente_direccion_numero_int+' '+val.cliente_direccion_colonia+' '+val.cliente_direccion_municipio+' C.P. '+val.cliente_direccion_cp+' <a href="javascript:void(0)" onclick="asociaDireccionEnvio('+val.cliente_direccion_id+');">elegir</a></div>';
+										newDivsEnvio+= '<div id="demo_'+val.cliente_direccion_id+'" class="collapse" style="font-size:14px;">'+val.cliente_direccion_calle+' '+val.cliente_direccion_numero_ext+' '+val.cliente_direccion_numero_int+' '+val.cliente_direccion_colonia+' '+val.cliente_direccion_municipio+' C.P. '+val.cliente_direccion_cp+' <a href="javascript:void(0)" onclick="asociaDireccionEnvio('+val.cliente_direccion_id+');"> Elegir</a></div>';
 									}
 									if(val.cliente_direccion_tipo_id == 2 || val.cliente_direccion_tipo_id == 3){
 										newDivBtnsFact+= '<button type="button" class="btn btn-success" data-toggle="collapse" data-target="#demo_'+val.cliente_direccion_id+'">'+val.cliente_direccion_calle+' '+val.cliente_direccion_numero_ext+'...</button> ';
-										newDivsFact+= '<div id="demo_'+val.cliente_direccion_id+'" class="collapse">'+val.cliente_direccion_calle+' '+val.cliente_direccion_numero_ext+' '+val.cliente_direccion_numero_int+' '+val.cliente_direccion_colonia+' '+val.cliente_direccion_municipio+' C.P. '+val.cliente_direccion_cp+' <a href="javascript:void(0)" onclick="asociaDireccionFact('+val.cliente_direccion_id+');">elegir</a></div>';
+										newDivsFact+= '<div id="demo_'+val.cliente_direccion_id+'" class="collapse" style="font-size:14px;">'+val.cliente_direccion_calle+' '+val.cliente_direccion_numero_ext+' '+val.cliente_direccion_numero_int+' '+val.cliente_direccion_colonia+' '+val.cliente_direccion_municipio+' C.P. '+val.cliente_direccion_cp+' <a href="javascript:void(0)" onclick="asociaDireccionFact('+val.cliente_direccion_id+');"> Elegir</a></div>';
 									}
 									
 								});
