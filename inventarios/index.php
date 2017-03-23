@@ -240,13 +240,13 @@ cursor: default;
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="col-sm-3 control-label">Nota de Salida</label>
+					<label class="col-sm-3 control-label">Observaciones de Salida</label>
 					<div class="col-sm-8" >
 					<label id="nota_salida"></label>
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="col-sm-3 control-label">Nota de Entrega</label>
+					<label class="col-sm-3 control-label">Observaciones de Entrega</label>
 					<div class="col-sm-8" >
 					<label id="nota_entrega"></label>
 					</div>
@@ -298,13 +298,13 @@ cursor: default;
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="col-sm-3 control-label">Nota de Salida</label>
+					<label class="col-sm-3 control-label">Observaciones de Salida</label>
 					<div class="col-sm-8" >
 					<label id="nota_salida_check"></label>
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="col-sm-3 control-label">Nota de Entrega</label>
+					<label class="col-sm-3 control-label">Observaciones de Entrega</label>
 					<div class="col-sm-8" >
 					<textarea class="form-control" id="nota_entrega_check" name="nota_entrega"></textarea>
 					</div>

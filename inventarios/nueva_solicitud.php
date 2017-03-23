@@ -7,7 +7,7 @@ $inventarios=new Inventarios();
 	<form method="post" class="form-horizontal" action="/" id="form_inventario" enctype="multipart/form-data">
 
 	<div class="form-group">
-        <label class="col-sm-2 control-label">Origen</label>
+        <label class="col-sm-3 control-label">Origen</label>
 		<div class="col-sm-6" >
 			<select data-placeholder="Selecciona una entrada" class="chosen-select" style="width:300px;" tabindex="4" id="origen" name="origen">
 	        <option value=""></option>
@@ -30,7 +30,7 @@ $inventarios=new Inventarios();
 	</div>
 	
 	<div class="form-group">
-        <label class="col-sm-2 control-label">Destino</label>
+        <label class="col-sm-3 control-label">Destino</label>
 		<div class="col-sm-6" >
 			<select data-placeholder="Selecciona un Destino" class="chosen-select" style="width:300px;" tabindex="4" id="destino" name="destino">
 	        <option value=""></option>
@@ -52,20 +52,20 @@ $inventarios=new Inventarios();
 	</div>
 	
 	<div class="form-group">
-        <label class="col-sm-2 control-label">Chofer</label>
+        <label class="col-sm-3 control-label">Chofer</label>
 		<div class="col-sm-6" >
 			<input type="text" class="form-control" id="chofer" name="chofer">
 		</div>
 	</div>
 	<div class="form-group">
-        <label class="col-sm-2 control-label">Nota de Salida</label>
+        <label class="col-sm-3 control-label">Observaciones de Salida</label>
 		<div class="col-sm-6" >
 			 <textarea class="form-control" id="nota_salida" name="nota_salida"></textarea>
 		</div>
 	</div>
     
 	<div class="form-group">
-	<label class="col-sm-2 control-label">Productos</label>
+	<label class="col-sm-3 control-label">Productos</label>
     <div class="col-sm-7" ><input type="text" class="form-control" id="producto" name="producto"></div>
     </div>
     <div class="form-group">
