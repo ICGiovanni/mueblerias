@@ -7,6 +7,7 @@
     include $pathProy.'/menu.php';
 ?>
 <link rel="stylesheet" type="text/css" href="../css/clientes.css">
+<link href="<?php echo $raizProy?>css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
 
     <div class="row wrapper border-bottom white-bg page-heading">
         <div class="col-sm-4">
@@ -48,7 +49,7 @@
                         <th align="center">Cliente</th>
                         <th align="center">E-mail</th>
                         <th align="center">Rating</th>
-                        <th align="center"></th>
+                        <th align="center"><input type="checkbox" name="check_clientes" id="check_clientes"></th>
                     </tr>
                     </thead>
                     <tbody id="clientes">
@@ -112,7 +113,7 @@
                     	<th align="center">ID</th>
                         <th align="center">Campa&ntilde;a</th>
                         <th align="center">Fecha de Creaci&oacute;n</th>
-                        <th align="center"></th>
+                        <th align="center"><input type="checkbox" name="check_publicidad" id="check_publicidad"></th>
                         
                     </tr>
                     </thead>
@@ -165,7 +166,7 @@
 		
     
     <script src="<?php echo $raizProy?>js/plugins/dataTables/datatables.min.js"></script>
-    
+    <script src="<?php echo $raizProy?>js/plugins/sweetalert/sweetalert.min.js"></script>
 
 
     <!-- Page-Level Scripts -->
@@ -191,6 +192,36 @@
             });
             
         });
+
+        $("#check_clientes").click(function()
+        {
+            
+			if($(this).is(":checked"))
+			{
+				$('.clientes').attr('checked', true);
+				$(".clientes").prop('checked', true);
+			}
+			else
+			{
+				$('.clientes').attr('checked', false);
+				$(".clientes").prop('checked', false);
+			}
+         });check_publicidad
+
+        $("#check_publicidad").click(function()
+		{
+    		console.log("ddddd");
+        	if($(this).is(":checked"))
+        	{
+        		$('.publicidad').attr('checked', true);
+        		$(".publicidad").prop('checked', true);
+			}
+        	else
+        	{
+        		$('.publicidad').attr('checked', false);
+        		$(".publicidad").prop('checked', false);
+        	}
+		});
 
         $( "#enviar" ).click(function()
 		{	
