@@ -64,6 +64,159 @@ $(document).ready(function()
 		return bandera;
 	};
 	
+	var validar_direccion=function()
+	{
+		var bandera=false;
+		
+		if($("#calle").val()=='')
+		{
+			toastr.error('Debe de agregar una Calle');
+			$("#calle").val('');
+			$("#calle").focus();		
+		}
+		else if($("#noExt").val()=='')
+		{
+			toastr.error('Debe de agregar un No. Exterior');
+			$("#noExt").val('');
+			$("#noExt").focus();		
+		}
+		else if($("#colonia").val()=='')
+		{
+			toastr.error('Debe de agregar una Colonia');
+			$("#colonia").val('');
+			$("#colonia").focus();		
+		}
+		else if($("#codigoPostal").val()=='')
+		{
+			toastr.error('Debe de agregar un Codigo Postal');
+			$("#codigoPostal").val('');
+			$("#codigoPostal").focus();
+		}
+		else if($("#estado").val()=='')
+		{
+			toastr.error('Debe de agregar un Estado');
+			$("#estado").val('');
+			$("#estado").focus();
+		}
+		else if($("#municipio").val()=='')
+		{
+			toastr.error('Debe de agregar un Municipio');
+			$("#municipio").val('');
+			$("#municipio").focus();
+		}
+		else
+		{
+			bandera=true;
+		}
+		
+		return bandera;
+	};
+	
+	var clean_address=function()
+	{
+		$("#calle").val('');
+		$("#noExt").val('');
+		$("#noInt").val('');		
+		$("#colonia").val('');
+		$("#codigoPostal").val('');
+		$("#estado").val('');
+		$("#estado").val('').trigger("chosen:updated");
+		$("#municipio").val('');
+	};
+	
+	$("#limpiar").click(function()
+	{
+		clean_address();
+	});
+	
+	$( "#agregar" ).click(function()
+	{
+		var validate=validar_direccion();
+		var table='';
+		
+		if(validate)
+		{
+			var address=parseInt($("#address").val());
+			var calle=$("#calle").val();
+			var noExt=$("#noExt").val();
+			var noInt=$("#noInt").val();		
+			var colonia=$("#colonia").val();
+			var codigoPostal=$("#codigoPostal").val();
+			var estado=$("#estado").val();
+			var municipio=$("#municipio").val();
+			var addressComplete='';
+			
+			addressComplete+=calle+' '+noExt;
+			
+			if(noInt!='')
+			{
+				addressComplete+=' Int.'+noInt;
+			}
+			
+			addressComplete+=' '+colonia;
+			addressComplete+=' C.P.'+codigoPostal;
+			addressComplete+=' '+municipio+', '+$("#estado option:selected").html();
+			
+			table+='<tr>';
+			table+='<input type="hidden" id="address_'+address+'" name="address_'+address+'" value="'+address+'" class="address">';
+			table+='<input type="hidden" id="calle_'+address+'" name="calle_'+address+'" value="'+calle+'">';
+			table+='<input type="hidden" id="noExt_'+address+'" name="noExt_'+address+'" value="'+noExt+'">';
+			table+='<input type="hidden" id="noInt_'+address+'" name="noInt_'+address+'" value="'+noInt+'">';
+			table+='<input type="hidden" id="colonia_'+address+'" name="colonia_'+address+'" value="'+colonia+'">';
+			table+='<input type="hidden" id="codigoPostal_'+address+'" name="codigoPostal_'+address+'" value="'+codigoPostal+'">';
+			table+='<input type="hidden" id="estado_'+address+'" name="estado_'+address+'" value="'+estado+'">';
+			table+='<input type="hidden" id="municipio_'+address+'" name="municipio_'+address+'" value="'+municipio+'">';
+			table+='<td>'+addressComplete+'</td>';
+			table+='<td class="text-left"><button class="btn btn-danger btn-xs deleteAddress" id="deleteA" value="" placeholder="Descuento" type="button"><i class="fa fa-times"></i></button></td>';
+			table+='</tr>';
+			
+			$('#address_table').append(table);
+			$("#address_list").show();
+			
+			$("#address").val(address+1);
+			
+			clean_address();
+			
+			$(".deleteAddress").click(function()
+			{            
+				$(this).parent().parent().remove();
+				
+				var address=parseInt($("#address").val());
+				
+				if(address>0)
+				{
+					address=address-1;
+				}
+				
+				if(address==0)
+				{
+					$("#address_list").hide();
+				}
+				
+				$("#address").val(address);
+			});
+		}
+	});
+	
+	$(".deleteAddress").click(function()
+	{            
+		$(this).parent().parent().remove();
+		
+		var address=parseInt($("#address").val());
+		
+		if(address>0)
+		{
+			address=address-1;
+		}
+		
+		if(address==0)
+		{
+			$("#address_list").hide();
+		}
+		
+		$("#address").val(address);
+	});
+	
 	$( "#guardar" ).click(function()
 	{
 		var validate=validate_form();

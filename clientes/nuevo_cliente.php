@@ -29,6 +29,7 @@
 
     <div class="wrapper wrapper-content animated fadeInRight">
 		<form method="get" class="form-horizontal" action="/" id="form_cliente">
+			<input type="hidden" id="address" name="address" value="0">
 			<div class="form-group"><label class="col-sm-2 control-label">Nombre</label>
 			<div class="col-sm-6" ><input type="text" class="form-control" id="nombre" name="nombre"></div>
             </div>
@@ -44,6 +45,14 @@
             <div class="form-group"><label class="col-sm-2 control-label">RFC</label>
 			<div class="col-sm-6"><input type="text" class="form-control" id="rfc" name="rfc"></div>
             </div>
+            
+            <div class="col-lg-11">
+			<div class="panel panel-default">
+            <div class="panel-heading">
+            <label class="control-label">Direeción de Envio</label>
+			</div>
+            <div class="panel-body">
+            
             <div class="form-group"><label class="col-sm-2 control-label">Calle</label>
 			<div class="col-sm-6"><input type="text" class="form-control" id="calle" name="calle"></div>
             </div>
@@ -70,6 +79,39 @@
 			<div class="form-group"><label class="col-sm-2 control-label">Municipio</label>
 			<div class="col-sm-6"><input type="text" class="form-control" id="municipio" name="municipio"></div>
             </div>
+            
+            <div class="form-group">
+			<div class="col-sm-6 col-sm-offset-2" align="right"><br>
+			<button class="btn btn-danger btn-xs" id="limpiar" type="button">Limpiar</button>&nbsp;&nbsp;&nbsp;&nbsp;
+			<button class="btn btn-primary btn-xs" id="agregar" type="button">Agregar Dirección</button>
+			</div>
+			</div>
+			
+			<div class="form-group">
+	           	<div class="col-sm-8" >
+	           	<div id="address_list" class="ibox-content" style="display:none;">
+	           	
+	           	<table class="table table-striped">
+	           	<thead>
+					<tr>
+						<td><strong>Dirección</strong></td>
+						<td></td>
+					</tr>
+				</thead>
+	           	<tbody id="address_table">
+	           	
+	           	</tbody>
+	           	</table>
+	           </div>
+	           </div>
+	           </div>
+            
+            </div>
+			</div>
+            </div>
+            
+            
+            
             <div class="form-group">
            	<label class="col-sm-2 control-label">Telefono</label>
            	<div class="col-sm-3 "><input class="form-control telefono_cliente" id="telefono" name="telefono[]" value="" type="text" onkeypress="return validateNumber(event)"></div>
