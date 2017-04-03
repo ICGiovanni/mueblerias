@@ -118,7 +118,7 @@
            	<label class="col-sm-2 control-label">Telefono</label>
            	<div class="col-sm-3 "><input class="form-control telefono_cliente" id="telefono" name="telefono[]" value="" type="text" onkeypress="return validateNumber(event)"></div>
            	<div class="col-md-2">
-                            <select id="phoneType" name="phoneType[]" class="form-control">
+                            <select id="phoneType" name="phoneType[]" class="form-control chosen-select phone">
                                 <option value="1">Celular</option>
                                 <option value="2">Casa</option>
                                 <option value="3">Oficina</option>
