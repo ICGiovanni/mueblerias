@@ -1,6 +1,7 @@
 $(document).ready(function()
 {
 	//$('.phone').chosen();
+	$('#tipo_datos').chosen();
 	toastr.options=
 	{
 		  "closeButton": true,
@@ -67,8 +68,21 @@ $(document).ready(function()
 	var validar_direccion=function()
 	{
 		var bandera=false;
+		var tipo_datos=$("#tipo_datos").val();
 		
-		if($("#calle").val()=='')
+		if(tipo_datos=='facturacion' && $("#razonS").val()=='')
+		{
+			toastr.error('Debe de agregar una Razón Social');
+			$("#razonS").val('');
+			$("#razonS").focus();	
+		}
+		else if(tipo_datos=='facturacion' && $("#rfc").val()=='')
+		{
+			toastr.error('Debe de agregar un RFC');
+			$("#rfc").val('');
+			$("#rfc").focus();	
+		}
+		else if($("#calle").val()=='')
 		{
 			toastr.error('Debe de agregar una Calle');
 			$("#calle").val('');
@@ -114,6 +128,10 @@ $(document).ready(function()
 	
 	var clean_address=function()
 	{
+		$("#tipo_datos").val('facturacion').trigger('chosen:updated');
+		$("#div_facturacion").show();
+		$("#razonS").val('');
+		$("#rfc").val('');
 		$("#calle").val('');
 		$("#noExt").val('');
 		$("#noInt").val('');		
@@ -125,7 +143,19 @@ $(document).ready(function()
 	};
 	
 	var edit_address=function(id)
-	{
+	{	
+		$("#tipo_datos").val($("#tipo_datos_"+id).val()).trigger('chosen:updated');
+		if($("#tipo_datos_"+id).val()=='facturacion')
+		{
+			$("#div_facturacion").show();
+		}
+		else
+		{
+			$("#div_facturacion").hide();
+		}
+		
+		$("#razonS").val($("#razonS_"+id).val());
+		$("#rfc").val($("#rfc_"+id).val());
 		$("#calle").val($("#calle_"+id).val());
 		$("#noExt").val($("#noExt_"+id).val());
 		$("#noInt").val($("#noInt_"+id).val());		
@@ -143,6 +173,24 @@ $(document).ready(function()
 		clean_address();
 	});
 	
+	$("#tipo_datos").change(function()
+	{
+		var tipo_datos=$(this).val();
+		
+		if(tipo_datos=='facturacion')
+		{
+			$("#div_facturacion").show();
+		}
+		else if(tipo_datos=='envio')
+		{
+			$("#div_facturacion").hide();
+		}
+		
+		$("#razonS").val('');
+		$("#rfc").val('');
+		
+	});	
+		
 	$("#aditAddress").click(function()
 	{
 		var validate=validar_direccion();
@@ -150,6 +198,9 @@ $(document).ready(function()
 		if(validate)
 		{
 			var address=$("#address_current").val();
+			var tipo_datos=$("#tipo_datos").val();
+			var razonS=$("#razonS").val();
+			var rfc=$("#rfc").val();
 			var calle=$("#calle").val();
 			var noExt=$("#noExt").val();
 			var noInt=$("#noInt").val();		
@@ -158,6 +209,18 @@ $(document).ready(function()
 			var estado=$("#estado").val();
 			var municipio=$("#municipio").val();
 			var addressComplete='';
+			
+			if(tipo_datos=='facturacion')
+			{
+				tipo_datos='Facturación';
+				addressComplete+='RFC: '+rfc+' '+razonS+' ';
+			}
+			else
+			{
+				tipo_datos='Envio';
+				razonS='';
+				rfc='';
+			}
 			
 			addressComplete+=calle+' '+noExt;
 			
@@ -171,6 +234,10 @@ $(document).ready(function()
 			addressComplete+=' '+municipio+', '+$("#estado option:selected").html();
 			
 			$("#addres_div_"+address).html(addressComplete);
+			$("#addres_tipo_"+address).html(tipo_datos);
+			$("#tipo_datos_"+address).val($("#tipo_datos").val());
+			$("#razonS_"+address).val(razonS);
+			$("#rfc_"+address).val(rfc);
 			$("#calle_"+address).val(calle);
 			$("#noExt_"+address).val(noExt);
 			$("#noInt_"+address).val(noInt);		
@@ -194,6 +261,9 @@ $(document).ready(function()
 		if(validate)
 		{
 			var address=parseInt($("#address").val());
+			var tipo_datos=$("#tipo_datos").val();
+			var razonS=$("#razonS").val();
+			var rfc=$("#rfc").val();
 			var calle=$("#calle").val();
 			var noExt=$("#noExt").val();
 			var noInt=$("#noInt").val();		
@@ -202,6 +272,16 @@ $(document).ready(function()
 			var estado=$("#estado").val();
 			var municipio=$("#municipio").val();
 			var addressComplete='';
+			
+			if(tipo_datos=='facturacion')
+			{
+				tipo_datos='Facturación';
+				addressComplete+='RFC: '+rfc+' '+razonS+' ';
+			}
+			else
+			{
+				tipo_datos='Envio';
+			}
 			
 			addressComplete+=calle+' '+noExt;
 			
@@ -216,6 +296,9 @@ $(document).ready(function()
 			
 			table+='<tr>';
 			table+='<input type="hidden" id="address_'+address+'" name="address_'+address+'" value="'+address+'" class="address">';
+			table+='<input type="hidden" id="tipo_datos_'+address+'" name="tipo_datos_'+address+'" value="'+$("#tipo_datos").val()+'">';
+			table+='<input type="hidden" id="razonS_'+address+'" name="razonS_'+address+'" value="'+razonS+'">';
+			table+='<input type="hidden" id="rfc_'+address+'" name="rfc_'+address+'" value="'+rfc+'">';
 			table+='<input type="hidden" id="calle_'+address+'" name="calle_'+address+'" value="'+calle+'">';
 			table+='<input type="hidden" id="noExt_'+address+'" name="noExt_'+address+'" value="'+noExt+'">';
 			table+='<input type="hidden" id="noInt_'+address+'" name="noInt_'+address+'" value="'+noInt+'">';
@@ -223,6 +306,7 @@ $(document).ready(function()
 			table+='<input type="hidden" id="codigoPostal_'+address+'" name="codigoPostal_'+address+'" value="'+codigoPostal+'">';
 			table+='<input type="hidden" id="estado_'+address+'" name="estado_'+address+'" value="'+estado+'">';
 			table+='<input type="hidden" id="municipio_'+address+'" name="municipio_'+address+'" value="'+municipio+'">';
+			table+='<td><div id="addres_tipo_'+address+'">'+tipo_datos+'</div></td>';
 			table+='<td><div id="addres_div_'+address+'">'+addressComplete+'</div></td>';
 			table+='<td class="text-left"><button class="btn btn-primary btn-xs editAddress" id="editA" value="" placeholder="" type="button" id-num="'+address+'"><i class="fa fa-pencil"></i></button>  ';
 			table+='<button class="btn btn-danger btn-xs deleteAddress" id="deleteA" value="" placeholder="" type="button"><i class="fa fa-trash-o"></i></button></td>';

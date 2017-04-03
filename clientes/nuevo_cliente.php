@@ -40,19 +40,32 @@
             <div class="form-group"><label class="col-sm-2 control-label">Apellido Materno</label>
 			<div class="col-sm-6" ><input type="text" class="form-control" id="apellidoM" name="apellidoM"></div>
             </div>
+            
+            
+            <div class="col-lg-11">
+			<div class="panel panel-default">
+            <div class="panel-heading">
+            <label class="control-label">Datos Cliente</label>
+			</div>
+            <div class="panel-body">
+            
+            <div class="form-group"><label class="col-sm-2 control-label">Tipo</label>
+			<div class="col-sm-6">
+			<select data-placeholder="Selecciona un Tipo" class="chosen-select" style="width:300px;" tabindex="4" id="tipo_datos" name="tipo_datos">
+			<option value="facturacion">Facturación</option>
+			<option value="envio">Envio</option>
+			</select>
+			</div>
+			</div>
+            
+            <div id="div_facturacion" name=""div_facturacion"">
             <div class="form-group"><label class="col-sm-2 control-label">Raz&oacute;n Social</label>
 			<div class="col-sm-6"><input type="text" class="form-control" id="razonS" name="razonS"></div>
             </div>
             <div class="form-group"><label class="col-sm-2 control-label">RFC</label>
 			<div class="col-sm-6"><input type="text" class="form-control" id="rfc" name="rfc"></div>
             </div>
-            
-            <div class="col-lg-11">
-			<div class="panel panel-default">
-            <div class="panel-heading">
-            <label class="control-label">Direeción de Envio</label>
-			</div>
-            <div class="panel-body">
+            </div>
             
             <div class="form-group"><label class="col-sm-2 control-label">Calle</label>
 			<div class="col-sm-6"><input type="text" class="form-control" id="calle" name="calle"></div>
@@ -96,7 +109,8 @@
 	           	<table class="table table-striped">
 	           	<thead>
 					<tr>
-						<td><strong>Dirección</strong></td>
+						<td><strong>Tipo</strong></td>
+						<td><strong>Datos</strong></td>
 						<td></td>
 					</tr>
 				</thead>
