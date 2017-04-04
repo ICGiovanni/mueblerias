@@ -88,6 +88,7 @@
 			<select data-placeholder="Selecciona un estado" class="chosen-select" style="width:300px;" tabindex="4" id="estado" name="estado">
             <option value=""></option>
             </select>
+            <button class="btn btn-danger btn-xs" id="limpiar_estado" type="button">Limpiar</button>&nbsp;&nbsp;&nbsp;&nbsp;
 			</div>
 			</div>
 			<div class="form-group"><label class="col-sm-2 control-label">Municipio</label>

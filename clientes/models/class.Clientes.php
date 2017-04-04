@@ -21,17 +21,17 @@ class Clientes
 			$statement=$this->connect->prepare($sql);
 			
 			$statement->bindParam(':cliente', $idCliente, PDO::PARAM_STR);
-			$statement->bindParam(':tipo', $data['tipo'], PDO::PARAM_STR);
-			$statement->bindParam(':calle', $data['calle'], PDO::PARAM_STR);
-			$statement->bindParam(':num_ext', $data['noExt'], PDO::PARAM_STR);
-			$statement->bindParam(':num_int', $data['noInt'], PDO::PARAM_STR);
-			$statement->bindParam(':colonia', $data['colonia'], PDO::PARAM_STR);
-			$statement->bindParam(':municipio', $data['municipio'], PDO::PARAM_STR);
-			$statement->bindParam(':estado', $data['estado'], PDO::PARAM_STR);
-			$statement->bindParam(':codigoPostal', $data['codigoPostal'], PDO::PARAM_STR);
-			$statement->bindParam(':rfc', $data['rfc'], PDO::PARAM_STR);
-			$statement->bindParam(':razon_social', $data['razon_social'], PDO::PARAM_STR);
-			$statement->bindParam(':referencia', $data['referencia'], PDO::PARAM_STR);
+			$statement->bindParam(':tipo', $d['tipo'], PDO::PARAM_STR);
+			$statement->bindParam(':calle', $d['calle'], PDO::PARAM_STR);
+			$statement->bindParam(':num_ext', $d['noExt'], PDO::PARAM_STR);
+			$statement->bindParam(':num_int', $d['noInt'], PDO::PARAM_STR);
+			$statement->bindParam(':colonia', $d['colonia'], PDO::PARAM_STR);
+			$statement->bindParam(':municipio', $d['municipio'], PDO::PARAM_STR);
+			$statement->bindParam(':estado', $d['estado'], PDO::PARAM_STR);
+			$statement->bindParam(':codigoPostal', $d['codigoPostal'], PDO::PARAM_STR);
+			$statement->bindParam(':rfc', $d['rfc'], PDO::PARAM_STR);
+			$statement->bindParam(':razon_social', $d['razonS'], PDO::PARAM_STR);
+			$statement->bindParam(':referencia', $d['referencia'], PDO::PARAM_STR);
 			
 			$statement->execute();
 		}
