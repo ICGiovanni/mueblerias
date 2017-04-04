@@ -11,24 +11,43 @@ class Clientes
 		$this->connect=$c->db;
 	}
 	
+	public function InsertarDatosCliente($idCliente,$data)
+	{
+		
+		foreach($data as $d)
+		{
+			$sql="INSERT INTO cliente_direccion VALUES('',:cliente,:tipo,:calle,:num_ext,:num_int,:colonia,:municipio,:estado,:codigoPostal,:rfc,:razon_social,:referencia)";
+			
+			$statement=$this->connect->prepare($sql);
+			
+			$statement->bindParam(':cliente', $idCliente, PDO::PARAM_STR);
+			$statement->bindParam(':tipo', $data['tipo'], PDO::PARAM_STR);
+			$statement->bindParam(':calle', $data['calle'], PDO::PARAM_STR);
+			$statement->bindParam(':num_ext', $data['noExt'], PDO::PARAM_STR);
+			$statement->bindParam(':num_int', $data['noInt'], PDO::PARAM_STR);
+			$statement->bindParam(':colonia', $data['colonia'], PDO::PARAM_STR);
+			$statement->bindParam(':municipio', $data['municipio'], PDO::PARAM_STR);
+			$statement->bindParam(':estado', $data['estado'], PDO::PARAM_STR);
+			$statement->bindParam(':codigoPostal', $data['codigoPostal'], PDO::PARAM_STR);
+			$statement->bindParam(':rfc', $data['rfc'], PDO::PARAM_STR);
+			$statement->bindParam(':razon_social', $data['razon_social'], PDO::PARAM_STR);
+			$statement->bindParam(':referencia', $data['referencia'], PDO::PARAM_STR);
+			
+			$statement->execute();
+		}
+		
+		$cliente_id=$this->connect->lastInsertId();
+	}
+	
 	public function InsertarCliente($params)
 	{
-		$sql="INSERT INTO clientes VALUES('',:nombre,:apellidoP,:apellidoM,:razonS,:rfc,:calle,:noExt,:noInt,:colonia,:codigoPostal,:municipio,:estado,'')";
+		$sql="INSERT INTO clientes VALUES('',:nombre,:apellidoP,:apellidoM,'')";
 		
 		$statement=$this->connect->prepare($sql);
 		
 		$statement->bindParam(':nombre', $params['nombre'], PDO::PARAM_STR);
 		$statement->bindParam(':apellidoP', $params['apellidoP'], PDO::PARAM_STR);
 		$statement->bindParam(':apellidoM', $params['apellidoM'], PDO::PARAM_STR);
-		$statement->bindParam(':razonS', $params['razonS'], PDO::PARAM_STR);
-		$statement->bindParam(':rfc', $params['rfc'], PDO::PARAM_STR);
-		$statement->bindParam(':calle', $params['calle'], PDO::PARAM_STR);
-		$statement->bindParam(':noExt', $params['noExt'], PDO::PARAM_STR);
-		$statement->bindParam(':noInt', $params['noInt'], PDO::PARAM_STR);
-		$statement->bindParam(':colonia', $params['colonia'], PDO::PARAM_STR);
-		$statement->bindParam(':codigoPostal', $params['codigoPostal'], PDO::PARAM_STR);
-		$statement->bindParam(':municipio', $params['municipio'], PDO::PARAM_STR);
-		$statement->bindParam(':estado', $params['estado'], PDO::PARAM_STR);		
 		
 		$statement->execute();
 		$cliente_id=$this->connect->lastInsertId();
