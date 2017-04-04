@@ -393,7 +393,20 @@ $(document).ready(function()
 		        		banderaAddress=true;
 		        		var a={};
         				var id = $(this).attr('id-num');
+        				var tipo="";
         				
+        				if($("#tipo_datos_"+id).val()=='facturacion')
+    					{
+        					tipo=1;
+    					}
+        				else
+        				{
+        					tipo=2;
+        				}
+        				
+        				a.tipo=$("#tipo_datos_"+id).val();
+        				a.razonS=$("#razonS_"+id).val();
+        				a.rfc=$("#rfc_"+id).val();
         				a.calle=$("#calle_"+id).val();
         				a.noExt=$("#noExt_"+id).val();
         				a.noInt=$("#noInt_"+id).val();
@@ -401,6 +414,7 @@ $(document).ready(function()
         				a.codigoPostal=$("#codigoPostal_"+id).val();
         				a.estado=$("#estado_"+id).val();
         				a.municipio=$("#municipio_"+id).val();
+        				a.referencia='';
         				
         				addressArray.push(a);
         	        });
@@ -418,7 +432,30 @@ $(document).ready(function()
 		        	else
 		        	{
 		        		var jsonAddress=JSON.stringify(addressArray);
-		        		console.log(jsonAddress);
+		        		
+		        		$.ajax
+						({
+							type: "POST",
+							url: "sava_data_clients.php?id="+idCliente,
+							data: jsonAddress,
+							contentType: "application/json; charset=utf-8",
+							dataType: "json",
+							complete: function(data)
+							{
+								/*swal({
+					                title: "Guardado!",
+					                text: "Cliente guardado correctamente!",
+					                type: "success"
+					            }, function () {
+					                window.location.href = 'index.php';
+					            });*/
+							},
+							failure: function(errMsg)
+							{
+								alert(errMsg);
+							}
+						});
+		        		
 		        	}
 				}
 			});
