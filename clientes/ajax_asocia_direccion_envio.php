@@ -3,7 +3,7 @@ session_start();
 
 if(isset( $_SESSION["punto_venta"] )){
 	if(isset($_REQUEST["cliente_direccion_id"]) && !empty($_REQUEST["cliente_direccion_id"])){
-		$_SESSION["punto_venta"]["cliente_direccion_id_envio"]=$_REQUEST["cliente_direccion_id"];
+		$_SESSION["punto_venta"]["cliente"]["cliente_direccion_id_envio"]=$_REQUEST["cliente_direccion_id"];
 	}
 }
 include $_SERVER['REDIRECT_PATH_CONFIG'].'/config.php';
