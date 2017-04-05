@@ -4,5 +4,5 @@ require_once($_SERVER["REDIRECT_PATH_CONFIG"].'clientes/models/class.Clientes.ph
 
 $clientes=new Clientes();
 $id_cliente=$clientes->InsertarCliente($_REQUEST);
-$clientes->JsonClientes();
+//$clientes->JsonClientes();
 echo $id_cliente;

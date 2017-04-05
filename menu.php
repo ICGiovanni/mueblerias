@@ -122,7 +122,16 @@
                         </a>
                         <ul class="nav nav-second-level">
                             <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/ventas/index.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'ventas/index.php'?>" >Nueva Venta</a></li>
-                            <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/ventas/listaVentas.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'ventas/listaVentas.php'?>" >Lista de Ventas</a></li>
+                            
+                            <li class="<?php if ( stristr($_SERVER['SCRIPT_NAME'],'/ventas/listaVentasEntregadas.php') || stristr($_SERVER['SCRIPT_NAME'],'/ventas/listaVentasPorEntregar.php')){ echo 'active';}?>">
+                                <a href="<?php echo $ruta.'productos/'?>" >Lista de ventas<span class="fa arrow"></span></a>
+                                <ul class="nav nav-third-level" >
+                                    <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/ventas/listaVentasEntregadas.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'ventas/listaVentasEntregadas.php'?>" >Entregadas</a></li>
+                                    <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/ventas/listaVentasPorEntregar.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'ventas/listaVentasPorEntregar.php'?>" >Por Entregar</a></li>
+                                </ul>
+                            </li>
+                            <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/ventas/listaApartados.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'ventas/listaApartados.php'?>" >Lista de Apartados</a></li>
+                            
                         </ul>
                     </li>
                     <li class="<?php if (stristr($_SERVER['SCRIPT_NAME'],'/calendario/')){ echo 'active';}?>">

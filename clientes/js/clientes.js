@@ -125,7 +125,7 @@ $(document).ready(function()
 		
 		return bandera;
 	};
-	
+		
 	var clean_address=function()
 	{
 		$("#tipo_datos").val('facturacion').trigger('chosen:updated');
@@ -190,6 +190,11 @@ $(document).ready(function()
 		$("#rfc").val('');
 		
 	});	
+	
+	$("#limpiar_estado").click(function()
+	{
+		$("#estado").val('').trigger('chosen:updated');
+	});
 		
 	$("#aditAddress").click(function()
 	{
@@ -404,7 +409,7 @@ $(document).ready(function()
         					tipo=2;
         				}
         				
-        				a.tipo=$("#tipo_datos_"+id).val();
+        				a.tipo=tipo;
         				a.razonS=$("#razonS_"+id).val();
         				a.rfc=$("#rfc_"+id).val();
         				a.calle=$("#calle_"+id).val();
@@ -442,13 +447,13 @@ $(document).ready(function()
 							dataType: "json",
 							complete: function(data)
 							{
-								/*swal({
+								swal({
 					                title: "Guardado!",
 					                text: "Cliente guardado correctamente!",
 					                type: "success"
 					            }, function () {
 					                window.location.href = 'index.php';
-					            });*/
+					            });
 							},
 							failure: function(errMsg)
 							{
