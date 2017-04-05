@@ -8,7 +8,7 @@ $inventarios=new Inventarios();
 
 	<div class="form-group">
         <label class="col-sm-3 control-label">Origen</label>
-		<div class="col-sm-6" >
+		<div class="col-sm-9" >
 			<select data-placeholder="Selecciona una entrada" class="chosen-select" style="width:300px;" tabindex="4" id="origen" name="origen">
 	        <option value=""></option>
 	        <option value="0">Proveedor</option>
@@ -26,12 +26,13 @@ $inventarios=new Inventarios();
 	            
 			?>
 			</select>
+			<button class="btn btn-danger btn-xs" id="limpiar_origen" type="button">Limpiar</button>
 		</div>
 	</div>
 	
 	<div class="form-group">
         <label class="col-sm-3 control-label">Destino</label>
-		<div class="col-sm-6" >
+		<div class="col-sm-9" >
 			<select data-placeholder="Selecciona un Destino" class="chosen-select" style="width:300px;" tabindex="4" id="destino" name="destino">
 	        <option value=""></option>
 	        <?php 
@@ -48,6 +49,7 @@ $inventarios=new Inventarios();
 	            
 			?>
 			</select>
+			<button class="btn btn-danger btn-xs" id="limpiar_origen" type="button">Limpiar</button>
 		</div>
 	</div>
 	
@@ -134,6 +136,16 @@ $(document).ready(function()
 			toastr.error('El Producto ya ha sido agregado');
 		}
 	};
+
+	$("#limpiar_origen").click(function()
+	{
+		$("#origen").val('').trigger('chosen:updated');
+	});
+
+	$("#limpiar_destino").click(function()
+	{
+		$("#destino").val('').trigger('chosen:updated');
+	});
 	
 	var options=
 	{
