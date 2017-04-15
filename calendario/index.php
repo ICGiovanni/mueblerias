@@ -109,7 +109,7 @@ while(list(,$dataEventos) = each($rowEventos)){
 <script>
 
 	$(document).ready(function() {
-		
+	setTimeout(function(){	
 		
 
         $('#external-events div.external-event').each(function() {
@@ -147,6 +147,8 @@ while(list(,$dataEventos) = each($rowEventos)){
                <?=implode(",",$jsonEventos)?>
             ]
         });
+        
+        }, 1000);
 
     });
 

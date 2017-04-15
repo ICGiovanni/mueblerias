@@ -13,7 +13,8 @@
     if(isset($_SESSION['punto_venta']['Productos'])){
         $puntoVenta = $_SESSION['punto_venta'];
         $numProd = count($puntoVenta['Productos']);
-        $total = $puntoVenta['Total'];
+        //$total = $puntoVenta['Total'];
+        $total = $puntoVenta['Subtotal'];
         $subtotal = $puntoVenta['Subtotal'];
         $iva = $puntoVenta['IVA'];
         
@@ -59,7 +60,7 @@
     </div>
 
     <div class="row">
-        <div class="col-md-9">
+        <div class="col-md-12">
             <div class="ibox">
                 <div class="ibox-title">
                     
@@ -69,7 +70,7 @@
                 <div id="productos">                       
                     <div class="ibox-content">
                         <div class="table-responsive">
-                            <table class="table shoping-cart-table">
+                            <table class="table shoping-cart-table table-striped">
                                 <thead>
                                     <tr>
                                         <th>&nbsp;</th>
@@ -103,20 +104,33 @@
                                 }
                                 ?>                                                                                                    
                                 </tbody>
+                                <tfoot class="ibox-content">
+                                    <tr>                                        
+                                        <td colspan="4" class="font-bold" style="text-align: right"><h3>TOTAL</h3></td>
+                                        <td><h3 class="text-right"> $ <?php echo number_format($total,2,'.',',');?></h3></td>
+                                        <td>&nbsp;</td>
+                                    </tr>
+                                </tfoot>
                             </table>
                         </div>
                     </div>
 		</div>                        
-                <div class="ibox-content">                    
-                    <a href="<?php echo $ruta.'proveedores/grid.php'?>" class="btn btn-white"><i class="fa fa-arrow-left"></i>&nbsp;Continuar Comprando</a>
+                <div class="ibox-title">                    
+                    <div class="m-t-sm">
+                        <a href="<?php echo $ruta.'proveedores/grid.php'?>" class="btn btn-white"><i class="fa fa-arrow-left"></i>&nbsp;Continuar Comprando</a>
+                    
+                        <div style="float: right">
+                            <a href="#" class="btn btn-warning btn-md"><i class="fa fa-shopping-cart"></i>&nbsp;Apartar</a>&nbsp;                            
+                            <a href="<?php echo $ruta.'punto_venta'?>" class="btn btn-primary btn-md"><i class="fa fa-shopping-cart"></i>&nbsp;Pagar</a>                        
+                        </div>
+                        
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
+        <!--<div class="col-md-3">
             <div class="ibox">
-                <div class="ibox-title">
-                    <h5>Resumen de Venta</h5>
-                </div>
+                
                 <div class="ibox-content">
                     <span>
                         Subtotal
@@ -144,7 +158,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>-->
     </div>
 </div>
 
@@ -284,6 +298,7 @@ function saveCart(id, sku, modelo, cantidad, precio, imagen){
         },
         success: function (response) {                        
             console.log(response);
+            window.location.href = 'index.php';                        
             /*swal({
                 title: "Actualizado!",
                 text: "Producto agregado correctamente!",
