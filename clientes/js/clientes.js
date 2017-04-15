@@ -1,6 +1,7 @@
 $(document).ready(function()
 {
 	//$('.phone').chosen();
+	$("#limpiar_estado").hide();
 	$('#tipo_datos').chosen();
 	toastr.options=
 	{
@@ -22,6 +23,11 @@ $(document).ready(function()
 	
 	$("#nombre").focus();
 
+	$("#estado").change(function()
+	{
+		$("#limpiar_estado").show();
+	});
+	
 	var validate_form=function()
 	{
 		var email_regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i;
@@ -194,6 +200,7 @@ $(document).ready(function()
 	$("#limpiar_estado").click(function()
 	{
 		$("#estado").val('').trigger('chosen:updated');
+		$("#limpiar_estado").hide();
 	});
 		
 	$("#aditAddress").click(function()
@@ -313,8 +320,9 @@ $(document).ready(function()
 			table+='<input type="hidden" id="municipio_'+address+'" name="municipio_'+address+'" value="'+municipio+'">';
 			table+='<td><div id="addres_tipo_'+address+'">'+tipo_datos+'</div></td>';
 			table+='<td><div id="addres_div_'+address+'">'+addressComplete+'</div></td>';
-			table+='<td class="text-left"><button class="btn btn-primary btn-xs editAddress" id="editA" value="" placeholder="" type="button" id-num="'+address+'"><i class="fa fa-pencil"></i></button>  ';
-			table+='<button class="btn btn-danger btn-xs deleteAddress" id="deleteA" value="" placeholder="" type="button"><i class="fa fa-trash-o"></i></button></td>';
+			//table+='<td class="text-left"><button class="btn btn-primary btn-xs editAddress" id="editA" value="" placeholder="" type="button" id-num="'+address+'"><i class="fa fa-pencil"></i></button>  ';
+			table+='<td class="text-left"><div class="infont col-md-1 col-sm-1"><a href="#" title="Editar" id-num="'+address+'" class="editAddress"><i class="fa fa-pencil editAddress"></i></a></div><div class="infont col-md-1 col-sm-1"><a href="#" title="Borrar" class="deleteAddress"><i class="fa fa-trash-o"></i></a></div></td>';
+			//table+='<button class="btn btn-danger btn-xs deleteAddress" id="deleteA" value="" placeholder="" type="button"><i class="fa fa-trash-o"></i></button></td>';
 			table+='</tr>';
 			
 			$('#address_table').append(table);
@@ -324,11 +332,11 @@ $(document).ready(function()
 			
 			clean_address();
 			
-			$(".deleteAddress").click(function()
+			$(".deleteAddress").on("click", function ()
 			{            
 				var bandera=false;
 				
-				$(this).parent().parent().remove();
+				$(this).parent().parent().parent().remove();
 				
 				$('#address_table > tr').each(function()
 				{
@@ -341,16 +349,22 @@ $(document).ready(function()
 				}
 			});
 			
-			$(".editAddress").click(function()
+			$('.editAddress').on("click", function ()
+			{
+				var id = $(this).attr('id-num');
+				edit_address(id);
+			});
+			
+			/*$(".editAddress").on("click", function () {on("click", function ()
 			{            
 				 var id = $(this).attr('id-num');
-				 
+				 alert("ddddd");
 				 edit_address(id);
-			});
+			});*/
 		}
 	});
 	
-	$(".editAddress").click(function()
+	$(".editAddress a").click(function()
 	{            
 		 var id = $(this).attr('id-num');
 		 

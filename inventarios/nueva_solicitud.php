@@ -9,7 +9,7 @@ $inventarios=new Inventarios();
 	<div class="form-group">
         <label class="col-sm-3 control-label">Origen</label>
 		<div class="col-sm-9" >
-			<select data-placeholder="Selecciona una entrada" class="chosen-select" style="width:300px;" tabindex="4" id="origen" name="origen">
+			<select data-placeholder="Selecciona una Entrada" class="chosen-select" style="width:300px;" tabindex="4" id="origen" name="origen">
 	        <option value=""></option>
 	        <option value="0">Proveedor</option>
 	        <?php 
@@ -26,7 +26,7 @@ $inventarios=new Inventarios();
 	            
 			?>
 			</select>
-			<button class="btn btn-danger btn-xs" id="limpiar_origen" type="button">Limpiar</button>
+			<button class="btn btn-danger btn-xs" id="limpiar_origen" type="button"><i class="fa fa-times"></i></button>
 		</div>
 	</div>
 	
@@ -49,7 +49,7 @@ $inventarios=new Inventarios();
 	            
 			?>
 			</select>
-			<button class="btn btn-danger btn-xs" id="limpiar_origen" type="button">Limpiar</button>
+			<button class="btn btn-danger btn-xs" id="limpiar_destino" type="button"><i class="fa fa-times"></i></button>
 		</div>
 	</div>
 	
@@ -100,6 +100,19 @@ $inventarios=new Inventarios();
 <script>
 $(document).ready(function()
 {
+	$("#limpiar_destino").hide();
+	$("#limpiar_origen").hide();
+
+	$("#origen").change(function()
+	{
+		$("#limpiar_origen").show();
+	});
+
+	$("#destino").change(function()
+	{
+		$("#limpiar_destino").show();
+	});
+	
 	var SelectedItemData=function(id,sku,name,imagen)
 	{
 		var table='';
@@ -140,11 +153,13 @@ $(document).ready(function()
 	$("#limpiar_origen").click(function()
 	{
 		$("#origen").val('').trigger('chosen:updated');
+		$("#limpiar_origen").hide();
 	});
 
 	$("#limpiar_destino").click(function()
 	{
 		$("#destino").val('').trigger('chosen:updated');
+		$("#limpiar_destino").hide();
 	});
 	
 	var options=
