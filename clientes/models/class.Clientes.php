@@ -371,12 +371,14 @@ class Clientes
 				cliente_direccion_numero_int,
 				cliente_direccion_colonia,
 				cliente_direccion_municipio,
+				estado,
 				id_estado,
 				cliente_direccion_cp,
 				cliente_direccion_rfc,
 				cliente_direccion_razon_social,
 				cliente_direccion_entre_calles
 			FROM cliente_direccion
+			INNER JOIN estados USING(id_estado)
 			WHERE cliente_id = :cliente_id";
 		
 		$statement=$this->connect->prepare($sql);
