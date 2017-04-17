@@ -48,39 +48,101 @@ $datos=$clientes->GetClientes($id_cliente);
             <div class="form-group"><label class="col-sm-2 control-label">Apellido Materno</label>
 			<div class="col-sm-6" ><input type="text" class="form-control" id="apellidoM" name="apellidoM" value="<?php echo $datos[0]["apellidoM"]?>"></div>
             </div>
+            
+            
+            
+            <div class="col-lg-11">
+			<div class="panel panel-default">
+            <div class="panel-heading">
+            <label class="control-label">Datos Cliente</label>
+			</div>
+            <div class="panel-body">
+            
+            <div class="form-group"><label class="col-sm-2 control-label">Tipo</label>
+			<div class="col-sm-6">
+			<select data-placeholder="Selecciona un Tipo" class="chosen-select" style="width:300px;" tabindex="4" id="tipo_datos" name="tipo_datos">
+			<option value="facturacion">Facturación</option>
+			<option value="envio">Envio</option>
+			</select>
+			</div>
+			</div>
+            
+            <div id="div_facturacion" name=""div_facturacion"">
             <div class="form-group"><label class="col-sm-2 control-label">Raz&oacute;n Social</label>
-			<div class="col-sm-6"><input type="text" class="form-control" id="razonS" name="razonS" value="<?php echo $datos[0]["razon_social"]?>"></div>
+			<div class="col-sm-6"><input type="text" class="form-control" id="razonS" name="razonS"></div>
             </div>
             <div class="form-group"><label class="col-sm-2 control-label">RFC</label>
-			<div class="col-sm-6"><input type="text" class="form-control" id="rfc" name="rfc" value="<?php echo $datos[0]["rfc"]?>"></div>
+			<div class="col-sm-6"><input type="text" class="form-control" id="rfc" name="rfc"></div>
             </div>
+            </div>
+            
             <div class="form-group"><label class="col-sm-2 control-label">Calle</label>
-			<div class="col-sm-6"><input type="text" class="form-control" id="calle" name="calle" value="<?php echo $datos[0]["calle"]?>"></div>
+			<div class="col-sm-6"><input type="text" class="form-control" id="calle" name="calle"></div>
             </div>
             <div class="form-group">
             <label class="col-sm-2 control-label">No. Exterior</label>
-			<div class="col-sm-2"><input type="text" class="form-control" id="noExt" name="noExt" value="<?php echo $datos[0]["num_exterior"]?>"></div>
+			<div class="col-sm-2"><input type="text" class="form-control" id="noExt" name="noExt"></div>
 			<label class="col-sm-2 control-label">No. Interior</label>
-			<div class="col-sm-2"><input type="text" class="form-control" id="noInt" name="noInt" value="<?php echo $datos[0]["num_interior"]?>"></div>
+			<div class="col-sm-2"><input type="text" class="form-control" id="noInt" name="noInt"></div>
             </div>
             <div class="form-group"><label class="col-sm-2 control-label">Colonia</label>
-			<div class="col-sm-6"><input type="text" class="form-control" id="colonia" name="colonia" value="<?php echo $datos[0]["colonia"]?>"></div>
+			<div class="col-sm-6"><input type="text" class="form-control" id="colonia" name="colonia"></div>
             </div>
             <div class="form-group">
 			<label class="col-sm-2 control-label">C.P.</label>
-			<div class="col-sm-2"><input type="text" class="form-control" id="codigoPostal" name="codigoPostal" value="<?php echo $datos[0]["codigo_postal"]?>"></div>
+			<div class="col-sm-2"><input type="text" class="form-control" id="codigoPostal" name="codigoPostal"></div>
             </div>
-           
             <div class="form-group"><label class="col-sm-2 control-label">Estado</label>
 			<div class="col-sm-6">
 			<select data-placeholder="Selecciona un estado" class="chosen-select" style="width:300px;" tabindex="4" id="estado" name="estado">
             <option value=""></option>
             </select>
+			<button class="btn btn-danger btn-xs" id="limpiar_estado" type="button"><i class="fa fa-times"></i></button>&nbsp;&nbsp;&nbsp;&nbsp;
 			</div>
 			</div>
-			 <div class="form-group"><label class="col-sm-2 control-label">Municipio</label>
-			<div class="col-sm-6"><input type="text" class="form-control" id="municipio" name="municipio" value="<?php echo $datos[0]["municipio"]?>"></div>
+			<div class="form-group"><label class="col-sm-2 control-label">Municipio</label>
+			<div class="col-sm-6"><input type="text" class="form-control" id="municipio" name="municipio"></div>
             </div>
+            
+            <div class="form-group"><label class="col-sm-2 control-label">Referencia</label>
+			<div class="col-sm-6"><textarea class="form-control" id="referencia" name="referencia"></textarea></div>
+            </div>
+            
+            <div class="form-group">
+			<div class="col-sm-6 col-sm-offset-2" align="right"><br>
+			<button class="btn btn-warning btn-xs" id="limpiar_address" type="button">Limpiar</button>&nbsp;&nbsp;&nbsp;&nbsp;
+			<button class="btn btn-primary btn-xs" id="addAddress" type="button">Agregar Dirección</button>
+			<button class="btn btn-primary btn-xs" style="display: none;" id="aditAddress" type="button">Actualizar Dirección</button>
+			</div>
+			</div>
+			
+			<div class="form-group">
+	           	<div class="col-sm-8" >
+	           	<div id="address_list" class="ibox-content" style="display:none;">
+	           	
+	           	<table class="table table-striped">
+	           	<thead>
+					<tr>
+						<td><strong>Tipo</strong></td>
+						<td><strong>Datos</strong></td>
+						<td></td>
+					</tr>
+				</thead>
+	           	<tbody id="address_table">
+	           	
+	           	</tbody>
+	           	</table>
+	           </div>
+	           </div>
+	           </div>
+            
+            </div>
+			</div>
+            </div>
+            
+            
+            
+            
             <div class="form-group">
             <?php
            	$phones=$clientes->GetPhonesClient($id_cliente);

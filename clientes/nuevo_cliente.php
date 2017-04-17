@@ -95,6 +95,10 @@
 			<div class="col-sm-6"><input type="text" class="form-control" id="municipio" name="municipio"></div>
             </div>
             
+            <div class="form-group"><label class="col-sm-2 control-label">Referencia</label>
+			<div class="col-sm-6"><textarea class="form-control" id="referencia" name="referencia"></textarea></div>
+            </div>
+            
             <div class="form-group">
 			<div class="col-sm-6 col-sm-offset-2" align="right"><br>
 			<button class="btn btn-warning btn-xs" id="limpiar_address" type="button">Limpiar</button>&nbsp;&nbsp;&nbsp;&nbsp;
