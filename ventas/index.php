@@ -78,7 +78,7 @@
                                         <th style="width: 120px">Precio Unitario</th>
                                         <th style="width: 70px">Cantidad</th>
                                         <th style="width: 120px; text-align: center">Subtotal</th>
-                                        <th role="button" onclick="removeAll()"><i class="fa fa-trash-o"></i> todos</th>
+                                        <th role="button" onclick="removeAll()"><button class='btn btn-danger btn-md' ><i class="fa fa-trash-o"></i> Borrar  Todo</button></th>
                                     </tr>
                                 </thead>
                                 <tbody id="productosVenta">
@@ -98,9 +98,11 @@
                                                 <td>$ '.number_format($prod['Precio'],2,'.',',').'</td>
                                                 <td><input type="text" class="form-control" placeholder="1" value='.$prod['Cantidad'].'></td>
                                                 <td><h4>$ '.number_format($prod['Subtotal'],2,'.',',').'</h4></td>
-                                                <td><i class="fa fa-trash removeCart" role="button" data-sku="'.$prod['SKU'].'" id="removeCart_'.$prod['ID'].'"></i></td>                                    
+                                                <td style="text-align: center"><button class="btn btn-danger btn-md" ><i class="fa fa-trash removeCart" role="button" data-sku="'.$prod['SKU'].'" id="removeCart_'.$prod['ID'].'"></i></button></td>                                    
                                             </tr>';
                                     }
+                                }else{
+                                    echo "<tr><td colspan='6' style='height: 150px'>&nbsp;</td></tr>";
                                 }
                                 ?>                                                                                                    
                                 </tbody>
@@ -352,7 +354,13 @@ function addCommas(nStr)
 }
 
 </script>
+<style type="text/css">
+    .btn-danger {
+        margin-top: -10px !important;
+        font-size: 12px !important;
+    }
 
+</style>
 
 <?php
     include $pathProy.'footer.php';
