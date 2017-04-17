@@ -88,16 +88,20 @@
 			<select data-placeholder="Selecciona un estado" class="chosen-select" style="width:300px;" tabindex="4" id="estado" name="estado">
             <option value=""></option>
             </select>
-            <button class="btn btn-danger btn-xs" id="limpiar_estado" type="button">Limpiar</button>&nbsp;&nbsp;&nbsp;&nbsp;
+			<button class="btn btn-danger btn-xs" id="limpiar_estado" type="button"><i class="fa fa-times"></i></button>&nbsp;&nbsp;&nbsp;&nbsp;
 			</div>
 			</div>
 			<div class="form-group"><label class="col-sm-2 control-label">Municipio</label>
 			<div class="col-sm-6"><input type="text" class="form-control" id="municipio" name="municipio"></div>
             </div>
             
+            <div class="form-group"><label class="col-sm-2 control-label">Referencia</label>
+			<div class="col-sm-6"><textarea class="form-control" id="referencia" name="referencia"></textarea></div>
+            </div>
+            
             <div class="form-group">
 			<div class="col-sm-6 col-sm-offset-2" align="right"><br>
-			<button class="btn btn-danger btn-xs" id="limpiar_address" type="button">Limpiar</button>&nbsp;&nbsp;&nbsp;&nbsp;
+			<button class="btn btn-warning btn-xs" id="limpiar_address" type="button">Limpiar</button>&nbsp;&nbsp;&nbsp;&nbsp;
 			<button class="btn btn-primary btn-xs" id="addAddress" type="button">Agregar Dirección</button>
 			<button class="btn btn-primary btn-xs" style="display: none;" id="aditAddress" type="button">Actualizar Dirección</button>
 			</div>

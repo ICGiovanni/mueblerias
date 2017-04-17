@@ -11,11 +11,23 @@ class Clientes
 		$this->connect=$c->db;
 	}
 	
+	public function DeleteDataCliente($id_cliente)
+	{
+		$sql="DELETE FROM cliente_direccion WHERE id_cliente=:id_cliente";
+		
+		$statement=$this->connect->prepare($sql);
+		$statement->bindParam(':id_cliente', $id_cliente, PDO::PARAM_STR);
+		
+		$statement->execute();
+		return $id_cliente;
+	}
+	
 	public function InsertarDatosCliente($idCliente,$data)
 	{
+		$this->DeleteDataCliente($idCliente);
 		
 		foreach($data as $d)
-		{
+		{			
 			$sql="INSERT INTO cliente_direccion VALUES('',:cliente,:tipo,:calle,:num_ext,:num_int,:colonia,:municipio,:estado,:codigoPostal,:rfc,:razon_social,:referencia)";
 			
 			$statement=$this->connect->prepare($sql);
@@ -269,11 +281,8 @@ class Clientes
 		}
 		
 		
-		$sql="SELECT c.id_cliente,c.nombre,c.apellidoP,c.apellidoM,c.razon_social,c.rfc,c.calle,c.num_exterior,
-				c.num_interior,c.colonia,c.codigo_postal,c.municipio,
-				e.estado,e.id_estado
+		$sql="SELECT c.id_cliente,c.nombre,c.apellidoP,c.apellidoM
 				FROM clientes c
-				INNER JOIN estados e USING(id_estado)
 				$where
 				$orderby";
 	
@@ -281,6 +290,25 @@ class Clientes
 		$statement->execute();
 		$result=$statement->fetchAll(PDO::FETCH_ASSOC);
 	
+		return $result;
+	}
+	
+	public function GetDataCliente($id_cliente)
+	{
+		$sql="SELECT cliente_direccion_tipo_desc,cliente_direccion_calle,cliente_direccion_numero_ext,
+				cliente_direccion_numero_int,cliente_direccion_colonia,cliente_direccion_municipio,
+				estado,cliente_direccion_cp,cliente_direccion_rfc,cliente_direccion_razon_social,
+				cliente_direccion_entre_calles
+				FROM cliente_direccion cd
+				INNER JOIN cliente_direccion_tipo cdt USING(cliente_direccion_tipo_id)
+				INNER JOIN estados e USING(id_estado)
+				WHERE cliente_id='$id_cliente'
+				ORDER BY cliente_direccion_id";
+		
+		$statement=$this->connect->prepare($sql);
+		$statement->execute();
+		$result=$statement->fetchAll(PDO::FETCH_ASSOC);
+		
 		return $result;
 	}
 	
