@@ -125,9 +125,9 @@
                             
                             <li class="<?php if ( stristr($_SERVER['SCRIPT_NAME'],'/ventas/listaVentasEntregadas.php') || stristr($_SERVER['SCRIPT_NAME'],'/ventas/listaVentasPorEntregar.php')){ echo 'active';}?>">
                                 <a href="<?php echo $ruta.'ventas/'?>" >Lista de ventas<span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level" >
-                                    <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/ventas/listaVentasEntregadas.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'ventas/listaVentasEntregadas.php'?>" >Entregadas</a></li>
+                                <ul class="nav nav-third-level" >                                    
                                     <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/ventas/listaVentasPorEntregar.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'ventas/listaVentasPorEntregar.php'?>" >Por Entregar</a></li>
+                                    <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/ventas/listaVentasEntregadas.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'ventas/listaVentasEntregadas.php'?>" >Entregadas</a></li>
                                 </ul>
                             </li>
                             <li class="<?php if ( stristr($_SERVER['SCRIPT_NAME'],'/ventas/listaApartadosVigentes.php') || stristr($_SERVER['SCRIPT_NAME'],'/ventas/listaApartadosVencidos.php')){ echo 'active';}?>">
