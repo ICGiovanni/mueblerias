@@ -1,23 +1,20 @@
 <?php session_start();
 include $_SERVER['REDIRECT_PATH_CONFIG'].'/config.php';
+require_once($_SERVER["REDIRECT_PATH_CONFIG"].'ventas/models/class.Ventas.php');
 require_once($_SERVER["REDIRECT_PATH_CONFIG"].'clientes/models/class.Clientes.php');
+require_once($_SERVER["REDIRECT_PATH_CONFIG"].'models/general/class.General.php');
+
 // include $pathProy.'login/session.php';
 include $pathProy.'/header.php';
 include $pathProy.'/menu.php';
 
-$numProd = 0;
-$total = 0;
-$subtotal = 0;
-$iva = 0;
 
-if(isset($_SESSION['punto_venta']['Productos'])){
-    $puntoVenta = $_SESSION['punto_venta'];
-    $numProd = count($puntoVenta['Productos']);
-    $total = $puntoVenta['Total'];
-    $subtotal = $puntoVenta['Subtotal'];
-    $iva = $puntoVenta['IVA'];
+$insVentas = new Ventas();
+$insClientes = new Clientes();
+$insGeneral = new General();
 
-}
+$ventas = $insVentas->obtenerVentas(1,0);
+
 ?>
 <link href="<?php echo $raizProy?>css/plugins/easy-autocomplete/easy-autocomplete.min.css" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="../css/clientes.css">
@@ -35,15 +32,14 @@ if(isset($_SESSION['punto_venta']['Productos'])){
                 <a href="">Lista de ventas</a>
             </li>
             <li class="active">
-                <strong>Ventas</strong>
+                <strong>Entregadas</strong>
             </li>
         </ol>
     </div>
 </div>
 
 
-<div class="wrapper wrapper-content animated fadeIn">
-
+<div class="wrapper wrapper-content animated fadeIn">      
     <div class="row">
         <div class="col-md-12">
             <div class="ibox">
@@ -53,7 +49,7 @@ if(isset($_SESSION['punto_venta']['Productos'])){
                 <div id="productos">
                     <div class="ibox-content">
                         <div class="table-responsive">
-                            <table class="table table-striped table-bordered table-hover dataTables-example" id="table" >
+                            <table class="table table-responsive table-striped table-bordered table-hover dataTables-example" id="table" >
                                 <thead>
                                 <tr>
                                     <th>ID</th>
@@ -64,47 +60,71 @@ if(isset($_SESSION['punto_venta']['Productos'])){
                                     <th>Cliente</th>
                                     <th>Total</th>
                                     <th>Pagos</th>
+                                    <th>Resta</th>
                                     <th>Flete</th>
                                     <th>Facturación</th>
                                     <th>Estatus</th>                                    
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr class="gradeX">
-                                    <td>1</td>
-                                    <td>1 <b>HHH-DIV-E6C3</b><br />MESA VENECIA</td>
-                                    <td>Centro</td>
-                                    <td>12/Nov/2016<br />11:47 am</td>
-                                    <th>12/Nov/2016<br />11:47 am</th>
-                                    <td>Mostrador</td>
-                                    <td>$1,700.00</td>                                                                        
-                                    <td>Efectivo $500.00<br />Tarjeta $1,200.00</td>
-                                    <td>N/R Se lo lleva el cliente</td>                                    
-                                    <td>N/R</td>
-                                    <td>Pagado</td>
-                                </tr>
-                                <tr class="gradeX">
-                                    <td>2</td>
-                                    <td>1<b>POR-DOM-E6D8<b></br> MESA PORTUGAL</td>
-                                    <td>Allende</td>
-                                    <td>12/Nov/2016<br />11:47 am</td>
-                                    <th>12/Nov/2016<br />11:47 am</th>
-                                    <td>Juan Lopez</td>
-                                    <td>$1,700.00</td>                                                                        
-                                    <td>Efectivo $500.00<br />Tarjeta $1,000.00<br /><b>Resta $200.00</b></td>
-                                    <td>Seccion 1, Planta baja, Requiere traslado a pie</td>                                    
-                                    <td>HBGY787878HU8 <br />Juan Lopez</td>
-                                    <td>Pendiente de pago</td>
-                                </tr>                               
+                                <?php
+                                    foreach($ventas as $venta){
+                                        $clienteInfo = $insClientes->GetClientes($venta['id_cliente']);
+                                        $flete = 'No Requiere';
+                                        if($venta['venta_flete_id']!=0){
+                                            $dir = end($insVentas->getAddress($venta['venta_flete_id']));
+                                            $flete = $dir['cliente_direccion_calle']."&nbsp;".$dir['cliente_direccion_numero_ext']." &nbsp;".$dir['cliente_direccion_entre_calles'];
+                                        }
+
+                                        $factura = 'No Requiere';
+                                        if($venta['cliente_direccion_id']!=0){
+                                            $dir = end($insVentas->getAddress($venta['cliente_direccion_id']));
+                                            $factura = $dir['cliente_direccion_rfc']."<br />".$dir['cliente_direccion_razon_social'];
+                                        }
+                                        
+                                        $pagosInfo = $insVentas->getPagosVenta($venta['venta_id']);
+                                        $pagos = 'Sin Pago';
+                                        $resta = $venta['monto'];
+                                        if($pagosInfo){
+
+                                            $pagos = '';
+
+                                            foreach($pagosInfo as $pago){
+                                                $pagos .= number_format($pago['monto'],2,'.',',')."&nbsp;".$pago['general_forma_de_pago_desc']."<br />".$insGeneral->getDate($pago['fecha']);
+                                                $resta -= $pago['monto'];
+                                            }
+                                        }
+
+                                        $productosVenta = $insVentas->obtenerProductosVenta($venta['venta_id']);
+                                        $productosMostrar = '';
+                                        foreach($productosVenta as $pv){
+                                            $productosMostrar .= "<b>".$pv['producto_sku']."</b>&nbsp;".$pv['producto_name']."<br />";
+                                        }
+                                        echo "<tr>";
+                                        echo "<td>".$venta['venta_id']."</td>";
+                                        echo "<td>".$productosMostrar."</td>";
+                                        echo "<td>".$insVentas->getSucursal($venta['sucursal_id'])."</td>";
+                                        echo "<td>".$insGeneral->getDate($venta['fecha_creacion'])."</td>";
+                                        echo "<td>".$insGeneral->getDate($venta['fecha_creacion'])."</td>";
+                                        echo "<td>".$clienteInfo[0]['nombre']."&nbsp;".$clienteInfo[0]['apellidoP']."&nbsp;".$clienteInfo[0]['apellidoM']."</td>";
+                                        echo "<td>".$venta['monto']."</td>";
+                                        echo "<td>".$pagos."</td>";
+                                        echo "<td>".$resta."</td>";
+                                        echo "<td>".$flete."</td>";
+                                        echo "<td>".$factura."</td>";
+                                        echo "<td>".$insVentas->getEstatusVenta($venta['venta_estatus_id'])."</td>";                                    
+
+                                        echo "</tr>";
+                                    }
+                                ?>                                                                                                        
                                 </tfoot>
                             </table>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-
-    </div>
+        </div>   
+    </div>    
 </div>
 
 <script src="<?php echo $raizProy?>js/plugins/toastr/toastr.min.js"></script>
