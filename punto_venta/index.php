@@ -360,14 +360,13 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 													<span>
 														Total
 													</span>
-													<h2 class="font-bold text-right" id="granTotalEnPago"> $ <?=($totalVenta+$totalEnvio)?>  </h2>
+													<h3 class="font-bold text-right" id="granTotalEnPago"> $ <?=($totalVenta+$totalEnvio)?>  </h3>
 													<span>
 														Restan
 													</span>
-													<h2 class="font-bold text-right">
+													<h3 class="font-bold text-right">
 														<span id="spanRestanVenta" >$ <?=($totalVenta+$totalEnvio)?></span>
-														<span style="display:none;" id="spanRestanVentaOriginal" ><?=($totalVenta+$totalEnvio)?></span>                    </h2>
-													<hr/>
+														<span style="display:none;" id="spanRestanVentaOriginal" ><?=$totalVenta?></span>                    </h3>
 													
 												</div>
 											</div>
@@ -417,7 +416,7 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 											lmrodriguez@gmail.com<br>-->
 										</div>
 									</div>
-									<div class="col-lg-4" style="padding-right: 0px;">
+									<div class="col-lg-4" style="padding-right: 0px; margin-top: 40px;">
 										<table class="table table-striped table-bordered">
 										<!-- <tr>
 												<td>Subtotal</td>
@@ -432,8 +431,20 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 												<td>$ 500</td>												
 											</tr> -->
 											<tr>
-												<td><b>Gran Total</b></td>
-												<td>$ <?=$totalVenta?></td>												
+												<td align="right"><b>Sub-total</b></td>
+												<td align="right">$ <?=$totalVenta?></td>												
+											</tr>
+											<tr>
+												<td align="right"><b>IVA</b></td>
+												<td align="right">$ 125</td>												
+											</tr>
+											<tr>
+												<td align="right"><b>Envío</b></td>
+												<td align="right">$ <?=$totalVenta?></td>												
+											</tr>
+											<tr>
+												<td align="right"><b>Gran Total</b></td>
+												<td align="right"><h2>$ <?=$totalVenta?></h2></td>												
 											</tr>
 										</table>
 									</div>
@@ -736,7 +747,8 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 		}
 ?>
 		var globalDataClient = new Array();
-	
+		var subtotal = <?=$totalVenta?>;
+		var costoActual = 0;
         $(document).ready(function(){
 			
 			toastr.options={
@@ -1301,7 +1313,7 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 			maxObjIdTmp = 1;
 			
 		    numNuevoRestan = $('#spanRestanVentaOriginal').html();
-			numNuevoRestan = Number(numNuevoRestan);
+			numNuevoRestan = Number(subtotal) + Number(costoActual);
 		   
 			while (maxObjIdTmp <= maxObjId) {
 				newValue = $('#metodo_'+maxObjIdTmp).val();
@@ -1419,7 +1431,6 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 	language: 'es'
 }).datepicker("setDate", "0");
 
-subtotal = <?=$totalVenta?>;
 function actualizaCostoEnvio(){
 	
 	costoActual = $("#costoFlete").val();	
@@ -1427,6 +1438,7 @@ function actualizaCostoEnvio(){
 	granTotalActual = Number(costoActual) + Number(subtotal);
 	$("#granTotalEnPago").html("$ "+granTotalActual);
 	
+	recalculaRestaTotal();
 }
     </script>
 
