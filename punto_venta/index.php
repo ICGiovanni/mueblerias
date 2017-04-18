@@ -30,72 +30,134 @@ else{
 		$totalVenta+=$valueP["Subtotal"];
 	}
 }
+
+$totalEnvio = 0;
+if( isset($_SESSION["punto_venta"]["envio"]) ){
+	$totalEnvio = $_SESSION["punto_venta"]["envio"]["costo_envio"];
+}
 //print_r($_SESSION);
 $clientFromSession = '';
+$clientFromSessionForEnvio = '';
+$clientFromSessionExtra = '';
 $clientAddressFactFromSession = '';
 $clientAddressShipFromSession = '';
 if(isset($_SESSION["punto_venta"]["cliente"])){
 	
-	$clientFromSession = '<table ><tbody>
-			<tr id="row_'.$_SESSION["punto_venta"]["cliente"]["cliente_id"].'"> 
-				<td class="desc" style="padding-right:50px;">
-					<h3><a href="#" class="text-navy">'.$_SESSION["punto_venta"]["cliente"]["name"].'</a></h3>
+	
+	if(isset($_SESSION["punto_venta"]["cliente"]["direcciones"])){
+	
+		$newBotonesEnvio = '<b>Direcciones de envío del cliente:</b><br>';
+		$newDivsEnvio = '';
+		$dirsEnvioIni = '';
+		$dirsFacturacionIni = '';
+	
+		$newDivBtnsFact = '';
+		$newDivsFact = '';
+		while ( list($keyD, $valueD) = each($_SESSION["punto_venta"]["cliente"]["direcciones"]) ){
+			if( $valueD["cliente_direccion_tipo_id"] == "2" || $valueD["cliente_direccion_tipo_id"] == "3" ){
+				$newBotonesEnvio.= '<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo_'.$valueD["cliente_direccion_id"].'">'.$valueD["cliente_direccion_calle"].' '.$valueD["cliente_direccion_numero_ext"].'...</button> ';
+				
+				$cssRowDireccion = 'class="direccionSinSeleccion"';
+				$cssBtnElegir = 'mostrarElemento';
+				$cssIcoElegir = 'ocultarElemento';
+				if(isset($_SESSION["punto_venta"]["cliente"]["cliente_direccion_id_envio"]) && ($valueD["cliente_direccion_id"] == $_SESSION["punto_venta"]["cliente"]["cliente_direccion_id_envio"]) ){
+					$cssRowDireccion = ' class="direccionSeleccionada"';
+					$cssBtnElegir = 'ocultarElemento';
+					$cssIcoElegir = 'mostrarElemento';
+				}
+				$newDivsEnvio.= '<div id="demo_'.$valueD["cliente_direccion_id"].'" class="collapse"><font id="demo_font_'.$valueD["cliente_direccion_id"].'" '.$cssRowDireccion.'>'.$valueD["cliente_direccion_calle"].' '.$valueD["cliente_direccion_numero_ext"].' '.$valueD["cliente_direccion_numero_int"].' '.$valueD["cliente_direccion_colonia"].' '.$valueD["cliente_direccion_municipio"].', '.$valueD['estado'].'. C.P. '.$valueD["cliente_direccion_cp"].'</font> &nbsp;&nbsp;&nbsp;<i id="demo_ico_'.$valueD["cliente_direccion_id"].'" class="fa fa-check-square '.$cssIcoElegir.'" style="color:green;"></i><button type="button" class="btn btn-warning btn-xs '.$cssBtnElegir.'" onclick="asociaDireccionEnvio('.$valueD["cliente_direccion_id"].');" style="margin:4px 0px;" id="demo_btn_'.$valueD["cliente_direccion_id"].'"> Elegir </button> </div>';
+				
+				$dirsEnvioIni.= '<i class="fa fa-map-marker"></i> '.$valueD["cliente_direccion_calle"].' '.$valueD["cliente_direccion_numero_ext"].' '.$valueD["cliente_direccion_numero_int"].' '.$valueD["cliente_direccion_colonia"].' '.$valueD["cliente_direccion_municipio"].', '.$valueD['estado'].'. C.P. '.$valueD["cliente_direccion_cp"].'<br>';
+				
+			}
+			
+			if( $valueD["cliente_direccion_tipo_id"] == "1" || $valueD["cliente_direccion_tipo_id"] == "3" ){
+				$newDivBtnsFact.= '<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo_'.$valueD["cliente_direccion_id"].'">'.$valueD["cliente_direccion_calle"].' '.$valueD["cliente_direccion_numero_ext"].'...</button> ';
+				
+				$cssRowDireccion = 'class="direccionSinSeleccion"';
+				$cssBtnElegir = 'mostrarElemento';
+				$cssIcoElegir = 'ocultarElemento';
+				if(isset($_SESSION["punto_venta"]["cliente"]["cliente_direccion_id_fact"]) && ($valueD["cliente_direccion_id"] == $_SESSION["punto_venta"]["cliente"]["cliente_direccion_id_envio"]) ){
+					$cssRowDireccion = ' class="direccionSeleccionada"';
+					$cssBtnElegir = 'ocultarElemento';
+					$cssIcoElegir = 'mostrarElemento';
+				}
+				$newDivsFact.= '<div id="demo_'.$valueD["cliente_direccion_id"].'" class="collapse"><font id="demo_font_'.$valueD["cliente_direccion_id"].'" '.$cssRowDireccion.'>'.$valueD["cliente_direccion_calle"].' '.$valueD["cliente_direccion_numero_ext"].' '.$valueD["cliente_direccion_numero_int"].' '.$valueD["cliente_direccion_colonia"].' '.$valueD["cliente_direccion_municipio"].', '.$valueD['estado'].'. C.P. '.$valueD["cliente_direccion_cp"].'</font> &nbsp;&nbsp;&nbsp;<i id="demo_ico_'.$valueD["cliente_direccion_id"].'" class="fa fa-check-square '.$cssIcoElegir.'" style="color:green;"></i><button type="button" class="btn btn-warning btn-xs '.$cssBtnElegir.'" onclick="asociaDireccionFact('.$valueD["cliente_direccion_id"].');" style="margin:4px 0px;" id="demo_btn_'.$valueD["cliente_direccion_id"].'"> Elegir </button> </div>';
+
+				$dirsFacturacionIni.= '<i class="fa fa-file-text-o"></i> '.$valueD["cliente_direccion_calle"].' '.$valueD["cliente_direccion_numero_ext"].' '.$valueD["cliente_direccion_numero_int"].' '.$valueD["cliente_direccion_colonia"].' '.$valueD["cliente_direccion_municipio"].', '.$valueD['estado'].'. C.P. '.$valueD["cliente_direccion_cp"].'<br>';
+			}
+			
+		}
+		$newBotonesEnvio.= '<button type="button" class="btn btn-success" >+ Nueva direccion envío</button> ';
+		$newDivBtnsFact.= '<button type="button" class="btn btn-success" >+ Nueva direccion facturación</button> ';
+		
+		$clientAddressShipFromSession = $newBotonesEnvio."<br><br>".$newDivsEnvio;
+		$clientAddressFactFromSession = $newDivBtnsFact."<br><br>".$newDivsFact;
+	}
+	
+	$clientFromSessionForEnvio ='<button style="position:relative; float:right;" type="button" class="btn btn-xs btn-danger" id="removeCliente_'.$_SESSION["punto_venta"]["cliente"]["cliente_id"].'" onclick="removeCliente('.$_SESSION["punto_venta"]["cliente"]["cliente_id"].');">Desasociar cliente</button>
+	<table class=""><tbody>
+			<tr>
+				<td>
+					<b>Nombre Completo:</b>
 				</td>
-				<td style="padding-right:50px;"><h3>'.$_SESSION["punto_venta"]["cliente"]["email"].'<h3></td>
-				<td style="padding-right:50px;"><h3>'.$_SESSION["punto_venta"]["cliente"]["number"].'</h3></td>
-				<td><h3><i class="fa fa-trash removeCart" role="button" id="removeCliente_'.$_SESSION["punto_venta"]["cliente"]["cliente_id"].'" onclick="removeCliente('.$_SESSION["punto_venta"]["cliente"]["cliente_id"].');"></i></h3></td>
-			</tr></tbody></table>';
+			</tr>
+			<tr id="row_'.$_SESSION["punto_venta"]["cliente"]["cliente_id"].'">
+				<td class="desc" style="padding-left:10px;">
+					'.$_SESSION["punto_venta"]["cliente"]["name"].' &nbsp;&nbsp;<br><br>
+				</td>
+				<td></td>
+			</tr></tbody>
+	</table>';
+	
+	
+	$clientFromSession = '
+	<button style="position:relative; float:right;" type="button" class="btn btn-xs btn-danger" id="removeCliente_'.$_SESSION["punto_venta"]["cliente"]["cliente_id"].'" onclick="removeCliente('.$_SESSION["punto_venta"]["cliente"]["cliente_id"].');">Desasociar cliente</button>
+	<table class=""><tbody>
+			<tr>
+				<td>
+					<b>Nombre Completo:</b>
+				</td>
+			</tr>
+			<tr id="row_'.$_SESSION["punto_venta"]["cliente"]["cliente_id"].'">
+				<td class="desc" style="padding-left:10px;">
+					'.$_SESSION["punto_venta"]["cliente"]["name"].' &nbsp;&nbsp;<br><br>
+				</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td><b>Direcciones de envío:</b></td>
+			</tr>
+			<tr>
+				<td class="desc" style="padding-left:10px;">
+					'.$dirsEnvioIni.'<br>
+				</td>
+			</tr>
+			<tr>
+				<td><b>Direcciones de facturación:</b></td>
+			</tr>
+			<tr>
+				<td class="desc" style="padding-left:10px;">
+					'.$dirsFacturacionIni.'
+				</td>
+			</tr>
+			</tbody></table>';
+			
+		$clientFromSessionExtra	= '<b>Telefonos:</b><br>
+		'.str_replace(",","<br>",$_SESSION["punto_venta"]["cliente"]["number"]).'
+		<br><br>
+		<b>Correos:</b><br>'.str_replace(",","<br>",$_SESSION["punto_venta"]["cliente"]["email"]);
 }
 
-if(isset($_SESSION["punto_venta"]["cliente"]["direcciones"])){
-	
-	$newBotonesEnvio = '';
-	$newDivsEnvio = '';
-	
-	$newDivBtnsFact = '';
-	$newDivsFact = '';
-	while ( list($keyD, $valueD) = each($_SESSION["punto_venta"]["cliente"]["direcciones"]) ){
-		if( $valueD["cliente_direccion_tipo_id"] == "2" || $valueD["cliente_direccion_tipo_id"] == "3" ){
-			$newBotonesEnvio.= '<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo_'.$valueD["cliente_direccion_id"].'">'.$valueD["cliente_direccion_calle"].' '.$valueD["cliente_direccion_numero_ext"].'...</button> ';
-			
-			$cssRowDireccion = 'class="direccionSinSeleccion"';
-			$cssBtnElegir = 'mostrarElemento';
-			$cssIcoElegir = 'ocultarElemento';
-			if(isset($_SESSION["punto_venta"]["cliente"]["cliente_direccion_id_envio"]) && ($valueD["cliente_direccion_id"] == $_SESSION["punto_venta"]["cliente"]["cliente_direccion_id_envio"]) ){
-				$cssRowDireccion = ' class="direccionSeleccionada"';
-				$cssBtnElegir = 'ocultarElemento';
-				$cssIcoElegir = 'mostrarElemento';
-			}
-			$newDivsEnvio.= '<div id="demo_'.$valueD["cliente_direccion_id"].'" class="collapse"><font id="demo_font_'.$valueD["cliente_direccion_id"].'" '.$cssRowDireccion.'>'.$valueD["cliente_direccion_calle"].' '.$valueD["cliente_direccion_numero_ext"].' '.$valueD["cliente_direccion_numero_int"].' '.$valueD["cliente_direccion_colonia"].' '.$valueD["cliente_direccion_municipio"].', '.$valueD['estado'].'. C.P. '.$valueD["cliente_direccion_cp"].'</font> &nbsp;&nbsp;&nbsp;<i id="demo_ico_'.$valueD["cliente_direccion_id"].'" class="fa fa-check-square '.$cssIcoElegir.'" style="color:green;"></i><button type="button" class="btn btn-warning btn-xs '.$cssBtnElegir.'" onclick="asociaDireccionEnvio('.$valueD["cliente_direccion_id"].');" style="margin:4px 0px;" id="demo_btn_'.$valueD["cliente_direccion_id"].'"> Elegir </button> </div>';
-		}
-		
-		if( $valueD["cliente_direccion_tipo_id"] == "1" || $valueD["cliente_direccion_tipo_id"] == "3" ){
-			$newDivBtnsFact.= '<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo_'.$valueD["cliente_direccion_id"].'">'.$valueD["cliente_direccion_calle"].' '.$valueD["cliente_direccion_numero_ext"].'...</button> ';
-			
-			$cssRowDireccion = 'class="direccionSinSeleccion"';
-			$cssBtnElegir = 'mostrarElemento';
-			$cssIcoElegir = 'ocultarElemento';
-			if(isset($_SESSION["punto_venta"]["cliente"]["cliente_direccion_id_fact"]) && ($valueD["cliente_direccion_id"] == $_SESSION["punto_venta"]["cliente"]["cliente_direccion_id_envio"]) ){
-				$cssRowDireccion = ' class="direccionSeleccionada"';
-				$cssBtnElegir = 'ocultarElemento';
-				$cssIcoElegir = 'mostrarElemento';
-			}
-			$newDivsFact.= '<div id="demo_'.$valueD["cliente_direccion_id"].'" class="collapse"><font id="demo_font_'.$valueD["cliente_direccion_id"].'" '.$cssRowDireccion.'>'.$valueD["cliente_direccion_calle"].' '.$valueD["cliente_direccion_numero_ext"].' '.$valueD["cliente_direccion_numero_int"].' '.$valueD["cliente_direccion_colonia"].' '.$valueD["cliente_direccion_municipio"].', '.$valueD['estado'].'. C.P. '.$valueD["cliente_direccion_cp"].'</font> &nbsp;&nbsp;&nbsp;<i id="demo_ico_'.$valueD["cliente_direccion_id"].'" class="fa fa-check-square '.$cssIcoElegir.'" style="color:green;"></i><button type="button" class="btn btn-warning btn-xs '.$cssBtnElegir.'" onclick="asociaDireccionFact('.$valueD["cliente_direccion_id"].');" style="margin:4px 0px;" id="demo_btn_'.$valueD["cliente_direccion_id"].'"> Elegir </button> </div>';
-		}
-		
-	}
-	$newBotonesEnvio.= '<button type="button" class="btn btn-success" >+ Nueva direccion envío</button> ';
-	$newDivBtnsFact.= '<button type="button" class="btn btn-success" >+ Nueva direccion facturación</button> ';
-	
-	$clientAddressShipFromSession = $newBotonesEnvio."<br><br>".$newDivsEnvio;
-	$clientAddressFactFromSession = $newDivBtnsFact."<br><br>".$newDivsFact;
-}
+
 ?> 
 <link href="<?=$raizProy?>css/plugins/iCheck/custom.css" rel="stylesheet">
 <link href="<?=$raizProy?>css/plugins/steps/jquery.steps.css" rel="stylesheet">
 <link href="<?=$raizProy?>css/plugins/chosen/chosen.css" rel="stylesheet">
 <link href="<?=$raizProy?>css/plugins/easy-autocomplete/easy-autocomplete.min.css" rel="stylesheet">
 <link href="<?=$raizProy?>css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+<link href="<?=$raizProy?>css/plugins/datapicker/datepicker3.css" rel="stylesheet">
+<link href="<?=$raizProy?>css/plugins/clockpicker/clockpicker.css" rel="stylesheet">
 <style>
 .wizard > .content > .body  position: relative; 
 .wizard > .content { min-height: 350px; overflow: scroll;}
@@ -108,7 +170,9 @@ if(isset($_SESSION["punto_venta"]["cliente"]["direcciones"])){
 .mostrarElemento{ visibility:visible; }
 .greenFont { color:green; }
 .redFont { color:red; }
-
+.clockpicker-popover{
+	z-index: 999999;
+}
 
 </style>
        
@@ -168,11 +232,8 @@ if(isset($_SESSION["punto_venta"]["cliente"]["direcciones"])){
 										</div>
 										<div class="col-lg-3">
 											<div class="ibox"  >
-												<div class="ibox-content" id="divBuscaCliente_0">
-													telefonos:<br>
-													<br><br>
-													email:													
-													<?=$clientFromSession?>
+												<div class="ibox-content" id="divBuscaCliente_extra_0">
+													<?=$clientFromSessionExtra?>
 												</div>
 											</div>
 										</div>
@@ -200,7 +261,7 @@ if(isset($_SESSION["punto_venta"]["cliente"]["direcciones"])){
 														<tr>
 															<td><button class="btn btn-primary dim btn-large-dim" type="button" data-toggle="modal" data-target="#modalBuscaCliente">SÍ</button></td>
 															<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-															<td><button class="btn btn-danger dim btn-large-dim" type="button" onclick="ventaSinEnvio();" >NO</button></td>
+															<td><button class="btn btn-danger dim btn-large-dim" type="button" data-toggle="modal" data-target="#modalVentaSinEnvio" onclick="ventaSinEnvio();" >NO</button></td>
 														</tr>
 											</div>	</table>
 										</div>
@@ -288,16 +349,24 @@ if(isset($_SESSION["punto_venta"]["cliente"]["direcciones"])){
 												<div class="ibox-content">
 													                  
 													<span>
+														Sub-total
+													</span>
+													<h3 class="font-bold text-right">
+														$ <?=$totalVenta?>            </h3>                    
+													<span>
+														Costo envío
+													</span>
+													<h3 class="font-bold text-right" id="costoEnvioEnPago"> $ <?=$totalEnvio?>  </h3>
+													<span>
 														Total
 													</span>
-													<h2 class="font-bold text-right">
-														$ <?=$totalVenta?>            </h2>                    
+													<h2 class="font-bold text-right" id="granTotalEnPago"> $ <?=($totalVenta+$totalEnvio)?>  </h2>
 													<span>
 														Restan
 													</span>
 													<h2 class="font-bold text-right">
-														<span id="spanRestanVenta" >$ <?=$totalVenta?></span>
-														<span style="display:none;" id="spanRestanVentaOriginal" ><?=$totalVenta?></span>                    </h2>
+														<span id="spanRestanVenta" >$ <?=($totalVenta+$totalEnvio)?></span>
+														<span style="display:none;" id="spanRestanVentaOriginal" ><?=($totalVenta+$totalEnvio)?></span>                    </h2>
 													<hr/>
 													
 												</div>
@@ -397,10 +466,18 @@ if(isset($_SESSION["punto_venta"]["cliente"]["direcciones"])){
 				<h4 class="modal-title">Detalle de Envio</h4>
 			</div>
 			<div class="modal-body">
-				<div class="form-group" id="divBuscaClienteInputEnvio"><input type="text" placeholder="Nombre, email, numero telefonico" class="form-control" id="inputBuscaCliente" name="inputBuscaCliente" ></div>
-				<div class="form-group" id="divBuscaClienteEnvio" ><?=$clientFromSession?></div>
+				<div class="form-group" id="divBuscaClienteInputEnvio"><input type="text" placeholder="Nombre, email y/o número telefónico" class="form-control" id="inputBuscaCliente" name="inputBuscaCliente" style="display:<?=($clientFromSessionForEnvio=='')?"block":"none"?>" ></div>
+				<div class="form-group" id="divBuscaClienteEnvio" ><?=$clientFromSessionForEnvio?></div>
 				<div class="form-group" id="divDireciconesClienteEnvio" ><?=$clientAddressShipFromSession?></div>
-				<div class="form-group"><div style="display: inline; width: 150px">Zona de envío</div>
+				
+				<div class="ibox">
+					<div class="ibox-title">
+						<b>Datos extras de envío</b>
+					</div>
+					<div class="ibox-content">
+						<div class="form-group">
+						<div class="col-md-2" style="padding:7px 0px;">Zona de envío&nbsp;&nbsp;&nbsp;</div>
+						<div class="col-md-4" style="width:31%">
 										<select class="form-control" id="flete" style="display: inline; width: 200px">
 											<option value="0">Elige sección</option>
 											<option value="1">seccion 1</option>
@@ -408,10 +485,34 @@ if(isset($_SESSION["punto_venta"]["cliente"]["direcciones"])){
 											<option value="3">seccion 3</option>
 											<option value="4">seccion 4</option>
 										</select>
-										<input type="text" id="costoFlete" class="form-control" style="display: inline; width: 150px">
-										&nbsp;&nbsp;&nbsp;<span id="spanCostoFlete">...</span> 
+					</div>
+					
+							<input type="text" id="costoFlete" placeholder="Costo del Flete" class="form-control" style="display: inline; width: 150px" onchange="actualizaCostoEnvio();">
+							&nbsp;&nbsp;&nbsp;<span id="spanCostoFlete"></span> 
+					
+							</div>
+						<div class="form-group">
+							<div class="col-md-2" style="padding:7px 0px;">
+								Fecha/hora entrega
+							</div>
+							<div class="col-md-3">
+								<div class="form-group" id="data_1" >
+										<div class="input-group date">
+											<span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" class="form-control" id="gasto_fecha_vencimiento" name="gasto_fecha_vencimiento" value="">
 										</div>
-				<div class="form-group">
+								</div>
+							</div>   
+							<div class="col-md-2">
+								<div class="input-group clockpicker" data-autoclose="true">
+									<input name="gasto_hora_vencimiento" id ="gasto_hora_vencimiento" type="text" class="form-control" value="12:00" >
+									<span class="input-group-addon">
+										<span class="fa fa-clock-o"></span>
+									</span>
+								</div>
+							</div>
+							
+						</div>
+						<div class="form-group">
 										<select class="form-control" id="planta">
 											<option value="0">Selecciona número de pisos</option>
 											<option value="1">Planta Baja</option>
@@ -436,12 +537,38 @@ if(isset($_SESSION["punto_venta"]["cliente"]["direcciones"])){
 											<option value="2">Require traslado a pie</option>
 											
 										</select></div>
+						</div>
+				</div>
 										
 			</div>
 			<div class="modal-footer">
-				<button data-toggle="modal" href="#ModalClienteNuevo"  type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalNuevoCliente">+ Nuevo Cliente</button>
+				<!-- <button data-toggle="modal" href="#ModalClienteNuevo"  type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalNuevoCliente">+ Nuevo Cliente</button>-->
 				<button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-				<button type="button" class="btn btn-primary">Guardar datos de envío</button>
+				<button type="button" class="btn btn-primary">Guardar</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal inmodal fade" id="modalVentaSinEnvio" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title">Sin envío</h4>
+			</div>
+			<div class="modal-body">
+						<h5>Motivo por el cual el cliente no quiere envio</h5>
+						<div class="form-group">
+							<select class="form-control" id="SelSinEnvio">
+								<option value="0">Seleccione una opcion</option>
+								<option value="1">Flete externo</option>
+								<option value="2">El cliente se lo lleva</option>
+							</select></div></div>
+			<div class="modal-footer">
+				<!-- <button data-toggle="modal" href="#ModalClienteNuevo"  type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalNuevoCliente">+ Nuevo Cliente</button>-->
+				<button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+				<button type="button" class="btn btn-primary">Guardar</button>
 			</div>
 		</div>
 	</div>
@@ -455,7 +582,7 @@ if(isset($_SESSION["punto_venta"]["cliente"]["direcciones"])){
 				<h4 class="modal-title">Detalle de Facturación</h4>
 			</div>
 			<div class="modal-body">
-				<div class="form-group" id="divBuscaClienteInputFacturacion"><input type="text" placeholder="Nombre, email, numero telefonico" class="form-control" id="inputBuscaCliente" name="inputBuscaCliente" ></div>
+				<div class="form-group" id="divBuscaClienteInputFacturacion"><input type="text" placeholder="Nombre, email y/o número telefónico" class="form-control" id="inputBuscaCliente" name="inputBuscaCliente" ></div>
 				<div class="form-group" id="divBuscaClienteFacturacion" ><?=$clientFromSession?></div>
 				<div class="form-group" id="divDireciconesClienteFacturacion" ><?=$clientAddressFactFromSession?></div>										
 			</div>
@@ -579,6 +706,10 @@ if(isset($_SESSION["punto_venta"]["cliente"]["direcciones"])){
     <!-- Custom and plugin javascript -->
     <script src="<?=$raizProy?>js/inspinia.js"></script>
     <script src="<?=$raizProy?>js/plugins/pace/pace.min.js"></script>
+	
+	<script src="<?=$raizProy?>js/plugins/datapicker/bootstrap-datepicker.js"></script>
+	<script src="<?=$raizProy?>js/plugins/datapicker/bootstrap-datepicker.es.js"></script>
+	<script src="<?=$raizProy?>js/plugins/clockpicker/clockpicker.js"></script>
 
     <!-- Steps -->
     <script src="<?=$raizProy?>js/plugins/staps/jquery.steps.min.js"></script>
@@ -627,7 +758,9 @@ if(isset($_SESSION["punto_venta"]["cliente"]["direcciones"])){
 			
 			$("#wizard").steps();
 			$("#metodosPago").chosen();
-		
+			
+			$.fn.datepicker.defaults.language = 'es';
+			$('.clockpicker').clockpicker();
 			
             $("#form").steps({
                 bodyTag: "fieldset",
@@ -850,7 +983,7 @@ if(isset($_SESSION["punto_venta"]["cliente"]["direcciones"])){
 					$("#costoFlete").val('1501');
 					$("#spanCostoFlete").html("$1501 más");
 				}
-				
+				actualizaCostoEnvio();
 			});
 			
 			
@@ -953,7 +1086,7 @@ if(isset($_SESSION["punto_venta"]["cliente"]["direcciones"])){
 							urlImage = '';
 							
 							table +='   <tr id="row_'+id+'"> '+
-											'<td class="desc" style="padding-right:50px;">'+
+											'<td class="" style="padding-right:50px;">'+
 												'<h3><a href="#" class="text-navy">'+name+'</a></h3>'+
 											'</td>'+
 											'<td style="padding-right:50px;"><h3>'+email+'<h3></td>'+									
@@ -990,7 +1123,7 @@ if(isset($_SESSION["punto_venta"]["cliente"]["direcciones"])){
 							urlImage = '';
 							
 							table +='   <tr id="row_'+id+'"> '+
-											'<td class="desc" style="padding-right:50px;">'+
+											'<td class="" style="padding-right:50px;">'+
 												'<h3><a href="#" class="text-navy">'+name+'</a></h3>'+
 											'</td>'+
 											'<td style="padding-right:50px;"><h3>'+email+'<h3></td>'+									
@@ -1278,6 +1411,23 @@ if(isset($_SESSION["punto_venta"]["cliente"]["direcciones"])){
 			$("#icoResumenFactura").addClass("redFont");
 			
 	   }
+	   
+	   $('#data_1 .input-group.date').datepicker({
+	keyboardNavigation: false,
+	forceParse: false,
+	autoclose: true,
+	language: 'es'
+}).datepicker("setDate", "0");
+
+subtotal = <?=$totalVenta?>;
+function actualizaCostoEnvio(){
+	
+	costoActual = $("#costoFlete").val();	
+	$("#costoEnvioEnPago").html("$ "+costoActual);
+	granTotalActual = Number(costoActual) + Number(subtotal);
+	$("#granTotalEnPago").html("$ "+granTotalActual);
+	
+}
     </script>
 
 </body>
