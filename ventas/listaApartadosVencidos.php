@@ -13,7 +13,7 @@ $insVentas = new Ventas();
 $insClientes = new Clientes();
 $insGeneral = new General();
 
-$ventas = $insVentas->obtenerVentas(0,0);
+$apartados = $insVentas->obtenerApartados(0,2);
 
 ?>
 <link href="<?php echo $raizProy?>css/plugins/easy-autocomplete/easy-autocomplete.min.css" rel="stylesheet">
@@ -26,13 +26,13 @@ $ventas = $insVentas->obtenerVentas(0,0);
 
 <div class="row wrapper border-bottom white-bg page-heading">
     <div class="col-sm-4">
-        <h2>Ventas</h2>
+        <h2>Apartados</h2>
         <ol class="breadcrumb">
             <li>
-                <a href="">Lista de Ventas</a>
+                <a href="">Lista de Apartados</a>
             </li>
             <li class="active">
-                <strong>Ventas por Entregar</strong>
+                <strong>Vencidos</strong>
             </li>
         </ol>
     </div>
@@ -48,16 +48,14 @@ $ventas = $insVentas->obtenerVentas(0,0);
                     &nbsp;
                 </div>
                 <div id="productos">
-                    <div class="ibox-content">      
-                        <div class="table-responsive">
-                        <table class="table table-responsive table-striped table-bordered table-hover dataTables-example" id="table" >                        
+                    <div class="ibox-content">                        
+                        <table class="table table-striped table-bordered table-hover dataTables-example" id="table" >
                             <thead>
                             <tr>
                                 <th>ID</th>
-                                <th >Productos</th>
+                                <th style="width: 250px">Productos</th>
                                 <th>Sucursal</th>                                    
-                                <th>Fecha Compra</th>
-                                <th>Fecha Entrega</th>
+                                <th>Fecha</th>
                                 <th>Cliente</th>
                                 <th>Total</th>
                                 <th>Pagos</th>
@@ -68,65 +66,44 @@ $ventas = $insVentas->obtenerVentas(0,0);
                             </tr>
                             </thead>
                             <tbody>
+                               
                             <?php
-                                foreach($ventas as $venta){
-                                    
-                                    $clienteInfo = $insClientes->GetClientes($venta['id_cliente']);
+                                foreach($apartados as $apartado){
+                                    $clienteInfo = $insClientes->GetClientes($apartado['id_cliente']);
                                     $flete = 'No Requiere';
-                                    if($venta['venta_flete_id']!=0){
-                                        $dir = end($insVentas->getAddress($venta['venta_flete_id']));
+                                    if($apartado['venta_flete_id']!=0){
+                                        $dir = end($insVentas->getAddress($apartado['venta_flete_id']));
                                         $flete = $dir['cliente_direccion_calle']."&nbsp;".$dir['cliente_direccion_numero_ext']." &nbsp;".$dir['cliente_direccion_entre_calles'];
                                     }
-
+                                    
                                     $factura = 'No Requiere';
-                                    if($venta['cliente_direccion_id']!=0){
-                                        $dir = end($insVentas->getAddress($venta['cliente_direccion_id']));
+                                    if($apartado['cliente_direccion_id']!=0){
+                                        $dir = end($insVentas->getAddress($apartado['cliente_direccion_id']));
                                         $factura = $dir['cliente_direccion_rfc']."<br />".$dir['cliente_direccion_razon_social'];
                                     }
-                                    
-                                    $pagosInfo = $insVentas->getPagosVenta($venta['venta_id']);
-                                    $pagos = 'Sin Pago';
-                                    $resta = $venta['monto'];
-                                    if($pagosInfo){
-                                        
-                                        $pagos = '';
-                                        
-                                        foreach($pagosInfo as $pago){
-                                            $pagos .= number_format($pago['monto'],2,'.',',')."&nbsp;".$pago['general_forma_de_pago_desc']."<br />".$insGeneral->getDate($pago['fecha']);
-                                            $resta -= $pago['monto'];
-                                        }
-                                    }
-                                    
-                                    $productosVenta = $insVentas->obtenerProductosVenta($venta['venta_id']);
-                                    $productosMostrar = '';
-                                    foreach($productosVenta as $pv){
-                                        $productosMostrar .= "<b>".$pv['producto_sku']."</b>&nbsp;".$pv['producto_name']."<br />";
-                                    }
-                                    
                                     echo "<tr>";
-                                    echo "<td>".$venta['venta_id']."</td>";
-                                    echo "<td>".$productosMostrar."</td>";
-                                    echo "<td>".$insVentas->getSucursal($venta['sucursal_id'])."</td>";
-                                    echo "<td>".$insGeneral->getDate($venta['fecha_creacion'])."</td>";
-                                    echo "<td>".$insGeneral->getDate($venta['fecha_entrega'])."</td>";
+                                    echo "<td>".$apartado['venta_id']."</td>";
+                                    echo "<td>Productos</td>";
+                                    echo "<td>".$insVentas->getSucursal($apartado['sucursal_id'])."</td>";
+                                    echo "<td>".$insGeneral->getDate($apartado['fecha_creacion'])."</td>";
                                     echo "<td>".$clienteInfo[0]['nombre']."&nbsp;".$clienteInfo[0]['apellidoP']."&nbsp;".$clienteInfo[0]['apellidoM']."</td>";
-                                    echo "<td>".$venta['monto']."</td>";
-                                    echo "<td>".$pagos."</td>";
-                                    echo "<td>".$resta."</td>";
+                                    echo "<td>".$apartado['monto']."</td>";
+                                    echo "<td>Pagos</td>";
+                                    echo "<td>Resta</td>";
                                     echo "<td>".$flete."</td>";
                                     echo "<td>".$factura."</td>";
-                                    echo "<td>".$insVentas->getEstatusVenta($venta['venta_estatus_id'])."</td>";                                    
-
+                                    echo "<td>".$insVentas->getEstatusVenta($apartado['venta_estatus_id'])."</td>";                                    
+                                    
                                     echo "</tr>";
                                 }
-                            ?>                             
+                            ?>                                                                                  
                             </tfoot>
-                        </table>
-                        </div>    
+                        </table>                        
                     </div>
                 </div>
             </div>
         </div>
+
     </div>
 </div>
 
@@ -144,14 +121,7 @@ $ventas = $insVentas->obtenerVentas(0,0);
             buttons: [],
             "language": {
                 "url": "../js/plugins/dataTables/Spanish.json"
-            }        
-        });
-        
-        $('#table .fa-trash-o').click(function(){
-            var opc = confirm('¿desea cancelar el pedido?');
-            if(opc){
-                $(this).parent().parent().parent().remove();
-            }    
+            }
         });
     });
 

@@ -1,23 +1,20 @@
 <?php session_start();
 include $_SERVER['REDIRECT_PATH_CONFIG'].'/config.php';
+require_once($_SERVER["REDIRECT_PATH_CONFIG"].'ventas/models/class.Ventas.php');
 require_once($_SERVER["REDIRECT_PATH_CONFIG"].'clientes/models/class.Clientes.php');
+require_once($_SERVER["REDIRECT_PATH_CONFIG"].'models/general/class.General.php');
+
 // include $pathProy.'login/session.php';
 include $pathProy.'/header.php';
 include $pathProy.'/menu.php';
 
-$numProd = 0;
-$total = 0;
-$subtotal = 0;
-$iva = 0;
 
-if(isset($_SESSION['punto_venta']['Productos'])){
-    $puntoVenta = $_SESSION['punto_venta'];
-    $numProd = count($puntoVenta['Productos']);
-    $total = $puntoVenta['Total'];
-    $subtotal = $puntoVenta['Subtotal'];
-    $iva = $puntoVenta['IVA'];
+$insVentas = new Ventas();
+$insClientes = new Clientes();
+$insGeneral = new General();
 
-}
+$apartados = $insVentas->obtenerApartados();
+
 ?>
 <link href="<?php echo $raizProy?>css/plugins/easy-autocomplete/easy-autocomplete.min.css" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="../css/clientes.css">
@@ -29,13 +26,13 @@ if(isset($_SESSION['punto_venta']['Productos'])){
 
 <div class="row wrapper border-bottom white-bg page-heading">
     <div class="col-sm-4">
-        <h2>Ventas</h2>
+        <h2>Apartados</h2>
         <ol class="breadcrumb">
             <li>
-                <a href="">Lista de ventas</a>
+                <a href="">Lista de Apartados</a>
             </li>
             <li class="active">
-                <strong>Ventas</strong>
+                <strong>Vigentes</strong>
             </li>
         </ol>
     </div>
@@ -62,36 +59,44 @@ if(isset($_SESSION['punto_venta']['Productos'])){
                                 <th>Cliente</th>
                                 <th>Total</th>
                                 <th>Pagos</th>
+                                <th>Resta</th>
                                 <th>Flete</th>
                                 <th>Facturación</th>
                                 <th>Estatus</th>                                
                             </tr>
                             </thead>
                             <tbody>
-                            <tr class="gradeX">
-                                <td>1</td>
-                                <td>1 <b>HHH-DIV-E6C3</b><br />MESA VENECIA</td>
-                                <td>Centro</td>
-                                <th>12/Nov/2016<br />11:47 am</th>                                
-                                <td>Sergio Gonzalez</td>
-                                <td>$1,700.00</td>     
-                                <td>Efectivo $500.00<br />Tarjeta $100.00<br /><b>Resta</b> $1,100</td>
-                                <td>Seccion 1, Planta baja, Requiere traslado a pie</td>                                    
-                                <td>N/R</td>
-                                <td>pendiente de pago</td>
-                            </tr>
-                            <tr class="gradeX">
-                                <td>2</td>
-                                <td>1<b>POR-DOM-E6D8</b><br />MESA PORTUGAL</td>
-                                <td>Allende</td>
-                                <th>1/Ene/2017<br />11:47 am</th>
-                                <td>Juan Lopez</td>
-                                <td>$1,900.00</td>                                
-                                <td>Tarjeta $1000.00 1/Ene/2017 11:47 am</td>
-                                <td>N/R <br />Flete externo</td>                                    
-                                <td>HBGY787878HU8 <br />Juan Lopez</td>                                
-                                <td>pendiente de pago</td>
-                            </tr>                           
+                               
+                            <?php
+                                foreach($apartados as $apartado){
+                                    $clienteInfo = $insClientes->GetClientes($apartado['id_cliente']);
+                                    $flete = 'No Requiere';
+                                    if($apartado['venta_flete_id']!=0){
+                                        $dir = end($insVentas->getAddress($apartado['venta_flete_id']));
+                                        $flete = $dir['cliente_direccion_calle']."&nbsp;".$dir['cliente_direccion_numero_ext']." &nbsp;".$dir['cliente_direccion_entre_calles'];
+                                    }
+                                    
+                                    $factura = 'No Requiere';
+                                    if($apartado['cliente_direccion_id']!=0){
+                                        $dir = end($insVentas->getAddress($apartado['cliente_direccion_id']));
+                                        $factura = $dir['cliente_direccion_rfc']."<br />".$dir['cliente_direccion_razon_social'];
+                                    }
+                                    echo "<tr>";
+                                    echo "<td>".$apartado['venta_id']."</td>";
+                                    echo "<td>Productos</td>";
+                                    echo "<td>".$insVentas->getSucursal($apartado['sucursal_id'])."</td>";
+                                    echo "<td>".$insGeneral->getDate($apartado['fecha_creacion'])."</td>";
+                                    echo "<td>".$clienteInfo[0]['nombre']."&nbsp;".$clienteInfo[0]['apellidoP']."&nbsp;".$clienteInfo[0]['apellidoM']."</td>";
+                                    echo "<td>".$apartado['monto']."</td>";
+                                    echo "<td>Pagos</td>";
+                                    echo "<td>Resta</td>";
+                                    echo "<td>".$flete."</td>";
+                                    echo "<td>".$factura."</td>";
+                                    echo "<td>".$insVentas->getEstatusVenta($apartado['venta_estatus_id'])."</td>";                                    
+                                    
+                                    echo "</tr>";
+                                }
+                            ?>                                                                                  
                             </tfoot>
                         </table>                        
                     </div>
