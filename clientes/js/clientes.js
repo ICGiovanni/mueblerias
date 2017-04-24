@@ -146,6 +146,7 @@ $(document).ready(function()
 		$("#estado").val('');
 		$("#estado").val('').trigger("chosen:updated");
 		$("#municipio").val('');
+		$("#referencia").val('');
 	};
 	
 	var edit_address=function(id)
@@ -220,6 +221,8 @@ $(document).ready(function()
 			var codigoPostal=$("#codigoPostal").val();
 			var estado=$("#estado").val();
 			var municipio=$("#municipio").val();
+			var referencia=$("#referencia").val();
+			
 			var addressComplete='';
 			
 			if(tipo_datos=='facturacion')
@@ -243,7 +246,13 @@ $(document).ready(function()
 			
 			addressComplete+=' '+colonia;
 			addressComplete+=' C.P.'+codigoPostal;
+						
 			addressComplete+=' '+municipio+', '+$("#estado option:selected").html();
+			
+			if(referencia)
+			{
+				addressComplete+=' ,'+referencia;
+			}
 			
 			$("#addres_div_"+address).html(addressComplete);
 			$("#addres_tipo_"+address).html(tipo_datos);
@@ -257,6 +266,7 @@ $(document).ready(function()
 			$("#codigoPostal_"+address).val(codigoPostal);
 			$("#estado_"+address).val(estado);
 			$("#municipio_"+address).val(municipio);
+			$("#referencia_"+address).val(referencia);
 			
 			$("#addAddress").show();
 			$("#aditAddress").hide();
@@ -283,6 +293,7 @@ $(document).ready(function()
 			var codigoPostal=$("#codigoPostal").val();
 			var estado=$("#estado").val();
 			var municipio=$("#municipio").val();
+			var referencia=$("#referencia").val();
 			var addressComplete='';
 			
 			if(tipo_datos=='facturacion')
@@ -306,6 +317,11 @@ $(document).ready(function()
 			addressComplete+=' C.P.'+codigoPostal;
 			addressComplete+=' '+municipio+', '+$("#estado option:selected").html();
 			
+			if(referencia)
+			{
+				addressComplete+=' ,'+referencia;
+			}
+			
 			table+='<tr>';
 			table+='<input type="hidden" id="address_'+address+'" name="address_'+address+'" value="'+address+'" class="address">';
 			table+='<input type="hidden" id="tipo_datos_'+address+'" name="tipo_datos_'+address+'" value="'+$("#tipo_datos").val()+'">';
@@ -318,6 +334,7 @@ $(document).ready(function()
 			table+='<input type="hidden" id="codigoPostal_'+address+'" name="codigoPostal_'+address+'" value="'+codigoPostal+'">';
 			table+='<input type="hidden" id="estado_'+address+'" name="estado_'+address+'" value="'+estado+'">';
 			table+='<input type="hidden" id="municipio_'+address+'" name="municipio_'+address+'" value="'+municipio+'">';
+			table+='<input type="hidden" id="referencia_'+address+'" name="referencia_'+address+'" value="'+referencia+'">';
 			table+='<td><div id="addres_tipo_'+address+'">'+tipo_datos+'</div></td>';
 			table+='<td><div id="addres_div_'+address+'">'+addressComplete+'</div></td>';
 			//table+='<td class="text-left"><button class="btn btn-primary btn-xs editAddress" id="editA" value="" placeholder="" type="button" id-num="'+address+'"><i class="fa fa-pencil"></i></button>  ';
@@ -413,7 +430,7 @@ $(document).ready(function()
 		        		var a={};
         				var id = $(this).attr('id-num');
         				var tipo="";
-        				
+        				alert(id);
         				if($("#tipo_datos_"+id).val()=='facturacion')
     					{
         					tipo=1;
@@ -423,19 +440,22 @@ $(document).ready(function()
         					tipo=2;
         				}
         				
-        				a.tipo=tipo;
-        				a.razonS=$("#razonS_"+id).val();
-        				a.rfc=$("#rfc_"+id).val();
-        				a.calle=$("#calle_"+id).val();
-        				a.noExt=$("#noExt_"+id).val();
-        				a.noInt=$("#noInt_"+id).val();
-        				a.colonia=$("#colonia_"+id).val();
-        				a.codigoPostal=$("#codigoPostal_"+id).val();
-        				a.estado=$("#estado_"+id).val();
-        				a.municipio=$("#municipio_"+id).val();
-        				a.referencia='';
-        				
-        				addressArray.push(a);
+        				if(id!=undefined && id!='')
+        				{
+	        				a.tipo=tipo;
+	        				a.razonS=$("#razonS_"+id).val();
+	        				a.rfc=$("#rfc_"+id).val();
+	        				a.calle=$("#calle_"+id).val();
+	        				a.noExt=$("#noExt_"+id).val();
+	        				a.noInt=$("#noInt_"+id).val();
+	        				a.colonia=$("#colonia_"+id).val();
+	        				a.codigoPostal=$("#codigoPostal_"+id).val();
+	        				a.estado=$("#estado_"+id).val();
+	        				a.municipio=$("#municipio_"+id).val();
+	        				a.referencia=$("#referencia_"+id).val();;
+	        				
+	        				addressArray.push(a);
+        				}
         	        });
 		        	
 		        	if(!banderaAddress)
