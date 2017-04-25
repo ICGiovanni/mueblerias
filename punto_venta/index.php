@@ -12,7 +12,6 @@ while( list ($KeyMP, $valueMP) = each($arrayMetodosPago) ){
 	$rowsMetodosPago.='<option value="'.$valueMP["general_forma_de_pago_id"].'">'.$valueMP["general_forma_de_pago_desc"].'</option> ';
 }
 
-
 if(!isset($_SESSION["punto_venta"])){
 	die("Agregar productos al carrito");
 }
@@ -509,13 +508,13 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 							<div class="col-md-3">
 								<div class="form-group" id="data_1" >
 										<div class="input-group date">
-											<span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" class="form-control" id="gasto_fecha_vencimiento" name="gasto_fecha_vencimiento" value="">
+											<span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" class="form-control" id="pv_fecha_vencimiento" name="pv_fecha_vencimiento" value="">
 										</div>
 								</div>
 							</div>   
 							<div class="col-md-2">
 								<div class="input-group clockpicker" data-autoclose="true">
-									<input name="gasto_hora_vencimiento" id ="gasto_hora_vencimiento" type="text" class="form-control" value="12:00" >
+									<input name="pv_hora_vencimiento" id ="pv_hora_vencimiento" type="text" class="form-control" value="12:00" >
 									<span class="input-group-addon">
 										<span class="fa fa-clock-o"></span>
 									</span>
@@ -737,16 +736,44 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 	
 		currentClientDireccionIdEnvio = 0;
 		currentClientDireccionIdFact = 0;
-		
 <?php
 		if( isset($_SESSION["punto_venta"]["cliente"]["cliente_direccion_id_envio"]) ){
-			echo "currentClientDireccionIdEnvio = ".$_SESSION["punto_venta"]["cliente"]["cliente_direccion_id_envio"]."; ";
+			echo "
+		currentClientDireccionIdEnvio = ".$_SESSION["punto_venta"]["cliente"]["cliente_direccion_id_envio"]."; ";
 		}
 		if( isset($_SESSION["punto_venta"]["cliente"]["cliente_direccion_id_fact"]) ){
-			echo "currentClientDireccionIdFact = ".$_SESSION["punto_venta"]["cliente"]["cliente_direccion_id_fact"]."; ";
+			echo "
+		currentClientDireccionIdFact = ".$_SESSION["punto_venta"]["cliente"]["cliente_direccion_id_fact"]."; ";
 		}
 ?>
+		
 		var globalDataClient = new Array();
+<?php
+		
+		if( isset($_SESSION["punto_venta"]["cliente"]["direcciones"]) ){
+			reset(($_SESSION["punto_venta"]["cliente"]["direcciones"]));
+			
+			//print_r($_SESSION["punto_venta"]["cliente"]["direcciones"]);
+			
+			foreach( $_SESSION["punto_venta"]["cliente"]["direcciones"] as $keyA=>$valueA ){
+			
+				echo "
+		globalDataClient['id_".$valueA["cliente_direccion_id"]."'] = new Array();
+		globalDataClient['id_".$valueA["cliente_direccion_id"]."']['cliente_direccion_tipo_id'] = '".$valueA["cliente_direccion_tipo_id"]."';
+		globalDataClient['id_".$valueA["cliente_direccion_id"]."']['cliente_direccion_calle'] = '".str_replace("'","\'",$valueA["cliente_direccion_calle"])."';
+		globalDataClient['id_".$valueA["cliente_direccion_id"]."']['cliente_direccion_numero_ext'] = '".$valueA["cliente_direccion_numero_ext"]."';
+		globalDataClient['id_".$valueA["cliente_direccion_id"]."']['cliente_direccion_numero_int'] = '".$valueA["cliente_direccion_numero_int"]."';
+		globalDataClient['id_".$valueA["cliente_direccion_id"]."']['cliente_direccion_colonia'] = '".str_replace("'","\'",$valueA["cliente_direccion_colonia"])."';
+		globalDataClient['id_".$valueA["cliente_direccion_id"]."']['cliente_direccion_municipio'] = '".str_replace("'","\'",$valueA["cliente_direccion_municipio"])."';
+		globalDataClient['id_".$valueA["cliente_direccion_id"]."']['estado'] = '".str_replace("'","\'",$valueA["estado"])."';
+		globalDataClient['id_".$valueA["cliente_direccion_id"]."']['cliente_direccion_cp'] = '".$valueA["cliente_direccion_cp"]."';
+		";	
+		
+			}
+		}
+		
+?>
+		
 		var subtotal = <?=$totalVenta?>;
 		var costoActual = 0;
         $(document).ready(function(){
@@ -1187,8 +1214,23 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 			
        });
 	   
+	   var meses = new Array();
+	   meses["01"] = "Ene";
+	   meses["02"] = "Feb";
+	   meses["03"] = "Maz";
+	   meses["04"] = "Abr";
+	   meses["05"] = "May";
+	   meses["06"] = "Jun";
+	   meses["07"] = "Jul";
+	   meses["08"] = "Ago";
+	   meses["09"] = "Sep";
+	   meses["10"] = "Oct";
+	   meses["11"] = "Nov";
+	   meses["12"] = "Dic";
+	   
 	   function asociaDireccionEnvio(cliente_direccion_id){
 		   var url="/clientes/ajax_asocia_direccion_envio.php";
+		   
 					 
 			$.ajax({
 				type: "POST",
@@ -1229,21 +1271,21 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 			currentClientDireccionIdEnvio = cliente_direccion_id;
 			
 			/////
-			alert(currentClientDireccionIdEnvio);
-			txtDireccionEnvio = globalDataClient['id_'+currentClientDireccionIdEnvio]['cliente_direccion_calle']+" "+globalDataClient['id_'+currentClientDireccionIdEnvio]['cliente_direccion_numero_ext']+", "+globalDataClient['id_'+currentClientDireccionIdEnvio]['cliente_direccion_colonia']+"<br>";
-			alert(txtDireccionEnvio);
-			txtDireccionEnvio+= globalDataClient['id_'+currentClientDireccionIdEnvio]['cliente_direccion_municipio']+", "+globalDataClient['id_'+currentClientDireccionIdEnvio]['estado']+". C.P. "+globalDataClient['id_'+currentClientDireccionIdEnvio]['cliente_direccion_cp']+"<br>";
-			alert(txtDireccionEnvio);
-			txtDireccionEnvio+="Fecha y hora de entrega: 21/dic/2016 4:00pm<br>";
-			alert(txtDireccionEnvio);
-			alert(txtDireccionEnvio);
-			$("#divInfoResumenEnvio").html(txtDireccionEnvio);
 			
-			/*Calle Luis Barrera, Fraccionamiento Ojo de Pato<br>
-				Cuautitlan Izcalli, Estado de México, C.P. 58252<br>
-				Telefono de contacto: 55 55 76 56 26<br>
-				Fecha y hora de entrega: 21/dic/2016 4:00pm<br>*/
-				
+			txtDireccionEnvio = globalDataClient['id_'+currentClientDireccionIdEnvio]['cliente_direccion_calle']+" "+globalDataClient['id_'+currentClientDireccionIdEnvio]['cliente_direccion_numero_ext']+", "+globalDataClient['id_'+currentClientDireccionIdEnvio]['cliente_direccion_colonia']+"<br>";
+			txtDireccionEnvio+= globalDataClient['id_'+currentClientDireccionIdEnvio]['cliente_direccion_municipio']+", "+globalDataClient['id_'+currentClientDireccionIdEnvio]['estado']+". C.P. "+globalDataClient['id_'+currentClientDireccionIdEnvio]['cliente_direccion_cp']+"<br>";
+			
+			
+			
+			fec_ven_arr = $("#pv_fecha_vencimiento").val().split("/");
+			//alert( fec_ven_arr[1] );
+			//$("#pv_fecha_vencimiento").val()
+			txtDireccionEnvio+="Fecha y hora de entrega: "+fec_ven_arr[0]+"/"+meses[fec_ven_arr[1]]+"/"+fec_ven_arr[2]+" "+$("#pv_hora_vencimiento").val()+" hrs<br>";
+			
+			//
+			
+			
+			$("#divInfoResumenEnvio").html(txtDireccionEnvio);
 				
 			
 	   }
