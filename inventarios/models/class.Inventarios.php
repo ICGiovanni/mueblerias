@@ -578,5 +578,50 @@ class Inventarios
 		
 		return $result;
 	}
+	
+	
+	public function GetDataMoves($move_id)
+	{
+		$sql="SELECT IF(usuario_id_salida!=0,
+				(SELECT CONCAT(firstName,' ',lastName,' ',secondLastName)
+				FROM inv_login
+				WHERE login_id=usuario_id_salida),'') AS usuario_salida,
+				ss.sucursal_name AS sucursal_salida,
+				fecha_salida,
+				nota_salida,
+				IF(usuario_id_entrega!=0,
+				(SELECT CONCAT(firstName,' ',lastName,' ',secondLastName)
+				FROM inv_login
+				WHERE login_id=usuario_id_entrega),'') AS usuario_entrega,
+				se.sucursal_name AS sucursal_entrega,
+				nota_entrega,chofer,fecha_entrega
+				FROM movimientos_inventario mi
+				LEFT JOIN inv_sucursales ss ON ss.sucursal_id=mi.sucursal_id_salida
+				LEFT JOIN inv_sucursales se ON se.sucursal_id=mi.sucursal_id_entrada
+				WHERE movimiento_id=$move_id";
 		
+		$statement=$this->connect->prepare($sql);
+		$statement->execute();
+		$result=$statement->fetchAll(PDO::FETCH_ASSOC);
+		
+		return $result[0];		
+	}
+	
+	public function GetProductsMove($move_id)
+	{
+		$sql="SELECT producto_id,CONCAT(producto_sku,' ',producto_name,' ',color_name,' ',material_name) AS producto,
+				cantidad
+				FROM movimientos_productos mp
+				INNER JOIN productos p USING(producto_id)
+				INNER JOIN colores c USING(color_id)
+				INNER JOIN materiales m USING(material_id)
+				WHERE mp.movimiento_id=$move_id";
+		
+		$statement=$this->connect->prepare($sql);
+		$statement->execute();
+		$result=$statement->fetchAll(PDO::FETCH_ASSOC);
+		
+		return $result;
+	}
+	
 }

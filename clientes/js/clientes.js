@@ -170,6 +170,7 @@ $(document).ready(function()
 		$("#codigoPostal").val($("#codigoPostal_"+id).val());
 		$("#estado").val($("#estado_"+id).val()).trigger('chosen:updated');
 		$("#municipio").val($("#municipio_"+id).val());
+		$("#referencia").val($("#referencia_"+id).val());
 		$("#address_current").val(id);
 		$("#addAddress").hide();
 		$("#aditAddress").show();
@@ -228,30 +229,28 @@ $(document).ready(function()
 			if(tipo_datos=='facturacion')
 			{
 				tipo_datos='Facturación';
-				addressComplete+='RFC: '+rfc+' '+razonS+' ';
+				addressComplete+='<strong>RFC: </strong>'+rfc+'<br><strong>Razón Social: </strong>'+razonS+'<br>';
 			}
 			else
 			{
 				tipo_datos='Envio';
-				razonS='';
-				rfc='';
 			}
 			
-			addressComplete+=calle+' '+noExt;
+			addressComplete+='<strong>Calle: </strong>'+calle+' <strong>No. Ext: </strong>'+noExt;
 			
 			if(noInt!='')
 			{
-				addressComplete+=' Int.'+noInt;
+				addressComplete+=' <strong>No. Int.: </strong>'+noInt;
 			}
+			addressComplete+='<br>';
 			
-			addressComplete+=' '+colonia;
-			addressComplete+=' C.P.'+codigoPostal;
-						
-			addressComplete+=' '+municipio+', '+$("#estado option:selected").html();
+			addressComplete+='<strong>Colonia: </strong>'+colonia+' ';
+			addressComplete+='<strong>C.P. </strong>'+codigoPostal+'<br>';
+			addressComplete+='<strong>Municipio o Delegación: </strong> '+municipio+' <strong>Estado: </strong>'+$("#estado option:selected").html()+'<br>';
 			
 			if(referencia)
 			{
-				addressComplete+=' ,'+referencia;
+				addressComplete+='<strong>Referencia: </strong>'+referencia;
 			}
 			
 			$("#addres_div_"+address).html(addressComplete);
@@ -299,27 +298,28 @@ $(document).ready(function()
 			if(tipo_datos=='facturacion')
 			{
 				tipo_datos='Facturación';
-				addressComplete+='RFC: '+rfc+' '+razonS+' ';
+				addressComplete+='<strong>RFC: </strong>'+rfc+'<br><strong>Razón Social: </strong>'+razonS+'<br>';
 			}
 			else
 			{
 				tipo_datos='Envio';
 			}
 			
-			addressComplete+=calle+' '+noExt;
+			addressComplete+='<strong>Calle: </strong>'+calle+' <strong>No. Ext: </strong>'+noExt;
 			
 			if(noInt!='')
 			{
-				addressComplete+=' Int.'+noInt;
+				addressComplete+=' <strong>No. Int.: </strong>'+noInt;
 			}
+			addressComplete+='<br>';
 			
-			addressComplete+=' '+colonia;
-			addressComplete+=' C.P.'+codigoPostal;
-			addressComplete+=' '+municipio+', '+$("#estado option:selected").html();
+			addressComplete+='<strong>Colonia: </strong>'+colonia+' ';
+			addressComplete+='<strong>C.P. </strong>'+codigoPostal+'<br>';
+			addressComplete+='<strong>Municipio o Delegación: </strong> '+municipio+' <strong>Estado: </strong>'+$("#estado option:selected").html()+'<br>';
 			
 			if(referencia)
 			{
-				addressComplete+=' ,'+referencia;
+				addressComplete+='<strong>Referencia: </strong>'+referencia;
 			}
 			
 			table+='<tr>';
