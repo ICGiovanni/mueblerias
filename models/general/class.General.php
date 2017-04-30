@@ -68,6 +68,22 @@ class General
 		return $date;
 	}
 	
+	public function getDateSimple($date)
+	{
+		$dateformat= new DateTime($date);
+		$date=$dateformat->format('Y-m-d h:i a');
+		
+		$s=explode(' ',$date);
+		$d=$s[0];
+		$h=$s[1];
+		$t=$s[2];
+		
+		$d=explode('-',$d);
+		$date=$d[2].'/'.$this->month[$d[1]].'/'.$d[0].' '.$h.' '.$t;
+		
+		return $date;
+	}
+	
 	public function getOnlyDate($date)
 	{
 		$dateformat= new DateTime($date);
