@@ -34,7 +34,7 @@ $totalEnvio = 0;
 if( isset($_SESSION["punto_venta"]["envio"]) ){
 	$totalEnvio = $_SESSION["punto_venta"]["envio"]["costo_envio"];
 }
-//print_r($_SESSION);
+print_r($_SESSION);
 $clientFromSession = '';
 $clientFromSessionForEnvio = '';
 $clientFromSessionExtra = '';
@@ -396,7 +396,11 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 									<div>
 									
 									<div class="col-lg-8" >
-										<i id="icoResumenEnvio" class="fa fa-check-circle-o greenFont" style="font-size:20px;"></i> &nbsp;<font style="font-size:15px;"><b>Envío a domicilio</b></font>
+										<!-- 
+										fa fa-check-square-o greenFont
+										fa-question-circle
+										-->
+										<i id="icoResumenEnvio" class="fa fa-question-circle" style="font-size:20px;"></i> &nbsp;<font style="font-size:15px;"><b>Envío a domicilio</b></font>
 										<div id="divInfoResumenEnvio">
 										
 											<!--Calle Luis Barrera, Fraccionamiento Ojo de Pato<br>
@@ -405,8 +409,8 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 											Fecha y hora de entrega: 21/dic/2016 4:00pm<br>-->
 										</div>
 										<br>
-										<i id="icoResumenFactura" class="fa fa-check-circle-o greenFont" style="font-size:20px;"></i> &nbsp;<font style="font-size:15px;"><b>Requiere Factura</b></font>
 										<div id="divInfoResumenFactura">
+										<i id="icoResumenFactura" class="fa fa-question-circle" style="font-size:20px;"></i> &nbsp;<font style="font-size:15px;"><b>Requiere Factura</b></font>
 										
 											<!--<b>Luis Mario Rodriguez</b><br>
 											<b>LMRO098765AG7</b><br>
@@ -488,7 +492,7 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 						<div class="form-group">
 						<div class="col-md-2" style="padding:7px 0px;">Zona de envío&nbsp;&nbsp;&nbsp;</div>
 						<div class="col-md-4" style="width:31%">
-										<select class="form-control" id="flete" style="display: inline; width: 200px">
+										<select class="form-control" id="select_zona_envio" style="display: inline; width: 200px">
 											<option value="0">Elige sección</option>
 											<option value="1">seccion 1</option>
 											<option value="2">seccion 2</option>
@@ -497,8 +501,8 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 										</select>
 					</div>
 					
-							<input type="text" id="costoFlete" placeholder="Costo del Flete" class="form-control" style="display: inline; width: 150px" onchange="actualizaCostoEnvio();">
-							&nbsp;&nbsp;&nbsp;<span id="spanCostoFlete"></span> 
+							<input type="text" id="costoEnvio" placeholder="Costo del Flete" class="form-control" style="display: inline; width: 150px" onchange="actualizaCostoEnvio();">
+							&nbsp;&nbsp;&nbsp;<span id="spancostoEnvio"></span> 
 					
 							</div>
 						<div class="form-group">
@@ -523,7 +527,7 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 							
 						</div>
 						<div class="form-group">
-										<select class="form-control" id="planta">
+										<select class="form-control" id="select_planta">
 											<option value="0">Selecciona número de pisos</option>
 											<option value="1">Planta Baja</option>
 											<option value="2">Piso 1</option>
@@ -540,7 +544,7 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 										</select></div>
 										
 										<div class="form-group">
-										<select class="form-control" id="planta">
+										<select class="form-control" id="select_planta_extra">
 											<option value="0">Selecione donde se entregará la mercancia</option>
 											<option value="1">Al interior de la vivienda</option>										
 											<option value="1">A pie de puerta</option>
@@ -554,7 +558,7 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 			<div class="modal-footer">
 				<!-- <button data-toggle="modal" href="#ModalClienteNuevo"  type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalNuevoCliente">+ Nuevo Cliente</button>-->
 				<button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-				<button type="button" class="btn btn-primary">Guardar</button>
+				<button type="button" class="btn btn-primary" data-dismiss="modal" onclick="guarda_datos_envio();">Guardar</button>
 			</div>
 		</div>
 	</div>
@@ -776,6 +780,8 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 		
 		var subtotal = <?=$totalVenta?>;
 		var costoActual = 0;
+		var stringPagoData = '';
+		
         $(document).ready(function(){
 			
 			toastr.options={
@@ -825,9 +831,15 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
                     {
 						envia_falso = false;
 						maxObjIdTmp = 1;
+						
+						stringPagoData = '{"pagos":[';
+						
 					   //alert(maxObjId);
 						while (maxObjIdTmp <= maxObjId) {
 							newValueSel = $('#sel_metodo_'+maxObjIdTmp).val();
+							newValueSelTxt = $('#sel_metodo_'+maxObjIdTmp+' option:selected').text();
+							
+							newValueRef = '';
 							
 							if( newValueSel == "0" ){
 								toastr.error("Debe elegir el metodo de pago #<b>"+maxObjIdTmp+"</b>");
@@ -854,11 +866,19 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 								}, 1);
 							}
 							
+							if(!envia_falso){
+								stringPagoData+='{"pago_metodo_id": "'+newValueSel+'", "pago_metodo": "'+newValueSelTxt+'", "monto": "'+newValue+'", "referencia": "'+newValueRef+'"},';
+							}
+							
 							maxObjIdTmp++;
 						}
+						stringPagoData = stringPagoData.slice(0,-1);
+						stringPagoData+=']}';
 						
 						if( envia_falso ){
 							return false;
+						} else {
+							guarda_metodos_pago();
 						}
                     }
 
@@ -1004,23 +1024,23 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 			 });
 			/*FUNCIONES PARA CLIENTE NUEVO*/
 			
-			$("#flete").change(function(){
+			$("#select_zona_envio").change(function(){
 				console.log("llega" + $(this).val());
 				if($(this).val()=='1'){
-					$("#costoFlete").val('500');
-					$("#spanCostoFlete").html("min $1 - max $500");
+					$("#costoEnvio").val('500');
+					$("#spancostoEnvio").html("min $1 - max $500");
 				}
 				if($(this).val()=='2'){
-					$("#costoFlete").val('1000');
-					$("#spanCostoFlete").html("min $501 - max $1000");
+					$("#costoEnvio").val('1000');
+					$("#spancostoEnvio").html("min $501 - max $1000");
 				}
 				if($(this).val()=='3'){
-					$("#costoFlete").val('1500');
-					$("#spanCostoFlete").html("min $1001 - max $1500");
+					$("#costoEnvio").val('1500');
+					$("#spancostoEnvio").html("min $1001 - max $1500");
 				}
 				if($(this).val()=='4'){
-					$("#costoFlete").val('1501');
-					$("#spanCostoFlete").html("$1501 más");
+					$("#costoEnvio").val('1501');
+					$("#spancostoEnvio").html("$1501 más");
 				}
 				actualizaCostoEnvio();
 			});
@@ -1069,6 +1089,14 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 						getClienteDirecciones(id);
 						
 						SelectedItemData(id, name, email, number);
+						/**/
+						swal({
+							title: "Vilculado!",
+							text: "Clinte vinculado correctamente!",
+							type: "success"
+							}, function () {
+							
+						});
 			}
 				}
 		};
@@ -1112,6 +1140,15 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 						
 						SelectedItemData_0(id, name, email, number);
 						
+						/**/
+						swal({
+							title: "Vilculado!",
+							text: "Clinte vinculado correctamente!",
+							type: "success"
+							}, function () {
+							
+						});
+						
 						
 			}
 				}
@@ -1142,8 +1179,15 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 						'<tr> <td><b>Direcciones de facturación:</b></td> </tr>'+
 						'<tr> <td class="desc" style="padding-left:10px;"> '+txtDireccionesFacturacion+' </td> </tr>'+
 						'</tbody></table>';
-											
+						
+				table_extra = '<b>Teléfonos:</b><br>'+number.replace(/,/g,"<br>")+'<br><br><b>Correos:</b><br>'+email.replace(/,/g,"<br>");
+				
+				$('#divBuscaCliente_0').html(table);
+				
 				$('#divBuscaClienteEnvio_0').html(table);
+				
+				$('#divBuscaCliente_extra_0').html(table_extra);
+				
 				$('#divBuscaClienteEnvio').html(tableEnvio);
 				$('#divBuscaClienteFacturacion').html(tableEnvio);
 				
@@ -1186,7 +1230,7 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 						'<tr> <td class="desc" style="padding-left:10px;"> '+txtDireccionesFacturacion+' </td> </tr>'+
 						'</tbody></table>';
 
-				table_extra = '<b>Teléfonos:</b><br>'+number+'<br><br><b>Correos:</b><br>'+email;
+				table_extra = '<b>Teléfonos:</b><br>'+number.replace(/,/g,"<br>")+'<br><br><b>Correos:</b><br>'+email.replace(/,/g,"<br>");
 		
 				$('#divBuscaCliente_0').html(table);
 				
@@ -1275,8 +1319,6 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 			txtDireccionEnvio = globalDataClient['id_'+currentClientDireccionIdEnvio]['cliente_direccion_calle']+" "+globalDataClient['id_'+currentClientDireccionIdEnvio]['cliente_direccion_numero_ext']+", "+globalDataClient['id_'+currentClientDireccionIdEnvio]['cliente_direccion_colonia']+"<br>";
 			txtDireccionEnvio+= globalDataClient['id_'+currentClientDireccionIdEnvio]['cliente_direccion_municipio']+", "+globalDataClient['id_'+currentClientDireccionIdEnvio]['estado']+". C.P. "+globalDataClient['id_'+currentClientDireccionIdEnvio]['cliente_direccion_cp']+"<br>";
 			
-			
-			
 			fec_ven_arr = $("#pv_fecha_vencimiento").val().split("/");
 			//alert( fec_ven_arr[1] );
 			//$("#pv_fecha_vencimiento").val()
@@ -1342,18 +1384,18 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 			nuevoMetodoDePago = '<tr id="trMetodo_'+maxObjId+'">';
 			nuevoMetodoDePago+= '<td style="padding-top:15px;font-weight: bold;font-size: 14px;"> '+maxObjId+' </td>';
 			nuevoMetodoDePago+= '	<td>';			
-			nuevoMetodoDePago+= '		<select id="sel_metodo_'+maxObjId+'" style="height:35px; font-size:15px;">';
+			nuevoMetodoDePago+= '		<select id="sel_metodo_'+maxObjId+'" style="height:35px; font-size:13px;">';
 			nuevoMetodoDePago+= '			<?=$rowsMetodosPago?>';
 			nuevoMetodoDePago+= '		</select>';
 			nuevoMetodoDePago+= '	</td>';
 			nuevoMetodoDePago+= '	<td>';
 			nuevoMetodoDePago+= '		<div>';
-			nuevoMetodoDePago+= '			<input style="width:130px;" type="text" name="metodo_'+maxObjId+'" id="metodo_'+maxObjId+'" class="form-control" placeholder="$" onchange="recalculaRestaTotal();" /> ';
+			nuevoMetodoDePago+= '			<input style="width:130px; font-size:13px;" type="text" name="metodo_'+maxObjId+'" id="metodo_'+maxObjId+'" class="form-control" placeholder="$" onchange="recalculaRestaTotal();" /> ';
 			nuevoMetodoDePago+= '		</div>';
 			nuevoMetodoDePago+= '	</td>';
 			nuevoMetodoDePago+= '	<td>';
 			nuevoMetodoDePago+= '		<div>';
-			nuevoMetodoDePago+= '			<input type="text" name="referencia_'+maxObjId+'" id="referencia_'+maxObjId+'" class="form-control" placeholder="Referencia/Terminación" onchange="recalculaRestaTotal();" /> ';
+			nuevoMetodoDePago+= '			<input type="text" name="referencia_'+maxObjId+'" id="referencia_'+maxObjId+'" style="font-size:13px;" class="form-control" placeholder="Referencia/Terminación" onchange="recalculaRestaTotal();" /> ';
 			nuevoMetodoDePago+= '		</div>';
 			nuevoMetodoDePago+= '	</td>';
 			nuevoMetodoDePago+= '	<td>';
@@ -1478,12 +1520,14 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 			});
 	   }
 	   
+	   function ventaConEnvio(){
+			$("#icoResumenEnvio").removeClass();
+			$("#icoResumenEnvio").addClass("fa fa-check-square-o greenFont");
+	   }
+	   
 	   function ventaSinEnvio(){
-			$("#icoResumenEnvio").removeClass("fa-check-circle-o");
-			$("#icoResumenEnvio").addClass("fa-times-circle-o");
-			
-			$("#icoResumenEnvio").removeClass("greenFont");
-			$("#icoResumenEnvio").addClass("redFont");
+			$("#icoResumenEnvio").removeClass();
+			$("#icoResumenEnvio").addClass("fa fa-times-circle-o redFont");
 			
 	   }
 	   
@@ -1503,15 +1547,76 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 	language: 'es'
 }).datepicker("setDate", "0");
 
-function actualizaCostoEnvio(){
+	function actualizaCostoEnvio(){
+		
+		costoActual = $("#costoEnvio").val();	
+		$("#costoEnvioEnPago").html("$ "+costoActual);
+		granTotalActual = Number(costoActual) + Number(subtotal);
+		$("#granTotalEnPago").html("$ "+granTotalActual);
+		
+		recalculaRestaTotal();
+	}
 	
-	costoActual = $("#costoFlete").val();	
-	$("#costoEnvioEnPago").html("$ "+costoActual);
-	granTotalActual = Number(costoActual) + Number(subtotal);
-	$("#granTotalEnPago").html("$ "+granTotalActual);
+	function guarda_datos_envio(){
+		//validar direccion elegida y costo de flete		
+		
+		var url="/clientes/ajax_set_cliente_envio_data.php";
+		 
+		select_zona_envio_text = $("#select_zona_envio option:selected").text();
+		costoEnvio = $("#costoEnvio").val();
+		
+		fec_ven_arr = $("#pv_fecha_vencimiento").val().split("/");
+		fecha_hora_entrega = fec_ven_arr[0]+"/"+meses[fec_ven_arr[1]]+"/"+fec_ven_arr[2]+" "+$("#pv_hora_vencimiento").val()+" hrs";
+		select_planta_text = $("#select_planta option:selected").text();
+		select_planta_extra_text = $("#select_planta_extra option:selected").text();
+		
+		$.ajax({
+			type: "POST",
+			url: url,
+			data: { 
+				cliente_direccion_id:currentClientDireccionIdEnvio, 
+				select_zona_envio:select_zona_envio_text,
+				costo_envio:costoEnvio,
+				fecha_hora_entrega:fecha_hora_entrega,
+				select_planta:select_planta_text,
+				select_planta_extra:select_planta_extra_text				
+			}, 
+			success: function(data)
+			{
+				swal({
+						title: "Envio!",
+						text: "Los datos de envío han sido guardados correctamente!",
+						type: "success"
+					}, function () {
+						
+					});
+			}
+		});
+		ventaConEnvio();
+	}
 	
-	recalculaRestaTotal();
-}
+	function guarda_metodos_pago(){
+
+		var url="/clientes/ajax_set_metodos_pago.php";
+
+		$.ajax({
+			type: "POST",
+			url: url,
+			data: { 
+				pago_data:stringPagoData				
+			}, 
+			success: function(data)
+			{
+				swal({
+						title: "Pago!",
+						text: "Los datos de pago han sido guardados correctamente!",
+						type: "success"
+					}, function () {
+						
+					});
+			}
+		});
+	}
     </script>
 
 </body>
