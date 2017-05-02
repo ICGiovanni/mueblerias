@@ -168,6 +168,12 @@ cursor: default;
                     	{
                     		$tr.='<a href="#" class="link_modal_check" data-toggle="modal" data-target="#modal_check" data-id="'.$movimiento_id.'" id="open_modal"><i class="fa fa-check"></i></a>';
                     	}
+                    	
+                    	if($estatus=='ET')
+                    	{
+                    		$tr.='<a href="comprobante_salida.php?m='.$movimiento_id.'" target="_blank" class="link_modal_check"><i class="fa fa-ticket"></i></a>';
+                    	}
+                    	
                         $tr.='</div></td>';
                     	$tr.='</tr>';
                     	
@@ -447,6 +453,7 @@ cursor: default;
 			                type: "success"
 			            }, function () {
 			                window.location.href = 'index.php';
+			                window.open('comprobante_salida.php?m='+move_id,'_blank');
 			            });
     				}
     		
