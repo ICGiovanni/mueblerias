@@ -34,7 +34,7 @@ $totalEnvio = 0;
 if( isset($_SESSION["punto_venta"]["envio"]) ){
 	$totalEnvio = $_SESSION["punto_venta"]["envio"]["costo_envio"];
 }
-print_r($_SESSION);
+//print_r($_SESSION);
 $clientFromSession = '';
 $clientFromSessionForEnvio = '';
 $clientFromSessionExtra = '';
@@ -141,9 +141,44 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 				</td>
 			</tr>
 			</tbody></table>';
+		
+		$number_detail = explode(",",$_SESSION["punto_venta"]["cliente"]["number"]);
+		//print_r($number_detail);
+		$txtTelefonosTipo = '<table>';
+		
+		while ( list($keyND, $valueND) = each($number_detail) ){
 			
+			$number_detail_sep = explode("|",$valueND);
+			$classIcoPhone = '';
+			$fontSizeIcoPhone = '15px;';
+			$titleIcoPhone = '';
+			if($number_detail_sep[0] == "1" || $number_detail_sep[0] == "5"){ //celular
+				$classIcoPhone = 'fa fa-mobile';
+				$fontSizeIcoPhone = '20px;';
+				$titleIcoPhone = 'Celular';
+			}
+			if($number_detail_sep[0] == "2"){ //casa
+				$classIcoPhone = 'fa fa-home';
+				$fontSizeIcoPhone = '15px;';
+				$titleIcoPhone = 'Casa';
+				
+			}
+			if($number_detail_sep[0] == "3"){ //oficina
+				$classIcoPhone = 'fa fa-hospital-o';
+				$fontSizeIcoPhone = '15px;';
+				$titleIcoPhone = 'Oficina';
+			}
+			if($number_detail_sep[0] == "4"){ //otro
+				$classIcoPhone = 'fa phone';
+				$fontSizeIcoPhone = '15px;';
+				$titleIcoPhone = 'Otro';
+			}
+			$txtTelefonosTipo.='<tr><td align="center"><i class="'.$classIcoPhone.'" style="font-size:'.$fontSizeIcoPhone.'" title="'.$titleIcoPhone.'" ></i></td><td>&nbsp; '.$number_detail_sep[1].'</td></tr>';
+		}
+		
+		$txtTelefonosTipo.= '</table>';
 		$clientFromSessionExtra	= '<b>Teléfonos:</b><br>
-		'.str_replace(",","<br>",$_SESSION["punto_venta"]["cliente"]["number"]).'
+		'.$txtTelefonosTipo.'
 		<br><br>
 		<b>Correos:</b><br>'.str_replace(",","<br>",$_SESSION["punto_venta"]["cliente"]["email"]);
 }
@@ -310,27 +345,86 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 													<h2>Método de pago</h2>
 														
 														<table class="table" id="tableMetodosDePago">
-															<tr id="trMetodo_1">
-																<td style="padding-top:15px;font-weight: bold;font-size: 13px;"> 1 </td>
+														<?php
+															$sumaDePagos = 0;
+															$trCount = 1;
+															$trsMetodosdePago = '';
+															if( isset($_SESSION["punto_venta"]["pago"]) ){
+																
+																$pagosArray = json_decode($_SESSION["punto_venta"]["pago"],true);
+																$pagosArray = $pagosArray["pagos"];
+																while( list($keyP, $valueP) = each($pagosArray) ){
+																	
+																	reset($arrayMetodosPago);
+																	$rowsMetodosPagoFromSession = '<option value="0" style="color:#888;">Selecciona un método de pago</option> ';
+																	while( list ($KeyMP, $valueMP) = each($arrayMetodosPago) ){
+																		$selected = '';
+																		if($valueMP["general_forma_de_pago_id"] == $valueP["pago_metodo_id"]){
+																			$selected = ' selected';
+																		}
+																		$rowsMetodosPagoFromSession.='<option value="'.$valueMP["general_forma_de_pago_id"].'"'.$selected.'>'.$valueMP["general_forma_de_pago_desc"].'</option> ';
+																	}
+																	
+																	$trsMetodosdePago.= '<tr id="trMetodo_'.$trCount.'">
+																<td style="padding-top:15px;font-weight: bold;font-size: 13px;"> '.$trCount.' </td>
 																<td> 
-																	<select id="sel_metodo_1" style="height:35px; font-size:13px;">
-																		<?=$rowsMetodosPago?>
+																	<select id="sel_metodo_'.$trCount.'" style="height:35px; font-size:13px;">
+																		'.$rowsMetodosPagoFromSession.'
 																	</select>
 																</td>
 																<td>
 																	<div>
-																		<input style="width:130px; font-size:13px;" type="text" name="metodo_1" id="metodo_1" class="form-control" placeholder="$" onchange="recalculaRestaTotal();" /> 
+																		<input style="width:130px; font-size:13px;" type="text" name="metodo_'.$trCount.'" id="metodo_'.$trCount.'" class="form-control" placeholder="$" onchange="recalculaRestaTotal();" value="'.$valueP["monto"].'" /> 
 																	</div>
 																</td>
 																<td>
 																	<div>
-																		 <input type="text" name="referencia_1" id="referencia_1" class="form-control" style="font-size:13px;" placeholder="Referencia/Terminación" /> 
+																		 <input type="text" name="referencia_'.$trCount.'" id="referencia_'.$trCount.'" class="form-control" style="font-size:13px;" placeholder="Referencia/Terminación" value="'.$valueP["referencia"].'" /> 
 																	</div>
-																</td>
-																<td>
-																	<button class="btn btn-primary btn-xs" id="agregarMetodoPago" value="" placeholder="Metodo Pago" type="button" style="margin-top:5px;" onclick="agregaNuevoMetodoPago();"><i class="fa fa-plus"></i></button>
-																</td>
-															</tr>
+																</td>';
+																
+																	if($trCount == 1){
+																		$trsMetodosdePago.= '<td>
+																		<button class="btn btn-primary btn-xs" id="agregarMetodoPago" value="" type="button" style="margin-top:5px;" onclick="agregaNuevoMetodoPago();"><i class="fa fa-plus"></i></button>
+																	</td>';
+																	} else {
+																		$trsMetodosdePago.= '<td>
+																		<button class="btn btn-danger btn-xs" id="botonMinus_'.$trCount.'"  type="button" style="margin-top:5px;" onclick="remueveNuevoMetodoPago(this);"><i class="fa fa-minus"></i></button>
+																	</td>';
+																	}
+																
+																	$trsMetodosdePago.= '</tr>';
+																	$trCount++;
+																	$sumaDePagos+=$valueP["monto"];
+																}
+																 
+															} else { 
+																$trsMetodosdePago = '<tr id="trMetodo_1">
+																	<td style="padding-top:15px;font-weight: bold;font-size: 13px;"> 1 </td>
+																	<td> 
+																		<select id="sel_metodo_1" style="height:35px; font-size:13px;">
+																			<option value="0" style="color:#888;">Selecciona un método de pago</option> <option value="1">Efectivo</option> <option value="2">Cheque</option> <option value="3">Depósito</option> <option value="4">Tranferencia electrónica</option> <option value="5">Vales de despensa</option> <option value="6">Tarjeta de crédito</option> <option value="7">Tarjeta de débito</option> 																	</select>
+																	</td>
+																	<td>
+																		<div>
+																			<input style="width:130px; font-size:13px;" type="text" name="metodo_1" id="metodo_1" class="form-control" placeholder="$" onchange="recalculaRestaTotal();" /> 
+																		</div>
+																	</td>
+																	<td>
+																		<div>
+																			 <input type="text" name="referencia_1" id="referencia_1" class="form-control" style="font-size:13px;" placeholder="Referencia/Terminación" /> 
+																		</div>
+																	</td>
+																	<td>
+																		<button class="btn btn-primary btn-xs" id="agregarMetodoPago" value="" placeholder="Metodo Pago" type="button" style="margin-top:5px;" onclick="agregaNuevoMetodoPago();"><i class="fa fa-plus"></i></button>
+																	</td>
+																</tr>';
+															}
+															echo $trsMetodosdePago;
+														?>
+														
+														
+															
 														</table>
 													
 												</div>
@@ -364,7 +458,7 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 														Restan
 													</span>
 													<h3 class="font-bold text-right">
-														<span id="spanRestanVenta" >$ <?=($totalVenta+$totalEnvio)?></span>
+														<span id="spanRestanVenta" >$ <?=($totalVenta+$totalEnvio-$sumaDePagos)?></span>
 														<span style="display:none;" id="spanRestanVentaOriginal" ><?=$totalVenta?></span>                    </h3>
 													
 												</div>
@@ -400,13 +494,31 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 										fa fa-check-square-o greenFont
 										fa-question-circle
 										-->
-										<i id="icoResumenEnvio" class="fa fa-question-circle" style="font-size:20px;"></i> &nbsp;<font style="font-size:15px;"><b>Envío a domicilio</b></font>
+										<?php
+											$datosDireccion = array();
+											$txtDivInfoResumenEnvio = '';
+											$cssIcoResumenEnvio = 'fa fa-question-circle';
+											
+											if($_SESSION["punto_venta"]["envio"]){
+												reset($_SESSION["punto_venta"]["cliente"]["direcciones"]);
+												while ( list($keyDirecciones, $valueDirecciones) = each( $_SESSION["punto_venta"]["cliente"]["direcciones"] )){
+													if($valueDirecciones["cliente_direccion_id"] == $_SESSION["punto_venta"]["envio"]["cliente_direccion_id"]){
+														$datosDireccion = $valueDirecciones;
+													}
+												}
+											}
+											
+											if(!empty($datosDireccion)){
+												$cssIcoResumenEnvio = 'fa fa-check-square-o greenFont';
+												$txtDivInfoResumenEnvio.= $datosDireccion["cliente_direccion_calle"]." ".$datosDireccion["cliente_direccion_numero_ext"]." ".$datosDireccion["cliente_direccion_numero_int"]."<br>";
+												$txtDivInfoResumenEnvio.= $datosDireccion["cliente_direccion_colonia"]." ".$datosDireccion["cliente_direccion_municipio"].", ".$datosDireccion["estado"]."<br>";
+												$txtDivInfoResumenEnvio.= "C.P. ".$datosDireccion["cliente_direccion_cp"]."<br>";
+												$txtDivInfoResumenEnvio.= "Fecha de entrega: ".$_SESSION["punto_venta"]["envio"]["fecha_hora_entrega"]."<br>";
+											}
+										?>
+										<i id="icoResumenEnvio" class="<?=$cssIcoResumenEnvio?>" style="font-size:20px;"></i> &nbsp;<font style="font-size:15px;"><b>Envío a domicilio</b></font>
 										<div id="divInfoResumenEnvio">
-										
-											<!--Calle Luis Barrera, Fraccionamiento Ojo de Pato<br>
-											Cuautitlan Izcalli, Estado de México, C.P. 58252<br>
-											Telefono de contacto: 55 55 76 56 26<br>
-											Fecha y hora de entrega: 21/dic/2016 4:00pm<br>-->
+											<?=$txtDivInfoResumenEnvio?>
 										</div>
 										<br>
 										<div id="divInfoResumenFactura">
@@ -776,7 +888,15 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 			}
 		}
 		
+		if( isset ($_SESSION["punto_venta"]["pago"]) ){
+			echo "var maxObjId = ".$trCount.";
+			";
+		} else {
+			echo "var maxObjId = 2;
+			";
+		}
 ?>
+
 		
 		var subtotal = <?=$totalVenta?>;
 		var costoActual = 0;
@@ -835,41 +955,43 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 						stringPagoData = '{"pagos":[';
 						
 					   //alert(maxObjId);
-						while (maxObjIdTmp <= maxObjId) {
+						while (maxObjIdTmp <= (maxObjId-1)) {
 							newValueSel = $('#sel_metodo_'+maxObjIdTmp).val();
 							newValueSelTxt = $('#sel_metodo_'+maxObjIdTmp+' option:selected').text();
-							
+							newValue = $('#metodo_'+maxObjIdTmp).val();
 							newValueRef = '';
 							
-							if( newValueSel == "0" ){
-								toastr.error("Debe elegir el metodo de pago #<b>"+maxObjIdTmp+"</b>");
-								envia_falso = true;
-							}
+							if(typeof(newValue) != "undefined"){ //se borro la fila por lo tanto se omite
 							
-							if( newValueSel != "0" && newValueSel != "1" && newValueSel != "5" ){ // no requieren referencia 0 sin seleccion, 1 efectivo, 5 vales de despensa
-								newValueRef = $('#referencia_'+maxObjIdTmp).val();
-								if(newValueRef == ''){
-									toastr.error("Debe ingresar una referencia para el metodo de pago #<b>"+maxObjIdTmp+"</b>");
+								if( newValueSel == "0" ){
+									toastr.error("Debe elegir el metodo de pago #<b>"+maxObjIdTmp+"</b>");
+									envia_falso = true;
+								}
+								
+								if( newValueSel != "0" && newValueSel != "1" && newValueSel != "5" ){ // no requieren referencia 0 sin seleccion, 1 efectivo, 5 vales de despensa
+									newValueRef = $('#referencia_'+maxObjIdTmp).val();
+									if(newValueRef == ''){
+										toastr.error("Debe ingresar una referencia para el metodo de pago #<b>"+maxObjIdTmp+"</b>");
+										envia_falso = true;
+										setTimeout(function(){
+											$("#referencia_"+maxObjIdTmp).focus();
+										}, 1);
+									}
+								}
+								
+								if(newValue == ''){
+									toastr.error("Debe ingresar el monto para el metodo de pago #<b>"+maxObjIdTmp+"</b>");
 									envia_falso = true;
 									setTimeout(function(){
-										$("#referencia_"+maxObjIdTmp).focus();
+										$("#metodo_"+maxObjIdTmp).focus();
 									}, 1);
 								}
+								
+								if(!envia_falso){
+									stringPagoData+='{"pago_metodo_id": "'+newValueSel+'", "pago_metodo": "'+newValueSelTxt+'", "monto": "'+newValue+'", "referencia": "'+newValueRef+'"},';
+								}
+								
 							}
-							
-							newValue = $('#metodo_'+maxObjIdTmp).val();
-							if(newValue == ''){
-								toastr.error("Debe ingresar el monto para el metodo de pago #<b>"+maxObjIdTmp+"</b>");
-								envia_falso = true;
-								setTimeout(function(){
-									$("#metodo_"+maxObjIdTmp).focus();
-								}, 1);
-							}
-							
-							if(!envia_falso){
-								stringPagoData+='{"pago_metodo_id": "'+newValueSel+'", "pago_metodo": "'+newValueSelTxt+'", "monto": "'+newValue+'", "referencia": "'+newValueRef+'"},';
-							}
-							
 							maxObjIdTmp++;
 						}
 						stringPagoData = stringPagoData.slice(0,-1);
@@ -1131,7 +1253,7 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 						var id=$("#inputBuscaCliente_0").getSelectedItemData().id_cliente;						
 						var name=$("#inputBuscaCliente_0").getSelectedItemData().nombre;
 						var email=$("#inputBuscaCliente_0").getSelectedItemData().emails;
-						var number=$("#inputBuscaCliente_0").getSelectedItemData().numbers;
+						var number=$("#inputBuscaCliente_0").getSelectedItemData().numbers_type;
 						
 						$("#divBuscaClienteInputEnvio").css("display","none");
 						
@@ -1229,8 +1351,45 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 						'<tr> <td><b>Direcciones de facturación:</b></td> </tr>'+
 						'<tr> <td class="desc" style="padding-left:10px;"> '+txtDireccionesFacturacion+' </td> </tr>'+
 						'</tbody></table>';
-
-				table_extra = '<b>Teléfonos:</b><br>'+number.replace(/,/g,"<br>")+'<br><br><b>Correos:</b><br>'+email.replace(/,/g,"<br>");
+				
+				//
+				number_detail = number.split(",");
+				var txtTelefonosTipo = '<table>';
+				
+				for(indice in number_detail){
+					//alert(number_detail[indice]);
+					number_detail_sep = number_detail[indice].split("|");
+					classIcoPhone = '';
+					fontSizeIcoPhone = '15px;';
+					titleIcoPhone = '';
+					if(number_detail_sep[0] == 1 || number_detail_sep[0] == 5){ //celular
+						classIcoPhone = 'fa fa-mobile';
+						fontSizeIcoPhone = '20px;';
+						titleIcoPhone = 'Celular';
+					}
+					if(number_detail_sep[0] == 2){ //casa
+						classIcoPhone = 'fa fa-home';
+						fontSizeIcoPhone = '15px;';
+						titleIcoPhone = 'Casa';
+						
+					}
+					if(number_detail_sep[0] == 3){ //oficina
+						classIcoPhone = 'fa fa-hospital-o';
+						fontSizeIcoPhone = '15px;';
+						titleIcoPhone = 'Oficina';
+					}
+					if(number_detail_sep[0] == 4){ //otro
+						classIcoPhone = 'fa phone';
+						fontSizeIcoPhone = '15px;';
+						titleIcoPhone = 'Otro';
+					}
+					
+					txtTelefonosTipo+='<tr><td align="center"><i class="'+classIcoPhone+'" style="font-size:'+fontSizeIcoPhone+'" title="'+titleIcoPhone+'" ></i></td><td>&nbsp; '+number_detail_sep[1]+'</td></tr>';
+				}
+				
+				txtTelefonosTipo+='</table>';
+				
+				table_extra = '<b>Teléfonos:</b><br>'+txtTelefonosTipo+'<br><br><b>Correos:</b><br>'+email.replace(/,/g,"<br>");
 		
 				$('#divBuscaCliente_0').html(table);
 				
@@ -1378,9 +1537,9 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 			});
 			$("#divBuscaClienteInputEnvio").css("display","block");
 	   }
-	   maxObjId = 1;
+	   
 	   function agregaNuevoMetodoPago(){
-			maxObjId++;
+			
 			nuevoMetodoDePago = '<tr id="trMetodo_'+maxObjId+'">';
 			nuevoMetodoDePago+= '<td style="padding-top:15px;font-weight: bold;font-size: 14px;"> '+maxObjId+' </td>';
 			nuevoMetodoDePago+= '	<td>';			
@@ -1404,6 +1563,8 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 			nuevoMetodoDePago+= '</tr>';
 			
 			$('#tableMetodosDePago').append(nuevoMetodoDePago);
+			
+			maxObjId++;
 	   }
 	   
 	   function remueveNuevoMetodoPago(objIconMinus){

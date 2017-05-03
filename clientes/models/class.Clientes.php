@@ -326,7 +326,7 @@ class Clientes
 	
 	public function GetPhonesClient($id_cliente)
 	{
-		$sql="SELECT ct.number,pt.phone_type_id,pt.type
+		$sql="SELECT ct.number,pt.phone_type_id,pt.type,pt.phone_type_css 
 				FROM cliente_telefono ct
 				INNER JOIN inv_phone_type pt USING(phone_type_id)
 				WHERE ct.id_cliente=:id_cliente";
@@ -378,13 +378,19 @@ class Clientes
 			$numbers = $this->GetPhonesClient($values["id_cliente"]);
 			
 			$txtNumbers = array();
+			$txtNumbersWithType = array();
 			while ( list($keyN, $valueN) = each($numbers) ){
-				$txtNumbers[]=$valueN["number"];	
+				
+				$txtNumbersWithType[]=$valueN["phone_type_id"]."|".$valueN["number"];	
+				$txtNumbers[]=$valueN["number"];
+				
 			}
 			$txtNumbers = implode(",",$txtNumbers);
+			$txtNumbersWithType = implode(",",$txtNumbersWithType);
 			/////
 			$result[$key]["emails"]=$txtEmails;
 			$result[$key]["numbers"]=$txtNumbers;
+			$result[$key]["numbers_type"]=$txtNumbersWithType;
 		}
 		//print_r($result);
 		return $result;
