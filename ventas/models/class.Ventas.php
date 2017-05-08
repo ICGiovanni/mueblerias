@@ -91,13 +91,17 @@ class Ventas {
     public function obtenerVentas($entrega = 0, $idVenta = 0){
         
         $sql="SELECT * FROM ".$this->name_table."                 
-                 WHERE venta_tipo = 1 AND venta_entrega = " .$entrega;
+                 WHERE venta_tipo = 1";
+        
+        if($entrega!=0)
+        {
+        	$sql.=" AND venta_entrega = " .$entrega;
+        }
         
         if($idVenta != 0){
             $sql .= " AND venta_id = ".$idVenta;
         }
-                                
-
+                                		
         $statement=$this->connect->prepare($sql);        
 
         $statement->execute();

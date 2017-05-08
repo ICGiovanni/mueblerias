@@ -50,7 +50,7 @@ $html.='</div>';
 $html.='<div style="text-align:center;width:100%;font-size: 8px;">';
 $html.='<table>';
 $html.='<tr>
-	<th align="center"><strong>CANTIDAD</strong></th>
+	<th align="center"><strong>CANT.</strong></th>
 	<th align="center"><strong>DESCRIPCIÓN/CODIGO</strong></th>
 	</tr>';
 $productos=$inventarios->GetProductsMove($move_id);
