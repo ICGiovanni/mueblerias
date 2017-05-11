@@ -326,7 +326,7 @@ class Clientes
 	
 	public function GetPhonesClient($id_cliente)
 	{
-		$sql="SELECT ct.number,pt.phone_type_id,pt.type,pt.phone_type_css 
+		$sql="SELECT ct.number,pt.phone_type_id,pt.type 
 				FROM cliente_telefono ct
 				INNER JOIN inv_phone_type pt USING(phone_type_id)
 				WHERE ct.id_cliente=:id_cliente";
