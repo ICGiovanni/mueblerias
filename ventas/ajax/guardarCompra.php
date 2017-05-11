@@ -12,11 +12,11 @@ if(isset($_SESSION['punto_venta']) && is_array($_SESSION['punto_venta'])){
     $sesionVenta = $_SESSION;
 
    
-    $pagos = isset($sesionVenta['punto_venta']['pagos']) ? $sesionVenta['punto_venta']['pagos'] : null;
+    $pagos = isset($sesionVenta['punto_venta']['pago']) ? $sesionVenta['punto_venta']['pago'] : null;
     
     $estatus = 1; //por pagar 
     if($pagos){
-        
+        $pagos = json_decode($pagos, true);
         $totalPago = 0;
         foreach($pagos as $pago){
             $totalPago += $pago['pago_monto'];

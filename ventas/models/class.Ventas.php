@@ -24,7 +24,9 @@ class Ventas {
         
         $subtotal = $infoVenta['punto_venta']['Subtotal'];
         $iva = $infoVenta['punto_venta']['IVA'];
-        $total =  $infoVenta['punto_venta']['Total'];
+
+
+
         
         $infoCliente = isset($infoVenta['punto_venta']['cliente']) ? $infoVenta['punto_venta']['cliente'] : null;
                 
@@ -32,7 +34,17 @@ class Ventas {
             $clienteId = isset($infoCliente['cliente_id']) ? $infoCliente['cliente_id'] : 0;
 
             $dirEnvio = isset($infoCliente['cliente_direccion_id_envio']) ? $infoCliente['cliente_direccion_id_envio'] : 0;
-            $dirFactura =  isset($infoCliente['cliente_direccion_id_fact']) ? $infoCliente['cliente_direccion_id_fact'] : 0;                        
+            $dirFactura =  isset($infoCliente['cliente_direccion_id_fact']) ? $infoCliente['cliente_direccion_id_fact'] : 0;
+
+            if($dirFactura!=0){
+                $total =  $infoVenta['punto_venta']['Total'];
+            }else{
+                $total =  $infoVenta['punto_venta']['Subtotal'];
+            }
+
+            if($dirEnvio!=0){
+                $total += $infoVenta['punto_venta']['envio']['costo_envio'];
+            }
 
             $sql = "   INSERT INTO ventas (venta_id, fecha_creacion, monto, sucursal_id, id_cliente, venta_flete_id, cliente_direccion_id, venta_estatus_id, venta_entrega, venta_tipo, factura_generada, fecha_entrega) 
                         VALUES (0, NOW(), $total, 1, $clienteId, $dirEnvio, $dirFactura, $status, $entregado, $tipoVenta, 0, NOW())";
@@ -72,16 +84,17 @@ class Ventas {
     public function pagosVenta($pagos, $idVenta){
                          
         $pagosRegistro = array();
-        
-        foreach($pagos as $pago){
+
+        foreach(end($pagos) as $pago){
+
             $sql = "   INSERT INTO ventas_pagos (ventas_pagos_id, general_forma_de_pago_id, monto, referencia, fecha, venta_id) 
-                       VALUES (0, ".$pago['general_forma_de_pago_id'].", ".$pago['pago_monto'].", '".$pago['pago_referencia']."', NOW(), $idVenta)";
+                       VALUES (0, ".$pago['pago_metodo_id'].", ".$pago['monto'].", '".$pago['referencia']."', NOW(), $idVenta)";
 
             $statement=$this->connect->prepare($sql);
 
             $statement->execute();   
-            $bdid = $this->connect->lastInsertId(); 
-            $prodRegistro[] = array('monto'=>$pago['pago_monto'], 'BDPAGOID'=>$bdid);
+            $bdid = $this->connect->lastInsertId();
+            $pagosRegistro[] = array('monto'=>$pago['monto'], 'BDPAGOID'=>$bdid);
         }
         
         return $pagosRegistro;        
@@ -91,13 +104,17 @@ class Ventas {
     public function obtenerVentas($entrega = 0, $idVenta = 0){
         
         $sql="SELECT * FROM ".$this->name_table."                 
-                 WHERE venta_tipo = 1 AND venta_entrega = " .$entrega;
+                 WHERE venta_tipo = 1";
+        
+        if($entrega!=0)
+        {
+        	$sql.=" AND venta_entrega = " .$entrega;
+        }
         
         if($idVenta != 0){
             $sql .= " AND venta_id = ".$idVenta;
         }
-                                
-
+                                		
         $statement=$this->connect->prepare($sql);        
 
         $statement->execute();
