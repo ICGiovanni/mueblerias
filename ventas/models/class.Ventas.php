@@ -205,7 +205,10 @@ class Ventas {
                         cliente_direccion_numero_int,                                                                        
                         cliente_direccion_rfc,
                         cliente_direccion_razon_social,
-                        cliente_direccion_entre_calles
+                        cliente_direccion_entre_calles,
+						cliente_direccion_colonia,
+						cliente_direccion_municipio,
+						cliente_direccion_cp
                 FROM cliente_direccion
                 WHERE cliente_direccion_id = ".$adress_id;
 
@@ -213,7 +216,7 @@ class Ventas {
 
         $statement->execute();
         $result=$statement->fetchAll(PDO::FETCH_ASSOC);
-        return $result;
+        return $result[0];
         
     }
 }
