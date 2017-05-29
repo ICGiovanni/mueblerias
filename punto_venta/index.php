@@ -210,7 +210,10 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 }
 
 </style>
-       
+<!--
+#span_iva { display:none; }
+#h4_iva { display:none; }
+-->       
 <div class="row wrapper border-bottom white-bg page-heading">
 	<div class="col-lg-10">
 		<h2>Punto de Venta</h2>
@@ -445,22 +448,41 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 													<span>
 														Sub-total
 													</span>
-													<h3 class="font-bold text-right">
-														$ <?=$totalVenta?>            </h3>                    
+													<h4 class="font-bold text-right">
+														$ <?=$totalVenta?>            
+													</h4>
+													<span id="span_iva">
+														IVA
+													</span>
+													<h4  id="h4_iva" class="font-bold text-right">
+														$ <?php
+														if( isset( $_SESSION["punto_venta"]["facturacion"] ) ){
+															echo ($totalVenta*.16);
+														} else {
+															echo "0";
+														}
+														?>
+														            
+													</h4> 
 													<span>
 														Costo envío
 													</span>
-													<h3 class="font-bold text-right" id="costoEnvioEnPago"> $ <?=$totalEnvio?>  </h3>
+													<h4 class="font-bold text-right" id="costoEnvioEnPago"> 
+														$ <?=$totalEnvio?>  
+													</h4>
 													<span>
-														Total
+														Gran Total
 													</span>
-													<h3 class="font-bold text-right" id="granTotalEnPago"> $ <?=($totalVenta+$totalEnvio)?>  </h3>
+													<h4 class="font-bold text-right" id="granTotalEnPago"> 
+														$ <?=($totalVenta+$totalEnvio)?>  
+													</h4>
 													<span>
 														Restan
 													</span>
-													<h3 class="font-bold text-right">
+													<h4 class="font-bold text-right">
 														<span id="spanRestanVenta" >$ <?=($totalVenta+$totalEnvio-$sumaDePagos)?></span>
-														<span style="display:none;" id="spanRestanVentaOriginal" ><?=$totalVenta?></span>                    </h3>
+														<span style="display:none;" id="spanRestanVentaOriginal" ><?=$totalVenta?></span>                    
+													</h4>
 													
 												</div>
 											</div>
@@ -612,8 +634,8 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 											<option value="4">seccion 4</option>
 										</select>
 						</div>
-					
-							<input type="text" id="costoEnvio" placeholder="Costo del Flete" class="form-control" style="display: inline; width: 150px" onchange="actualizaCostoEnvio();">
+					Costo del Flete &nbsp;&nbsp;&nbsp;
+							<input type="text" id="costoEnvio" placeholder="" class="form-control" style="display: inline; width: 150px" onchange="actualizaResumenVenta();" value="<?=(isset($_SESSION["punto_venta"]["envio"]["costo_envio"]) && !empty($_SESSION["punto_venta"]["envio"]["costo_envio"]) )?$_SESSION["punto_venta"]["envio"]["costo_envio"]:"0"?>" >
 							&nbsp;&nbsp;&nbsp;<span id="spancostoEnvio"></span> 
 					
 							</div>
@@ -719,17 +741,26 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 					</div>
 					<div class="ibox-content" style="height:100px;">
 						<div class="col-md-5" style="padding:7px 0px;" >
-							Correo electrónico al que se enviará la factura:  
+							Correo electrónico al que se enviará la factura:
 						</div>
+						<?php 
+							if( isset($_SESSION["punto_venta"]["cliente"]["email"]) ){
+								$arrayMails = explode(",",$_SESSION["punto_venta"]["cliente"]["email"]);
+								$optionsMail = '';
+								while( list($keyMail, $valueMail) = each($arrayMails) ){
+									$optionsMail.='<option value="'.$valueMail.'">'.$valueMail.'</option>'; 
+								}
+							}
+						?>
 						<div class="col-md-5" >
-							<select class="form-control" id="correo_p_facturacion" name="correo_p_facturacion" ><option>Elegir un correo electrónico</option>  </select>
+							<select class="form-control" id="correo_p_facturacion" name="correo_p_facturacion" ><option value="0">Elegir un correo electrónico</option><?=$optionsMail?></select>
 						</div>
 					</div>
 				</div>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-				<button type="button" class="btn btn-primary">Guardar</button>
+				<button type="button" class="btn btn-primary" data-dismiss="modal" onclick="guarda_datos_facturacion();">Guardar</button>
 			</div>
 		</div>
 	</div>
@@ -853,6 +884,7 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 
     <!-- Steps -->
     <script src="<?=$raizProy?>js/plugins/staps/jquery.steps.min.js"></script>
+	
 
     <!-- Jquery Validate -->
     <script src="<?=$raizProy?>js/plugins/validate/jquery.validate.min.js"></script>
@@ -913,8 +945,17 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 
 		
 		var subtotal = <?=$totalVenta?>;
-		var costoActual = 0;
+<?php
+		if( isset($_SESSION["punto_venta"]["envio"]["costo_envio"]) && !empty($_SESSION["punto_venta"]["envio"]["costo_envio"])){
+			echo '		var costoActual = '.$_SESSION["punto_venta"]["envio"]["costo_envio"].';';
+		}
+		else {
+			echo '		var costoActual = 0;';
+		}
+?>
+
 		var stringPagoData = '';
+		var requiere_factura = false;
 		
         $(document).ready(function(){
 			
@@ -935,7 +976,7 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 			  "hideMethod": "fadeOut"
 			}
 			
-			$("#wizard").steps();
+			//$("#wizard").steps();
 			$("#metodosPago").chosen();
 			
 			$.fn.datepicker.defaults.language = 'es';
@@ -1195,7 +1236,7 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 					$("#costoEnvio").val('1501');
 					$("#spancostoEnvio").html("$1501 más");
 				}
-				actualizaCostoEnvio();
+				actualizaResumenVenta();
 			});
 			
 			
@@ -1353,16 +1394,24 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 				$('#divBuscaClienteEnvio').html(tableEnvio);
 				$('#divBuscaClienteFacturacion').html(tableEnvio);
 				
-				$("#inputBuscaCliente").focus(); // foco a input
-				$("#inputBuscaCliente").val(''); // reset a input
+				array_emails = email.split(",");
+				for (indice in array_emails){
+					$("#correo_p_facturacion").append('<option value="'+array_emails[indice]+'">'+array_emails[indice]+'</option>')
+				}
+				
+				//$("#inputBuscaCliente").focus(); // foco a input
+				
+				$("#inputBuscaCliente_0").val(''); // reset a input
+				$("#inputBuscaCliente").val('');
+				$("#inputBuscaCliente_1").val('');
 				//$("#product_list").fadeIn();
 							
 				
 			}
 			else
 			{
-				$("#inputBuscaCliente").focus();
-				$("#inputBuscaCliente").val('');
+				//$("#inputBuscaCliente").focus();
+				//$("#inputBuscaCliente").val('');
 				alert("El cliente ya ha sido ligado");
 			}
 		}
@@ -1584,6 +1633,10 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 			$('#divDireciconesClienteEnvio').html('');
 			$('#divDireciconesClienteFacturacion').html('');
 			
+			
+			$('#correo_p_facturacion').empty();
+			$('#correo_p_facturacion').append('<option value="0">Elegir un correo electrónico</option>');
+
 			var url="/clientes/ajax_remove_cliente_session.php";
 			$.ajax({
 				type: "POST",
@@ -1646,14 +1699,17 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 		   
 			maxObjIdTmp = 1;
 			
-		    numNuevoRestan = $('#spanRestanVentaOriginal').html();
-			numNuevoRestan = Number(subtotal) + Number(costoActual);
-		   
+			if( requiere_factura ){
+				numNuevoRestan = parseInt(costoActual) + ( parseInt(subtotal) * 1.16);
+			} else {
+				numNuevoRestan = parseInt(costoActual) + parseInt(subtotal);
+			}
+			numNuevoRestan = Math.round(numNuevoRestan);
 			while (maxObjIdTmp <= maxObjId) {
 				newValue = $('#metodo_'+maxObjIdTmp).val();
 				//alert(newValue);
 				if(typeof(newValue) != "undefined" && newValue!=''){
-					newValue =  Number(newValue);
+					newValue =  parseInt(newValue);
 					//alert("restar "+newValue);
 					numNuevoRestan = numNuevoRestan - newValue;
 				}
@@ -1705,16 +1761,21 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 						globalDataClient['id_'+val.cliente_direccion_id]['cliente_direccion_numero_int'] = val.cliente_direccion_numero_int;
 						
 						//separar botones de divs
+						
+						cssRowDireccion = 'class="direccionSinSeleccion"';
+						cssBtnElegir = 'mostrarElemento';
+						cssIcoElegir = 'ocultarElemento';
+						
 						if(val.cliente_direccion_tipo_id == 1 || val.cliente_direccion_tipo_id == 3){ //direcciones de facturación
 							newDivBtnsEnvio+= '<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo_'+val.cliente_direccion_id+'">'+val.cliente_direccion_calle+' '+val.cliente_direccion_numero_ext+'...</button> ';
-							newDivsEnvio+= '<div id="demo_'+val.cliente_direccion_id+'" class="collapse" style="font-size:14px;">'+val.cliente_direccion_calle+' '+val.cliente_direccion_numero_ext+' '+val.cliente_direccion_numero_int+' '+val.cliente_direccion_colonia+' '+val.cliente_direccion_municipio+', '+globalDataClient['id_'+val.cliente_direccion_id]['estado']+'. C.P. '+val.cliente_direccion_cp+' &nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-warning btn-xs" onclick="asociaDireccionEnvio('+val.cliente_direccion_id+');" style="margin:4px 0px;"> Elegir</button></div>';
+							newDivsEnvio+= '<div id="demo_'+val.cliente_direccion_id+'" class="collapse"><font id="demo_font_'+val.cliente_direccion_id+'" '+cssRowDireccion+'>'+val.cliente_direccion_calle+' '+val.cliente_direccion_numero_ext+' '+val.cliente_direccion_numero_int+' '+val.cliente_direccion_colonia+' '+val.cliente_direccion_municipio+', '+globalDataClient['id_'+val.cliente_direccion_id]['estado']+'. C.P. '+val.cliente_direccion_cp+'</font> &nbsp;&nbsp;&nbsp;<i id="demo_ico_'+val.cliente_direccion_id+'" class="fa fa-check-square '+cssIcoElegir+'" style="color:green;"></i><button type="button" class="btn btn-warning btn-xs '+cssBtnElegir+'" onclick="asociaDireccionEnvio('+val.cliente_direccion_id+');" style="margin:4px 0px;" id="demo_btn_'+val.cliente_direccion_id+'"> Elegir</button></div>';
 							
 							txtDireccionesFacturacion+= '<i class="fa fa-file-text-o"></i> '+val.cliente_direccion_calle+' '+val.cliente_direccion_numero_ext+' '+val.cliente_direccion_numero_int+' '+val.cliente_direccion_colonia+' '+val.cliente_direccion_municipio+', '+val.estado+'. C.P. '+val.cliente_direccion_cp+'<br>';
 						}
 						if(val.cliente_direccion_tipo_id == 2 || val.cliente_direccion_tipo_id == 3){ //direcciones de envio
 						
 							newDivBtnsFact+= '<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo_'+val.cliente_direccion_id+'">'+val.cliente_direccion_calle+' '+val.cliente_direccion_numero_ext+'...</button> ';
-							newDivsFact+= '<div id="demo_'+val.cliente_direccion_id+'" class="collapse" style="font-size:14px;">'+val.cliente_direccion_calle+' '+val.cliente_direccion_numero_ext+' '+val.cliente_direccion_numero_int+' '+val.cliente_direccion_colonia+' '+val.cliente_direccion_municipio+', '+globalDataClient['id_'+val.cliente_direccion_id]['estado']+'. C.P. '+val.cliente_direccion_cp+' &nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-warning btn-xs" onclick="asociaDireccionFact('+val.cliente_direccion_id+');" style="margin:4px 0px;"> Elegir</button></div>';
+							newDivsFact+= '<div id="demo_'+val.cliente_direccion_id+'" class="collapse"><font id="demo_font_'+val.cliente_direccion_id+'" '+cssRowDireccion+'>'+val.cliente_direccion_calle+' '+val.cliente_direccion_numero_ext+' '+val.cliente_direccion_numero_int+' '+val.cliente_direccion_colonia+' '+val.cliente_direccion_municipio+', '+globalDataClient['id_'+val.cliente_direccion_id]['estado']+'. C.P. '+val.cliente_direccion_cp+'</font> &nbsp;&nbsp;&nbsp;<i id="demo_ico_'+val.cliente_direccion_id+'" class="fa fa-check-square '+cssIcoElegir+'" style="color:green;"></i><button type="button" class="btn btn-warning btn-xs '+cssBtnElegir+'" onclick="asociaDireccionFact('+val.cliente_direccion_id+');" style="margin:4px 0px;" id="demo_btn_'+val.cliente_direccion_id+'"> Elegir</button></div>';
 							
 							txtDireccionesEnvio+= '<i class="fa fa-map-marker"></i> '+val.cliente_direccion_calle+' '+val.cliente_direccion_numero_ext+' '+val.cliente_direccion_numero_int+' '+val.cliente_direccion_colonia+' '+val.cliente_direccion_municipio+', '+globalDataClient['id_'+val.cliente_direccion_id]['estado']+'. C.P. '+val.cliente_direccion_cp+'<br>';
 						}
@@ -1758,27 +1819,62 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 			
 	   }
 	   
-	   function ventaSinFactura(){
-			$("#icoResumenFactura").removeClass("fa-check-circle-o");
-			$("#icoResumenFactura").addClass("fa-times-circle-o");
-			
-			$("#icoResumenFactura").removeClass("greenFont");
-			$("#icoResumenFactura").addClass("redFont");
-			
-	   }
-	   
-	   $('#data_1 .input-group.date').datepicker({
-	keyboardNavigation: false,
-	forceParse: false,
-	autoclose: true,
-	language: 'es'
-}).datepicker("setDate", "0");
+	function ventaSinFactura(){
+		$("#icoResumenFactura").removeClass("fa-check-circle-o");
+		$("#icoResumenFactura").addClass("fa-times-circle-o");
 
-	function actualizaCostoEnvio(){
+		$("#icoResumenFactura").removeClass("greenFont");
+		$("#icoResumenFactura").addClass("redFont");
+
+		var url="/clientes/ajax_unset_cliente_facturacion_data.php";
+
+		$.ajax({
+			type: "POST",
+			url: url,
+			success: function(data)
+			{
+				/*
+				swal({
+						title: "Sin envío!",
+						text: "Los datos de NO envío han sido guardados correctamente!",
+						type: "success"
+					}, function () {
+						
+					});
+				*/
+				$("#form").steps("next");
+				requiere_factura = false;
+				$("#h4_iva").html("$ 0");
+				actualizaResumenVenta();
+			}
+		});
+	}
+	   
+	function ventaConFactura(){
+		//$("#span_iva").css("display","block");
+		//$("#h4_iva").css("display","block");
+		$("#h4_iva").html("$ "+( parseInt(subtotal) * 0.16));
+		requiere_factura = true;
+		actualizaResumenVenta();
+	}
+	   
+	$('#data_1 .input-group.date').datepicker({
+		keyboardNavigation: false,
+		forceParse: false,
+		autoclose: true,
+		language: 'es'
+	}).datepicker("setDate", "0");
+
+	function actualizaResumenVenta(){
 		
-		costoActual = $("#costoEnvio").val();	
+		costoActual = $("#costoEnvio").val();
 		$("#costoEnvioEnPago").html("$ "+costoActual);
-		granTotalActual = Number(costoActual) + Number(subtotal);
+		if( requiere_factura ){
+			granTotalActual = parseInt(costoActual) + ( parseInt(subtotal) * 1.16);
+		} else {
+			granTotalActual = parseInt(costoActual) + parseInt(subtotal);
+		}
+		granTotalActual = Math.round(granTotalActual); // OJO
 		$("#granTotalEnPago").html("$ "+granTotalActual);
 		
 		recalculaRestaTotal();
@@ -1822,6 +1918,33 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 		ventaConEnvio();
 	}
 	
+	function guarda_datos_facturacion(){
+		//validar que se haya elegido un correo electrónico y una direccion de facturacion
+		var url="/clientes/ajax_set_cliente_facturacion_data.php";
+		
+		select_correo_factura_text = $("#correo_p_facturacion option:selected").text();
+		
+		$.ajax({
+			type: "POST",
+			url: url,
+			data: { 
+				cliente_direccion_id:currentClientDireccionIdFact, 
+				select_correo_factura:select_correo_factura_text			
+			}, 
+			success: function(data)
+			{
+				swal({
+						title: "Envio!",
+						text: "Los datos de facturación han sido guardados correctamente!",
+						type: "success"
+					}, function () {
+						ventaConFactura();
+					});
+			}
+		});
+		//
+	}
+	
 	function guarda_metodos_pago(){
 
 		var url="/clientes/ajax_set_metodos_pago.php";
@@ -1862,7 +1985,9 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 						text: "Los datos de NO envío han sido guardados correctamente!",
 						type: "success"
 					}, function () {
-						
+						$("#costoEnvioEnPago").html("$ 0");
+						$("#costoEnvio").val(0);
+						actualizaResumenVenta();
 					});
 			}
 		});
