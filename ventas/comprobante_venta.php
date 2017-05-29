@@ -162,7 +162,7 @@ if($flete)
 	$html.='<tr><td style="text-align:right;"><strong>Domicilio:</strong></td><td style="text-align:left;">'.$direccion.'</td></tr>';
 	$html.='<tr><td style="text-align:right;"><strong>Colonia:</strong></td><td style="text-align:left;">'.$flete['cliente_direccion_colonia'].'</td></tr>';
 	$html.='<tr><td style="text-align:right;"><strong>C.P.:</strong></td><td style="text-align:left;">'.$flete['cliente_direccion_cp'].'</td></tr>';
-	$html.='<tr><td style="text-align:right;"><strong>Delegación o<br>Municipio:</strong></td><td style="text-align:left;">'.$flete['cliente_direccion_municipio'].'</td></tr>';
+	$html.='<tr><td style="text-align:right;"><strong>Delegación o Municipio:</strong></td><td style="text-align:left;">'.$flete['cliente_direccion_municipio'].'</td></tr>';
 	$html.='<tr><td style="text-align:right;"></td><td></td></tr>';
 	$html.='</table>';
 	$html.='------------------------------------------------------------------------------------------';
