@@ -19,6 +19,15 @@ $hora=$f[1].' '.$f[2];
 $ticket=strtotime($v['fecha_creacion']).'-'.$venta_id;
 $vendedor='Edgar Isaac Montoya';
 
+if(isset($v['venta_flete_id']))
+{
+	$flete=$ventas->getAddress($v['venta_flete_id']);
+}
+else
+{
+	$flete="";
+}
+
 $html='';
 $html.='<style>';
 $html.='body{font-family: "Arial", Helvetica, sans-serif;}';
@@ -135,12 +144,30 @@ $html.='</table>';
 $html.='------------------------------------------------------------------------------------------';
 $html.='</div>';
 
-$html.='<div style="text-align:center;width:100%;font-size: 8px;">';
-$html.='<table>';
-$html.='<tr><td>Detalles de Pago:</td><td></td></tr>';
-$html.='</table>';
-$html.='------------------------------------------------------------------------------------------';
-$html.='</div>';
+if($flete)
+{
+	$html.='<div style="text-align:center;width:100%;font-size: 8px;">';
+	$html.='<table>';
+	
+	if(isset($flete['cliente_direccion_numero_int']))
+	{
+		$direccion=$flete['cliente_direccion_calle'].' '.$flete['cliente_direccion_numero_ext'].' '.$flete['cliente_direccion_numero_ext'];
+	}
+	else
+	{
+		$direccion=$flete['cliente_direccion_calle'].' '.$flete['cliente_direccion_numero_ext'];
+	}
+	
+	$html.='<tr><td style="text-align:right;"><strong>Datos de Envio</strong></td><td></td></tr>';
+	$html.='<tr><td style="text-align:right;"><strong>Domicilio:</strong></td><td style="text-align:left;">'.$direccion.'</td></tr>';
+	$html.='<tr><td style="text-align:right;"><strong>Colonia:</strong></td><td style="text-align:left;">'.$flete['cliente_direccion_colonia'].'</td></tr>';
+	$html.='<tr><td style="text-align:right;"><strong>C.P.:</strong></td><td style="text-align:left;">'.$flete['cliente_direccion_cp'].'</td></tr>';
+	$html.='<tr><td style="text-align:right;"><strong>Delegación o Municipio:</strong></td><td style="text-align:left;">'.$flete['cliente_direccion_municipio'].'</td></tr>';
+	$html.='<tr><td style="text-align:right;"></td><td></td></tr>';
+	$html.='</table>';
+	$html.='------------------------------------------------------------------------------------------';
+	$html.='</div>';
+}
 
 $html.='<div style="text-align:center;width:100%;font-size: 8px;">';
 $html.='GRACIAS POR SU COMPRA LO ESPERAMOS PRONTO<br>';
