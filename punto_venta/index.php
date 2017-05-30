@@ -449,7 +449,7 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 														Sub-total
 													</span>
 													<h4 class="font-bold text-right">
-														$ <?=$totalVenta?>            
+														$ <?=$totalVenta?>
 													</h4>
 													<span id="span_iva">
 														IVA
@@ -461,27 +461,40 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 														} else {
 															echo "0";
 														}
-														?>
-														            
+														?>   
 													</h4> 
 													<span>
-														Costo envío
+														Envío
 													</span>
 													<h4 class="font-bold text-right" id="costoEnvioEnPago"> 
-														$ <?=$totalEnvio?>  
+														$ <?=$totalEnvio?>
 													</h4>
 													<span>
 														Gran Total
 													</span>
 													<h4 class="font-bold text-right" id="granTotalEnPago"> 
-														$ <?=($totalVenta+$totalEnvio)?>  
+														$ <?php
+														if( isset( $_SESSION["punto_venta"]["facturacion"] ) ){
+															echo ($totalVenta*1.16)+$totalEnvio;
+														} else {
+															echo $totalVenta+$totalEnvio;
+														}
+														?>
 													</h4>
 													<span>
 														Restan
 													</span>
 													<h4 class="font-bold text-right">
-														<span id="spanRestanVenta" >$ <?=($totalVenta+$totalEnvio-$sumaDePagos)?></span>
-														<span style="display:none;" id="spanRestanVentaOriginal" ><?=$totalVenta?></span>                    
+														<span id="spanRestanVenta" >
+														$ <?php
+														if( isset( $_SESSION["punto_venta"]["facturacion"] ) ){
+															echo ($totalVenta*1.16)+$totalEnvio-$sumaDePagos;
+														} else {
+															echo $totalVenta+$totalEnvio-$sumaDePagos;
+														}
+														?>
+														
+														</span>                    
 													</h4>
 													
 												</div>
@@ -555,33 +568,35 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 									</div>
 									<div class="col-lg-4" style="padding-right: 0px; margin-top: 40px;">
 										<table class="table table-striped table-bordered">
-										<!-- <tr>
-												<td>Subtotal</td>
-												<td>$ 4,500</td>												
-											</tr>
-											<tr>
-												<td>IVA</td>
-												<td>$ 800</td>												
-											</tr> 
-											<tr>
-												<td>Descuento</td>
-												<td>$ 500</td>												
-											</tr> -->
 											<tr>
 												<td align="right"><b>Sub-total</b></td>
 												<td align="right">$ <?=$totalVenta?></td>												
 											</tr>
 											<tr>
 												<td align="right"><b>IVA</b></td>
-												<td align="right">$ 125</td>												
+												<td align="right" id="td_iva">
+												$ <?php
+														if( isset( $_SESSION["punto_venta"]["facturacion"] ) ){
+															echo ($totalVenta*.16);
+														} else {
+															echo "0";
+														}
+												?>
+												</td>												
 											</tr>
 											<tr>
 												<td align="right"><b>Envío</b></td>
-												<td align="right">$ <?=$totalVenta?></td>												
+												<td align="right" id="costoEnvioEnResumen">$ <?=$totalEnvio?></td>												
 											</tr>
 											<tr>
 												<td align="right"><b>Gran Total</b></td>
-												<td align="right"><h2>$ <?=$totalVenta?></h2></td>												
+												<td align="right" id="granTotalEnResumen"><h2>$ <?php
+														if( isset( $_SESSION["punto_venta"]["facturacion"] ) ){
+															echo ($totalVenta*1.16)+$totalEnvio;
+														} else {
+															echo $totalVenta+$totalEnvio;
+														}
+														?></h2></td>												
 											</tr>
 										</table>
 									</div>
@@ -955,7 +970,7 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 ?>
 
 		var stringPagoData = '';
-		var requiere_factura = false;
+		var requiere_factura = <?=(isset($_SESSION["punto_venta"]["facturacion"]))?"true":"false"?>;
 		
         $(document).ready(function(){
 			
@@ -1820,12 +1835,9 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 	   }
 	   
 	function ventaSinFactura(){
-		$("#icoResumenFactura").removeClass("fa-check-circle-o");
-		$("#icoResumenFactura").addClass("fa-times-circle-o");
-
-		$("#icoResumenFactura").removeClass("greenFont");
-		$("#icoResumenFactura").addClass("redFont");
-
+		$("#icoResumenFactura").removeClass();
+		$("#icoResumenFactura").addClass("fa fa-times-circle-o redFont");
+		
 		var url="/clientes/ajax_unset_cliente_facturacion_data.php";
 
 		$.ajax({
@@ -1851,8 +1863,9 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 	}
 	   
 	function ventaConFactura(){
-		//$("#span_iva").css("display","block");
-		//$("#h4_iva").css("display","block");
+		$("#icoResumenFactura").removeClass();
+		$("#icoResumenFactura").addClass("fa fa-check-square-o greenFont");
+		
 		$("#h4_iva").html("$ "+( parseInt(subtotal) * 0.16));
 		requiere_factura = true;
 		actualizaResumenVenta();
@@ -1869,6 +1882,8 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 		
 		costoActual = $("#costoEnvio").val();
 		$("#costoEnvioEnPago").html("$ "+costoActual);
+		$("#costoEnvioEnResumen").html("$ "+costoActual);
+		//alert(requiere_factura);
 		if( requiere_factura ){
 			granTotalActual = parseInt(costoActual) + ( parseInt(subtotal) * 1.16);
 		} else {
@@ -1876,6 +1891,7 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 		}
 		granTotalActual = Math.round(granTotalActual); // OJO
 		$("#granTotalEnPago").html("$ "+granTotalActual);
+		$("#granTotalEnResumen").html("$ "+granTotalActual);
 		
 		recalculaRestaTotal();
 	}
@@ -1986,6 +2002,7 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 						type: "success"
 					}, function () {
 						$("#costoEnvioEnPago").html("$ 0");
+						$("#costoEnvioEnResumen").html("$ 0");
 						$("#costoEnvio").val(0);
 						actualizaResumenVenta();
 					});
