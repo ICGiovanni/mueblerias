@@ -152,29 +152,31 @@ cursor: default;
                     	$tr.='<td>'.$sucursal_entrada.'</td>';
                     	$tr.='<td>'.$fecha_entrada.'</td>';
                     	$tr.='<td>'.$estatus_etiqueta.'</td>';
-                    	$tr.='<td><div class="infont col-md-1 col-sm-1">';
-                    	$tr.='<a href="#" class="link_modal" data-toggle="modal" data-target="#modal_view" data-id="'.$movimiento_id.'"  id="open_modal">';
+                    	$tr.='<td>';
+                    	$tr.='<div class="infont col-md-1 col-sm-1"><a href="#" class="link_modal" data-toggle="modal" data-target="#modal_view" data-id="'.$movimiento_id.'"  id="open_modal">';
                     	
                     	if($nota_entrega || $nota_salida)
                     	{
-                    		$tr.='<i class="fa fa-file-text-o"></i></a>';
+                    		$tr.='<i class="fa fa-file-text-o"></i></a></div>';
                     	}
                     	else 
                     	{
-                    		$tr.='<i class="fa fa-search"></i></a>';
+                    		$tr.='<i class="fa fa-search"></i></a></div>';
                     	}
                     	
                     	if($estatus=='PE')
                     	{
-                    		$tr.='<a href="#" class="link_modal_check" data-toggle="modal" data-target="#modal_check" data-id="'.$movimiento_id.'" id="open_modal"><i class="fa fa-check"></i></a>';
+                    		$tr.='<div class="infont col-md-1 col-sm-1"><a href="#" class="link_modal_check" data-toggle="modal" data-target="#modal_check" data-id="'.$movimiento_id.'" id="open_modal"><i class="fa fa-check"></i></a></div>';
+                    		$tr.='<div class="infont col-md-1 col-sm-1"><a href="comprobante_salida.php?m='.$movimiento_id.'" target="_blank"><i class="fa fa-paper-plane-o"></i></a></div>';
                     	}
                     	
                     	if($estatus=='ET')
                     	{
-                    		$tr.='<a href="comprobante_salida.php?m='.$movimiento_id.'" target="_blank" class="link_modal_check"><i class="fa fa-ticket"></i></a>';
+                    		$tr.='<div class="infont col-md-1 col-sm-1"><a href="comprobante_salida.php?m='.$movimiento_id.'" target="_blank"><i class="fa fa-paper-plane-o"></i></a></div>';
+                    		$tr.='<div class="infont col-md-1 col-sm-1"><a href="comprobante_entrada.php?m='.$movimiento_id.'" target="_blank"><i class="fa fa-paper-plane"></i></a></div>';
                     	}
                     	
-                        $tr.='</div></td>';
+                        $tr.='</td>';
                     	$tr.='</tr>';
                     	
                     }
