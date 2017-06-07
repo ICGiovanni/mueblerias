@@ -20,7 +20,7 @@ $vendedor=$result['usuario_salida'];
 
 $html='';
 $html.='<style>';
-$html.='body{font-family: "Arial", Helvetica, sans-serif;}';
+$html.='body{font-family: "Verdana", Geneva, sans-serif;}';
 $html.='</style>';
 $html.='<div style="text-align:center;font-size: 8px;">';
 $html.='<table>';
@@ -31,10 +31,10 @@ $html.='<tr>';
 $html.='<td></td>';
 $html.='</tr>';
 $html.='</table>';
-$html.='<table style="padding-right:8px;">';
+$html.='<table style="padding-right:8px;" width="100%">';
 $html.='<tr>';
 $html.='<td align="left"><strong>Fecha:</strong> '.$fecha.'</td>';
-$html.='<td align="left"><strong>Hora:</strong> '.$hora.'</td>';
+$html.='<td align="rigth"><strong>Hora:</strong> '.$hora.'</td>';
 $html.='</tr>';
 $html.='<tr>';
 $html.='<td align="left"><strong>No. Movimiento:</strong> '.$move_id.'</td>';
@@ -42,7 +42,7 @@ $html.='<td></td>';
 $html.='</tr>';
 $html.='<tr>';
 $html.='<td align="left"><strong>Vendedor:</strong> '.$vendedor.'</td>';
-$html.='<td align="left"><div><strong>1 / 2</strong></div></td>';
+$html.='<td align="rigth"><div><strong>1 / 2</strong></div></td>';
 $html.='</tr>';
 $html.='</table><br><br>';
 $html.='<strong>+++++++++++ MOV. MERCANCIA +++++++++++</strong><br><br>';
@@ -53,20 +53,21 @@ $html.='</div>';
 $html.='<div style="text-align:center;width:100%;font-size: 8px;">';
 $html.='<table>';
 $html.='<tr>
-	<th align="center"><strong>DESCRIPCIÓN/CODIGO</strong></th>
+	<th align="left" width="55%"><strong>DESCRIPCIÓN / CODIGO</strong></th>
 	<th align="center"><strong>CANT.</strong></th>
 	</tr>';
+$html.='<tr><td></td><td align="center"></td></tr>';
 $productos=$inventarios->GetProductsMove($move_id);
 $cantidad=0;
 foreach($productos as $p)
 {
-	$html.='<tr><td>'.$p['producto'].'</td><td align="center">'.$p['cantidad'].'</td></tr>';
+	$html.='<tr><td width="55%" align="left">'.$p['producto'].'<br>'.$p['producto_sku'].'</td><td align="center">'.$p['cantidad'].'</td></tr>';
 	$cantidad=$cantidad+$p['cantidad'];
 }
 
 $html.='<tr><td></td><td align="center">__________</td></tr>';
-$html.='<tr><td><strong>No. de Articulos:</strong></td><td align="center">'.$cantidad.'</td></tr>';
-
+$html.='<tr><td width="55%" align="left"><strong>No. de Articulos:</strong></td><td align="center">'.$cantidad.'</td></tr>';
+$html.='<tr><td></td><td align="center"></td></tr>';
 $html.='</table>';
 $html.='-----------------------------------------------------------------------------------------';
 $html.='</div>';
@@ -82,6 +83,9 @@ $html.='<tr><td align="left"></td></tr>';
 $html.='<tr><td align="left"><strong>Tipo de Movimiento:</strong> Interno</td></tr>';
 $html.='<tr><td align="left"><strong>Chofer:</strong> '.$result['chofer'].'</td></tr>';
 $html.='<tr><td align="left"><strong>Observaciones:</strong> '.$result['nota_salida'].'</td></tr>';
+$html.='<tr><td></td><td align="center"></td></tr>';
+$html.='<tr><td align="left"><strong>Destino Sucursal::</strong> '.$result['sucursal_entrega'].'</td></tr>';
+$html.='<tr><td></td><td align="center"></td></tr>';
 $html.='</table>';
 $html.='-----------------------------------------------------------------------------------------';
 $html.='</div>';
@@ -92,13 +96,13 @@ $html.='<tr>';
 $html.='<td><img src="http://globmint.com/img/rectangulo.png" class="header_logo " alt="Globmint" height="60" width="170"></td>';
 $html.='</tr>';
 $html.='<tr>';
-$html.='<td>Firma de Salida de Mercancia</td>';
+$html.='<td>Firma de Entrada de Mercancia</td>';
 $html.='</tr>';
 $html.='</table>';
 $html.='</div>';
 
 $width="72";
-$height="120";
+$height="150";
 $custom_layout = array($width, $height);
 $pdf = new TCPDF('P', 'mm', $custom_layout, true, 'UTF-8', false);
 /*$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
@@ -123,7 +127,7 @@ $pdf->SetAutoPageBreak(TRUE,0);
 
 $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 
-$pdf->SetFont('times', '', 8);
+//$pdf->SetFont('tahoma', '', 8);
 
 $pdf->AddPage();
 
