@@ -13,7 +13,7 @@ while( list ($KeyMP, $valueMP) = each($arrayMetodosPago) ){
 }
 
 if(!isset($_SESSION["punto_venta"])){
-	die("Agregar productos al carrito");
+	die("Debe agregar al menos un producto al carrito de compras");
 }
 else{
 	$trProductos = '';
@@ -531,39 +531,75 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 										fa-question-circle
 										-->
 										<?php
-											$datosDireccion = array();
+											
 											$txtDivInfoResumenEnvio = '';
+											$txtDivInfoResumenFact = '';
+											
 											$cssIcoResumenEnvio = 'fa fa-question-circle';
+											$cssIcoResumenFact = 'fa fa-question-circle';
 											
 											if(isset($_SESSION["punto_venta"]["envio"])){
-												reset($_SESSION["punto_venta"]["cliente"]["direcciones"]);
-												while ( list($keyDirecciones, $valueDirecciones) = each( $_SESSION["punto_venta"]["cliente"]["direcciones"] )){
-													if($valueDirecciones["cliente_direccion_id"] == $_SESSION["punto_venta"]["envio"]["cliente_direccion_id"]){
-														$datosDireccion = $valueDirecciones;
+												if($_SESSION["punto_venta"]["envio"]["cliente_direccion_id"] == "0"){ //eligio sin envio
+													$cssIcoResumenEnvio = 'fa fa-times-circle-o redFont';
+													$txtDivInfoResumenEnvio.= 'Sin envío';
+												} else {
+												
+													$datosDireccion = array();
+													reset($_SESSION["punto_venta"]["cliente"]["direcciones"]);
+													while ( list($keyDirecciones, $valueDirecciones) = each( $_SESSION["punto_venta"]["cliente"]["direcciones"] )){
+														if($valueDirecciones["cliente_direccion_id"] == $_SESSION["punto_venta"]["envio"]["cliente_direccion_id"]){
+															$datosDireccion = $valueDirecciones;
+														}
+													}
+													if(!empty($datosDireccion)){
+														$cssIcoResumenEnvio = 'fa fa-check-square-o greenFont';
+														$txtDivInfoResumenEnvio.= $datosDireccion["cliente_direccion_calle"]." ".$datosDireccion["cliente_direccion_numero_ext"]." ".$datosDireccion["cliente_direccion_numero_int"]."<br>";
+														$txtDivInfoResumenEnvio.= $datosDireccion["cliente_direccion_colonia"]." ".$datosDireccion["cliente_direccion_municipio"].", ".$datosDireccion["estado"].". CP ".$datosDireccion["cliente_direccion_cp"]."<br>";
+														$txtDivInfoResumenEnvio.= "Fecha de entrega: ".$_SESSION["punto_venta"]["envio"]["fecha_hora_entrega"]."<br>";
+													}
+													
+												}
+											}
+											
+											
+											if(isset($_SESSION["punto_venta"]["facturacion"])){
+												
+												if($_SESSION["punto_venta"]["facturacion"]["cliente_direccion_id"] == "0"){ //eligio sin envio
+													$cssIcoResumenFact = 'fa fa-times-circle-o redFont';
+													$txtDivInfoResumenFact.= 'Sin factura';
+												} else {
+													
+													$datosDireccion = array();
+													reset($_SESSION["punto_venta"]["cliente"]["direcciones"]);
+													while ( list($keyDirecciones, $valueDirecciones) = each( $_SESSION["punto_venta"]["cliente"]["direcciones"] )){
+														if($valueDirecciones["cliente_direccion_id"] == $_SESSION["punto_venta"]["facturacion"]["cliente_direccion_id"]){
+															$datosDireccion = $valueDirecciones;
+														}
+													}
+													
+													if(!empty($datosDireccion)){
+														//print_r($datosDireccion);
+														
+														$cssIcoResumenFact = 'fa fa-check-square-o greenFont';
+														$txtDivInfoResumenFact.= "Razón Social: ".$datosDireccion["cliente_direccion_razon_social"]."<br>";
+														$txtDivInfoResumenFact.= "RFC: ".$datosDireccion["cliente_direccion_rfc"]."<br>";
+														$txtDivInfoResumenFact.= $datosDireccion["cliente_direccion_calle"]." ".$datosDireccion["cliente_direccion_numero_ext"]." ".$datosDireccion["cliente_direccion_numero_int"]."<br>";
+														$txtDivInfoResumenFact.= $datosDireccion["cliente_direccion_colonia"]." ".$datosDireccion["cliente_direccion_municipio"].", ".$datosDireccion["estado"].". CP ".$datosDireccion["cliente_direccion_cp"]."<br>";
+														$txtDivInfoResumenFact.= "enviar factura a: ".$_SESSION["punto_venta"]["facturacion"]["select_correo_factura"]."<br>";
 													}
 												}
 											}
 											
-											if(!empty($datosDireccion)){
-												$cssIcoResumenEnvio = 'fa fa-check-square-o greenFont';
-												$txtDivInfoResumenEnvio.= $datosDireccion["cliente_direccion_calle"]." ".$datosDireccion["cliente_direccion_numero_ext"]." ".$datosDireccion["cliente_direccion_numero_int"]."<br>";
-												$txtDivInfoResumenEnvio.= $datosDireccion["cliente_direccion_colonia"]." ".$datosDireccion["cliente_direccion_municipio"].", ".$datosDireccion["estado"]."<br>";
-												$txtDivInfoResumenEnvio.= "C.P. ".$datosDireccion["cliente_direccion_cp"]."<br>";
-												$txtDivInfoResumenEnvio.= "Fecha de entrega: ".$_SESSION["punto_venta"]["envio"]["fecha_hora_entrega"]."<br>";
-											}
+											
 										?>
 										<i id="icoResumenEnvio" class="<?=$cssIcoResumenEnvio?>" style="font-size:20px;"></i> &nbsp;<font style="font-size:15px;"><b>Envío a domicilio</b></font>
 										<div id="divInfoResumenEnvio">
 											<?=$txtDivInfoResumenEnvio?>
 										</div>
 										<br>
-										<i id="icoResumenFactura" class="fa fa-question-circle" style="font-size:20px;"></i> &nbsp;<font style="font-size:15px;"><b>Requiere Factura</b></font>
+										<i id="icoResumenFactura" class="<?=$cssIcoResumenFact?>" style="font-size:20px;"></i> &nbsp;<font style="font-size:15px;"><b>Requiere Factura</b></font>
 										<div id="divInfoResumenFactura">
-											<!--<b>Luis Mario Rodriguez</b><br>
-											<b>LMRO098765AG7</b><br>
-											Calle Luis Barrera, Fraccionamiento Ojo de Pato<br>
-											Cuautitlan Izcalli, Estado de México, C.P. 58252<br>
-											lmrodriguez@gmail.com<br>-->
+											<?=$txtDivInfoResumenFact?>
 										</div>
 									</div>
 									<div class="col-lg-4" style="padding-right: 0px; margin-top: 40px;">
@@ -911,8 +947,10 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 
     <script>
 	
-		currentClientDireccionIdEnvio = 0;
-		currentClientDireccionIdFact = 0;
+		var currentClientDireccionIdEnvio = 0;
+		var currentClientDireccionIdFact = 0;
+		var bandera_datos_completos_envio = false;
+		var bandera_datos_completos_fact = false;
 <?php
 		if( isset($_SESSION["punto_venta"]["cliente"]["cliente_direccion_id_envio"]) ){
 			echo "
@@ -944,6 +982,9 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 		globalDataClient['id_".$valueA["cliente_direccion_id"]."']['cliente_direccion_municipio'] = '".str_replace("'","\'",$valueA["cliente_direccion_municipio"])."';
 		globalDataClient['id_".$valueA["cliente_direccion_id"]."']['estado'] = '".str_replace("'","\'",$valueA["estado"])."';
 		globalDataClient['id_".$valueA["cliente_direccion_id"]."']['cliente_direccion_cp'] = '".$valueA["cliente_direccion_cp"]."';
+		globalDataClient['id_".$valueA["cliente_direccion_id"]."']['cliente_direccion_rfc'] = '".$valueA["cliente_direccion_rfc"]."';
+		globalDataClient['id_".$valueA["cliente_direccion_id"]."']['cliente_direccion_razon_social'] = '".$valueA["cliente_direccion_razon_social"]."';
+		globalDataClient['id_".$valueA["cliente_direccion_id"]."']['cliente_direccion_entre_calles'] = '".$valueA["cliente_direccion_entre_calles"]."';
 		";	
 		
 			}
@@ -1015,9 +1056,26 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
                     {
                         return true;
                     }
+					
+					if(newIndex === 2){
+						//alert("envio completo: "+bandera_datos_completos_envio);
+						if(!bandera_datos_completos_envio){
+							toastr.error("Debe elegir si requiere envío o no");
+							return false;
+						}
+						
+					}
 
-                    // Forbid suppressing "Warning" step if the user is to young
-                    if (newIndex === 4)
+                    if(newIndex === 3){
+						//alert("envio completo: "+bandera_datos_completos_envio);
+						if(!bandera_datos_completos_fact){
+							toastr.error("Debe elegir si requiere factura o no");
+							return false;
+						}
+						
+					}
+					// Forbid suppressing "Warning" step if the user is to young
+                    if (newIndex === 4) // validacion de pagos
                     {
 						envia_falso = false;
 						maxObjIdTmp = 1;
@@ -1124,28 +1182,60 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
                 },
                 onFinished: function (event, currentIndex)
                 {
-                    var form = $(this);
-					
-					url = '/ventas/ajax/guardarCompra.php';
-					$.ajax(
-					{
-						type: "POST",
-						url: url,
-						success: function(data)
+					//alert(currentIndex);
+					//var form = $(this);
+					if(currentIndex == 4){
+						url = '/ventas/ajax/guardarCompra.php';
+						$.ajax(
 						{
-							swal({
-								title: "Compra Realizada!",
-								text: "La compra se ha registrado!",
-								type: "success"
-								}, function () {
-								
-							});
-						}
-					});
+							type: "POST",
+							url: url,
+							success: function(data)
+							{
+								alert(data);
+								swal({
+									title: "Compra Realizada!",
+									text: "La compra se ha registrado!",
+									type: "success"
+									}, function () {
+										
+								});
+							}
+						});
+					} else {
+						toastr.error("Datos incompletos, aun no se puede finalizar la compra");
+						return false;
+					}
 					
                     // Submit form input
                     //form.submit();
-                }
+                },
+				onCanceled: function (event, currentIndex)
+				{
+					swal({
+					  title: "¿ Estás seguro de cancelar esta venta ?",
+					  text: "Se eliminaran los datos de la venta",
+					  type: "warning",
+					  showCancelButton: true,
+					  confirmButtonColor: "#DD6B55",
+					  confirmButtonText: "Borrar",
+					  cancelButtonText: "Cancelar",
+					  closeOnConfirm: false,
+					},
+					function(isConfirm){
+						if (isConfirm) {
+							borrar_datos_venta();
+							swal({
+								title: "Venta Cancelada!", 
+								text: "Se ha borrado el avance de la venta", 
+								type: "success"			
+							}, function () {
+								location.href = '/ventas/index.php';
+							});
+						}
+					});
+
+				}
             }).validate({
                         errorPlacement: function (error, element)
                         {
@@ -1546,13 +1636,13 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 				data: {cliente_direccion_id: cliente_direccion_id}, // serializes the form's elements.
 				success: function(data)
 				{
-					swal({
+					/*swal({
 						title: "Guardado!",
 						text: "Dirección de envío vinculada correctamente!",
 						type: "success"
 					}, function () {
 						
-					});
+					});*/
 				}
 			});
 			
@@ -1577,23 +1667,11 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 			$("#demo_font_"+currentClientDireccionIdEnvio).removeClass("direccionSeleccionada");
 			$("#demo_font_"+currentClientDireccionIdEnvio).addClass("direccionSinSeleccion");
 			currentClientDireccionIdEnvio = cliente_direccion_id;
-			
-			/////
-			
-			txtDireccionEnvio = globalDataClient['id_'+currentClientDireccionIdEnvio]['cliente_direccion_calle']+" "+globalDataClient['id_'+currentClientDireccionIdEnvio]['cliente_direccion_numero_ext']+", "+globalDataClient['id_'+currentClientDireccionIdEnvio]['cliente_direccion_colonia']+"<br>";
-			txtDireccionEnvio+= globalDataClient['id_'+currentClientDireccionIdEnvio]['cliente_direccion_municipio']+", "+globalDataClient['id_'+currentClientDireccionIdEnvio]['estado']+". C.P. "+globalDataClient['id_'+currentClientDireccionIdEnvio]['cliente_direccion_cp']+"<br>";
-			
-			fec_ven_arr = $("#pv_fecha_vencimiento").val().split("/");
-			
-			txtDireccionEnvio+="Fecha y hora de entrega: "+fec_ven_arr[0]+"/"+meses[fec_ven_arr[1]]+"/"+fec_ven_arr[2]+" "+$("#pv_hora_vencimiento").val()+" hrs<br>";
-			
-			//
-	
-			$("#divInfoResumenEnvio").html(txtDireccionEnvio);
 	
 	   }
 	   
 	   function asociaDireccionFact(cliente_direccion_id){
+		   
 		   var url="/clientes/ajax_asocia_direccion_fact.php";
 					 
 			$.ajax({
@@ -1602,13 +1680,14 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 				data: {cliente_direccion_id: cliente_direccion_id}, // serializes the form's elements.
 				success: function(data)
 				{
+					/*
 					swal({
 						title: "Guardado!",
 						text: "Dirección de facturación vinculada correctamente!",
 						type: "success"
 					}, function () {
 						
-					});
+					});*/
 				}
 			});
 			
@@ -1634,10 +1713,6 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 			$("#demo_font_"+currentClientDireccionIdFact).addClass("direccionSinSeleccion");
 			currentClientDireccionIdFact = cliente_direccion_id;
 			
-			txtDireccionFact = globalDataClient['id_'+currentClientDireccionIdFact]['cliente_direccion_calle']+" "+globalDataClient['id_'+currentClientDireccionIdFact]['cliente_direccion_numero_ext']+", "+globalDataClient['id_'+currentClientDireccionIdFact]['cliente_direccion_colonia']+"<br>";
-			txtDireccionFact+= globalDataClient['id_'+currentClientDireccionIdFact]['cliente_direccion_municipio']+", "+globalDataClient['id_'+currentClientDireccionIdFact]['estado']+". C.P. "+globalDataClient['id_'+currentClientDireccionIdFact]['cliente_direccion_cp']+"<br>";
-			
-			$("#divInfoResumenFactura").html(txtDireccionFact);
 	   }
 	   
 	   function removeCliente(cliente_id){
@@ -1770,6 +1845,10 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 						globalDataClient['id_'+val.cliente_direccion_id]['estado'] = val.estado;
 						globalDataClient['id_'+val.cliente_direccion_id]['cliente_direccion_cp'] = val.cliente_direccion_cp;
 						
+						globalDataClient['id_'+val.cliente_direccion_id]['cliente_direccion_rfc'] = val.cliente_direccion_rfc;
+						globalDataClient['id_'+val.cliente_direccion_id]['cliente_direccion_razon_social'] = val.cliente_direccion_razon_social;
+						globalDataClient['id_'+val.cliente_direccion_id]['cliente_direccion_entre_calles'] = val.cliente_direccion_entre_calles;
+						
 						if( typeof(val.cliente_direccion_numero_int) != 'string'){
 							val.cliente_direccion_numero_int = '';
 						} 
@@ -1782,15 +1861,15 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 						cssIcoElegir = 'ocultarElemento';
 						
 						if(val.cliente_direccion_tipo_id == 1 || val.cliente_direccion_tipo_id == 3){ //direcciones de facturación
-							newDivBtnsEnvio+= '<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo_'+val.cliente_direccion_id+'">'+val.cliente_direccion_calle+' '+val.cliente_direccion_numero_ext+'...</button> ';
-							newDivsEnvio+= '<div id="demo_'+val.cliente_direccion_id+'" class="collapse"><font id="demo_font_'+val.cliente_direccion_id+'" '+cssRowDireccion+'>'+val.cliente_direccion_calle+' '+val.cliente_direccion_numero_ext+' '+val.cliente_direccion_numero_int+' '+val.cliente_direccion_colonia+' '+val.cliente_direccion_municipio+', '+globalDataClient['id_'+val.cliente_direccion_id]['estado']+'. C.P. '+val.cliente_direccion_cp+'</font> &nbsp;&nbsp;&nbsp;<i id="demo_ico_'+val.cliente_direccion_id+'" class="fa fa-check-square '+cssIcoElegir+'" style="color:green;"></i><button type="button" class="btn btn-warning btn-xs '+cssBtnElegir+'" onclick="asociaDireccionEnvio('+val.cliente_direccion_id+');" style="margin:4px 0px;" id="demo_btn_'+val.cliente_direccion_id+'"> Elegir</button></div>';
+							newDivBtnsFact+= '<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo_'+val.cliente_direccion_id+'">'+val.cliente_direccion_calle+' '+val.cliente_direccion_numero_ext+'...</button> ';
+							newDivsFact+= '<div id="demo_'+val.cliente_direccion_id+'" class="collapse"><font id="demo_font_'+val.cliente_direccion_id+'" '+cssRowDireccion+'>'+val.cliente_direccion_calle+' '+val.cliente_direccion_numero_ext+' '+val.cliente_direccion_numero_int+' '+val.cliente_direccion_colonia+' '+val.cliente_direccion_municipio+', '+globalDataClient['id_'+val.cliente_direccion_id]['estado']+'. C.P. '+val.cliente_direccion_cp+'</font> &nbsp;&nbsp;&nbsp;<i id="demo_ico_'+val.cliente_direccion_id+'" class="fa fa-check-square '+cssIcoElegir+'" style="color:green;"></i><button type="button" class="btn btn-warning btn-xs '+cssBtnElegir+'" onclick="asociaDireccionFact('+val.cliente_direccion_id+');" style="margin:4px 0px;" id="demo_btn_'+val.cliente_direccion_id+'"> Elegir</button></div>';
 							
 							txtDireccionesFacturacion+= '<i class="fa fa-file-text-o"></i> '+val.cliente_direccion_calle+' '+val.cliente_direccion_numero_ext+' '+val.cliente_direccion_numero_int+' '+val.cliente_direccion_colonia+' '+val.cliente_direccion_municipio+', '+val.estado+'. C.P. '+val.cliente_direccion_cp+'<br>';
 						}
 						if(val.cliente_direccion_tipo_id == 2 || val.cliente_direccion_tipo_id == 3){ //direcciones de envio
 						
-							newDivBtnsFact+= '<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo_'+val.cliente_direccion_id+'">'+val.cliente_direccion_calle+' '+val.cliente_direccion_numero_ext+'...</button> ';
-							newDivsFact+= '<div id="demo_'+val.cliente_direccion_id+'" class="collapse"><font id="demo_font_'+val.cliente_direccion_id+'" '+cssRowDireccion+'>'+val.cliente_direccion_calle+' '+val.cliente_direccion_numero_ext+' '+val.cliente_direccion_numero_int+' '+val.cliente_direccion_colonia+' '+val.cliente_direccion_municipio+', '+globalDataClient['id_'+val.cliente_direccion_id]['estado']+'. C.P. '+val.cliente_direccion_cp+'</font> &nbsp;&nbsp;&nbsp;<i id="demo_ico_'+val.cliente_direccion_id+'" class="fa fa-check-square '+cssIcoElegir+'" style="color:green;"></i><button type="button" class="btn btn-warning btn-xs '+cssBtnElegir+'" onclick="asociaDireccionFact('+val.cliente_direccion_id+');" style="margin:4px 0px;" id="demo_btn_'+val.cliente_direccion_id+'"> Elegir</button></div>';
+							newDivBtnsEnvio+= '<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo_'+val.cliente_direccion_id+'">'+val.cliente_direccion_calle+' '+val.cliente_direccion_numero_ext+'...</button> ';
+							newDivsEnvio+= '<div id="demo_'+val.cliente_direccion_id+'" class="collapse"><font id="demo_font_'+val.cliente_direccion_id+'" '+cssRowDireccion+'>'+val.cliente_direccion_calle+' '+val.cliente_direccion_numero_ext+' '+val.cliente_direccion_numero_int+' '+val.cliente_direccion_colonia+' '+val.cliente_direccion_municipio+', '+globalDataClient['id_'+val.cliente_direccion_id]['estado']+'. C.P. '+val.cliente_direccion_cp+'</font> &nbsp;&nbsp;&nbsp;<i id="demo_ico_'+val.cliente_direccion_id+'" class="fa fa-check-square '+cssIcoElegir+'" style="color:green;"></i><button type="button" class="btn btn-warning btn-xs '+cssBtnElegir+'" onclick="asociaDireccionEnvio('+val.cliente_direccion_id+');" style="margin:4px 0px;" id="demo_btn_'+val.cliente_direccion_id+'"> Elegir</button></div>';
 							
 							txtDireccionesEnvio+= '<i class="fa fa-map-marker"></i> '+val.cliente_direccion_calle+' '+val.cliente_direccion_numero_ext+' '+val.cliente_direccion_numero_int+' '+val.cliente_direccion_colonia+' '+val.cliente_direccion_municipio+', '+globalDataClient['id_'+val.cliente_direccion_id]['estado']+'. C.P. '+val.cliente_direccion_cp+'<br>';
 						}
@@ -1826,19 +1905,28 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 	   function ventaConEnvio(){
 			$("#icoResumenEnvio").removeClass();
 			$("#icoResumenEnvio").addClass("fa fa-check-square-o greenFont");
+			
+			txtDireccionEnvio = globalDataClient['id_'+currentClientDireccionIdEnvio]['cliente_direccion_calle']+" "+globalDataClient['id_'+currentClientDireccionIdEnvio]['cliente_direccion_numero_ext']+", "+globalDataClient['id_'+currentClientDireccionIdEnvio]['cliente_direccion_colonia']+"<br>";
+			txtDireccionEnvio+= globalDataClient['id_'+currentClientDireccionIdEnvio]['cliente_direccion_municipio']+", "+globalDataClient['id_'+currentClientDireccionIdEnvio]['estado']+". C.P. "+globalDataClient['id_'+currentClientDireccionIdEnvio]['cliente_direccion_cp']+"<br>";
+			fec_ven_arr = $("#pv_fecha_vencimiento").val().split("/");
+			txtDireccionEnvio+="Fecha y hora de entrega: "+fec_ven_arr[0]+"/"+meses[fec_ven_arr[1]]+"/"+fec_ven_arr[2]+" "+$("#pv_hora_vencimiento").val()+" hrs<br>";
+	
+			$("#divInfoResumenEnvio").html(txtDireccionEnvio);
 	   }
 	   
 	   function ventaSinEnvio(){
 			$("#icoResumenEnvio").removeClass();
 			$("#icoResumenEnvio").addClass("fa fa-times-circle-o redFont");
+			$("#divInfoResumenEnvio").html("Sin envío");
 			
 	   }
 	   
 	function ventaSinFactura(){
 		$("#icoResumenFactura").removeClass();
 		$("#icoResumenFactura").addClass("fa fa-times-circle-o redFont");
+		$("#divInfoResumenFactura").html("Sin factura");
 		
-		var url="/clientes/ajax_unset_cliente_facturacion_data.php";
+		var url="/clientes/ajax_set_cliente_sin_factura_data.php";
 
 		$.ajax({
 			type: "POST",
@@ -1854,9 +1942,11 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 						
 					});
 				*/
-				$("#form").steps("next");
 				requiere_factura = false;
+				bandera_datos_completos_fact = true;
+				$("#form").steps("next");
 				$("#h4_iva").html("$ 0");
+				$("#td_iva").html("$ 0");
 				actualizaResumenVenta();
 			}
 		});
@@ -1866,8 +1956,16 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 		$("#icoResumenFactura").removeClass();
 		$("#icoResumenFactura").addClass("fa fa-check-square-o greenFont");
 		
+		txtDireccionFact = "Razón Social: "+globalDataClient['id_'+currentClientDireccionIdFact]['cliente_direccion_razon_social']+"<br>";
+		txtDireccionFact+= "RFC: "+globalDataClient['id_'+currentClientDireccionIdFact]['cliente_direccion_rfc']+"<br>";
+		txtDireccionFact+= globalDataClient['id_'+currentClientDireccionIdFact]['cliente_direccion_calle']+" "+globalDataClient['id_'+currentClientDireccionIdFact]['cliente_direccion_numero_ext']+", "+globalDataClient['id_'+currentClientDireccionIdFact]['cliente_direccion_colonia']+"<br>";
+		txtDireccionFact+= globalDataClient['id_'+currentClientDireccionIdFact]['cliente_direccion_municipio']+", "+globalDataClient['id_'+currentClientDireccionIdFact]['estado']+". C.P. "+globalDataClient['id_'+currentClientDireccionIdFact]['cliente_direccion_cp']+"<br>";
+		
+		$("#divInfoResumenFactura").html(txtDireccionFact);
+		
 		$("#h4_iva").html("$ "+( parseInt(subtotal) * 0.16));
-		requiere_factura = true;
+		$("#td_iva").html("$ "+( parseInt(subtotal) * 0.16));
+		
 		actualizaResumenVenta();
 	}
 	   
@@ -1927,16 +2025,18 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 						text: "Los datos de envío han sido guardados correctamente!",
 						type: "success"
 					}, function () {
-						
+						bandera_datos_completos_envio = true;
+						$("#form").steps("next");
+						ventaConEnvio();
 					});
 			}
 		});
-		ventaConEnvio();
+		
 	}
 	
 	function guarda_datos_facturacion(){
 		//validar que se haya elegido un correo electrónico y una direccion de facturacion
-		var url="/clientes/ajax_set_cliente_facturacion_data.php";
+		var url="/clientes/ajax_set_cliente_factura_data.php";
 		
 		select_correo_factura_text = $("#correo_p_facturacion option:selected").text();
 		
@@ -1954,6 +2054,9 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 						text: "Los datos de facturación han sido guardados correctamente!",
 						type: "success"
 					}, function () {
+						requiere_factura = true;
+						bandera_datos_completos_fact = true;
+						$("#form").steps("next");
 						ventaConFactura();
 					});
 			}
@@ -1973,13 +2076,13 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 			}, 
 			success: function(data)
 			{
-				swal({
+				/*swal({
 						title: "Pago!",
 						text: "Los datos de pago han sido guardados correctamente!",
 						type: "success"
 					}, function () {
 						
-					});
+					});*/
 			}
 		});
 	}
@@ -2004,8 +2107,23 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 						$("#costoEnvioEnPago").html("$ 0");
 						$("#costoEnvioEnResumen").html("$ 0");
 						$("#costoEnvio").val(0);
+						bandera_datos_completos_envio = true;
+						$("#form").steps("next");
 						actualizaResumenVenta();
 					});
+			}
+		});
+	}
+	
+	function borrar_datos_venta(){
+		url = '/clientes/ajax_unset_cliente_venta_data.php';
+		
+		$.ajax({
+			type: "POST",
+			url: url,
+			success: function(data)
+			{
+				
 			}
 		});
 	}
