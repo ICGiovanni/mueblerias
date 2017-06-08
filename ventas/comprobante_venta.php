@@ -19,7 +19,7 @@ $hora=$f[1].' '.$f[2];
 $ticket=strtotime($v['fecha_creacion']).'-'.$venta_id;
 $vendedor='Edgar Isaac Montoya';
 
-if(isset($v['venta_flete_id']))
+if(isset($v['venta_flete_id']) && $v['venta_flete_id']!=0)
 {
 	$flete=$ventas->getAddress($v['venta_flete_id']);
 }

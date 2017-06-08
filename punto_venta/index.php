@@ -1194,22 +1194,24 @@ if($esApartado){
 					//alert(currentIndex);
 					//var form = $(this);
 					if(currentIndex == 4){
-						url = '/ventas/ajax/guardarCompra.php';
+						url = '/ventas/ajax/guardarCompra.php<?=($esApartado)?'?apartado=u48f6d1':''?>';
 						$.ajax(
 						{
 							type: "POST",
 							url: url,
 							success: function(data)
 							{
-								alert(data);
-								//dataJson = JSON.parse(data);
+								//alert(data);
+								dataJson = JSON.parse(data);
 								//alert(dataJson.idVenta);
 								swal({
 									title: "<?=($esApartado)?'Apartado Realizado!':'Compra Realizada!'?>",
 									text: "<?=($esApartado)?'El apartado':'La compra'?> se ha registrado!",
 									type: "success"
-									}, function () {
-										//mandar impresion de ticket
+									}, function () {										
+										//mandar impresion de ticket dataJson.idVenta
+										window.location.href = 'index.php';
+										window.open('../ventas/comprobante_venta.php?v='+dataJson.idVenta,'_blank');
 								});
 							}
 						});

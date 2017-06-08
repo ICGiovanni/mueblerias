@@ -47,7 +47,7 @@ class Ventas {
 
             $costoEnvio = 0;
             $detalle_envio = isset($infoVenta['punto_venta']['envio']['motivo']) ? json_encode($infoVenta['punto_venta']['envio']['motivo']) : '';
-            $fecha_entrega = '0000-00-00 00:00:00';
+            $fecha_entrega = '';
             if($dirEnvio!=0){
 
                 $costoEnvio = $infoVenta['punto_venta']['envio']['costo_envio'];
@@ -59,7 +59,7 @@ class Ventas {
             }
 
             $sql = "INSERT INTO ventas (venta_id, fecha_creacion, monto, sucursal_id, id_cliente, venta_flete_id, costo_envio, detalle_envio, cliente_direccion_id, email_facturacion, venta_estatus_id, venta_entrega, venta_tipo, factura_generada, fecha_entrega) 
-                        VALUES (0, NOW(), $total, 1, $clienteId, $dirEnvio, $costoEnvio, '".$detalle_envio."', $dirFactura, '".$emailFacturacion."', $status, $entregado, $tipoVenta, 0, $fecha_entrega)";
+                        VALUES (0, NOW(), $total, 1, $clienteId, $dirEnvio, $costoEnvio, '".$detalle_envio."', $dirFactura, '".$emailFacturacion."', $status, $entregado, $tipoVenta, 0, '$fecha_entrega')";
 
             $statement=$this->connect->prepare($sql);
 
