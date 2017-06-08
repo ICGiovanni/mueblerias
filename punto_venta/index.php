@@ -11,7 +11,11 @@ $rowsMetodosPago = '<option value="0" style="color:#888;">Selecciona un método 
 while( list ($KeyMP, $valueMP) = each($arrayMetodosPago) ){
 	$rowsMetodosPago.='<option value="'.$valueMP["general_forma_de_pago_id"].'">'.$valueMP["general_forma_de_pago_desc"].'</option> ';
 }
-
+$esApartado = false;
+if(isset($_GET["apartado"]) && $_GET["apartado"]=="u48f6d1"){
+	$esApartado = true;
+	//echo "es apartado";
+}
 if(!isset($_SESSION["punto_venta"])){
 	die("Debe agregar al menos un producto al carrito de compras");
 }
@@ -436,7 +440,12 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 											
 										</div>
 										
-										
+										<?php
+											$ivaVenta = 0;
+											if( isset( $_SESSION["punto_venta"]["facturacion"]["cliente_direccion_id"] ) && $_SESSION["punto_venta"]["facturacion"]["cliente_direccion_id"] !="0" ){
+												$ivaVenta = ($totalVenta*.16);
+											}
+										?>
 										
 										<div class="col-md-3">
 											<div class="ibox">
@@ -455,13 +464,7 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 														IVA
 													</span>
 													<h4  id="h4_iva" class="font-bold text-right">
-														$ <?php
-														if( isset( $_SESSION["punto_venta"]["facturacion"] ) ){
-															echo ($totalVenta*.16);
-														} else {
-															echo "0";
-														}
-														?>   
+														$ <?=$ivaVenta?>  
 													</h4> 
 													<span>
 														Envío
@@ -473,27 +476,14 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 														Gran Total
 													</span>
 													<h4 class="font-bold text-right" id="granTotalEnPago"> 
-														$ <?php
-														if( isset( $_SESSION["punto_venta"]["facturacion"] ) ){
-															echo ($totalVenta*1.16)+$totalEnvio;
-														} else {
-															echo $totalVenta+$totalEnvio;
-														}
-														?>
+														$ <?=($totalVenta+$ivaVenta+$totalEnvio)?>
 													</h4>
 													<span>
 														Restan
 													</span>
 													<h4 class="font-bold text-right">
 														<span id="spanRestanVenta" >
-														$ <?php
-														if( isset( $_SESSION["punto_venta"]["facturacion"] ) ){
-															echo ($totalVenta*1.16)+$totalEnvio-$sumaDePagos;
-														} else {
-															echo $totalVenta+$totalEnvio-$sumaDePagos;
-														}
-														?>
-														
+														$ <?=($totalVenta+$ivaVenta+$totalEnvio-$sumaDePagos)?>													
 														</span>                    
 													</h4>
 													
@@ -611,13 +601,7 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 											<tr>
 												<td align="right"><b>IVA</b></td>
 												<td align="right" id="td_iva">
-												$ <?php
-														if( isset( $_SESSION["punto_venta"]["facturacion"] ) ){
-															echo ($totalVenta*.16);
-														} else {
-															echo "0";
-														}
-												?>
+												$ <?=$ivaVenta?>
 												</td>												
 											</tr>
 											<tr>
@@ -626,15 +610,28 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 											</tr>
 											<tr>
 												<td align="right"><b>Gran Total</b></td>
-												<td align="right" id="granTotalEnResumen"><h2>$ <?php
-														if( isset( $_SESSION["punto_venta"]["facturacion"] ) ){
-															echo ($totalVenta*1.16)+$totalEnvio;
-														} else {
-															echo $totalVenta+$totalEnvio;
-														}
-														?></h2></td>												
+												<td align="right" id="granTotalEnResumen"><h2>$ <?=$totalVenta+$ivaVenta+$totalEnvio?></h2></td>												
 											</tr>
 										</table>
+<?php
+if($esApartado){
+?>										
+										<br>
+										<table class="table table-striped table-bordered">
+											<tr>
+												<td align="right"><b>A cuenta</b></td>
+												<td align="right">$ <?=$sumaDePagos?></td>												
+											</tr>
+											<tr>
+												<td align="right"><b>Restan</b></td>
+												<td align="right" id="td_iva">
+													$ <?=($totalVenta+$ivaVenta+$totalEnvio-$sumaDePagos)?>
+												</td>												
+											</tr>
+										</table>
+<?php 
+}
+?>
 									</div>
                                 </fieldset>
 								<!-- FINALIZA RESUMEN DE COMPRA -->
@@ -1113,7 +1110,7 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 									setTimeout(function(){
 										$("#metodo_"+maxObjIdTmp).focus();
 									}, 1);
-								}
+								}								
 								
 								if(!envia_falso){
 									stringPagoData+='{"pago_metodo_id": "'+newValueSel+'", "pago_metodo": "'+newValueSelTxt+'", "monto": "'+newValue+'", "referencia": "'+newValueRef+'"},';
@@ -1124,6 +1121,18 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 						}
 						stringPagoData = stringPagoData.slice(0,-1);
 						stringPagoData+=']}';
+						
+						<?php
+						
+						if(!$esApartado){
+							echo "
+							if(  $('#spanRestanVenta').html() != '$ 0'){
+								toastr.error('<b>Los pagos deben cubrir el total de la venta</b>');
+								envia_falso = true;
+							}
+							";
+						}
+						?>
 						
 						if( envia_falso ){
 							return false;
@@ -1193,17 +1202,19 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 							success: function(data)
 							{
 								alert(data);
+								//dataJson = JSON.parse(data);
+								//alert(dataJson.idVenta);
 								swal({
-									title: "Compra Realizada!",
-									text: "La compra se ha registrado!",
+									title: "<?=($esApartado)?'Apartado Realizado!':'Compra Realizada!'?>",
+									text: "<?=($esApartado)?'El apartado':'La compra'?> se ha registrado!",
 									type: "success"
 									}, function () {
-										
+										//mandar impresion de ticket
 								});
 							}
 						});
 					} else {
-						toastr.error("Datos incompletos, aun no se puede finalizar la compra");
+						toastr.error("Datos incompletos, aun no se puede finalizar <?=($esApartado)?"el apartado":"la compra"?>");
 						return false;
 					}
 					
@@ -1218,8 +1229,8 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 					  type: "warning",
 					  showCancelButton: true,
 					  confirmButtonColor: "#DD6B55",
-					  confirmButtonText: "Borrar",
-					  cancelButtonText: "Cancelar",
+					  confirmButtonText: "Cancelar Venta",
+					  cancelButtonText: "Regresar",
 					  closeOnConfirm: false,
 					},
 					function(isConfirm){
@@ -1399,14 +1410,14 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 						getClienteDirecciones(id);
 						
 						SelectedItemData(id, name, email, number);
-						/**/
+						/*
 						swal({
 							title: "Vilculado!",
 							text: "Clinte vinculado correctamente!",
 							type: "success"
 							}, function () {
 							
-						});
+						});*/
 			}
 				}
 		};
@@ -1451,14 +1462,14 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 						
 						SelectedItemData_0(id, name, email, number);
 						
-						/**/
+						/*
 						swal({
 							title: "Vilculado!",
 							text: "Clinte vinculado correctamente!",
 							type: "success"
 							}, function () {
 							
-						});
+						});*/
 						
 						
 			}
@@ -1734,13 +1745,14 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 				data: {}, 
 				success: function(data)
 				{
+					/*
 					swal({
 						title: "Desvilculado!",
 						text: "Clinte desvinculado correctamente!",
 						type: "success"
 					}, function () {
 						
-					});
+					});*/
 				}
 			});
 			$("#divBuscaClienteInputEnvio").css("display","block");
