@@ -609,7 +609,7 @@ class Inventarios
 	
 	public function GetProductsMove($move_id)
 	{
-		$sql="SELECT producto_id,CONCAT(producto_sku,' ',producto_name,' ',color_name,' ',material_name) AS producto,
+		$sql="SELECT producto_id,producto_sku,CONCAT(producto_name,' ',color_name,' ',material_name) AS producto,
 				cantidad
 				FROM movimientos_productos mp
 				INNER JOIN productos p USING(producto_id)

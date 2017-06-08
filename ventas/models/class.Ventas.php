@@ -33,21 +33,33 @@ class Ventas {
         if($infoCliente){
             $clienteId = isset($infoCliente['cliente_id']) ? $infoCliente['cliente_id'] : 0;
 
-            $dirEnvio = isset($infoCliente['cliente_direccion_id_envio']) ? $infoCliente['cliente_direccion_id_envio'] : 0;
-            $dirFactura =  isset($infoCliente['cliente_direccion_id_fact']) ? $infoCliente['cliente_direccion_id_fact'] : 0;
+            $dirEnvio = isset($infoVenta['punto_venta']['envio']['cliente_direccion_id']) ? $infoVenta['punto_venta']['envio']['cliente_direccion_id'] : 0;
+            $dirFactura =  isset($infoVenta['punto_venta']['facturacion']['cliente_direccion_id']) ? $infoVenta['punto_venta']['facturacion']['cliente_direccion_id'] : 0;
+
 
             if($dirFactura!=0){
+                $emailFacturacion = $infoVenta['punto_venta']['facturacion']['select_correo_factura'];
                 $total =  $infoVenta['punto_venta']['Total'];
             }else{
+                $emailFacturacion = '';
                 $total =  $infoVenta['punto_venta']['Subtotal'];
             }
 
+            $costoEnvio = 0;
+            $detalle_envio = isset($infoVenta['punto_venta']['envio']['motivo']) ? json_encode($infoVenta['punto_venta']['envio']['motivo']) : '';
+            $fecha_entrega = '0000-00-00 00:00:00';
             if($dirEnvio!=0){
-                $total += $infoVenta['punto_venta']['envio']['costo_envio'];
+
+                $costoEnvio = $infoVenta['punto_venta']['envio']['costo_envio'];
+                $detalleEnvio = $infoVenta['punto_venta']['envio'];
+                $fecha_entrega = $infoVenta['punto_venta']['envio']['fecha_hora_entrega'];
+                unset($detalleEnvio['costo_envio']);
+                unset($detalleEnvio['cliente_direccion_id']);
+                $detalle_envio = json_encode($detalleEnvio);
             }
 
-            $sql = "   INSERT INTO ventas (venta_id, fecha_creacion, monto, sucursal_id, id_cliente, venta_flete_id, cliente_direccion_id, venta_estatus_id, venta_entrega, venta_tipo, factura_generada, fecha_entrega) 
-                        VALUES (0, NOW(), $total, 1, $clienteId, $dirEnvio, $dirFactura, $status, $entregado, $tipoVenta, 0, NOW())";
+            $sql = "INSERT INTO ventas (venta_id, fecha_creacion, monto, sucursal_id, id_cliente, venta_flete_id, costo_envio, detalle_envio, cliente_direccion_id, email_facturacion, venta_estatus_id, venta_entrega, venta_tipo, factura_generada, fecha_entrega) 
+                        VALUES (0, NOW(), $total, 1, $clienteId, $dirEnvio, $costoEnvio, '".$detalle_envio."', $dirFactura, '".$emailFacturacion."', $status, $entregado, $tipoVenta, 0, $fecha_entrega)";
 
             $statement=$this->connect->prepare($sql);
 

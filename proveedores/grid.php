@@ -112,9 +112,16 @@ echo "<pre>";*/
             <div class="wrapper wrapper-content animated fadeIn ibox-title">
                 <div class="row">
                     <?php 
-
+                    $indi = 0;
                     foreach($dataProducts as $prod){                                
 
+                    $indi++;
+                    $styleClear = '';
+                    if($indi==5){
+                        $styleClear = 'style="clear: left;"';
+                        $indi = 1;
+                    }    
+                        
                     $active = '';
                     $cantidad  = 1;
                     $verCarrito = 1;
@@ -142,7 +149,7 @@ echo "<pre>";*/
                         $url = 'detalleVariacion';                    
                     }
 
-                    echo '  <div class="col-md-3">    
+                    echo '  <div class="col-md-3" '.$styleClear.'>    
 
                                 <div class="ibox" >
                                     <div class="ibox-content product-box">                                    
@@ -162,7 +169,7 @@ echo "<pre>";*/
                                                 echo '<small>ver modelos</small>';
                                             }
 
-                    echo '                  </span></a>
+                    echo '                  </span>
                                             <small class="text-muted">'.$prod->producto_sku.'</small>
                                             <div class="product-name" >'.$prod->producto_name.'</div>
                                             <div class="small m-t-xs" >'.$prod->producto_description_corta.'</div>
@@ -187,7 +194,7 @@ echo "<pre>";*/
                                             else{
                                                 echo "<div>&nbsp;</div>";
                                             }
-                    echo '                  </div>                                        
+                    echo '                  </div></a>                                        
                                             <div class="m-t text-right">';
                                             if($prod->producto_type!='U'){
                     echo '                  <a href="'.$url.'.php?producto_id='.base64_encode($prod->producto_id).'" class="btn btn-xs btn-outline btn-primary">+ Info</a>
@@ -269,4 +276,9 @@ echo "<pre>";*/
         font-size: 14px;
         z-index: 999;        
     }
+    @media (min-width: 992px) {
+        .row .col-md-3{
+             
+        }
+    }    
 </style>    
