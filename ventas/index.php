@@ -155,7 +155,7 @@
                     <hr/>
                     
                     <div class="m-t-sm">
-                        <a href="#" class="btn btn-warning btn-md"><i class="fa fa-shopping-cart"></i>&nbsp;Apartar</a>&nbsp;                            
+                        <a href="<?php echo $ruta.'punto_venta/?apartado=u48f6d1'?>" class="btn btn-warning btn-md"><i class="fa fa-shopping-cart"></i>&nbsp;Apartar</a>&nbsp;                            
                         <a href="<?php echo $ruta.'punto_venta'?>" class="btn btn-primary btn-md"><i class="fa fa-shopping-cart"></i>&nbsp;Pagar</a>                        
                     </div>
                 </div>
