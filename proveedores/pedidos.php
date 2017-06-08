@@ -134,7 +134,9 @@ $listaPedidos = $pedidos->getPedidos();
                 
             </div>
             <div class="modal-footer">
+                
                 <button type="button" class="btn btn-danger btn-xs" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-warning btn-xs" id='actualizar_pedido' data-dismiss="modal">Actualizar</button>
                 <button type="button" class="btn btn-primary btn-xs" id="recibir_pedido" >Guardar</button>
             </div>
         </div>
