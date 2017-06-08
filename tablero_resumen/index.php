@@ -153,6 +153,7 @@ if($_POST){
                 <tr>
                   <th>ID Venta</th>
                   <th>Fecha</th>
+                  <th>Sucursal</th>
                   <th>Monto envio</th>
                   <th>Detalle</th>
                   <th>Fecha entrega</th>
@@ -164,12 +165,14 @@ if($_POST){
                 $ingresosEnvio = $instTablero->ingresosPorEnvio($fecha_inicio, $fecha_final);
                 if(count($ingresosEnvio) >0 ){
                     foreach($ingresosEnvio as $ingreso){
+                        $detalle_envio = json_decode($ingreso['detalle_envio'], true);
+                        $detalle = $detalle_envio['select_zona_envio']."<br />".$detalle_envio['select_planta']."<br />".$detalle_envio['select_planta_extra'];
                         echo "<tr>".
                                 "<td>".$ingreso['venta_id']."</td>".
                                 "<td>".$ingreso['fecha_creacion']."</td>".
                                 "<td>".$ingreso['sucursal_id']."</td>".
-                                "<td>".$ingreso['monto']."</td>".
-                                "<td>".$ingreso['detalle_envio']."</td>".
+                                "<td>".$ingreso['costo_envio']."</td>".
+                                "<td>".$detalle."</td>".
                                 "<td>".$ingreso['fecha_entrega']."</td>".
                              "</tr>";
                     }

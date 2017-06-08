@@ -15,7 +15,7 @@ class Tablero
         $fechaInicio = date("Y/d/m", strtotime($fechaInicio));
         $fechaFinal = date("Y/d/m", strtotime($fechaFinal));
 
-        $sql="SELECT venta_id, fecha_creacion, costo_envio, detalle_envio, sucursal_id FROM ventas WHERE venta_flete_id != 0 AND fecha_creacion BETWEEN '".$fechaInicio." 00:00:00' AND '".$fechaFinal." 23:59:59'";
+        $sql="SELECT venta_id, fecha_creacion, costo_envio, detalle_envio, sucursal_id, fecha_entrega FROM ventas WHERE venta_flete_id != 0 AND fecha_creacion BETWEEN '".$fechaInicio." 00:00:00' AND '".$fechaFinal." 23:59:59'";
 
         $statement=$this->connect->prepare($sql);
 
