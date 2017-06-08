@@ -255,6 +255,7 @@ $(document).ready(function()
 			        dataType: "json",
 			        success: function (data)
 			        {
+				        var move_id=data;
 				        $("#modal_nuevo_inventario").hide();
 
 				        swal({
@@ -263,6 +264,7 @@ $(document).ready(function()
 			                type: "success"
 			            }, function () {
 			                window.location.href = 'index.php';
+			                window.open('comprobante_salida.php?m='+move_id,'_blank');
 			            });
 				       
 			        },
