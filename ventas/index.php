@@ -95,8 +95,9 @@
                                                 <td class="desc">
                                                     <h3><a href="#" class="text-navy">'.$prod['Modelo'].'</a></h3>                                                                                                                      
                                                 </td>
-                                                <td>$ '.number_format($prod['Precio'],2,'.',',').'</td>
-                                                <td><input type="text" class="form-control" placeholder="1" value='.$prod['Cantidad'].'></td>
+                                                <td><span id="labelprecio_'.$prod['ID'].'">'.number_format($prod['Precio'],2,'.',',').'</span><br />
+                                                    <input type="number" id="precio_'.$prod['ID'].'" value="'.$prod['Precio'].'" min="'.$prod['Precio'].'" step="50"  /></td>
+                                                <td><input id="cantidad_'.$prod['ID'].'" type="number" class="form-control cantidad" placeholder="1" min="1" value='.$prod['Cantidad'].'></td>
                                                 <td><h4>$ '.number_format($prod['Subtotal'],2,'.',',').'</h4></td>
                                                 <td style="text-align: center"><button class="btn btn-danger btn-md" ><i class="fa fa-trash removeCart" role="button" data-sku="'.$prod['SKU'].'" id="removeCart_'.$prod['ID'].'"></i></button></td>                                    
                                             </tr>';
@@ -172,6 +173,8 @@
 <script>
 $(document).ready(function()
 {
+    
+    
     setTimeout(function(){$("#producto").focus();},0);
     
     var options={
@@ -283,6 +286,10 @@ $(document).ready(function()
                 });                                                                 
             });
         });
+        
+    $(document).on("click", ".cantidad", function(e) {
+        alert($(this).attr('id'));
+    });
 });
 
 function saveCart(id, sku, modelo, cantidad, precio, imagen){

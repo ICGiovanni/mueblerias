@@ -51,23 +51,9 @@ if($_POST){
     border-color: #4cae4c !important;
   }
 
-  .th-blue th{
-    color: #fff !important;
-    background-color: #337ab7 !important;     
-  }
-  .th-green th{
-    color: #fff !important;
-    background-color: #5cb85c !important;
-  }
-
-  .th-yellow th{
-    color: #fff !important;
-    background-color: #C37D0E !important;
-  }
-
-  .th-red th{
-    color: #fff !important;
-    background-color: #C64333 !important;    
+  th{
+    color: #999 !important;   
+    font-weight: bold;
   }
 
   .table-bordered{
@@ -90,6 +76,32 @@ if($_POST){
   .dataTables_filter input, .dataTables_paginate{
       color: #999;
   }
+  
+  .dataTables_wrapper{
+      background-color: #FFF;
+      color: #999;
+      padding-top: 10px;
+      
+  }
+  
+  .box-body{
+      padding: 2px !important;
+  }
+  
+  .box-title{
+      font-size: 15px !important;
+  }
+    
+    .dataTables_wrapper .table{
+        margin-left: 1%;
+        margin-right: 1%;
+        width: 98%;
+    }
+    
+    .pagination{
+        margin-right: 1% !important;
+    }
+    
 </style>
 <link href="<?php echo $raizProy?>css/plugins/datapicker/datepicker3.css" rel="stylesheet">
 <link href="<?php echo $raizProy?>css/plugins/dataTables/datatables.min.css" rel="stylesheet">
@@ -192,7 +204,7 @@ if($_POST){
                     <i class="fa fa-plus"></i></button>
             </div>
             <i class="fa fa fa-th"></i>
-            <h3 class="box-title">SALIDAS/ENTRADAS DE MERCANCIA</h3>
+            <h3 class="box-title">Salidas / Entradas de mercancía</h3>
           </div>
           <div class="box-body">
               <table class="table table-bordered dataTables-example">
@@ -236,7 +248,7 @@ if($_POST){
                     <i class="fa fa-plus"></i></button>
             </div>
             <i class="fa fa fa-th"></i>
-            <h3 class="box-title">PROMEDIO VENTAS</h3>
+            <h3 class="box-title">Promedio de ventas</h3>
           </div>
           <div class="box-body">
               <table class="table table-bordered dataTables-example">
@@ -281,7 +293,7 @@ if($_POST){
                     <i class="fa fa-plus"></i></button>
             </div>
             <i class="fa fa fa-th"></i>
-            <h3 class="box-title">CORTE GASTOS/INGRESOS</h3>
+            <h3 class="box-title">Corte Gastos / Ingresos</h3>
           </div>
           <div class="box-body">
               <table class="table table-bordered dataTables-example">
@@ -326,7 +338,7 @@ if($_POST){
                     <i class="fa fa-plus"></i></button>
             </div>
             <i class="fa fa fa-th"></i>
-            <h3 class="box-title">VENTAS POR VENDEDOR</h3>
+            <h3 class="box-title">Ventas por vendedor</h3>
           </div>
           <div class="box-body">
               <table class="table table-bordered dataTables-example">
@@ -370,7 +382,7 @@ if($_POST){
                     <i class="fa fa-plus"></i></button>
             </div>
             <i class="fa fa fa-th"></i>
-            <h3 class="box-title">ARTICULOS + VENDIDOS</h3>
+            <h3 class="box-title">Articulos mas vendidos</h3>
           </div>
           <div class="box-body">
               <table class="table table-bordered dataTables-example">
