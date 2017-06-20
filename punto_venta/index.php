@@ -39,11 +39,12 @@ if( isset($_SESSION["punto_venta"]["envio"]["costo_envio"]) ){
 	$totalEnvio = $_SESSION["punto_venta"]["envio"]["costo_envio"];
 }
 //print_r($_SESSION);
-$clientFromSession = '';
-$clientFromSessionForEnvio = '';
+$clientFromSessionDetailedData = '';
+$clientFromSessionGeneralData = '';
 $clientFromSessionExtra = '';
 $clientAddressFactFromSession = '';
 $clientAddressShipFromSession = '';
+$cssEspacios = '&nbsp;';
 if(isset($_SESSION["punto_venta"]["cliente"])){
 	
 	
@@ -53,6 +54,7 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 		$newDivsEnvio = '';
 		$dirsEnvioIni = '';
 		$dirsFacturacionIni = '';
+		
 	
 		$newDivBtnsFact = '<b>Selecciona una dirección de facturación:</b><br>';
 		$newDivsFact = '';
@@ -68,9 +70,9 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 					$cssBtnElegir = 'ocultarElemento';
 					$cssIcoElegir = 'mostrarElemento';
 				}
-				$newDivsEnvio.= '<div id="demo_'.$valueD["cliente_direccion_id"].'" class="collapse"><font id="demo_font_'.$valueD["cliente_direccion_id"].'" '.$cssRowDireccion.'>'.$valueD["cliente_direccion_calle"].' '.$valueD["cliente_direccion_numero_ext"].' '.$valueD["cliente_direccion_numero_int"].' '.$valueD["cliente_direccion_colonia"].' '.$valueD["cliente_direccion_municipio"].', '.$valueD['estado'].'. C.P. '.$valueD["cliente_direccion_cp"].'</font> &nbsp;&nbsp;&nbsp;<i id="demo_ico_'.$valueD["cliente_direccion_id"].'" class="fa fa-check-square '.$cssIcoElegir.'" style="color:green;"></i><button type="button" class="btn btn-warning btn-xs '.$cssBtnElegir.'" onclick="asociaDireccionEnvio('.$valueD["cliente_direccion_id"].');" style="margin:4px 0px;" id="demo_btn_'.$valueD["cliente_direccion_id"].'"> Elegir </button> </div>';
+				$newDivsEnvio.= '<div id="demo_'.$valueD["cliente_direccion_id"].'" class="collapse"><i class="fa fa-map-marker"></i> '.$cssEspacios.'<font id="demo_font_'.$valueD["cliente_direccion_id"].'" '.$cssRowDireccion.'>'.$valueD["cliente_direccion_calle"].' '.$valueD["cliente_direccion_numero_ext"].' '.$valueD["cliente_direccion_numero_int"].' '.$valueD["cliente_direccion_colonia"].' '.$valueD["cliente_direccion_municipio"].', '.$valueD['estado'].'. C.P. '.$valueD["cliente_direccion_cp"].'</font> &nbsp;&nbsp;&nbsp;<i id="demo_ico_'.$valueD["cliente_direccion_id"].'" class="fa fa-check-square '.$cssIcoElegir.'" style="color:green;"></i><button type="button" class="btn btn-warning btn-xs '.$cssBtnElegir.'" onclick="asociaDireccionEnvio('.$valueD["cliente_direccion_id"].');" style="margin:4px 0px;" id="demo_btn_'.$valueD["cliente_direccion_id"].'"> Elegir </button> </div>';
 				
-				$dirsEnvioIni.= '<i class="fa fa-map-marker"></i> '.$valueD["cliente_direccion_calle"].' '.$valueD["cliente_direccion_numero_ext"].' '.$valueD["cliente_direccion_numero_int"].' '.$valueD["cliente_direccion_colonia"].' '.$valueD["cliente_direccion_municipio"].', '.$valueD['estado'].'. C.P. '.$valueD["cliente_direccion_cp"].'<br>';
+				$dirsEnvioIni.= '<i class="fa fa-map-marker"></i> '.$cssEspacios.$valueD["cliente_direccion_calle"].' '.$valueD["cliente_direccion_numero_ext"].' '.$valueD["cliente_direccion_numero_int"].' '.$valueD["cliente_direccion_colonia"].' '.$valueD["cliente_direccion_municipio"].', '.$valueD['estado'].'. C.P. '.$valueD["cliente_direccion_cp"].'<br>';
 				
 			}
 			
@@ -85,9 +87,9 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 					$cssBtnElegir = 'ocultarElemento';
 					$cssIcoElegir = 'mostrarElemento';
 				}
-				$newDivsFact.= '<div id="demo_'.$valueD["cliente_direccion_id"].'" class="collapse"><font id="demo_font_'.$valueD["cliente_direccion_id"].'" '.$cssRowDireccion.'>'.$valueD["cliente_direccion_calle"].' '.$valueD["cliente_direccion_numero_ext"].' '.$valueD["cliente_direccion_numero_int"].' '.$valueD["cliente_direccion_colonia"].' '.$valueD["cliente_direccion_municipio"].', '.$valueD['estado'].'. C.P. '.$valueD["cliente_direccion_cp"].'</font> &nbsp;&nbsp;&nbsp;<i id="demo_ico_'.$valueD["cliente_direccion_id"].'" class="fa fa-check-square '.$cssIcoElegir.'" style="color:green;"></i><button type="button" class="btn btn-warning btn-xs '.$cssBtnElegir.'" onclick="asociaDireccionFact('.$valueD["cliente_direccion_id"].');" style="margin:4px 0px;" id="demo_btn_'.$valueD["cliente_direccion_id"].'"> Elegir </button> </div>';
+				$newDivsFact.= '<div id="demo_'.$valueD["cliente_direccion_id"].'" class="collapse"><i class="fa fa-map-marker"></i> '.$cssEspacios.'<font id="demo_font_'.$valueD["cliente_direccion_id"].'" '.$cssRowDireccion.'>'.$valueD["cliente_direccion_calle"].' '.$valueD["cliente_direccion_numero_ext"].' '.$valueD["cliente_direccion_numero_int"].' '.$valueD["cliente_direccion_colonia"].' '.$valueD["cliente_direccion_municipio"].', '.$valueD['estado'].'. C.P. '.$valueD["cliente_direccion_cp"].'</font> &nbsp;&nbsp;&nbsp;<i id="demo_ico_'.$valueD["cliente_direccion_id"].'" class="fa fa-check-square '.$cssIcoElegir.'" style="color:green;"></i><button type="button" class="btn btn-warning btn-xs '.$cssBtnElegir.'" onclick="asociaDireccionFact('.$valueD["cliente_direccion_id"].');" style="margin:4px 0px;" id="demo_btn_'.$valueD["cliente_direccion_id"].'"> Elegir </button> </div>';
 
-				$dirsFacturacionIni.= '<i class="fa fa-file-text-o"></i> '.$valueD["cliente_direccion_calle"].' '.$valueD["cliente_direccion_numero_ext"].' '.$valueD["cliente_direccion_numero_int"].' '.$valueD["cliente_direccion_colonia"].' '.$valueD["cliente_direccion_municipio"].', '.$valueD['estado'].'. C.P. '.$valueD["cliente_direccion_cp"].'<br>';
+				$dirsFacturacionIni.= '<i class="fa fa-file-text-o"></i> '.$cssEspacios.$valueD["cliente_direccion_calle"].' '.$valueD["cliente_direccion_numero_ext"].' '.$valueD["cliente_direccion_numero_int"].' '.$valueD["cliente_direccion_colonia"].' '.$valueD["cliente_direccion_municipio"].', '.$valueD['estado'].'. C.P. '.$valueD["cliente_direccion_cp"].'<br>';
 			}
 			
 		}
@@ -98,23 +100,7 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 		$clientAddressFactFromSession = $newDivBtnsFact."<br><br>".$newDivsFact;
 	}
 	
-	$clientFromSessionForEnvio ='<button style="position:relative; float:right;" type="button" class="btn btn-xs btn-danger" id="removeCliente_'.$_SESSION["punto_venta"]["cliente"]["cliente_id"].'" onclick="removeCliente('.$_SESSION["punto_venta"]["cliente"]["cliente_id"].');">Desasociar cliente</button>
-	<table class=""><tbody>
-			<tr>
-				<td>
-					<b>Nombre Completo:</b>
-				</td>
-			</tr>
-			<tr id="row_'.$_SESSION["punto_venta"]["cliente"]["cliente_id"].'">
-				<td style="padding-left:10px;">
-					'.$_SESSION["punto_venta"]["cliente"]["name"].' &nbsp;&nbsp;<br><br>
-				</td>
-				<td></td>
-			</tr></tbody>
-	</table>';
-	
-	
-	$clientFromSession = '
+	$clientFromSessionGeneralData ='
 	<button style="position:relative; float:right;" type="button" class="btn btn-xs btn-danger" id="removeCliente_'.$_SESSION["punto_venta"]["cliente"]["cliente_id"].'" onclick="removeCliente('.$_SESSION["punto_venta"]["cliente"]["cliente_id"].');">Desasociar cliente</button>
 	<table class=""><tbody>
 			<tr>
@@ -124,10 +110,15 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 			</tr>
 			<tr id="row_'.$_SESSION["punto_venta"]["cliente"]["cliente_id"].'">
 				<td style="padding-left:10px;">
-					'.$_SESSION["punto_venta"]["cliente"]["name"].' &nbsp;&nbsp;<br><br>
+					<i class="fa fa-user"></i> '.$cssEspacios.$_SESSION["punto_venta"]["cliente"]["name"].' &nbsp;&nbsp;<br><br>
 				</td>
 				<td></td>
 			</tr>
+	</tbody></table>';
+	
+	
+	$clientFromSessionDetailedData = $clientFromSessionGeneralData.'
+	<table class=""><tbody>
 			<tr>
 				<td><b>Direcciones de envío:</b></td>
 			</tr>
@@ -185,7 +176,7 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 		$clientFromSessionExtra	= '<b>Teléfonos:</b><br>
 		'.$txtTelefonosTipo.'
 		<br><br>
-		<b>Correos:</b><br>'.str_replace(",","<br>",$_SESSION["punto_venta"]["cliente"]["email"]);
+		<b>Correos:</b><br><i class="fa fa-envelope-o"></i> '.$cssEspacios.str_replace(',','<br><i class="fa fa-envelope-o"></i> '.$cssEspacios,$_SESSION["punto_venta"]["cliente"]["email"]);
 }
 
 
@@ -256,7 +247,7 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 										<div class="col-lg-10">
 											<div class="form-group">
 												<font>Busqueda del cliente por:</font><br>
-												<div style="margin-top: 4px;" class="form-group" id="divBuscaClienteInputPpal"><input type="text" placeholder="Nombre, email y/o número telefónico" class="form-control" id="inputBuscaCliente_0" name="inputBuscaCliente_0" ></div>
+												<div style="margin-top: 4px;" class="form-group" id="divBuscaClienteInputPpal"><input type="text" placeholder="Nombre, email y/o número telefónico" class="form-control" id="inputBuscaClienteFromDatos" name="inputBuscaClienteFromDatos" ></div>
 												
 												
                                             </div>
@@ -268,7 +259,7 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 										<div class="col-lg-9">
 											<div class="ibox"  >
 												<div class="ibox-content" id="divBuscaCliente_0">
-													<?=$clientFromSession?>
+													<?=$clientFromSessionDetailedData?>
 												</div>
 											</div>
 										</div>
@@ -301,7 +292,7 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 													
 													<table>
 														<tr>
-															<td><button class="btn btn-primary dim btn-large-dim" type="button" data-toggle="modal" data-target="#modalBuscaCliente">SÍ</button></td>
+															<td><button class="btn btn-primary dim btn-large-dim" type="button" data-toggle="modal" data-target="#modalDetalleEnvio">SÍ</button></td>
 															<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 															<td><button class="btn btn-danger dim btn-large-dim" type="button" data-toggle="modal" data-target="#modalVentaSinEnvio" onclick="ventaSinEnvio();" >NO</button></td>
 														</tr>
@@ -329,7 +320,7 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 													
 													<table>
 														<tr>
-															<td><button class="btn btn-primary dim btn-large-dim" type="button"  data-toggle="modal" data-target="#ModelDetalleFacturacion">SÍ</button></td>
+															<td><button class="btn btn-primary dim btn-large-dim" type="button"  data-toggle="modal" data-target="#ModalDetalleFacturacion">SÍ</button></td>
 															<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 															<td><button class="btn btn-danger dim btn-large-dim" type="button" onclick="ventaSinFactura();">NO</button></td>
 														</tr>
@@ -654,7 +645,7 @@ if($esApartado){
 <!-- ini modals -->
 
 
-<div class="modal inmodal fade" id="modalBuscaCliente" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal inmodal fade" id="modalDetalleEnvio" tabindex="-1" role="dialog" aria-hidden="true">
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -662,8 +653,8 @@ if($esApartado){
 				<h4 class="modal-title">Detalle de Envio</h4>
 			</div>
 			<div class="modal-body">
-				<div class="form-group" id="divBuscaClienteInputEnvio" style="display:<?=($clientFromSessionForEnvio=='')?"block":"none"?>"><input type="text" placeholder="Nombre, email y/o número telefónico" class="form-control" id="inputBuscaCliente" name="inputBuscaCliente" ></div>
-				<div class="form-group" id="divBuscaClienteEnvio" ><?=$clientFromSessionForEnvio?></div>
+				<div class="form-group" id="divBuscaClienteInputEnvio" style="display:<?=($clientFromSessionGeneralData=='')?"block":"none"?>"><input style="width:830px;" type="text" placeholder="Nombre, email y/o número telefónico" class="form-control" id="inputBuscaClienteFromEnvio" name="inputBuscaClienteFromEnvio" ></div>
+				<div class="form-group" id="divBuscaClienteEnvio" ><?=$clientFromSessionGeneralData?></div>
 				<div class="form-group" id="divDireciconesClienteEnvio" ><?=$clientAddressShipFromSession?></div>
 				
 				<div class="ibox">
@@ -740,7 +731,7 @@ if($esApartado){
 			<div class="modal-footer">
 				<!-- <button data-toggle="modal" href="#ModalClienteNuevo"  type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalNuevoCliente">+ Nuevo Cliente</button>-->
 				<button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-				<button type="button" class="btn btn-primary" data-dismiss="modal" onclick="guarda_datos_envio();">Guardar</button>
+				<button type="button" class="btn btn-primary" onclick="guarda_datos_envio();">Guardar</button>
 			</div>
 		</div>
 	</div>
@@ -757,20 +748,20 @@ if($esApartado){
 						<h5>Motivo por el cual el cliente no quiere envio</h5>
 						<div class="form-group">
 							<select class="form-control" id="SelSinEnvio">
-								<option value="0">Seleccione una opcion</option>
+								<option value="0">Seleccione una opción</option>
 								<option value="1">Flete externo</option>
 								<option value="2">El cliente se lo lleva</option>
 							</select></div></div>
 			<div class="modal-footer">
 				<!-- <button data-toggle="modal" href="#ModalClienteNuevo"  type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalNuevoCliente">+ Nuevo Cliente</button>-->
 				<button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-				<button type="button" class="btn btn-primary" data-dismiss="modal" onclick="guada_porque_no();">Guardar</button>
+				<button type="button" class="btn btn-primary" onclick="guada_porque_no();">Guardar</button>
 			</div>
 		</div>
 	</div>
 </div>
 
-<div class="modal inmodal fade" id="ModelDetalleFacturacion" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal inmodal fade" id="ModalDetalleFacturacion" tabindex="-1" role="dialog" aria-hidden="true">
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -778,9 +769,9 @@ if($esApartado){
 				<h4 class="modal-title">Detalle de Facturación</h4>
 			</div>
 			<div class="modal-body">
-				<div class="form-group" id="divBuscaClienteInputFacturacion" style="display:<?=($clientFromSessionForEnvio=='')?"block":"none"?>"><input style="width:830px;" type="text" placeholder="Nombre, email y/o número telefónico" class="form-control" id="inputBuscaCliente_1" name="inputBuscaCliente_1" ></div>
+				<div class="form-group" id="divBuscaClienteInputFacturacion" style="display:<?=($clientFromSessionGeneralData=='')?"block":"none"?>"><input style="width:830px;" type="text" placeholder="Nombre, email y/o número telefónico" class="form-control" id="inputBuscaClienteFromFact" name="inputBuscaClienteFromFact" ></div>
 				
-				<div class="form-group" id="divBuscaClienteFacturacion" ><?=$clientFromSessionForEnvio?></div>
+				<div class="form-group" id="divBuscaClienteFacturacion" ><?=$clientFromSessionGeneralData?></div>
 				<div class="form-group" id="divDireciconesClienteFacturacion" ><?=$clientAddressFactFromSession?></div>
 				
 				<div class="ibox">
@@ -808,7 +799,7 @@ if($esApartado){
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-				<button type="button" class="btn btn-primary" data-dismiss="modal" onclick="guarda_datos_facturacion();">Guardar</button>
+				<button type="button" class="btn btn-primary" onclick="guarda_datos_facturacion();">Guardar</button>
 			</div>
 		</div>
 	</div>
@@ -1008,6 +999,7 @@ if($esApartado){
 ?>
 
 		var stringPagoData = '';
+		var cssEspacios = '<?=$cssEspacios?>';
 		var requiere_factura = <?=(isset($_SESSION["punto_venta"]["facturacion"]))?"true":"false"?>;
 		
         $(document).ready(function(){
@@ -1212,6 +1204,7 @@ if($esApartado){
 										//mandar impresion de ticket dataJson.idVenta
 										window.location.href = 'index.php';
 										window.open('../ventas/comprobante_venta.php?v='+dataJson.idVenta,'_blank');
+										borrar_datos_venta();
 								});
 							}
 						});
@@ -1237,13 +1230,13 @@ if($esApartado){
 					},
 					function(isConfirm){
 						if (isConfirm) {
-							borrar_datos_venta();
+							
 							swal({
 								title: "Venta Cancelada!", 
 								text: "Se ha borrado el avance de la venta", 
 								type: "success"			
 							}, function () {
-								location.href = '/ventas/index.php';
+								borrar_datos_venta();
 							});
 						}
 					});
@@ -1337,7 +1330,11 @@ if($esApartado){
 			/*FUNCIONES PARA CLIENTE NUEVO*/
 			
 			$("#select_zona_envio").change(function(){
-				console.log("llega" + $(this).val());
+				//console.log("llega" + $(this).val());
+				if($(this).val()=='0'){
+					$("#costoEnvio").val('0');
+					$("#spancostoEnvio").html("");
+				}
 				if($(this).val()=='1'){
 					$("#costoEnvio").val('500');
 					$("#spancostoEnvio").html("min $1 - max $500");
@@ -1378,7 +1375,7 @@ if($esApartado){
 					match:{
 						enabled: true
 					},
-			showAnimation:{
+					showAnimation:{
 						type: "fade", //normal|slide|fade
 						time: 400,
 						callback: function() {}
@@ -1387,22 +1384,30 @@ if($esApartado){
 						type: "slide", //normal|slide|fade
 						time: 400,
 						callback: function() {}
-			},
-			onChooseEvent:function(){
+					},
+					onChooseEvent:function(){
 				
-						if (typeof( $("#inputBuscaCliente").getSelectedItemData().id_cliente ) != "undefined" ) { 
-							//desde envio
-							var id=$("#inputBuscaCliente").getSelectedItemData().id_cliente;
-							var name=$("#inputBuscaCliente").getSelectedItemData().nombre;
-							var email=$("#inputBuscaCliente").getSelectedItemData().emails;
-							var number=$("#inputBuscaCliente").getSelectedItemData().numbers_type;
+						if (typeof( $("#inputBuscaClienteFromDatos").getSelectedItemData().id_cliente ) != "undefined" ) { 
+							//desde datos
+							var id=$("#inputBuscaClienteFromDatos").getSelectedItemData().id_cliente;	
+							var name=$("#inputBuscaClienteFromDatos").getSelectedItemData().nombre;
+							var email=$("#inputBuscaClienteFromDatos").getSelectedItemData().emails;
+							var number=$("#inputBuscaClienteFromDatos").getSelectedItemData().numbers_type;
 						}
-						if (typeof( $("#inputBuscaCliente_1").getSelectedItemData().id_cliente ) != "undefined" ) { 
+				
+						if (typeof( $("#inputBuscaClienteFromEnvio").getSelectedItemData().id_cliente ) != "undefined" ) { 
+							//desde envio
+							var id=$("#inputBuscaClienteFromEnvio").getSelectedItemData().id_cliente;
+							var name=$("#inputBuscaClienteFromEnvio").getSelectedItemData().nombre;
+							var email=$("#inputBuscaClienteFromEnvio").getSelectedItemData().emails;
+							var number=$("#inputBuscaClienteFromEnvio").getSelectedItemData().numbers_type;
+						}
+						if (typeof( $("#inputBuscaClienteFromFact").getSelectedItemData().id_cliente ) != "undefined" ) { 
 							//desde facturacion
-							var id=$("#inputBuscaCliente_1").getSelectedItemData().id_cliente;
-							var name=$("#inputBuscaCliente_1").getSelectedItemData().nombre;
-							var email=$("#inputBuscaCliente_1").getSelectedItemData().emails;
-							var number=$("#inputBuscaCliente_1").getSelectedItemData().numbers_type; 
+							var id=$("#inputBuscaClienteFromFact").getSelectedItemData().id_cliente;
+							var name=$("#inputBuscaClienteFromFact").getSelectedItemData().nombre;
+							var email=$("#inputBuscaClienteFromFact").getSelectedItemData().emails;
+							var number=$("#inputBuscaClienteFromFact").getSelectedItemData().numbers_type; 
 						}
 						
 						$("#divBuscaClienteInputEnvio").css("display","none");
@@ -1412,154 +1417,30 @@ if($esApartado){
 						getClienteDirecciones(id);
 						
 						SelectedItemData(id, name, email, number);
-						/*
-						swal({
-							title: "Vilculado!",
-							text: "Clinte vinculado correctamente!",
-							type: "success"
-							}, function () {
-							
-						});*/
-			}
+						
+					}
 				}
 		};
 		
-		var options_0={
-				url: "/clientes/get_clients_search.php",
-				getValue: function(element){
-					var name=element.nombre+' '+element.emails+' '+element.numbers;			
-					return name;
-				},
-				template: {
-					type: "custom",
-					method: function(value, item) {
-						return value;
-					}
-				},
-				list:{
-					match:{
-						enabled: true
-					},
-				showAnimation:{
-						type: "fade", //normal|slide|fade
-						time: 400,
-						callback: function() {}
-					},
-					hideAnimation: {
-						type: "slide", //normal|slide|fade
-						time: 400,
-						callback: function() {}
-			},
-			onChooseEvent:function(){
-						var id=$("#inputBuscaCliente_0").getSelectedItemData().id_cliente;						
-						var name=$("#inputBuscaCliente_0").getSelectedItemData().nombre;
-						var email=$("#inputBuscaCliente_0").getSelectedItemData().emails;
-						var number=$("#inputBuscaCliente_0").getSelectedItemData().numbers_type;
-						
-						$("#divBuscaClienteInputEnvio").css("display","none");
-						$("#divBuscaClienteInputFacturacion").css("display","none");
-						
-						setClienteData(name, email, number);
-						getClienteDirecciones(id);
-						
-						SelectedItemData_0(id, name, email, number);
-						
-						/*
-						swal({
-							title: "Vilculado!",
-							text: "Clinte vinculado correctamente!",
-							type: "success"
-							}, function () {
-							
-						});*/
-						
-						
-			}
-				}
-		};
-
 		var SelectedItemData=function(id,name,email,number)
 		{
-			//
-			tableEnvio ='<button style="position:relative; float:right;" type="button" class="btn btn-xs btn-danger" id="removeCliente_'+id+'" onclick="removeCliente('+id+');">Desasociar cliente</button>'+
-			'<table class=""><tbody><tr><td><b>Nombre Completo:</b></td></tr>'+
-				'<tr id="row_'+id+'"><td style="padding-left:10px;">'+name+' &nbsp;&nbsp;<br><br></td><td></td></tr></tbody>'+
-			'</table>';
-			//
-			var table='<button style="position:relative; float:right;" type="button" class="btn btn-xs btn-danger" id="removeCliente_'+id+'" onclick="removeCliente('+id+');">Desasociar cliente</button>';
-			table+='<table class=""><tbody>';
 			
-			var cliente=$("#cliente_"+id).val();
-			
-			if(cliente==undefined)
-			{
-							
-				table+='<tr><td><b>Nombre Completo:</b></td></tr>';
-				table+='<tr id="row_'+id+'"> '+
-							'<td style="padding-left:10px;">'+name+' &nbsp;&nbsp;<br><br> </td>	<td></td>'+
-						'</tr>'+
-						'<tr> <td><b>Direcciones de envío:</b></td> </tr>'+
-						'<tr> <td style="padding-left:10px;"> '+txtDireccionesEnvio+' <br> </td> </tr>'+									
-						'<tr> <td><b>Direcciones de facturación:</b></td> </tr>'+
-						'<tr> <td class="desc" style="padding-left:10px;"> '+txtDireccionesFacturacion+' </td> </tr>'+
-						'</tbody></table>';
-						
-				table_extra = '<b>Teléfonos:</b><br>'+number.replace(/,/g,"<br>")+'<br><br><b>Correos:</b><br>'+email.replace(/,/g,"<br>");
-				
-				$('#divBuscaCliente_0').html(table);				
-				$('#divBuscaCliente_extra_0').html(table_extra);
-				
-				$('#divBuscaClienteEnvio').html(tableEnvio);
-				$('#divBuscaClienteFacturacion').html(tableEnvio);
-				
-				array_emails = email.split(",");
-				for (indice in array_emails){
-					$("#correo_p_facturacion").append('<option value="'+array_emails[indice]+'">'+array_emails[indice]+'</option>')
-				}
-				
-				//$("#inputBuscaCliente").focus(); // foco a input
-				
-				$("#inputBuscaCliente_0").val(''); // reset a input
-				$("#inputBuscaCliente").val('');
-				$("#inputBuscaCliente_1").val('');
-				//$("#product_list").fadeIn();
-							
-				
-			}
-			else
-			{
-				//$("#inputBuscaCliente").focus();
-				//$("#inputBuscaCliente").val('');
-				alert("El cliente ya ha sido ligado");
-			}
-		}
-		
-		var SelectedItemData_0=function(id,name,email,number)
-		{
-			//
-			tableEnvio ='<button style="position:relative; float:right;" type="button" class="btn btn-xs btn-danger" id="removeCliente_'+id+'" onclick="removeCliente('+id+');">Desasociar cliente</button>'+
+			var tableGeneralData ='<button style="position:relative; float:right;" type="button" class="btn btn-xs btn-danger" id="removeCliente_'+id+'" onclick="removeCliente('+id+');">Desasociar cliente</button>'+
 			'<table class=""><tbody><tr><td><b>Nombre Completo:</b></td></tr>'+
-				'<tr id="row_'+id+'"><td style="padding-left:10px;">'+name+' &nbsp;&nbsp;<br><br></td><td></td></tr></tbody>'+
-			'</table>';
-			//
-			var table='<button style="position:relative; float:right;" type="button" class="btn btn-xs btn-danger" id="removeCliente_'+id+'" onclick="removeCliente('+id+');">Desasociar cliente</button>';
-			table+='<table class=""><tbody>';
+				'<tr id="row_'+id+'"><td style="padding-left:10px;"><i class="fa fa-user"></i> '+cssEspacios+name+' &nbsp;&nbsp;<br><br> </td><td></td></tr>'+
+			'</tbody></table>';
 
-			var cliente=$("#cliente_"+id).val();
+			//var cliente=$("#cliente_"+id).val();
 			
-			if(cliente==undefined)
+			if(1)//cliente==undefined)
 			{		
-				table+='<tr><td><b>Nombre Completo:</b></td></tr>';
-				table+='<tr id="row_'+id+'"> '+
-							'<td style="padding-left:10px;">'+name+' &nbsp;&nbsp;<br><br> </td>	<td></td>'+
-						'</tr>'+
-						'<tr> <td><b>Direcciones de envío:</b></td> </tr>'+
-						'<tr> <td style="padding-left:10px;"> '+txtDireccionesEnvio+' <br> </td> </tr>'+									
-						'<tr> <td><b>Direcciones de facturación:</b></td> </tr>'+
-						'<tr> <td class="desc" style="padding-left:10px;"> '+txtDireccionesFacturacion+' </td> </tr>'+
-						'</tbody></table>';
+				var tableDetailedData = tableGeneralData+
+				'<table class=""><tbody><tr> <td><b>Direcciones de envío:</b></td> </tr>'+
+				'<tr> <td style="padding-left:10px;"> '+txtDireccionesEnvio+' <br> </td> </tr>'+									
+				'<tr> <td><b>Direcciones de facturación:</b></td> </tr>'+
+				'<tr> <td class="desc" style="padding-left:10px;"> '+txtDireccionesFacturacion+' </td> </tr>'+
+				'</tbody></table>';
 				
-				//
 				number_detail = number.split(",");
 				var txtTelefonosTipo = '<table>';
 				
@@ -1596,32 +1477,29 @@ if($esApartado){
 				
 				txtTelefonosTipo+='</table>';
 				
-				table_extra = '<b>Teléfonos:</b><br>'+txtTelefonosTipo+'<br><br><b>Correos:</b><br>'+email.replace(/,/g,"<br>");
+				table_extra = '<b>Teléfonos:</b><br>'+txtTelefonosTipo+'<br><br><b>Correos:</b><br><i class="fa fa-envelope-o"></i> '+cssEspacios+email.replace(/,/g,'<br><i class="fa fa-envelope-o"></i> '+cssEspacios);
 		
-				$('#divBuscaCliente_0').html(table);
+				$('#divBuscaCliente_0').html(tableDetailedData);
 				
 				$('#divBuscaCliente_extra_0').html(table_extra);
 				
-				$('#divBuscaClienteEnvio').html(tableEnvio);
-				$('#divBuscaClienteFacturacion').html(tableEnvio);
+				$('#divBuscaClienteEnvio').html(tableGeneralData);
+				$('#divBuscaClienteFacturacion').html(tableGeneralData);
 		
-				$("#inputBuscaCliente_0").focus();
-				$("#inputBuscaCliente_0").val('');
-				//$("#product_list").fadeIn();
-							
-							//saveClienteEnVenta(id, sku, name, 1, price,urlImage);
-			}
-			else
-			{
-				$("#inputBuscaCliente_0").focus();
-				$("#inputBuscaCliente_0").val('');
-				alert("El cliente ya ha sido ligado");
+				$("#inputBuscaClienteFromDatos").focus();
+				$("#inputBuscaClienteFromDatos").val('');
+				
+				$("#inputBuscaClienteFromEnvio").focus();
+				$("#inputBuscaClienteFromEnvio").val('');
+				
+				$("#inputBuscaClienteFromFact").focus();
+				$("#inputBuscaClienteFromFact").val('');
 			}
 		}
 
-		$("#inputBuscaCliente_0").easyAutocomplete(options_0);
-		$("#inputBuscaCliente").easyAutocomplete(options);
-		$("#inputBuscaCliente_1").easyAutocomplete(options);
+		$("#inputBuscaClienteFromDatos").easyAutocomplete(options);
+		$("#inputBuscaClienteFromEnvio").easyAutocomplete(options);
+		$("#inputBuscaClienteFromFact").easyAutocomplete(options);
 			
        });
 	   
@@ -1759,6 +1637,7 @@ if($esApartado){
 			});
 			$("#divBuscaClienteInputEnvio").css("display","block");
 			$("#divBuscaClienteInputFacturacion").css("display","block");
+			
 	   }
 	   
 	   function agregaNuevoMetodoPago(){
@@ -1878,14 +1757,14 @@ if($esApartado){
 							newDivBtnsFact+= '<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo_'+val.cliente_direccion_id+'">'+val.cliente_direccion_calle+' '+val.cliente_direccion_numero_ext+'...</button> ';
 							newDivsFact+= '<div id="demo_'+val.cliente_direccion_id+'" class="collapse"><font id="demo_font_'+val.cliente_direccion_id+'" '+cssRowDireccion+'>'+val.cliente_direccion_calle+' '+val.cliente_direccion_numero_ext+' '+val.cliente_direccion_numero_int+' '+val.cliente_direccion_colonia+' '+val.cliente_direccion_municipio+', '+globalDataClient['id_'+val.cliente_direccion_id]['estado']+'. C.P. '+val.cliente_direccion_cp+'</font> &nbsp;&nbsp;&nbsp;<i id="demo_ico_'+val.cliente_direccion_id+'" class="fa fa-check-square '+cssIcoElegir+'" style="color:green;"></i><button type="button" class="btn btn-warning btn-xs '+cssBtnElegir+'" onclick="asociaDireccionFact('+val.cliente_direccion_id+');" style="margin:4px 0px;" id="demo_btn_'+val.cliente_direccion_id+'"> Elegir</button></div>';
 							
-							txtDireccionesFacturacion+= '<i class="fa fa-file-text-o"></i> '+val.cliente_direccion_calle+' '+val.cliente_direccion_numero_ext+' '+val.cliente_direccion_numero_int+' '+val.cliente_direccion_colonia+' '+val.cliente_direccion_municipio+', '+val.estado+'. C.P. '+val.cliente_direccion_cp+'<br>';
+							txtDireccionesFacturacion+= '<i class="fa fa-file-text-o"></i> '+cssEspacios+val.cliente_direccion_calle+' '+val.cliente_direccion_numero_ext+' '+val.cliente_direccion_numero_int+' '+val.cliente_direccion_colonia+' '+val.cliente_direccion_municipio+', '+val.estado+'. C.P. '+val.cliente_direccion_cp+'<br>';
 						}
 						if(val.cliente_direccion_tipo_id == 2 || val.cliente_direccion_tipo_id == 3){ //direcciones de envio
 						
 							newDivBtnsEnvio+= '<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo_'+val.cliente_direccion_id+'">'+val.cliente_direccion_calle+' '+val.cliente_direccion_numero_ext+'...</button> ';
 							newDivsEnvio+= '<div id="demo_'+val.cliente_direccion_id+'" class="collapse"><font id="demo_font_'+val.cliente_direccion_id+'" '+cssRowDireccion+'>'+val.cliente_direccion_calle+' '+val.cliente_direccion_numero_ext+' '+val.cliente_direccion_numero_int+' '+val.cliente_direccion_colonia+' '+val.cliente_direccion_municipio+', '+globalDataClient['id_'+val.cliente_direccion_id]['estado']+'. C.P. '+val.cliente_direccion_cp+'</font> &nbsp;&nbsp;&nbsp;<i id="demo_ico_'+val.cliente_direccion_id+'" class="fa fa-check-square '+cssIcoElegir+'" style="color:green;"></i><button type="button" class="btn btn-warning btn-xs '+cssBtnElegir+'" onclick="asociaDireccionEnvio('+val.cliente_direccion_id+');" style="margin:4px 0px;" id="demo_btn_'+val.cliente_direccion_id+'"> Elegir</button></div>';
 							
-							txtDireccionesEnvio+= '<i class="fa fa-map-marker"></i> '+val.cliente_direccion_calle+' '+val.cliente_direccion_numero_ext+' '+val.cliente_direccion_numero_int+' '+val.cliente_direccion_colonia+' '+val.cliente_direccion_municipio+', '+globalDataClient['id_'+val.cliente_direccion_id]['estado']+'. C.P. '+val.cliente_direccion_cp+'<br>';
+							txtDireccionesEnvio+= '<i class="fa fa-map-marker"></i> '+cssEspacios+val.cliente_direccion_calle+' '+val.cliente_direccion_numero_ext+' '+val.cliente_direccion_numero_int+' '+val.cliente_direccion_colonia+' '+val.cliente_direccion_municipio+', '+globalDataClient['id_'+val.cliente_direccion_id]['estado']+'. C.P. '+val.cliente_direccion_cp+'<br>';
 						}
 
 					});
@@ -2021,6 +1900,12 @@ if($esApartado){
 		select_planta_text = $("#select_planta option:selected").text();
 		select_planta_extra_text = $("#select_planta_extra option:selected").text();
 		
+		if(currentClientDireccionIdEnvio == '0'){
+			toastr.error("Debe elegir una dirección de envío");
+			return false;
+		}
+		
+		$("#modalDetalleEnvio").modal('hide');
 		$.ajax({
 			type: "POST",
 			url: url,
@@ -2053,6 +1938,17 @@ if($esApartado){
 		var url="/clientes/ajax_set_cliente_factura_data.php";
 		
 		select_correo_factura_text = $("#correo_p_facturacion option:selected").text();
+		if(select_correo_factura_text == 'Elegir un correo electrónico'){
+			toastr.error("Debe elegir un correo electrónico");
+			return false;
+		}
+		//alert(currentClientDireccionIdFact);
+		if(currentClientDireccionIdFact == '0'){
+			toastr.error("Debe elegir una dirección de facturación");
+			return false;
+		}
+		$("#ModalDetalleFacturacion").modal('hide');
+		
 		
 		$.ajax({
 			type: "POST",
@@ -2105,6 +2001,12 @@ if($esApartado){
 		var url="/clientes/ajax_set_cliente_sin_envio_data.php";
 		motivo = $("#SelSinEnvio option:selected").text();
 		
+		
+		if(motivo == 'Seleccione una opción'){
+			toastr.error("Debe elegir un motivo");
+			return false;
+		}
+		$("#modalVentaSinEnvio").modal('hide');
 		$.ajax({
 			type: "POST",
 			url: url,
@@ -2137,7 +2039,7 @@ if($esApartado){
 			url: url,
 			success: function(data)
 			{
-				
+				location.href = '/ventas/index.php';
 			}
 		});
 	}
