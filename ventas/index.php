@@ -88,17 +88,17 @@
                                     foreach($puntoVenta['Productos'] as $prod){
                                         
                                     
-                                    echo '  <tr id="row_'.$prod['ID'].'">
+                                    echo '  <tr id="row_'.$prod['ID'].'" data-sku="'.$prod['SKU'].'" data-modelo="'.$prod['Modelo'].'" data-imagen="'.$prod['Imagen'].'">
                                                 <td width="90">
                                                     <img src="'.$prod['Imagen'].'" height="80" width="80">
                                                 </td>
                                                 <td class="desc">
                                                     <h3><a href="#" class="text-navy">'.$prod['Modelo'].'</a></h3>                                                                                                                      
                                                 </td>
-                                                <td><span id="labelprecio_'.$prod['ID'].'">'.number_format($prod['Precio'],2,'.',',').'</span><br />
-                                                    <input type="number" id="precio_'.$prod['ID'].'" value="'.$prod['Precio'].'" min="'.$prod['Precio'].'" step="50"  /></td>
+                                                <td>$<span id="labelprecio_'.$prod['ID'].'">'.number_format($prod['Precio'],2,'.',',').'</span><br />
+                                                    <input type="number" id="precio_'.$prod['ID'].'" value="'.$prod['Precio'].'" min="'.$prod['Precio'].'" step="50" style="display: none" /></td>
                                                 <td><input id="cantidad_'.$prod['ID'].'" type="number" class="form-control cantidad" placeholder="1" min="1" value='.$prod['Cantidad'].'></td>
-                                                <td><h4>$ '.number_format($prod['Subtotal'],2,'.',',').'</h4></td>
+                                                <td><h4 id="subtotal_'.$prod['ID'].'">$ '.number_format($prod['Subtotal'],2,'.',',').'</h4></td>
                                                 <td style="text-align: center"><button class="btn btn-danger btn-md" ><i class="fa fa-trash removeCart" role="button" data-sku="'.$prod['SKU'].'" id="removeCart_'.$prod['ID'].'"></i></button></td>                                    
                                             </tr>';
                                     }
@@ -288,7 +288,19 @@ $(document).ready(function()
         });
         
     $(document).on("click", ".cantidad", function(e) {
-        alert($(this).attr('id'));
+        var id = $(this).attr('id').substr(9, 3);
+        var sku = $("#row_"+id).data('sku');
+        var modelo = $("#row_"+id).data('modelo');
+        var imagen = $("#row_"+id).data('imagen');
+        var precio = $("#precio_"+id).val();
+        var cantidad = $(this).val();
+        
+        $("#subtotal_"+id).html(addCommas(precio * cantidad));     
+        
+        $(this).change(function(){
+            saveCart(id, sku, modelo, cantidad, precio, imagen);
+        });        
+        
     });
 });
 
