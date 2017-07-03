@@ -179,7 +179,64 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 		<b>Correos:</b><br><i class="fa fa-envelope-o"></i> '.$cssEspacios.str_replace(',','<br><i class="fa fa-envelope-o"></i> '.$cssEspacios,$_SESSION["punto_venta"]["cliente"]["email"]);
 }
 
+//INFORMACION ENVIO Y FACTURA
+$txtDivInfoResumenEnvio = '';
+$txtDivInfoResumenFact = '';
 
+$cssIcoResumenEnvio = 'fa fa-question-circle';
+$cssIcoResumenFact = 'fa fa-question-circle';
+
+if(isset($_SESSION["punto_venta"]["envio"])){
+	if($_SESSION["punto_venta"]["envio"]["cliente_direccion_id"] == "0"){ //eligio sin envio
+		$cssIcoResumenEnvio = 'fa fa-times-circle-o redFont';
+		$txtDivInfoResumenEnvio.= 'Sin envío';
+	} else {
+	
+		$datosDireccion = array();
+		reset($_SESSION["punto_venta"]["cliente"]["direcciones"]);
+		while ( list($keyDirecciones, $valueDirecciones) = each( $_SESSION["punto_venta"]["cliente"]["direcciones"] )){
+			if($valueDirecciones["cliente_direccion_id"] == $_SESSION["punto_venta"]["envio"]["cliente_direccion_id"]){
+				$datosDireccion = $valueDirecciones;
+			}
+		}
+		if(!empty($datosDireccion)){
+			$cssIcoResumenEnvio = 'fa fa-check-square-o greenFont';
+			$txtDivInfoResumenEnvio.= $datosDireccion["cliente_direccion_calle"]." ".$datosDireccion["cliente_direccion_numero_ext"]." ".$datosDireccion["cliente_direccion_numero_int"]."<br>";
+			$txtDivInfoResumenEnvio.= $datosDireccion["cliente_direccion_colonia"]." ".$datosDireccion["cliente_direccion_municipio"].", ".$datosDireccion["estado"].". CP ".$datosDireccion["cliente_direccion_cp"]."<br>";
+			$txtDivInfoResumenEnvio.= "Fecha de entrega: ".$_SESSION["punto_venta"]["envio"]["fecha_hora_entrega"]."<br>";
+		}
+		
+	}
+}
+
+if(isset($_SESSION["punto_venta"]["facturacion"])){
+	
+	if($_SESSION["punto_venta"]["facturacion"]["cliente_direccion_id"] == "0"){ //eligio sin envio
+		$cssIcoResumenFact = 'fa fa-times-circle-o redFont';
+		$txtDivInfoResumenFact.= 'Sin factura';
+	} else {
+		
+		$datosDireccion = array();
+		reset($_SESSION["punto_venta"]["cliente"]["direcciones"]);
+		while ( list($keyDirecciones, $valueDirecciones) = each( $_SESSION["punto_venta"]["cliente"]["direcciones"] )){
+			if($valueDirecciones["cliente_direccion_id"] == $_SESSION["punto_venta"]["facturacion"]["cliente_direccion_id"]){
+				$datosDireccion = $valueDirecciones;
+			}
+		}
+		
+		if(!empty($datosDireccion)){
+			//print_r($datosDireccion);
+			
+			$cssIcoResumenFact = 'fa fa-check-square-o greenFont';
+			$txtDivInfoResumenFact.= "Razón Social: ".$datosDireccion["cliente_direccion_razon_social"]."<br>";
+			$txtDivInfoResumenFact.= "RFC: ".$datosDireccion["cliente_direccion_rfc"]."<br>";
+			$txtDivInfoResumenFact.= $datosDireccion["cliente_direccion_calle"]." ".$datosDireccion["cliente_direccion_numero_ext"]." ".$datosDireccion["cliente_direccion_numero_int"]."<br>";
+			$txtDivInfoResumenFact.= $datosDireccion["cliente_direccion_colonia"]." ".$datosDireccion["cliente_direccion_municipio"].", ".$datosDireccion["estado"].". CP ".$datosDireccion["cliente_direccion_cp"]."<br>";
+			$txtDivInfoResumenFact.= "enviar factura a: ".$_SESSION["punto_venta"]["facturacion"]["select_correo_factura"]."<br>";
+		}
+	}
+}
+//INFORMACION ENVIO Y FACTURA FIN
 ?> 
 <link href="<?=$raizProy?>css/plugins/iCheck/custom.css" rel="stylesheet">
 <link href="<?=$raizProy?>css/plugins/steps/jquery.steps.css" rel="stylesheet">
@@ -284,22 +341,31 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 								<!-- INICIA SELECCION ENVIO -->
                                 <fieldset>
                                    
-									<div class="form-group">
-										
-										<div class="col-lg-12">
+									<div class="row">
+										<div class="col-lg-8">
+										<div class="ibox-content">
 											<div align="center"><font style="font-size:25px;">¿Requiere envío a domicilio?</font></div>
-											<br><br><br><div align="center">
-													
+											<br><br><br>
+											<div align="center">
 													<table>
 														<tr>
 															<td><button class="btn btn-primary dim btn-large-dim" type="button" data-toggle="modal" data-target="#modalDetalleEnvio">SÍ</button></td>
 															<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 															<td><button class="btn btn-danger dim btn-large-dim" type="button" data-toggle="modal" data-target="#modalVentaSinEnvio" onclick="ventaSinEnvio();" >NO</button></td>
 														</tr>
-											</div>	</table>
+												</table>
+											</div>
 										</div>
-										
-										
+										</div>
+										<div class="col-lg-4">
+											<div class="ibox-content">
+												<b><i class="fa fa-truck" style="font-size:20px;"></i> &nbsp;&nbsp;DATOS DE ENVÍO</b><br><br>
+												<i id="icoResumenEnvio" class="<?=$cssIcoResumenEnvio?>" style="font-size:20px;"></i> &nbsp;<font style="font-size:15px;"><b>Envío a domicilio</b></font>
+												<div id="divInfoResumenEnvioSelf">
+													<?=$txtDivInfoResumenEnvio?>
+												</div>
+											</div>
+										</div>
 									</div>
 								   
                                 </fieldset>
@@ -314,19 +380,31 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 								
 									<div class="form-group">
 										
-										<div class="col-lg-12">
+										<div class="col-lg-8">
+										<div class="ibox-content">
 											<div align="center"><font style="font-size:25px;">¿Requiere factura?</font></div>
-											<br><br><br><div align="center">
-													
+											<br><br><br>
+											<div align="center">
 													<table>
 														<tr>
 															<td><button class="btn btn-primary dim btn-large-dim" type="button"  data-toggle="modal" data-target="#ModalDetalleFacturacion">SÍ</button></td>
 															<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 															<td><button class="btn btn-danger dim btn-large-dim" type="button" onclick="ventaSinFactura();">NO</button></td>
 														</tr>
-											</div>	</table>
+													</table>
+											</div>
+										</div>
 										</div>
 										
+										<div class="col-lg-4">
+											<div class="ibox-content">
+												<b><i class="fa fa-dollar" style="font-size:20px;"></i> &nbsp;&nbsp;DATOS DE FACTURACIÓN</b><br><br>
+												<i id="icoResumenFactura" class="<?=$cssIcoResumenFact?>" style="font-size:20px;"></i> &nbsp;<font style="font-size:15px;"><b>Requiere Factura</b></font>
+												<div id="divInfoResumenFacturaSelf">
+													<?=$txtDivInfoResumenFact?>
+												</div>
+											</div>
+										</div>
 										
 									</div>
 								
@@ -507,72 +585,6 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 									<div>
 									
 									<div class="col-lg-8" >
-										<!-- 
-										fa fa-check-square-o greenFont
-										fa-question-circle
-										-->
-										<?php
-											
-											$txtDivInfoResumenEnvio = '';
-											$txtDivInfoResumenFact = '';
-											
-											$cssIcoResumenEnvio = 'fa fa-question-circle';
-											$cssIcoResumenFact = 'fa fa-question-circle';
-											
-											if(isset($_SESSION["punto_venta"]["envio"])){
-												if($_SESSION["punto_venta"]["envio"]["cliente_direccion_id"] == "0"){ //eligio sin envio
-													$cssIcoResumenEnvio = 'fa fa-times-circle-o redFont';
-													$txtDivInfoResumenEnvio.= 'Sin envío';
-												} else {
-												
-													$datosDireccion = array();
-													reset($_SESSION["punto_venta"]["cliente"]["direcciones"]);
-													while ( list($keyDirecciones, $valueDirecciones) = each( $_SESSION["punto_venta"]["cliente"]["direcciones"] )){
-														if($valueDirecciones["cliente_direccion_id"] == $_SESSION["punto_venta"]["envio"]["cliente_direccion_id"]){
-															$datosDireccion = $valueDirecciones;
-														}
-													}
-													if(!empty($datosDireccion)){
-														$cssIcoResumenEnvio = 'fa fa-check-square-o greenFont';
-														$txtDivInfoResumenEnvio.= $datosDireccion["cliente_direccion_calle"]." ".$datosDireccion["cliente_direccion_numero_ext"]." ".$datosDireccion["cliente_direccion_numero_int"]."<br>";
-														$txtDivInfoResumenEnvio.= $datosDireccion["cliente_direccion_colonia"]." ".$datosDireccion["cliente_direccion_municipio"].", ".$datosDireccion["estado"].". CP ".$datosDireccion["cliente_direccion_cp"]."<br>";
-														$txtDivInfoResumenEnvio.= "Fecha de entrega: ".$_SESSION["punto_venta"]["envio"]["fecha_hora_entrega"]."<br>";
-													}
-													
-												}
-											}
-											
-											
-											if(isset($_SESSION["punto_venta"]["facturacion"])){
-												
-												if($_SESSION["punto_venta"]["facturacion"]["cliente_direccion_id"] == "0"){ //eligio sin envio
-													$cssIcoResumenFact = 'fa fa-times-circle-o redFont';
-													$txtDivInfoResumenFact.= 'Sin factura';
-												} else {
-													
-													$datosDireccion = array();
-													reset($_SESSION["punto_venta"]["cliente"]["direcciones"]);
-													while ( list($keyDirecciones, $valueDirecciones) = each( $_SESSION["punto_venta"]["cliente"]["direcciones"] )){
-														if($valueDirecciones["cliente_direccion_id"] == $_SESSION["punto_venta"]["facturacion"]["cliente_direccion_id"]){
-															$datosDireccion = $valueDirecciones;
-														}
-													}
-													
-													if(!empty($datosDireccion)){
-														//print_r($datosDireccion);
-														
-														$cssIcoResumenFact = 'fa fa-check-square-o greenFont';
-														$txtDivInfoResumenFact.= "Razón Social: ".$datosDireccion["cliente_direccion_razon_social"]."<br>";
-														$txtDivInfoResumenFact.= "RFC: ".$datosDireccion["cliente_direccion_rfc"]."<br>";
-														$txtDivInfoResumenFact.= $datosDireccion["cliente_direccion_calle"]." ".$datosDireccion["cliente_direccion_numero_ext"]." ".$datosDireccion["cliente_direccion_numero_int"]."<br>";
-														$txtDivInfoResumenFact.= $datosDireccion["cliente_direccion_colonia"]." ".$datosDireccion["cliente_direccion_municipio"].", ".$datosDireccion["estado"].". CP ".$datosDireccion["cliente_direccion_cp"]."<br>";
-														$txtDivInfoResumenFact.= "enviar factura a: ".$_SESSION["punto_venta"]["facturacion"]["select_correo_factura"]."<br>";
-													}
-												}
-											}
-											
-											
-										?>
 										<i id="icoResumenEnvio" class="<?=$cssIcoResumenEnvio?>" style="font-size:20px;"></i> &nbsp;<font style="font-size:15px;"><b>Envío a domicilio</b></font>
 										<div id="divInfoResumenEnvio">
 											<?=$txtDivInfoResumenEnvio?>

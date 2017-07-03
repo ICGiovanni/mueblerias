@@ -41,7 +41,7 @@ $rowsGastosSucursal = $objGasto->getGastosSucursal();
 
 
 $asoccGastoCategoria = array();
-$options_gasto_categoria_id = '<option value="0">-- Elige un Categoría --</option>';
+$options_gasto_categoria_id = '<option value="0">Selecciona una categoría</option>';
 while(list(,$dataGastoCategoria) = each($rowsGastosCategoria)){
 	$selected = '';
 	if(isset($_GET["filtro_categoria_id"]) && $_GET["filtro_categoria_id"] == $dataGastoCategoria["gasto_categoria_id"]){
@@ -52,7 +52,7 @@ while(list(,$dataGastoCategoria) = each($rowsGastosCategoria)){
 }
 
 $asoccGastoStatus = array();
-$options_gasto_status_id = '<option value="0">-- Elige un Status --</option>';
+$options_gasto_status_id = '<option value="0">Selecciona un status</option>';
 while(list(,$dataGastoStatus) = each($rowsGastosStatus)){
 	$selected = '';
 	if(isset($_GET["filtro_status_id"]) && $_GET["filtro_status_id"] == $dataGastoStatus["gasto_status_id"]){
@@ -63,7 +63,7 @@ while(list(,$dataGastoStatus) = each($rowsGastosStatus)){
 }
 
 $asoccGastoSucursal = array();
-$options_sucursal_id = '<option value="0">-- Elige una Sucursal --</option>';
+$options_sucursal_id = '<option value="0">Selecciona una sucursal</option>';
 while(list(,$dataGastoSucursal) = each($rowsGastosSucursal)){
 	$selected = '';
 	if(isset($_GET["filtro_sucursal_id"]) && $_GET["filtro_sucursal_id"] == $dataGastoSucursal["sucursal_id"]){
@@ -186,7 +186,7 @@ while(list(,$dataGasto) = each($rows)){
 					
 						<div class="form-group" id="data_rango_inicio" >
 							<div class="input-group date input-group m-b">
-								<span class="input-group-addon"><i class="fa fa-calendar"></i></span><span class="input-group-addon">inicio</span><input type="text" class="form-control" id="filtro_fecha_inicio" name="filtro_fecha_inicio" value="">
+								<span class="input-group-addon"><i class="fa fa-calendar"></i></span><span class="input-group-addon">inicio</span><input style="width:110px;" type="text" class="form-control" id="filtro_fecha_inicio" name="filtro_fecha_inicio" value="">
 							</div>
 						</div>
 					</td>
@@ -194,7 +194,7 @@ while(list(,$dataGasto) = each($rows)){
 						
 						<div class="form-group" id="data_rango_fin" >
 							<div class="input-group date input-group m-b">
-								<span class="input-group-addon"><i class="fa fa-calendar"></i></span><span class="input-group-addon">fin</span><input type="text" class="form-control" id="filtro_fecha_fin" name="filtro_fecha_fin" value="">
+								<span class="input-group-addon"><i class="fa fa-calendar"></i></span><span class="input-group-addon">fin</span><input style="width:110px;" type="text" class="form-control" id="filtro_fecha_fin" name="filtro_fecha_fin" value="">
 							</div>
 						</div>
 					</td>

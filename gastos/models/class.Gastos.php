@@ -596,7 +596,7 @@ class Gasto {
 	
 	public function creaNomina($params){
 		
-		$sql = "SELECT login_id, salary, salary_periodicity, firstName, lastName FROM inv_login";
+		$sql = "SELECT login_id, salary, salary_periodicity, firstName, lastName FROM inv_login WHERE status_id = 1";
 		
 		$statement = $this->connect->prepare($sql);
 		$statement->execute();
