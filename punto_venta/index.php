@@ -351,7 +351,7 @@ if(isset($_SESSION["punto_venta"]["facturacion"])){
 														<tr>
 															<td><button class="btn btn-primary dim btn-large-dim" type="button" data-toggle="modal" data-target="#modalDetalleEnvio">SÍ</button></td>
 															<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-															<td><button class="btn btn-danger dim btn-large-dim" type="button" data-toggle="modal" data-target="#modalVentaSinEnvio" onclick="ventaSinEnvio();" >NO</button></td>
+															<td><button class="btn btn-danger dim btn-large-dim" type="button" data-toggle="modal" data-target="#modalVentaSinEnvio" >NO</button></td>
 														</tr>
 												</table>
 											</div>
@@ -399,7 +399,7 @@ if(isset($_SESSION["punto_venta"]["facturacion"])){
 										<div class="col-lg-4">
 											<div class="ibox-content">
 												<b><i class="fa fa-dollar" style="font-size:20px;"></i> &nbsp;&nbsp;DATOS DE FACTURACIÓN</b><br><br>
-												<i id="icoResumenFactura" class="<?=$cssIcoResumenFact?>" style="font-size:20px;"></i> &nbsp;<font style="font-size:15px;"><b>Requiere Factura</b></font>
+												<i id="icoResumenFacturaSelf" class="<?=$cssIcoResumenFact?>" style="font-size:20px;"></i> &nbsp;<font style="font-size:15px;"><b>Requiere Factura</b></font>
 												<div id="divInfoResumenFacturaSelf">
 													<?=$txtDivInfoResumenFact?>
 												</div>
@@ -949,8 +949,8 @@ if($esApartado){
 	
 		var currentClientDireccionIdEnvio = 0;
 		var currentClientDireccionIdFact = 0;
-		var bandera_datos_completos_envio = false;
-		var bandera_datos_completos_fact = false;
+		var bandera_datos_completos_envio = <?=isset($_SESSION["punto_venta"]["envio"])?"true":"false"?>;
+		var bandera_datos_completos_fact = <?=isset($_SESSION["punto_venta"]["facturacion"])?"true":"false"?>;
 <?php
 		if( isset($_SESSION["punto_venta"]["cliente"]["cliente_direccion_id_envio"]) ){
 			echo "
@@ -1491,6 +1491,13 @@ if($esApartado){
 				
 				table_extra = '<b>Teléfonos:</b><br>'+txtTelefonosTipo+'<br><br><b>Correos:</b><br><i class="fa fa-envelope-o"></i> '+cssEspacios+email.replace(/,/g,'<br><i class="fa fa-envelope-o"></i> '+cssEspacios);
 		
+				email_detail = email.split(",");
+				for(indice in email_detail){
+					
+					$('#correo_p_facturacion').append('<option value="'+(indice+1)+'">'+email_detail[indice]+'</option>');
+				}
+				
+		
 				$('#divBuscaCliente_0').html(tableDetailedData);
 				
 				$('#divBuscaCliente_extra_0').html(table_extra);
@@ -1823,13 +1830,18 @@ if($esApartado){
 			$("#icoResumenEnvio").removeClass();
 			$("#icoResumenEnvio").addClass("fa fa-times-circle-o redFont");
 			$("#divInfoResumenEnvio").html("Sin envío");
-			
+			$("#divInfoResumenEnvioSelf").html("Sin envío");
 	   }
 	   
 	function ventaSinFactura(){
 		$("#icoResumenFactura").removeClass();
+		$("#icoResumenFacturaSelf").removeClass();
+		
 		$("#icoResumenFactura").addClass("fa fa-times-circle-o redFont");
+		$("#icoResumenFacturaSelf").addClass("fa fa-times-circle-o redFont");
+		
 		$("#divInfoResumenFactura").html("Sin factura");
+		$("#divInfoResumenFacturaSelf").html("Sin factura");
 		
 		var url="/clientes/ajax_set_cliente_sin_factura_data.php";
 
@@ -1859,7 +1871,10 @@ if($esApartado){
 	   
 	function ventaConFactura(){
 		$("#icoResumenFactura").removeClass();
+		$("#icoResumenFacturaSelf").removeClass();
+		
 		$("#icoResumenFactura").addClass("fa fa-check-square-o greenFont");
+		$("#icoResumenFacturaSelf").addClass("fa fa-check-square-o greenFont");
 		
 		txtDireccionFact = "Razón Social: "+globalDataClient['id_'+currentClientDireccionIdFact]['cliente_direccion_razon_social']+"<br>";
 		txtDireccionFact+= "RFC: "+globalDataClient['id_'+currentClientDireccionIdFact]['cliente_direccion_rfc']+"<br>";
@@ -2018,7 +2033,16 @@ if($esApartado){
 			toastr.error("Debe elegir un motivo");
 			return false;
 		}
+		
 		$("#modalVentaSinEnvio").modal('hide');
+		$("#costoEnvioEnPago").html("$ 0");
+		$("#costoEnvioEnResumen").html("$ 0");
+		$("#costoEnvio").val(0);
+		
+		actualizaResumenVenta();
+		ventaSinEnvio();
+		bandera_datos_completos_envio = true;
+		
 		$.ajax({
 			type: "POST",
 			url: url,
@@ -2032,12 +2056,7 @@ if($esApartado){
 						text: "Los datos de NO envío han sido guardados correctamente!",
 						type: "success"
 					}, function () {
-						$("#costoEnvioEnPago").html("$ 0");
-						$("#costoEnvioEnResumen").html("$ 0");
-						$("#costoEnvio").val(0);
-						bandera_datos_completos_envio = true;
 						$("#form").steps("next");
-						actualizaResumenVenta();
 					});
 			}
 		});
