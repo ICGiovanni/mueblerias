@@ -45,6 +45,7 @@ $clientFromSessionExtra = '';
 $clientAddressFactFromSession = '';
 $clientAddressShipFromSession = '';
 $cssEspacios = '&nbsp;';
+
 if(isset($_SESSION["punto_venta"]["cliente"])){
 	
 	
@@ -360,7 +361,7 @@ if(isset($_SESSION["punto_venta"]["facturacion"])){
 										<div class="col-lg-4">
 											<div class="ibox-content">
 												<b><i class="fa fa-truck" style="font-size:20px;"></i> &nbsp;&nbsp;DATOS DE ENVÍO</b><br><br>
-												<i id="icoResumenEnvio" class="<?=$cssIcoResumenEnvio?>" style="font-size:20px;"></i> &nbsp;<font style="font-size:15px;"><b>Envío a domicilio</b></font>
+												<i id="icoResumenEnvioSelf" class="<?=$cssIcoResumenEnvio?>" style="font-size:20px;"></i> &nbsp;<font style="font-size:15px;"><b>Envío a domicilio</b></font>
 												<div id="divInfoResumenEnvioSelf">
 													<?=$txtDivInfoResumenEnvio?>
 												</div>
@@ -799,7 +800,11 @@ if($esApartado){
 								$arrayMails = explode(",",$_SESSION["punto_venta"]["cliente"]["email"]);
 								$optionsMail = '';
 								while( list($keyMail, $valueMail) = each($arrayMails) ){
-									$optionsMail.='<option value="'.$valueMail.'">'.$valueMail.'</option>'; 
+									$opt_selected = '';
+									if($_SESSION["punto_venta"]["facturacion"]["select_correo_factura"] == $valueMail){
+										$opt_selected = 'selected ';
+									}
+									$optionsMail.='<option '.$opt_selected.'value="'.$valueMail.'">'.$valueMail.'</option>'; 
 								}
 							}
 						?>
@@ -1059,7 +1064,7 @@ if($esApartado){
                     }
 					
 					if(newIndex === 2){
-						//alert("envio completo: "+bandera_datos_completos_envio);
+						
 						if(!bandera_datos_completos_envio){
 							toastr.error("Debe elegir si requiere envío o no");
 							return false;
@@ -1068,7 +1073,7 @@ if($esApartado){
 					}
 
                     if(newIndex === 3){
-						//alert("envio completo: "+bandera_datos_completos_envio);
+						
 						if(!bandera_datos_completos_fact){
 							toastr.error("Debe elegir si requiere factura o no");
 							return false;
@@ -1815,8 +1820,13 @@ if($esApartado){
 	   }
 	   
 	   function ventaConEnvio(){
+		   
+			bandera_datos_completos_envio = true;
+			
 			$("#icoResumenEnvio").removeClass();
+			$("#icoResumenEnvioSelf").removeClass();
 			$("#icoResumenEnvio").addClass("fa fa-check-square-o greenFont");
+			$("#icoResumenEnvioSelf").addClass("fa fa-check-square-o greenFont");
 			
 			txtDireccionEnvio = globalDataClient['id_'+currentClientDireccionIdEnvio]['cliente_direccion_calle']+" "+globalDataClient['id_'+currentClientDireccionIdEnvio]['cliente_direccion_numero_ext']+", "+globalDataClient['id_'+currentClientDireccionIdEnvio]['cliente_direccion_colonia']+"<br>";
 			txtDireccionEnvio+= globalDataClient['id_'+currentClientDireccionIdEnvio]['cliente_direccion_municipio']+", "+globalDataClient['id_'+currentClientDireccionIdEnvio]['estado']+". C.P. "+globalDataClient['id_'+currentClientDireccionIdEnvio]['cliente_direccion_cp']+"<br>";
@@ -1824,11 +1834,14 @@ if($esApartado){
 			txtDireccionEnvio+="Fecha y hora de entrega: "+fec_ven_arr[0]+"/"+meses[fec_ven_arr[1]]+"/"+fec_ven_arr[2]+" "+$("#pv_hora_vencimiento").val()+" hrs<br>";
 	
 			$("#divInfoResumenEnvio").html(txtDireccionEnvio);
+			$("#divInfoResumenEnvioSelf").html(txtDireccionEnvio);
 	   }
 	   
 	   function ventaSinEnvio(){
 			$("#icoResumenEnvio").removeClass();
+			$("#icoResumenEnvioSelf").removeClass();
 			$("#icoResumenEnvio").addClass("fa fa-times-circle-o redFont");
+			$("#icoResumenEnvioSelf").addClass("fa fa-times-circle-o redFont");
 			$("#divInfoResumenEnvio").html("Sin envío");
 			$("#divInfoResumenEnvioSelf").html("Sin envío");
 	   }
@@ -1870,6 +1883,10 @@ if($esApartado){
 	}
 	   
 	function ventaConFactura(){
+		
+		requiere_factura = true;
+		bandera_datos_completos_fact = true;
+		
 		$("#icoResumenFactura").removeClass();
 		$("#icoResumenFacturaSelf").removeClass();
 		
@@ -1882,6 +1899,7 @@ if($esApartado){
 		txtDireccionFact+= globalDataClient['id_'+currentClientDireccionIdFact]['cliente_direccion_municipio']+", "+globalDataClient['id_'+currentClientDireccionIdFact]['estado']+". C.P. "+globalDataClient['id_'+currentClientDireccionIdFact]['cliente_direccion_cp']+"<br>";
 		
 		$("#divInfoResumenFactura").html(txtDireccionFact);
+		$("#divInfoResumenFacturaSelf").html(txtDireccionFact);
 		
 		$("#h4_iva").html("$ "+( parseInt(subtotal) * 0.16));
 		$("#td_iva").html("$ "+( parseInt(subtotal) * 0.16));
@@ -1933,6 +1951,8 @@ if($esApartado){
 		}
 		
 		$("#modalDetalleEnvio").modal('hide');
+		ventaConEnvio();
+		
 		$.ajax({
 			type: "POST",
 			url: url,
@@ -1951,9 +1971,9 @@ if($esApartado){
 						text: "Los datos de envío han sido guardados correctamente!",
 						type: "success"
 					}, function () {
-						bandera_datos_completos_envio = true;
+						
 						$("#form").steps("next");
-						ventaConEnvio();
+						
 					});
 			}
 		});
@@ -1976,6 +1996,7 @@ if($esApartado){
 		}
 		$("#ModalDetalleFacturacion").modal('hide');
 		
+		ventaConFactura();
 		
 		$.ajax({
 			type: "POST",
@@ -1991,10 +2012,9 @@ if($esApartado){
 						text: "Los datos de facturación han sido guardados correctamente!",
 						type: "success"
 					}, function () {
-						requiere_factura = true;
-						bandera_datos_completos_fact = true;
+						
 						$("#form").steps("next");
-						ventaConFactura();
+						
 					});
 			}
 		});

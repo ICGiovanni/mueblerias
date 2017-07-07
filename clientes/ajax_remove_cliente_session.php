@@ -13,6 +13,9 @@ if( isset($_SESSION["punto_venta"]["pago"]) ){
 if( isset($_SESSION["punto_venta"]["facturacion"]) ){
 	unset($_SESSION["punto_venta"]["facturacion"]);
 }
+if( isset($_SESSION["punto_venta"]["[envio]"]) ){
+	unset($_SESSION["punto_venta"]["envio"]);
+}
 include $_SERVER['REDIRECT_PATH_CONFIG'].'/config.php';
 require_once($_SERVER["REDIRECT_PATH_CONFIG"].'clientes/models/class.Clientes.php');
 
