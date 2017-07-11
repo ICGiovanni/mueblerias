@@ -19,8 +19,13 @@ echo "<pre>";
 */
 //$dataUnique = $productos->GetProductsUnique();
 
-?>    
+?>
+<style type="text/css">
 
+.imgCarrito{
+    display: none;
+}
+</style>
 <link href="<?php echo $raizProy?>css/plugins/chosen/chosen.css" rel="stylesheet">
 
         <div class="row wrapper border-bottom white-bg page-heading">
@@ -131,14 +136,14 @@ echo "<pre>";
                         $puntoVenta = $_SESSION['punto_venta'];                    
                         foreach($puntoVenta['Productos'] as $product){                        
                             if($product['SKU']==$prod->producto_sku){
-                                $active = "visibility: visible";
+                                $active = "display: block";
                                 $cantidad = $product['Cantidad'];
                                 $verCarrito = 0;
                             }
                             if($prod->producto_type!='U'){
                                 foreach($prod->variaciones as $variacion){
                                     if($product['SKU']==$variacion->producto_sku){
-                                        $active = "visibility: visible";
+                                        $active = "display: block";
                                     }
                                 }
                             }
@@ -150,25 +155,35 @@ echo "<pre>";
                     if($prod->producto_type!='U'){                    
                         $url = 'detalleVariacion';                    
                     }
+                    $imgPromo='display: none;';
+                    $discount = false;
+                    if($prod->producto_price_public>$prod->producto_price_public_discount){
+                        $imgPromo='display: block';
+                        $discount=true;
+                    }
 
                     echo '  <div class="col-md-3" '.$styleClear.'>    
 
                                 <div class="ibox" >
-                                    <div class="ibox-content product-box">                                    
+                                    <div class="ibox-content product-box">                      
+                                        <img class="imgCarrito" id="line_'.$prod->producto_id.'" src="http://globmint.com/img/etiqueta_carrito.png" style="position: absolute; left: 15px; top: 5px; '.$active.'" />
+                                        <img src="http://globmint.com/img/etiqueta_promo.png" style="position: absolute; right: 9px; top: -7px; z-index: 999;'.$imgPromo.'" />          
                                         <a href="'.$url.'.php?producto_id='.base64_encode($prod->producto_id).'">
-                                        <div class="product-imitation" style="padding: 10px 0px">
-                                            <img src="'.$prod->imagen.'" alt="'.$prod->producto_sku.'" height="180px" width="200px" />
-                                            <div class="line" style="'.$active.'" id="line_'.$prod->producto_id.'"><span style="color: #FFF; padding: 0px 10px" class="diagonal">Punto de venta</span></div>    
+                                        <div class="product-imitation" style="padding: 5px 0px">                                            
+                                            <img src="'.$prod->imagen.'" alt="'.$prod->producto_sku.'" class="img-thumbnail" height="150px"/>                                                
                                         </div>
                                         </a>
                                         <div class="product-desc">
-                                            <a href="'.$url.'.php?producto_id='.base64_encode($prod->producto_id).'">
-                                            <span class="product-price">';
+                                            <a href="'.$url.'.php?producto_id='.base64_encode($prod->producto_id).'">';
 
                                             if($prod->producto_type=='U'){
-                                                echo "$&nbsp;".$prod->producto_price_public;
-                                            }else{                                            
-                                                echo '<small>ver modelos</small>';
+                                                if($discount==true){
+                                                    echo "&nbsp;<span class=\"product-price\" style='text-decoration:line-through;'>$".$prod->producto_price_public."</span>&nbsp;<span class=\"product-price\" style='background-color: #B0171D; color: #FFF; margin-top: 35px'>$".$prod->producto_price_public_discount."</span>";
+                                                }else{
+                                                    echo "<span class=\"product-price\">$&nbsp;".$prod->producto_price_public."</span>";
+                                                }
+                                            }else{
+                                                echo '<span class="product-price"><small>ver modelos</small></span>';
                                             }
 
                     echo '                  </span>
@@ -250,37 +265,3 @@ echo "<pre>";
 <link href="<?php echo $raizProy?>css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
 <script src="<?php echo $raizProy?>proveedores/js/addPuntoVenta.js"></script>
 <script src="<?php echo $raizProy?>js/plugins/dataTables/datatables.min.js"></script>    
-<style type="text/css">    
-    .line{
-        width: 0;
-        height: 0;
-        border-style: solid;
-        border-width: 120px 120px 0 0;
-        border-color: #ffb700 transparent transparent transparent;
-        line-height: 0px;
-        _border-color: #ffb700 #000000 #000000 #000000;
-        _filter: progid:DXImageTransform.Microsoft.Chroma(color='#000000');
-        position: absolute;
-        top: 0px;
-        left: 15px;
-        z-index: 0;
-        opacity: .6;
-        filter: alpha(opacity=60);
-        visibility: hidden;
-    }
-    .diagonal{
-        width: 125px;
-        height: 15px;        
-        -webkit-transform: translateY(34px) translateX(15px) rotate(-46deg);
-        position: absolute;
-        top: -110px;
-        left: -25px;
-        font-size: 14px;
-        z-index: 999;        
-    }
-    @media (min-width: 992px) {
-        .row .col-md-3{
-             
-        }
-    }    
-</style>    
