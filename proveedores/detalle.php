@@ -25,24 +25,24 @@ echo "</pre>";
 ?>
 <link href="<?php echo $raizProy?>css/plugins/slick/slick.css" rel="stylesheet">
 <link href="<?php echo $raizProy?>css/plugins/slick/slick-theme.css" rel="stylesheet">
-   
 
-    
         <div class="row wrapper border-bottom white-bg page-heading">
-            <div class="col-lg-10">
+            <div class="col-sm-4">
                 <h2>Catalogos</h2>
-                <ol class="breadcrumb">                    
+                <ol class="breadcrumb">
                     <li class="active">
                         <strong>Detalle de producto</strong>
                     </li>
                 </ol>
             </div>
-            <div class="col-lg-2">
-
+            <div class="col-sm-8">
+                <div class="title-action">
+                    <a href="./grid.php" class="btn btn-warning btn-xs"><i class="fa fa-arrow-left"></i> Regresar a listado</a>
+                </div>
             </div>
         </div>
 
-        <div class="wrapper wrapper-content animated fadeIn">
+<div class="wrapper wrapper-content animated fadeIn">
 
             <div class="row">
                 <div class="col-lg-12">
@@ -88,7 +88,7 @@ echo "</pre>";
                                         <?php echo $dataProduct->producto_description_corta?>
                                     </small>
                                     <div class="m-t-md">
-                                        <h2 class="product-main-price">$ <?php echo $dataProduct->producto_price_public?><small class="text-muted"> IVA incluido</small> </h2>
+                                        <h2 class="product-main-price">$ <?php echo number_format($dataProduct->producto_price_public, 2, '.',',');?> </h2>
                                     </div>
                                     <hr>
 
@@ -119,7 +119,7 @@ echo "</pre>";
                                     <hr>
                                     <div>
                                         <div class="btn-group">
-                                            <button class="btn btn-primary btn-sm" id='addPuntoVenta'><i class="fa fa-cart-plus"></i> Punto de venta</button>                                            
+                                            <button class="btn btn-warning btn-sm" id='addPuntoVenta'><i class="fa fa-cart-plus"></i> Punto de venta</button>
                                         </div>
                                     </div>
 
@@ -130,10 +130,11 @@ echo "</pre>";
 
                         </div>
                         <div class="ibox-footer">
-                            <span class="pull-right">
+                            <!-- <span class="pull-right">
                                 Full stock - <i class="fa fa-clock-o"></i> 14.04.2016 10:04 pm
                             </span>
                             The generated Lorem Ipsum is therefore always free
+                            -->
                         </div>
                     </div>
 

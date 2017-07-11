@@ -96,17 +96,15 @@
                     </select>
                 </div>    
             </div>  
-            <div class="form-group">                        
-                <label class="control-label col-sm-2">Comision</label>                        
-                <div class="col-md-6">
-                    <input class="form-control" id="comision" value="" placeholder="%" type="text">
-                </div>    
-            </div>  
-            <div class="form-group">                        
-                <label class="control-label col-sm-2">Salario</label>                        
-                <div class="col-md-6">
+            <div class="form-group">
+                <label class="control-label col-sm-2">Salario</label>
+                <div class="col-md-2">
                     <input class="form-control" id="salario" value="" type="text">
-                </div>    
+                </div>
+                <label class="control-label col-sm-2">Comision</label>                        
+                <div class="col-md-2">
+                    <input class="form-control" id="comision" value="" placeholder="%" type="text">
+                </div>
             </div>  
             <div class="form-group">                        
                 <label class="control-label col-sm-2">Periodicidad de pago</label>                        
@@ -142,14 +140,14 @@
                 <label class="control-label col-sm-2">Fecha de nacimiento</label>                        
                 <div class="col-md-6">
                     <div class="input-group date">
-                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span><input class="form-control" value="" type="text" id="fechaNacimiento">
+                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span><input class="form-control" value="" type="text" id="fechaNacimiento"  data-date-format='dd/mm/yyyy' >
                     </div>
                 </div>    
             </div>   
             <div class="form-group">                        
                 <label class="control-label col-sm-2">Calle</label>                        
                 <div class="col-md-6">
-                    <input class="form-control" id="calle" name="calle" value="" type="text">
+                    <textarea class="form-control" id="calle" name="calle"></textarea>
                 </div>    
             </div>                
             <div class="form-group">                        
@@ -175,7 +173,7 @@
                 </div>    
             </div>
             <div class="form-group">                        
-                <label class="control-label col-sm-2">Municipio</label>                        
+                <label class="control-label col-sm-2">Delegación&nbsp;/&nbsp;Municipio</label>
                 <div class="col-md-6">
                     <input class="form-control" id="municipio" name="municipio" value="" type="text">                            
                 </div>    

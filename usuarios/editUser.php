@@ -122,17 +122,15 @@
                         ?> 
                     </select>
                 </div>
-            </div>  
+            </div>
             <div class="form-group">
-                <label class="col-sm-2 control-label">Comision</label>
-		<div class="col-sm-6" >
-                    <input class="form-control" id="comision" value="<?php echo $infoUser['comision'] ?>" placeholder="%" type="text">
+                <label class="control-label col-sm-2">Salario</label>
+                <div class="col-md-2">
+                    <input class="form-control" id="salario" value="" type="text">
                 </div>
-            </div>  
-            <div class="form-group">
-                <label class="col-sm-2 control-label">Salario</label>
-		<div class="col-sm-6" >
-                    <input class="form-control" id="salario" value="<?php echo $infoUser['salary'] ?>" type="text">
+                <label class="control-label col-sm-2">Comision</label>
+                <div class="col-md-2">
+                    <input class="form-control" id="comision" value="" placeholder="%" type="text">
                 </div>
             </div>  
             <div class="form-group">
@@ -145,13 +143,7 @@
                         <option value="3" <?php if( $infoUser['salary_periodicity']==3){ echo "selected";} ?>>Mensual</option>                   
                     </select>
                 </div>
-            </div>                                      
-            <div class="form-group">
-                <label class="col-sm-2 control-label">Salario</label>
-		<div class="col-sm-6" >
-                    <input class="form-control" id="salario" value="<?php echo $infoUser['salary'] ?>" type="text">
-                </div>
-            </div>                              
+            </div>
                                              
             <?php 
             $i=0;
@@ -207,7 +199,11 @@
                 <label class="col-sm-2 control-label">Fecha de nacimiento</label>
 		<div class="col-sm-6" id="data_1">
                     <div class="input-group date">
-                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span><input class="form-control" value="<?php echo $infoUser['birthdate'] ?>" type="text" id="fechaNacimiento">
+                        <?php
+                        $date = new DateTime($infoUser['birthdate']);
+                        $fechaNacimiento = $date->format('d-m-Y');
+                        ?>
+                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span><input class="form-control" value="<?php echo $fechaNacimiento; ?>" type="text" id="fechaNacimiento">
                     </div>
                 </div>
             </div> 
@@ -240,7 +236,7 @@
                 </div>
             </div> 
             <div class="form-group">
-                <label class="col-sm-2 control-label">Municipio</label>
+                <label class="col-sm-2 control-label">Delegación&nbsp;/&nbsp;Municipio</label>
                 <div class="col-sm-6" >
                     <input class="form-control" id="municipio" name="municipio" value="<?php echo $address['municipality'] ?>" type="text">                            
                 </div>

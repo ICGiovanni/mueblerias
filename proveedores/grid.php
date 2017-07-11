@@ -12,9 +12,11 @@ $inventarios=new Inventarios();
 $proveedores = new Proveedor();
 
 $dataProducts = json_decode($productos->GetDataProductsMainJson());
-/*echo "<pre>";
+/*
+echo "<pre>";
     print_r($dataProducts);
-echo "<pre>";*/
+echo "<pre>";
+*/
 //$dataUnique = $productos->GetProductsUnique();
 
 ?>    
@@ -26,7 +28,7 @@ echo "<pre>";*/
                 <h2>Catalogos</h2>
                 <ol class="breadcrumb">                    
                     <li class="active">
-                        <strong>catalogo de productos</strong>
+                        <strong>Catalogo de Productos</strong>
                     </li>
                 </ol>
             </div>           
@@ -202,7 +204,7 @@ echo "<pre>";*/
                                             }        
                                             if($prod->producto_type=='U'){
                                                 if($verCarrito==1){
-                                                echo '<input type="text" id="cantidad_'.$prod->producto_id.'" value="'.$cantidad.'" size="3">&nbsp;';
+                                                echo '<input type="number" min="1" id="cantidad_'.$prod->producto_id.'" value="'.$cantidad.'" size="3" style="width: 70px">&nbsp;';
                                                 echo '<a href="#" class="btn btn-xs btn-outline btn-warning addCarrito addPuntoVenta" data-line="line_'.$prod->producto_id.'" id="addPuntoVenta_'.$prod->producto_id.'" 
                                                       data-imagen="'.$prod->imagen.'"
                                                       data-id="'.$prod->producto_id.'"

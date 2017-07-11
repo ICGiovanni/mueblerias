@@ -98,7 +98,7 @@
                                                 <td>$<span id="labelprecio_'.$prod['ID'].'">'.number_format($prod['Precio'],2,'.',',').'</span><br />
                                                     <input type="number" id="precio_'.$prod['ID'].'" value="'.$prod['Precio'].'" min="'.$prod['Precio'].'" step="50" style="display: none" /></td>
                                                 <td><input id="cantidad_'.$prod['ID'].'" type="number" class="form-control cantidad" placeholder="1" min="1" value='.$prod['Cantidad'].'></td>
-                                                <td><h4 id="subtotal_'.$prod['ID'].'">$ '.number_format($prod['Subtotal'],2,'.',',').'</h4></td>
+                                                <td><h4 id="subtotal_'.$prod['ID'].'" class="subtotal_sumar">$ '.number_format($prod['Subtotal'],2,'.',',').'</h4></td>
                                                 <td style="text-align: center"><button class="btn btn-danger btn-md" ><i class="fa fa-trash removeCart" role="button" data-sku="'.$prod['SKU'].'" id="removeCart_'.$prod['ID'].'"></i></button></td>                                    
                                             </tr>';
                                     }
@@ -110,7 +110,7 @@
                                 <tfoot class="ibox-content">
                                     <tr>                                        
                                         <td colspan="4" class="font-bold" style="text-align: right"><h3>TOTAL</h3></td>
-                                        <td><h3 class="text-right"> $ <?php echo number_format($total,2,'.',',');?></h3></td>
+                                        <td><h3 class="text-right" id="total_sumar"> $ <?php echo number_format($total,2,'.',',');?></h3></td>
                                         <td>&nbsp;</td>
                                     </tr>
                                 </tfoot>
@@ -236,8 +236,8 @@ $(document).ready(function()
                                             '<h3><a href="#" class="text-navy">'+name+'</a></h3>'+
                                         '</td>'+
                                         '<td>$ '+addCommas(price)+'</td>'+
-                                        '<td><input type="text" class="form-control" placeholder="1" value="1"></td>'+
-                                        '<td><h4>$ '+addCommas(price)+'</h4></td>'+
+                                        '<td><input type="number" min="1" class="form-control" placeholder="1" value="1"></td>'+
+                                        '<td><h4 class="subtotal_sumar">$ '+addCommas(price)+'</h4></td>'+
                                         '<td><i class="fa fa-trash removeCart" role="button" data-sku="'+sku+'" id="removeCart_'+id+'"></i></td>'+
                                         '</tr>';					
 	
@@ -317,9 +317,19 @@ function saveCart(id, sku, modelo, cantidad, precio, imagen){
             precio : precio,
             imagen : imagen
         },
-        success: function (response) {                        
+        success: function (response) {
+            var totalSumar = 0;
+            $(".subtotal_sumar").each(function(){
+
+                var txt = $(this).html();
+                txt = txt.replace(",", "");
+                totalSumar += parseFloat(txt);
+            });
+            alert(totalSumar);
+            $("#total_sumar").html("$ " + addCommas(totalSumar));
+
             console.log(response);
-            window.location.href = 'index.php';                        
+            //window.location.href = 'index.php';
             /*swal({
                 title: "Actualizado!",
                 text: "Producto agregado correctamente!",

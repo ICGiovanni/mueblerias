@@ -57,23 +57,20 @@ if(count($dataProduct->variaciones)>0){
 ?>
 <link href="<?php echo $raizProy?>css/plugins/slick/slick.css" rel="stylesheet">
 <link href="<?php echo $raizProy?>css/plugins/slick/slick-theme.css" rel="stylesheet">
-   
 
-    
         <div class="row wrapper border-bottom white-bg page-heading">
-            <div class="col-lg-10">
+            <div class="col-sm-4">
                 <h2>Catalogos</h2>
-                <ol class="breadcrumb">                    
-                    <li>
-                        <a href="grid.php">Catalogo</a>
-                    </li>
+                <ol class="breadcrumb">
                     <li class="active">
                         <strong>Detalle de producto</strong>
                     </li>
                 </ol>
             </div>
-            <div class="col-lg-2">
-
+            <div class="col-sm-8">
+                <div class="title-action">
+                    <a href="./grid.php" class="btn btn-warning btn-xs"><i class="fa fa-arrow-left"></i> Regresar a listado</a>
+                </div>
             </div>
         </div>
 
@@ -139,7 +136,7 @@ if(count($dataProduct->variaciones)>0){
                                         ?>    
                                     </div>    
                                     <div class="m-t-md">
-                                        <h2 class="product-main-price text-warning" style="display: none">$&nbsp;<span id="precioShow"></span> <small class="text-muted"> IVA incluido</small> </h2>
+                                        <h2 class="product-main-price text-warning" style="display: none">$&nbsp;<span id="precioShow"></span></h2>
                                     </div>
                                     <div id="descriptionProduct"></div>                                                                                                            
                                     SKU: <small id="skuShow">Seleccione una variación</small>                                        
@@ -147,7 +144,7 @@ if(count($dataProduct->variaciones)>0){
                                     <div>
                                         
                                         <div class="btn-group pull-right">
-                                            <button class="btn btn-primary btn-sm addPuntoVenta" id='addPuntoVenta' 
+                                            <button class="btn btn-warning btn-sm addPuntoVenta" id='addPuntoVenta'
                                                     data-sku="<?php echo $dataProduct->producto_sku?>"
                                                     data-modelo="<?php echo $dataProduct->producto_name?>"
                                                     data-precio="<?php echo $dataProduct->producto_price_public?>"
