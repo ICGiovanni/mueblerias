@@ -1,6 +1,7 @@
 <?php
 	include $_SERVER['REDIRECT_PATH_CONFIG'].'/config.php';
 	require_once($_SERVER["REDIRECT_PATH_CONFIG"].'publicidad/models/class.Publicidad.php');
+	require_once($_SERVER["REDIRECT_PATH_CONFIG"].'models/general/class.General.php');
    // include $pathProy.'login/session.php';
     include $pathProy.'/header.php';
     include $pathProy.'/menu.php';
@@ -65,6 +66,7 @@
                     <tbody id="clientes">
                     <?php
                     $publicidad=new Publicidad();
+                    $general=new General();
                     $publicidades=$publicidad->GetPublicidad();
                     $tr="";
                     
@@ -72,11 +74,9 @@
                     {
                     	$id_publicidad=$p["id_publicidad"];
                     	$nombre=$p["nombre"];
-                    	$f=$p["fecha"];
-                    	$fh=explode(' ', $f);
-                    	$fecha=$fh[0];
-                    	$f=explode('-', $fecha);
-                    	$fecha=$f[2].'/'.$f[1].'/'.$f[0].' '.$fh[1];
+                    	$fecha=$general->getDate($p["fecha"]);
+                    	
+                    	
                     	
                     	
                     	$tr.='<tr class="gradeX">';

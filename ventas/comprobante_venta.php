@@ -1,6 +1,7 @@
 <?php
 include $_SERVER['REDIRECT_PATH_CONFIG'].'/config.php';
 require_once($_SERVER["REDIRECT_PATH_CONFIG"].'ventas/models/class.Ventas.php');
+require_once($_SERVER["REDIRECT_PATH_CONFIG"].'clientes/models/class.Clientes.php');
 require_once($_SERVER["REDIRECT_PATH_CONFIG"].'models/general/class.General.php');
 require_once($_SERVER["REDIRECT_PATH_CONFIG"].'tcpdf/tcpdf.php');
 
@@ -8,8 +9,17 @@ $venta_id=$_REQUEST['v'];
 
 $ventas=new Ventas();
 $general=new General();
+$cliente=new Clientes();
+
 $v=$ventas->obtenerVentas(0,$venta_id);
 $v=$v[0];
+$idCliente=$v['id_cliente'];
+
+$c=$cliente->GetClientes($idCliente);
+$nombre_cliente=$c[0]['nombre'].' '.$c[0]['apellidoP'].' '.$c[0]['apellidoM'];
+$telefono='55 22 55 22';
+$celular='55 22 55 22';
+$email='rodriperez@hotmail.com';
 
 $f=$general->getDateSimple($v['fecha_creacion']);
 $f=explode(' ',$f);
@@ -19,7 +29,7 @@ $hora=$f[1].' '.$f[2];
 $ticket=strtotime($v['fecha_creacion']).'-'.$venta_id;
 $vendedor='Edgar Isaac Montoya';
 
-if(isset($v['venta_flete_id']))
+if(isset($v['venta_flete_id']) && $v['venta_flete_id']!=0)
 {
 	$flete=$ventas->getAddress($v['venta_flete_id']);
 }
@@ -30,7 +40,7 @@ else
 
 $html='';
 $html.='<style>';
-$html.='body{font-family: "Arial", Helvetica, sans-serif;}';
+$html.='body{font-family: "Verdana", Geneva, sans-serif;style="text-align:center;font-size: 8px !important;}';
 $html.='</style>';
 $html.='<div style="text-align:center;font-size: 8px;">';
 $html.='<table>';
@@ -50,11 +60,10 @@ $html.='</table>';
 $html.='-----------------------------------------------------------------------------------------';
 $html.='</div>';
 
-$html.='<div style="text-align:center;font-size: 8px;">';
-$html.='<table>';
+$html.='<table style="padding-right:8px;text-align:center;font-size: 8px;" width="100%" cellspacing="2">';
 $html.='<tr>';
-$html.='<td align="left"><strong>Fecha:</strong> '.$fecha.'</td>';
-$html.='<td align="left"><strong>Hora:</strong> '.$hora.'</td>';
+$html.='<td align="left" width="70%"><strong>Fecha:</strong> '.$fecha.'</td>';
+$html.='<td align="rigth" width="30%"><strong>Hora:</strong> '.$hora.'</td>';
 $html.='</tr>';
 $html.='<tr>';
 $html.='<td align="left"><strong>No. Ticket:</strong> '.$ticket.'</td>';
@@ -65,18 +74,42 @@ $html.='<td align="left"><strong>Vendedor:</strong> '.$vendedor.'</td>';
 $html.='<td></td>';
 $html.='</tr>';
 $html.='</table>';
-$html.='<br><br>++++++++++++++++++++++++ <STRONG>VENTA</STRONG> +++++++++++++++++++++<br><br>';
+$html.='<div style="text-align:center;font-size: 8px;">';
 $html.='-----------------------------------------------------------------------------------------';
 $html.='</div>';
 
-$html.='<div style="text-align:center;width:100%;font-size: 8px;">';
-$html.='<table>';
+
+$html.='<table style="padding-right:8px;text-align:left;font-size: 8px;" width="100%" cellspacing="2">';
+$html.='<tr>';
+$html.='<td><strong>Cliente:</strong> '.$nombre_cliente.'</td>';
+
+$html.='</tr>';
+$html.='<tr>';
+$html.='<td><strong>Tel:</strong> '.$telefono.'</td>';
+$html.='</tr>';
+
+$html.='<tr>';
+$html.='<td><strong>Cel:</strong> '.$telefono.'</td>';
+$html.='</tr>';
+
+$html.='<tr>';
+$html.='<td><strong>Correo:</strong> '.$telefono.'</td>';
+$html.='</tr>';
+
+$html.='</table>';
+$html.='<div style="text-align:left;font-size: 8px;">';
+$html.='++++++++++++++++++ <STRONG>VENTA NORMAL</STRONG> ++++++++++++++++++<br>';
+$html.='-----------------------------------------------------------------------------------------';
+$html.='</div>';
+
+$html.='<table style="padding-right:8px;font-size: 8px;" width="100%" cellspacing="2">';
 $html.='<tr>
-	<th align="center"><strong>CANT.</strong></th>
-	<th align="center"><strong>DESCRIPCIÓN/CODIGO</strong></th>
-	<th align="center"><strong>PRECIO</strong></th>
-	<th align="center"><strong>IMPORTE</strong></th>
+	<th align="center" width="14%"><strong>CANT.</strong></th>
+	<th align="center" width="42%"><strong>DESCRIPCIÓN / CODIGO</strong></th>
+	<th align="center" width="22%"><strong>PRECIO</strong></th>
+	<th align="center" width="22%"><strong>IMPORTE</strong></th>
 	</tr>';
+$html.='<tr><td></td><td></td><td align="right"><strong></strong></td><td align=""></td></tr>';
 $productos=$ventas->obtenerProductosVenta($venta_id);
 $totalP=0;
 $total=0;
@@ -96,9 +129,10 @@ foreach($productos as $p)
 		$subtotal.='.00';
 	}
 	
-	$html.='<tr><td align="center">'.$p['cantidad'].'</td><td>'.$p['producto_sku'].' '.$p['producto_name'].'</td><td>$ '.$precio.'</td><td>$ '.$subtotal.'</td></tr>';
+	$html.='<tr><td align="center">'.$p['cantidad'].'</td><td align="left">'.$p['producto_name'].' '.$p['producto_sku'].'</td><td align="center">$ '.$precio.'</td><td align="center">$ '.$subtotal.'</td></tr>';
 	$total=$total+$p['precio'];
 	$totalP++;
+	$html.='<tr><td></td><td></td><td align="right"><strong></strong></td><td align=""></td></tr>';
 }
 
 $t=explode('.',$total);
@@ -107,23 +141,26 @@ if(count($t)==1)
 	$total.='.00';
 }
 
+
 $html.='<tr><td></td><td></td><td align="right"><strong>SUBTOTAL</strong></td><td align="">$ '.$total.'</td></tr>';
-$html.='<tr><td></td><td></td><td align="right"><strong>TOTAL</strong></td><td align="">$ '.$total.'</td></tr>';
+$html.='<tr><td></td><td></td><td align="right"><strong></strong></td><td align=""></td></tr>';
+$html.='<tr><td></td><td></td><td align="right"><strong>TOTAL</strong></td><td align=""><strong>$ '.$total.'</strong></td></tr>';
 
 $html.='</table>';
-$html.='</div>';
 
-$html.='<div style="text-align:center;width:100%;font-size: 8px;">';
-$html.='<table>';
-$html.='<tr><td style="width:80%;">('.$general->num2letras($total).')</td><td></td></tr>';
-$html.='<tr><td style="width:80%;"><strong>Numero de articulos vendidos:</strong></td><td style="width:20%;text-align-last: right;">'.$totalP.'</td></tr>';
+
+$html.='<table style="padding-right:8px;font-size: 8px;" width="100%" cellspacing="2">';
+$html.='<tr><td align="left" style="width:80%;"></td><td></td></tr>';
+$html.='<tr><td align="left" style="width:95%;">('.strtoupper($general->num2letras($total)).')</td><td></td></tr>';
+$html.='<tr><td align="left" style="width:80%;"></td><td></td></tr>';
+$html.='<tr><td align="left" style="width:80%;"><strong>Numero de articulos vendidos:</strong></td><td style="width:20%;text-align-last: right;">'.$totalP.'</td></tr>';
 $html.='</table>';
-$html.='</div>';
-$html.='------------------------------------------------------------------------';
-
 $html.='<div style="text-align:center;width:100%;font-size: 8px;">';
-$html.='<table>';
-$html.='<tr><td>Detalles de Pago:</td><td></td></tr>';
+$html.='-----------------------------------------------------------------------------------------';
+$html.='</div>';
+
+$html.='<table style="padding-right:8px;font-size: 8px;" width="100%" cellspacing="2">';
+$html.='<tr><td width="40%" align="left"><strong>Detalles de Pago:</strong></td><td width="45%" align="left"></td><td width="15%"></td></tr>';
 $pagos=$ventas->getPagosVenta($venta_id);
 
 foreach($pagos as $p)
@@ -137,17 +174,17 @@ foreach($pagos as $p)
 		$monto.='.00';
 	}
 	
-	$html.='<tr><td style="text-align-last: left;">'.$tipo.'</td><td style="text-align-last: left;">$ '.$monto.'</td></tr>';
+	$html.='<tr><td width="40%" align="left"><strong>'.$tipo.'</strong></td><td width="45%" align="left">$ '.$monto.'</td><td width="15%"></td></tr>';
 }
-
 $html.='</table>';
-$html.='------------------------------------------------------------------------------------------';
+$html.='<div style="text-align:center;width:100%;font-size: 8px;">';
+$html.='-----------------------------------------------------------------------------------------';
 $html.='</div>';
 
 if($flete)
 {
-	$html.='<div style="text-align:center;width:100%;font-size: 8px;">';
-	$html.='<table>';
+	
+	$html.='<table style="padding-right:8px;font-size: 8px;" width="100%" cellspacing="2">';
 	
 	if(isset($flete['cliente_direccion_numero_int']))
 	{
@@ -158,20 +195,34 @@ if($flete)
 		$direccion=$flete['cliente_direccion_calle'].' '.$flete['cliente_direccion_numero_ext'];
 	}
 	
-	$html.='<tr><td style="text-align:right;"><strong>Datos de Envio</strong></td><td></td></tr>';
-	$html.='<tr><td style="text-align:right;"><strong>Domicilio:</strong></td><td style="text-align:left;">'.$direccion.'</td></tr>';
-	$html.='<tr><td style="text-align:right;"><strong>Colonia:</strong></td><td style="text-align:left;">'.$flete['cliente_direccion_colonia'].'</td></tr>';
-	$html.='<tr><td style="text-align:right;"><strong>C.P.:</strong></td><td style="text-align:left;">'.$flete['cliente_direccion_cp'].'</td></tr>';
-	$html.='<tr><td style="text-align:right;"><strong>Delegación o Municipio:</strong></td><td style="text-align:left;">'.$flete['cliente_direccion_municipio'].'</td></tr>';
-	$html.='<tr><td style="text-align:right;"></td><td></td></tr>';
+	$html.='<tr><td align="left" width="45%"><strong>Datos de Envio</strong></td><td></td></tr>';
+	$html.='<tr><td align="left" width="45%"><strong>Domicilio:</strong></td><td align="left" width="55%">'.$direccion.'</td></tr>';
+	$html.='<tr><td align="left" width="45%"><strong>Colonia:</strong></td><td align="left" width="55%">'.$flete['cliente_direccion_colonia'].'</td></tr>';
+	$html.='<tr><td align="left" width="45%"><strong>C.P.:</strong></td><td align="left" width="55%">'.$flete['cliente_direccion_cp'].'</td></tr>';
+	$html.='<tr><td align="left" width="45%"><strong>Delegación o Municipio:</strong></td><td align="left" width="55%">'.$flete['cliente_direccion_municipio'].'</td></tr>';
+	
 	$html.='</table>';
-	$html.='------------------------------------------------------------------------------------------';
+	$html.='<div style="text-align:center;width:100%;font-size: 8px;">';
+	$html.='-----------------------------------------------------------------------------------------';
 	$html.='</div>';
 }
 
+$html.='<div style="text-align:center;font-size: 8px;">';
+$html.='<table>';
+$html.='<tr>';
+$html.='<td><img src="http://globmint.com/img/rectangulo.png" class="header_logo " alt="Globmint" height="60" width="170"></td>';
+$html.='</tr>';
+$html.='<tr>';
+$html.='<td><strong>Firma del cliente recibido de conformidad</strong></td>';
+$html.='</tr>';
+$html.='</table>';
+$html.='-----------------------------------------------------------------------------------------';
+$html.='</div>';
+
 $html.='<div style="text-align:center;width:100%;font-size: 8px;">';
 $html.='GRACIAS POR SU COMPRA LO ESPERAMOS PRONTO<br>';
-$html.='<div style="text-align:justify;width:100%;font-size: 5px;">';
+$html.='<span style="font-size: 7px;">Tel. Central 55 33 44 22</span><br>';
+$html.='<div style="text-align:justify;width:100%;font-size: 6px;">';
 $html.='Extiende la presente garantía contra defectos de fabricación, de acuerdo a la Ley Federal de
 Protección al Consumidor.<br>
 *Dependiendo del pedido sera entregado en un lapso aproximado de 10 dias habiles.<br>
@@ -193,16 +244,14 @@ está sujeto a cambio sin previo aviso. Toda cancelación causará un 20% de car
 de Administración.';
 $html.='</div>';
 $html.='<div style="text-align:center;width:100%;font-size: 6px;">';
-$html.='No atenderemos ninguna reclamación sin la presentación de este
-Comprobante Simplificado.';
-$html.='</div>';
-$html.='------------------------------------------------------------------------------------------';
+$html.='<strong>No atenderemos ninguna reclamación sin la presentación de este
+Comprobante Simplificado.</strong>';
 $html.='</div>';
 
 //die($html);
 
 $width="72";
-$height="220";
+$height="315";
 $custom_layout = array($width, $height);
 $pdf = new TCPDF('P', 'mm', $custom_layout, true, 'UTF-8', false);
 /*$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
@@ -227,14 +276,13 @@ $pdf->SetAutoPageBreak(TRUE,0);
 
 $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 
-$pdf->SetFont('times', '', 8);
+//$pdf->SetFont('times', '', 8);
 
 $pdf->AddPage();
 
 $pdf->writeHTML($html, true, 0, true, 0);
 
-//$js = 'print(true);';
-$js='';
+$js = 'print(true);';
 $pdf->IncludeJS($js);
 
 $pdf->Output('ticket'.'.pdf', 'I');

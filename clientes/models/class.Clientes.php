@@ -13,7 +13,7 @@ class Clientes
 	
 	public function DeleteDataCliente($id_cliente)
 	{
-		$sql="DELETE FROM cliente_direccion WHERE id_cliente=:id_cliente";
+		$sql="DELETE FROM cliente_direccion WHERE cliente_id=:id_cliente";
 		
 		$statement=$this->connect->prepare($sql);
 		$statement->bindParam(':id_cliente', $id_cliente, PDO::PARAM_STR);
@@ -285,7 +285,7 @@ class Clientes
 				FROM clientes c
 				$where
 				$orderby";
-	
+		
 		$statement=$this->connect->prepare($sql);
 		$statement->execute();
 		$result=$statement->fetchAll(PDO::FETCH_ASSOC);
@@ -297,7 +297,7 @@ class Clientes
 	{
 		$sql="SELECT cliente_direccion_tipo_desc,cliente_direccion_calle,cliente_direccion_numero_ext,
 				cliente_direccion_numero_int,cliente_direccion_colonia,cliente_direccion_municipio,
-				estado,cliente_direccion_cp,cliente_direccion_rfc,cliente_direccion_razon_social,
+				estado,cd.id_estado,cliente_direccion_cp,cliente_direccion_rfc,cliente_direccion_razon_social,
 				cliente_direccion_entre_calles
 				FROM cliente_direccion cd
 				INNER JOIN cliente_direccion_tipo cdt USING(cliente_direccion_tipo_id)

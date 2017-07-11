@@ -56,7 +56,7 @@ if($datos[0]["producto_conjunto"]=='1')
 			<div class="col-sm-6"><label class="col-sm-2 control-label"><?php echo $datos[0]["producto_id"]?></label></div>
             </div>
             <div class="form-group"><label class="col-sm-2 control-label">Tipo de Producto</label>
-			<div class="col-sm-6"><label class="col-sm-2 control-label"><?php echo utf8_encode($datos[0]["producto_type_name"]);?></label></div>
+			<div class="col-sm-6"><label class="col-sm-3 control-label"><?php echo utf8_encode($datos[0]["producto_type_name"]);?></label></div>
             </div>
             
 <?php
@@ -86,7 +86,7 @@ if($datos[0]["producto_type"]=='V')
             			
 			<div class="form-group">
             <label class="col-sm-2 control-label">Medida</label>
-			<div class="col-sm-2 "><input type="text" class="form-control" id="medida" name="medida" value="<?php echo $datos[0]['producto_medida'];?>"></div>
+			<div class="col-sm-6"><input type="text" class="form-control" id="medida" name="medida" value="<?php echo $datos[0]['producto_medida'];?>"></div>
 			</div>
             
             <div class="form-group"><label class="col-sm-2 control-label">Descripci&oacute;n</label>
@@ -94,7 +94,7 @@ if($datos[0]["producto_type"]=='V')
             </div>
             
             <div class="form-group"><label class="col-sm-2 control-label">Descripci&oacute;n Corta</label>
-			<div class="col-sm-6" ><textarea class="form-control" id="descripcionC" name="descripcionC"><?php echo utf8_encode($datos[0]['producto_description_corta']);?></textarea></div>
+			<div class="col-sm-6" ><input type="text" class="form-control" id="descripcionC" name="descripcionC" autocomplete="off" value="<?php echo utf8_encode($datos[0]['producto_description_corta']);?>"></div>
             </div>
             
             <div class="form-group">
