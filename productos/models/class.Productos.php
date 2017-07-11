@@ -935,7 +935,7 @@ class Productos
 				WHERE ip.producto_id=p.producto_id
 				ORDER BY imagen_id ASC
 				LIMIT 0,1),'".FINAL_URL."img/imagen-no.png') AS imagen,
-				producto_price_public,producto_description,producto_price_purchase,
+				producto_price_public,producto_description,producto_price_purchase,producto_price_public_discount,
 				CASE producto_type
 				WHEN 'P' THEN 'Producto Compuesto'
 				WHEN 'U' THEN 'Producto Unitario'
