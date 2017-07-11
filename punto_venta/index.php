@@ -11,7 +11,11 @@ $rowsMetodosPago = '<option value="0" style="color:#888;">Selecciona un método 
 while( list ($KeyMP, $valueMP) = each($arrayMetodosPago) ){
 	$rowsMetodosPago.='<option value="'.$valueMP["general_forma_de_pago_id"].'">'.$valueMP["general_forma_de_pago_desc"].'</option> ';
 }
-
+$esApartado = false;
+if(isset($_GET["apartado"]) && $_GET["apartado"]=="u48f6d1"){
+	$esApartado = true;
+	//echo "es apartado";
+}
 if(!isset($_SESSION["punto_venta"])){
 	die("Debe agregar al menos un producto al carrito de compras");
 }
@@ -35,11 +39,13 @@ if( isset($_SESSION["punto_venta"]["envio"]["costo_envio"]) ){
 	$totalEnvio = $_SESSION["punto_venta"]["envio"]["costo_envio"];
 }
 //print_r($_SESSION);
-$clientFromSession = '';
-$clientFromSessionForEnvio = '';
+$clientFromSessionDetailedData = '';
+$clientFromSessionGeneralData = '';
 $clientFromSessionExtra = '';
 $clientAddressFactFromSession = '';
 $clientAddressShipFromSession = '';
+$cssEspacios = '&nbsp;';
+
 if(isset($_SESSION["punto_venta"]["cliente"])){
 	
 	
@@ -49,6 +55,7 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 		$newDivsEnvio = '';
 		$dirsEnvioIni = '';
 		$dirsFacturacionIni = '';
+		
 	
 		$newDivBtnsFact = '<b>Selecciona una dirección de facturación:</b><br>';
 		$newDivsFact = '';
@@ -64,9 +71,9 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 					$cssBtnElegir = 'ocultarElemento';
 					$cssIcoElegir = 'mostrarElemento';
 				}
-				$newDivsEnvio.= '<div id="demo_'.$valueD["cliente_direccion_id"].'" class="collapse"><font id="demo_font_'.$valueD["cliente_direccion_id"].'" '.$cssRowDireccion.'>'.$valueD["cliente_direccion_calle"].' '.$valueD["cliente_direccion_numero_ext"].' '.$valueD["cliente_direccion_numero_int"].' '.$valueD["cliente_direccion_colonia"].' '.$valueD["cliente_direccion_municipio"].', '.$valueD['estado'].'. C.P. '.$valueD["cliente_direccion_cp"].'</font> &nbsp;&nbsp;&nbsp;<i id="demo_ico_'.$valueD["cliente_direccion_id"].'" class="fa fa-check-square '.$cssIcoElegir.'" style="color:green;"></i><button type="button" class="btn btn-warning btn-xs '.$cssBtnElegir.'" onclick="asociaDireccionEnvio('.$valueD["cliente_direccion_id"].');" style="margin:4px 0px;" id="demo_btn_'.$valueD["cliente_direccion_id"].'"> Elegir </button> </div>';
+				$newDivsEnvio.= '<div id="demo_'.$valueD["cliente_direccion_id"].'" class="collapse"><i class="fa fa-map-marker"></i> '.$cssEspacios.'<font id="demo_font_'.$valueD["cliente_direccion_id"].'" '.$cssRowDireccion.'>'.$valueD["cliente_direccion_calle"].' '.$valueD["cliente_direccion_numero_ext"].' '.$valueD["cliente_direccion_numero_int"].' '.$valueD["cliente_direccion_colonia"].' '.$valueD["cliente_direccion_municipio"].', '.$valueD['estado'].'. C.P. '.$valueD["cliente_direccion_cp"].'</font> &nbsp;&nbsp;&nbsp;<i id="demo_ico_'.$valueD["cliente_direccion_id"].'" class="fa fa-check-square '.$cssIcoElegir.'" style="color:green;"></i><button type="button" class="btn btn-warning btn-xs '.$cssBtnElegir.'" onclick="asociaDireccionEnvio('.$valueD["cliente_direccion_id"].');" style="margin:4px 0px;" id="demo_btn_'.$valueD["cliente_direccion_id"].'"> Elegir </button> </div>';
 				
-				$dirsEnvioIni.= '<i class="fa fa-map-marker"></i> '.$valueD["cliente_direccion_calle"].' '.$valueD["cliente_direccion_numero_ext"].' '.$valueD["cliente_direccion_numero_int"].' '.$valueD["cliente_direccion_colonia"].' '.$valueD["cliente_direccion_municipio"].', '.$valueD['estado'].'. C.P. '.$valueD["cliente_direccion_cp"].'<br>';
+				$dirsEnvioIni.= '<i class="fa fa-map-marker"></i> '.$cssEspacios.$valueD["cliente_direccion_calle"].' '.$valueD["cliente_direccion_numero_ext"].' '.$valueD["cliente_direccion_numero_int"].' '.$valueD["cliente_direccion_colonia"].' '.$valueD["cliente_direccion_municipio"].', '.$valueD['estado'].'. C.P. '.$valueD["cliente_direccion_cp"].'<br>';
 				
 			}
 			
@@ -81,9 +88,9 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 					$cssBtnElegir = 'ocultarElemento';
 					$cssIcoElegir = 'mostrarElemento';
 				}
-				$newDivsFact.= '<div id="demo_'.$valueD["cliente_direccion_id"].'" class="collapse"><font id="demo_font_'.$valueD["cliente_direccion_id"].'" '.$cssRowDireccion.'>'.$valueD["cliente_direccion_calle"].' '.$valueD["cliente_direccion_numero_ext"].' '.$valueD["cliente_direccion_numero_int"].' '.$valueD["cliente_direccion_colonia"].' '.$valueD["cliente_direccion_municipio"].', '.$valueD['estado'].'. C.P. '.$valueD["cliente_direccion_cp"].'</font> &nbsp;&nbsp;&nbsp;<i id="demo_ico_'.$valueD["cliente_direccion_id"].'" class="fa fa-check-square '.$cssIcoElegir.'" style="color:green;"></i><button type="button" class="btn btn-warning btn-xs '.$cssBtnElegir.'" onclick="asociaDireccionFact('.$valueD["cliente_direccion_id"].');" style="margin:4px 0px;" id="demo_btn_'.$valueD["cliente_direccion_id"].'"> Elegir </button> </div>';
+				$newDivsFact.= '<div id="demo_'.$valueD["cliente_direccion_id"].'" class="collapse"><i class="fa fa-map-marker"></i> '.$cssEspacios.'<font id="demo_font_'.$valueD["cliente_direccion_id"].'" '.$cssRowDireccion.'>'.$valueD["cliente_direccion_calle"].' '.$valueD["cliente_direccion_numero_ext"].' '.$valueD["cliente_direccion_numero_int"].' '.$valueD["cliente_direccion_colonia"].' '.$valueD["cliente_direccion_municipio"].', '.$valueD['estado'].'. C.P. '.$valueD["cliente_direccion_cp"].'</font> &nbsp;&nbsp;&nbsp;<i id="demo_ico_'.$valueD["cliente_direccion_id"].'" class="fa fa-check-square '.$cssIcoElegir.'" style="color:green;"></i><button type="button" class="btn btn-warning btn-xs '.$cssBtnElegir.'" onclick="asociaDireccionFact('.$valueD["cliente_direccion_id"].');" style="margin:4px 0px;" id="demo_btn_'.$valueD["cliente_direccion_id"].'"> Elegir </button> </div>';
 
-				$dirsFacturacionIni.= '<i class="fa fa-file-text-o"></i> '.$valueD["cliente_direccion_calle"].' '.$valueD["cliente_direccion_numero_ext"].' '.$valueD["cliente_direccion_numero_int"].' '.$valueD["cliente_direccion_colonia"].' '.$valueD["cliente_direccion_municipio"].', '.$valueD['estado'].'. C.P. '.$valueD["cliente_direccion_cp"].'<br>';
+				$dirsFacturacionIni.= '<i class="fa fa-file-text-o"></i> '.$cssEspacios.$valueD["cliente_direccion_calle"].' '.$valueD["cliente_direccion_numero_ext"].' '.$valueD["cliente_direccion_numero_int"].' '.$valueD["cliente_direccion_colonia"].' '.$valueD["cliente_direccion_municipio"].', '.$valueD['estado'].'. C.P. '.$valueD["cliente_direccion_cp"].'<br>';
 			}
 			
 		}
@@ -94,23 +101,7 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 		$clientAddressFactFromSession = $newDivBtnsFact."<br><br>".$newDivsFact;
 	}
 	
-	$clientFromSessionForEnvio ='<button style="position:relative; float:right;" type="button" class="btn btn-xs btn-danger" id="removeCliente_'.$_SESSION["punto_venta"]["cliente"]["cliente_id"].'" onclick="removeCliente('.$_SESSION["punto_venta"]["cliente"]["cliente_id"].');">Desasociar cliente</button>
-	<table class=""><tbody>
-			<tr>
-				<td>
-					<b>Nombre Completo:</b>
-				</td>
-			</tr>
-			<tr id="row_'.$_SESSION["punto_venta"]["cliente"]["cliente_id"].'">
-				<td style="padding-left:10px;">
-					'.$_SESSION["punto_venta"]["cliente"]["name"].' &nbsp;&nbsp;<br><br>
-				</td>
-				<td></td>
-			</tr></tbody>
-	</table>';
-	
-	
-	$clientFromSession = '
+	$clientFromSessionGeneralData ='
 	<button style="position:relative; float:right;" type="button" class="btn btn-xs btn-danger" id="removeCliente_'.$_SESSION["punto_venta"]["cliente"]["cliente_id"].'" onclick="removeCliente('.$_SESSION["punto_venta"]["cliente"]["cliente_id"].');">Desasociar cliente</button>
 	<table class=""><tbody>
 			<tr>
@@ -120,10 +111,15 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 			</tr>
 			<tr id="row_'.$_SESSION["punto_venta"]["cliente"]["cliente_id"].'">
 				<td style="padding-left:10px;">
-					'.$_SESSION["punto_venta"]["cliente"]["name"].' &nbsp;&nbsp;<br><br>
+					<i class="fa fa-user"></i> '.$cssEspacios.$_SESSION["punto_venta"]["cliente"]["name"].' &nbsp;&nbsp;<br><br>
 				</td>
 				<td></td>
 			</tr>
+	</tbody></table>';
+	
+	
+	$clientFromSessionDetailedData = $clientFromSessionGeneralData.'
+	<table class=""><tbody>
 			<tr>
 				<td><b>Direcciones de envío:</b></td>
 			</tr>
@@ -181,10 +177,67 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 		$clientFromSessionExtra	= '<b>Teléfonos:</b><br>
 		'.$txtTelefonosTipo.'
 		<br><br>
-		<b>Correos:</b><br>'.str_replace(",","<br>",$_SESSION["punto_venta"]["cliente"]["email"]);
+		<b>Correos:</b><br><i class="fa fa-envelope-o"></i> '.$cssEspacios.str_replace(',','<br><i class="fa fa-envelope-o"></i> '.$cssEspacios,$_SESSION["punto_venta"]["cliente"]["email"]);
 }
 
+//INFORMACION ENVIO Y FACTURA
+$txtDivInfoResumenEnvio = '';
+$txtDivInfoResumenFact = '';
 
+$cssIcoResumenEnvio = 'fa fa-question-circle';
+$cssIcoResumenFact = 'fa fa-question-circle';
+
+if(isset($_SESSION["punto_venta"]["envio"])){
+	if($_SESSION["punto_venta"]["envio"]["cliente_direccion_id"] == "0"){ //eligio sin envio
+		$cssIcoResumenEnvio = 'fa fa-times-circle-o redFont';
+		$txtDivInfoResumenEnvio.= 'Sin envío';
+	} else {
+	
+		$datosDireccion = array();
+		reset($_SESSION["punto_venta"]["cliente"]["direcciones"]);
+		while ( list($keyDirecciones, $valueDirecciones) = each( $_SESSION["punto_venta"]["cliente"]["direcciones"] )){
+			if($valueDirecciones["cliente_direccion_id"] == $_SESSION["punto_venta"]["envio"]["cliente_direccion_id"]){
+				$datosDireccion = $valueDirecciones;
+			}
+		}
+		if(!empty($datosDireccion)){
+			$cssIcoResumenEnvio = 'fa fa-check-square-o greenFont';
+			$txtDivInfoResumenEnvio.= $datosDireccion["cliente_direccion_calle"]." ".$datosDireccion["cliente_direccion_numero_ext"]." ".$datosDireccion["cliente_direccion_numero_int"]."<br>";
+			$txtDivInfoResumenEnvio.= $datosDireccion["cliente_direccion_colonia"]." ".$datosDireccion["cliente_direccion_municipio"].", ".$datosDireccion["estado"].". CP ".$datosDireccion["cliente_direccion_cp"]."<br>";
+			$txtDivInfoResumenEnvio.= "Fecha de entrega: ".$_SESSION["punto_venta"]["envio"]["fecha_hora_entrega"]."<br>";
+		}
+		
+	}
+}
+
+if(isset($_SESSION["punto_venta"]["facturacion"])){
+	
+	if($_SESSION["punto_venta"]["facturacion"]["cliente_direccion_id"] == "0"){ //eligio sin envio
+		$cssIcoResumenFact = 'fa fa-times-circle-o redFont';
+		$txtDivInfoResumenFact.= 'Sin factura';
+	} else {
+		
+		$datosDireccion = array();
+		reset($_SESSION["punto_venta"]["cliente"]["direcciones"]);
+		while ( list($keyDirecciones, $valueDirecciones) = each( $_SESSION["punto_venta"]["cliente"]["direcciones"] )){
+			if($valueDirecciones["cliente_direccion_id"] == $_SESSION["punto_venta"]["facturacion"]["cliente_direccion_id"]){
+				$datosDireccion = $valueDirecciones;
+			}
+		}
+		
+		if(!empty($datosDireccion)){
+			//print_r($datosDireccion);
+			
+			$cssIcoResumenFact = 'fa fa-check-square-o greenFont';
+			$txtDivInfoResumenFact.= "Razón Social: ".$datosDireccion["cliente_direccion_razon_social"]."<br>";
+			$txtDivInfoResumenFact.= "RFC: ".$datosDireccion["cliente_direccion_rfc"]."<br>";
+			$txtDivInfoResumenFact.= $datosDireccion["cliente_direccion_calle"]." ".$datosDireccion["cliente_direccion_numero_ext"]." ".$datosDireccion["cliente_direccion_numero_int"]."<br>";
+			$txtDivInfoResumenFact.= $datosDireccion["cliente_direccion_colonia"]." ".$datosDireccion["cliente_direccion_municipio"].", ".$datosDireccion["estado"].". CP ".$datosDireccion["cliente_direccion_cp"]."<br>";
+			$txtDivInfoResumenFact.= "enviar factura a: ".$_SESSION["punto_venta"]["facturacion"]["select_correo_factura"]."<br>";
+		}
+	}
+}
+//INFORMACION ENVIO Y FACTURA FIN
 ?> 
 <link href="<?=$raizProy?>css/plugins/iCheck/custom.css" rel="stylesheet">
 <link href="<?=$raizProy?>css/plugins/steps/jquery.steps.css" rel="stylesheet">
@@ -252,7 +305,7 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 										<div class="col-lg-10">
 											<div class="form-group">
 												<font>Busqueda del cliente por:</font><br>
-												<div style="margin-top: 4px;" class="form-group" id="divBuscaClienteInputPpal"><input type="text" placeholder="Nombre, email y/o número telefónico" class="form-control" id="inputBuscaCliente_0" name="inputBuscaCliente_0" ></div>
+												<div style="margin-top: 4px;" class="form-group" id="divBuscaClienteInputPpal"><input type="text" placeholder="Nombre, email y/o número telefónico" class="form-control" id="inputBuscaClienteFromDatos" name="inputBuscaClienteFromDatos" ></div>
 												
 												
                                             </div>
@@ -264,7 +317,7 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 										<div class="col-lg-9">
 											<div class="ibox"  >
 												<div class="ibox-content" id="divBuscaCliente_0">
-													<?=$clientFromSession?>
+													<?=$clientFromSessionDetailedData?>
 												</div>
 											</div>
 										</div>
@@ -289,22 +342,31 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 								<!-- INICIA SELECCION ENVIO -->
                                 <fieldset>
                                    
-									<div class="form-group">
-										
-										<div class="col-lg-12">
+									<div class="row">
+										<div class="col-lg-8">
+										<div class="ibox-content">
 											<div align="center"><font style="font-size:25px;">¿Requiere envío a domicilio?</font></div>
-											<br><br><br><div align="center">
-													
+											<br><br><br>
+											<div align="center">
 													<table>
 														<tr>
-															<td><button class="btn btn-primary dim btn-large-dim" type="button" data-toggle="modal" data-target="#modalBuscaCliente">SÍ</button></td>
+															<td><button class="btn btn-primary dim btn-large-dim" type="button" data-toggle="modal" data-target="#modalDetalleEnvio">SÍ</button></td>
 															<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-															<td><button class="btn btn-danger dim btn-large-dim" type="button" data-toggle="modal" data-target="#modalVentaSinEnvio" onclick="ventaSinEnvio();" >NO</button></td>
+															<td><button class="btn btn-danger dim btn-large-dim" type="button" data-toggle="modal" data-target="#modalVentaSinEnvio" >NO</button></td>
 														</tr>
-											</div>	</table>
+												</table>
+											</div>
 										</div>
-										
-										
+										</div>
+										<div class="col-lg-4">
+											<div class="ibox-content">
+												<b><i class="fa fa-truck" style="font-size:20px;"></i> &nbsp;&nbsp;DATOS DE ENVÍO</b><br><br>
+												<i id="icoResumenEnvioSelf" class="<?=$cssIcoResumenEnvio?>" style="font-size:20px;"></i> &nbsp;<font style="font-size:15px;"><b>Envío a domicilio</b></font>
+												<div id="divInfoResumenEnvioSelf">
+													<?=$txtDivInfoResumenEnvio?>
+												</div>
+											</div>
+										</div>
 									</div>
 								   
                                 </fieldset>
@@ -319,19 +381,31 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 								
 									<div class="form-group">
 										
-										<div class="col-lg-12">
+										<div class="col-lg-8">
+										<div class="ibox-content">
 											<div align="center"><font style="font-size:25px;">¿Requiere factura?</font></div>
-											<br><br><br><div align="center">
-													
+											<br><br><br>
+											<div align="center">
 													<table>
 														<tr>
-															<td><button class="btn btn-primary dim btn-large-dim" type="button"  data-toggle="modal" data-target="#ModelDetalleFacturacion">SÍ</button></td>
+															<td><button class="btn btn-primary dim btn-large-dim" type="button"  data-toggle="modal" data-target="#ModalDetalleFacturacion">SÍ</button></td>
 															<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 															<td><button class="btn btn-danger dim btn-large-dim" type="button" onclick="ventaSinFactura();">NO</button></td>
 														</tr>
-											</div>	</table>
+													</table>
+											</div>
+										</div>
 										</div>
 										
+										<div class="col-lg-4">
+											<div class="ibox-content">
+												<b><i class="fa fa-dollar" style="font-size:20px;"></i> &nbsp;&nbsp;DATOS DE FACTURACIÓN</b><br><br>
+												<i id="icoResumenFacturaSelf" class="<?=$cssIcoResumenFact?>" style="font-size:20px;"></i> &nbsp;<font style="font-size:15px;"><b>Requiere Factura</b></font>
+												<div id="divInfoResumenFacturaSelf">
+													<?=$txtDivInfoResumenFact?>
+												</div>
+											</div>
+										</div>
 										
 									</div>
 								
@@ -436,7 +510,12 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 											
 										</div>
 										
-										
+										<?php
+											$ivaVenta = 0;
+											if( isset( $_SESSION["punto_venta"]["facturacion"]["cliente_direccion_id"] ) && $_SESSION["punto_venta"]["facturacion"]["cliente_direccion_id"] !="0" ){
+												$ivaVenta = ($totalVenta*.16);
+											}
+										?>
 										
 										<div class="col-md-3">
 											<div class="ibox">
@@ -455,13 +534,7 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 														IVA
 													</span>
 													<h4  id="h4_iva" class="font-bold text-right">
-														$ <?php
-														if( isset( $_SESSION["punto_venta"]["facturacion"] ) ){
-															echo ($totalVenta*.16);
-														} else {
-															echo "0";
-														}
-														?>   
+														$ <?=$ivaVenta?>  
 													</h4> 
 													<span>
 														Envío
@@ -473,27 +546,14 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 														Gran Total
 													</span>
 													<h4 class="font-bold text-right" id="granTotalEnPago"> 
-														$ <?php
-														if( isset( $_SESSION["punto_venta"]["facturacion"] ) ){
-															echo ($totalVenta*1.16)+$totalEnvio;
-														} else {
-															echo $totalVenta+$totalEnvio;
-														}
-														?>
+														$ <?=($totalVenta+$ivaVenta+$totalEnvio)?>
 													</h4>
 													<span>
 														Restan
 													</span>
 													<h4 class="font-bold text-right">
 														<span id="spanRestanVenta" >
-														$ <?php
-														if( isset( $_SESSION["punto_venta"]["facturacion"] ) ){
-															echo ($totalVenta*1.16)+$totalEnvio-$sumaDePagos;
-														} else {
-															echo $totalVenta+$totalEnvio-$sumaDePagos;
-														}
-														?>
-														
+														$ <?=($totalVenta+$ivaVenta+$totalEnvio-$sumaDePagos)?>													
 														</span>                    
 													</h4>
 													
@@ -526,72 +586,6 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 									<div>
 									
 									<div class="col-lg-8" >
-										<!-- 
-										fa fa-check-square-o greenFont
-										fa-question-circle
-										-->
-										<?php
-											
-											$txtDivInfoResumenEnvio = '';
-											$txtDivInfoResumenFact = '';
-											
-											$cssIcoResumenEnvio = 'fa fa-question-circle';
-											$cssIcoResumenFact = 'fa fa-question-circle';
-											
-											if(isset($_SESSION["punto_venta"]["envio"])){
-												if($_SESSION["punto_venta"]["envio"]["cliente_direccion_id"] == "0"){ //eligio sin envio
-													$cssIcoResumenEnvio = 'fa fa-times-circle-o redFont';
-													$txtDivInfoResumenEnvio.= 'Sin envío';
-												} else {
-												
-													$datosDireccion = array();
-													reset($_SESSION["punto_venta"]["cliente"]["direcciones"]);
-													while ( list($keyDirecciones, $valueDirecciones) = each( $_SESSION["punto_venta"]["cliente"]["direcciones"] )){
-														if($valueDirecciones["cliente_direccion_id"] == $_SESSION["punto_venta"]["envio"]["cliente_direccion_id"]){
-															$datosDireccion = $valueDirecciones;
-														}
-													}
-													if(!empty($datosDireccion)){
-														$cssIcoResumenEnvio = 'fa fa-check-square-o greenFont';
-														$txtDivInfoResumenEnvio.= $datosDireccion["cliente_direccion_calle"]." ".$datosDireccion["cliente_direccion_numero_ext"]." ".$datosDireccion["cliente_direccion_numero_int"]."<br>";
-														$txtDivInfoResumenEnvio.= $datosDireccion["cliente_direccion_colonia"]." ".$datosDireccion["cliente_direccion_municipio"].", ".$datosDireccion["estado"].". CP ".$datosDireccion["cliente_direccion_cp"]."<br>";
-														$txtDivInfoResumenEnvio.= "Fecha de entrega: ".$_SESSION["punto_venta"]["envio"]["fecha_hora_entrega"]."<br>";
-													}
-													
-												}
-											}
-											
-											
-											if(isset($_SESSION["punto_venta"]["facturacion"])){
-												
-												if($_SESSION["punto_venta"]["facturacion"]["cliente_direccion_id"] == "0"){ //eligio sin envio
-													$cssIcoResumenFact = 'fa fa-times-circle-o redFont';
-													$txtDivInfoResumenFact.= 'Sin factura';
-												} else {
-													
-													$datosDireccion = array();
-													reset($_SESSION["punto_venta"]["cliente"]["direcciones"]);
-													while ( list($keyDirecciones, $valueDirecciones) = each( $_SESSION["punto_venta"]["cliente"]["direcciones"] )){
-														if($valueDirecciones["cliente_direccion_id"] == $_SESSION["punto_venta"]["facturacion"]["cliente_direccion_id"]){
-															$datosDireccion = $valueDirecciones;
-														}
-													}
-													
-													if(!empty($datosDireccion)){
-														//print_r($datosDireccion);
-														
-														$cssIcoResumenFact = 'fa fa-check-square-o greenFont';
-														$txtDivInfoResumenFact.= "Razón Social: ".$datosDireccion["cliente_direccion_razon_social"]."<br>";
-														$txtDivInfoResumenFact.= "RFC: ".$datosDireccion["cliente_direccion_rfc"]."<br>";
-														$txtDivInfoResumenFact.= $datosDireccion["cliente_direccion_calle"]." ".$datosDireccion["cliente_direccion_numero_ext"]." ".$datosDireccion["cliente_direccion_numero_int"]."<br>";
-														$txtDivInfoResumenFact.= $datosDireccion["cliente_direccion_colonia"]." ".$datosDireccion["cliente_direccion_municipio"].", ".$datosDireccion["estado"].". CP ".$datosDireccion["cliente_direccion_cp"]."<br>";
-														$txtDivInfoResumenFact.= "enviar factura a: ".$_SESSION["punto_venta"]["facturacion"]["select_correo_factura"]."<br>";
-													}
-												}
-											}
-											
-											
-										?>
 										<i id="icoResumenEnvio" class="<?=$cssIcoResumenEnvio?>" style="font-size:20px;"></i> &nbsp;<font style="font-size:15px;"><b>Envío a domicilio</b></font>
 										<div id="divInfoResumenEnvio">
 											<?=$txtDivInfoResumenEnvio?>
@@ -611,13 +605,7 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 											<tr>
 												<td align="right"><b>IVA</b></td>
 												<td align="right" id="td_iva">
-												$ <?php
-														if( isset( $_SESSION["punto_venta"]["facturacion"] ) ){
-															echo ($totalVenta*.16);
-														} else {
-															echo "0";
-														}
-												?>
+												$ <?=$ivaVenta?>
 												</td>												
 											</tr>
 											<tr>
@@ -626,15 +614,28 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 											</tr>
 											<tr>
 												<td align="right"><b>Gran Total</b></td>
-												<td align="right" id="granTotalEnResumen"><h2>$ <?php
-														if( isset( $_SESSION["punto_venta"]["facturacion"] ) ){
-															echo ($totalVenta*1.16)+$totalEnvio;
-														} else {
-															echo $totalVenta+$totalEnvio;
-														}
-														?></h2></td>												
+												<td align="right" id="granTotalEnResumen"><h2>$ <?=$totalVenta+$ivaVenta+$totalEnvio?></h2></td>												
 											</tr>
 										</table>
+<?php
+if($esApartado){
+?>										
+										<br>
+										<table class="table table-striped table-bordered">
+											<tr>
+												<td align="right"><b>A cuenta</b></td>
+												<td align="right">$ <?=$sumaDePagos?></td>												
+											</tr>
+											<tr>
+												<td align="right"><b>Restan</b></td>
+												<td align="right" id="td_iva">
+													$ <?=($totalVenta+$ivaVenta+$totalEnvio-$sumaDePagos)?>
+												</td>												
+											</tr>
+										</table>
+<?php 
+}
+?>
 									</div>
                                 </fieldset>
 								<!-- FINALIZA RESUMEN DE COMPRA -->
@@ -657,7 +658,7 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 <!-- ini modals -->
 
 
-<div class="modal inmodal fade" id="modalBuscaCliente" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal inmodal fade" id="modalDetalleEnvio" tabindex="-1" role="dialog" aria-hidden="true">
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -665,8 +666,8 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 				<h4 class="modal-title">Detalle de Envio</h4>
 			</div>
 			<div class="modal-body">
-				<div class="form-group" id="divBuscaClienteInputEnvio" style="display:<?=($clientFromSessionForEnvio=='')?"block":"none"?>"><input type="text" placeholder="Nombre, email y/o número telefónico" class="form-control" id="inputBuscaCliente" name="inputBuscaCliente" ></div>
-				<div class="form-group" id="divBuscaClienteEnvio" ><?=$clientFromSessionForEnvio?></div>
+				<div class="form-group" id="divBuscaClienteInputEnvio" style="display:<?=($clientFromSessionGeneralData=='')?"block":"none"?>"><input style="width:830px;" type="text" placeholder="Nombre, email y/o número telefónico" class="form-control" id="inputBuscaClienteFromEnvio" name="inputBuscaClienteFromEnvio" ></div>
+				<div class="form-group" id="divBuscaClienteEnvio" ><?=$clientFromSessionGeneralData?></div>
 				<div class="form-group" id="divDireciconesClienteEnvio" ><?=$clientAddressShipFromSession?></div>
 				
 				<div class="ibox">
@@ -743,7 +744,7 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 			<div class="modal-footer">
 				<!-- <button data-toggle="modal" href="#ModalClienteNuevo"  type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalNuevoCliente">+ Nuevo Cliente</button>-->
 				<button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-				<button type="button" class="btn btn-primary" data-dismiss="modal" onclick="guarda_datos_envio();">Guardar</button>
+				<button type="button" class="btn btn-primary" onclick="guarda_datos_envio();">Guardar</button>
 			</div>
 		</div>
 	</div>
@@ -760,20 +761,20 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 						<h5>Motivo por el cual el cliente no quiere envio</h5>
 						<div class="form-group">
 							<select class="form-control" id="SelSinEnvio">
-								<option value="0">Seleccione una opcion</option>
+								<option value="0">Seleccione una opción</option>
 								<option value="1">Flete externo</option>
 								<option value="2">El cliente se lo lleva</option>
 							</select></div></div>
 			<div class="modal-footer">
 				<!-- <button data-toggle="modal" href="#ModalClienteNuevo"  type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalNuevoCliente">+ Nuevo Cliente</button>-->
 				<button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-				<button type="button" class="btn btn-primary" data-dismiss="modal" onclick="guada_porque_no();">Guardar</button>
+				<button type="button" class="btn btn-primary" onclick="guada_porque_no();">Guardar</button>
 			</div>
 		</div>
 	</div>
 </div>
 
-<div class="modal inmodal fade" id="ModelDetalleFacturacion" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal inmodal fade" id="ModalDetalleFacturacion" tabindex="-1" role="dialog" aria-hidden="true">
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -781,9 +782,9 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 				<h4 class="modal-title">Detalle de Facturación</h4>
 			</div>
 			<div class="modal-body">
-				<div class="form-group" id="divBuscaClienteInputFacturacion" style="display:<?=($clientFromSessionForEnvio=='')?"block":"none"?>"><input style="width:830px;" type="text" placeholder="Nombre, email y/o número telefónico" class="form-control" id="inputBuscaCliente_1" name="inputBuscaCliente_1" ></div>
+				<div class="form-group" id="divBuscaClienteInputFacturacion" style="display:<?=($clientFromSessionGeneralData=='')?"block":"none"?>"><input style="width:830px;" type="text" placeholder="Nombre, email y/o número telefónico" class="form-control" id="inputBuscaClienteFromFact" name="inputBuscaClienteFromFact" ></div>
 				
-				<div class="form-group" id="divBuscaClienteFacturacion" ><?=$clientFromSessionForEnvio?></div>
+				<div class="form-group" id="divBuscaClienteFacturacion" ><?=$clientFromSessionGeneralData?></div>
 				<div class="form-group" id="divDireciconesClienteFacturacion" ><?=$clientAddressFactFromSession?></div>
 				
 				<div class="ibox">
@@ -799,7 +800,11 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 								$arrayMails = explode(",",$_SESSION["punto_venta"]["cliente"]["email"]);
 								$optionsMail = '';
 								while( list($keyMail, $valueMail) = each($arrayMails) ){
-									$optionsMail.='<option value="'.$valueMail.'">'.$valueMail.'</option>'; 
+									$opt_selected = '';
+									if($_SESSION["punto_venta"]["facturacion"]["select_correo_factura"] == $valueMail){
+										$opt_selected = 'selected ';
+									}
+									$optionsMail.='<option '.$opt_selected.'value="'.$valueMail.'">'.$valueMail.'</option>'; 
 								}
 							}
 						?>
@@ -811,7 +816,7 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-				<button type="button" class="btn btn-primary" data-dismiss="modal" onclick="guarda_datos_facturacion();">Guardar</button>
+				<button type="button" class="btn btn-primary" onclick="guarda_datos_facturacion();">Guardar</button>
 			</div>
 		</div>
 	</div>
@@ -949,8 +954,8 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 	
 		var currentClientDireccionIdEnvio = 0;
 		var currentClientDireccionIdFact = 0;
-		var bandera_datos_completos_envio = false;
-		var bandera_datos_completos_fact = false;
+		var bandera_datos_completos_envio = <?=isset($_SESSION["punto_venta"]["envio"])?"true":"false"?>;
+		var bandera_datos_completos_fact = <?=isset($_SESSION["punto_venta"]["facturacion"])?"true":"false"?>;
 <?php
 		if( isset($_SESSION["punto_venta"]["cliente"]["cliente_direccion_id_envio"]) ){
 			echo "
@@ -1011,6 +1016,7 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 ?>
 
 		var stringPagoData = '';
+		var cssEspacios = '<?=$cssEspacios?>';
 		var requiere_factura = <?=(isset($_SESSION["punto_venta"]["facturacion"]))?"true":"false"?>;
 		
         $(document).ready(function(){
@@ -1058,7 +1064,7 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
                     }
 					
 					if(newIndex === 2){
-						//alert("envio completo: "+bandera_datos_completos_envio);
+						
 						if(!bandera_datos_completos_envio){
 							toastr.error("Debe elegir si requiere envío o no");
 							return false;
@@ -1067,7 +1073,7 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 					}
 
                     if(newIndex === 3){
-						//alert("envio completo: "+bandera_datos_completos_envio);
+						
 						if(!bandera_datos_completos_fact){
 							toastr.error("Debe elegir si requiere factura o no");
 							return false;
@@ -1113,7 +1119,7 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 									setTimeout(function(){
 										$("#metodo_"+maxObjIdTmp).focus();
 									}, 1);
-								}
+								}								
 								
 								if(!envia_falso){
 									stringPagoData+='{"pago_metodo_id": "'+newValueSel+'", "pago_metodo": "'+newValueSelTxt+'", "monto": "'+newValue+'", "referencia": "'+newValueRef+'"},';
@@ -1124,6 +1130,18 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 						}
 						stringPagoData = stringPagoData.slice(0,-1);
 						stringPagoData+=']}';
+						
+						<?php
+						
+						if(!$esApartado){
+							echo "
+							if(  $('#spanRestanVenta').html() != '$ 0'){
+								toastr.error('<b>Los pagos deben cubrir el total de la venta</b>');
+								envia_falso = true;
+							}
+							";
+						}
+						?>
 						
 						if( envia_falso ){
 							return false;
@@ -1185,25 +1203,30 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 					//alert(currentIndex);
 					//var form = $(this);
 					if(currentIndex == 4){
-						url = '/ventas/ajax/guardarCompra.php';
+						url = '/ventas/ajax/guardarCompra.php<?=($esApartado)?'?apartado=u48f6d1':''?>';
 						$.ajax(
 						{
 							type: "POST",
 							url: url,
 							success: function(data)
 							{
-								alert(data);
+								//alert(data);
+								dataJson = JSON.parse(data);
+								//alert(dataJson.idVenta);
 								swal({
-									title: "Compra Realizada!",
-									text: "La compra se ha registrado!",
+									title: "<?=($esApartado)?'Apartado Realizado!':'Compra Realizada!'?>",
+									text: "<?=($esApartado)?'El apartado':'La compra'?> se ha registrado!",
 									type: "success"
-									}, function () {
-										
+									}, function () {										
+										//mandar impresion de ticket dataJson.idVenta
+										window.location.href = 'index.php';
+										window.open('../ventas/comprobante_venta.php?v='+dataJson.idVenta,'_blank');
+										borrar_datos_venta();
 								});
 							}
 						});
 					} else {
-						toastr.error("Datos incompletos, aun no se puede finalizar la compra");
+						toastr.error("Datos incompletos, aun no se puede finalizar <?=($esApartado)?"el apartado":"la compra"?>");
 						return false;
 					}
 					
@@ -1218,19 +1241,19 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 					  type: "warning",
 					  showCancelButton: true,
 					  confirmButtonColor: "#DD6B55",
-					  confirmButtonText: "Borrar",
-					  cancelButtonText: "Cancelar",
+					  confirmButtonText: "Cancelar Venta",
+					  cancelButtonText: "Regresar",
 					  closeOnConfirm: false,
 					},
 					function(isConfirm){
 						if (isConfirm) {
-							borrar_datos_venta();
+							
 							swal({
 								title: "Venta Cancelada!", 
 								text: "Se ha borrado el avance de la venta", 
 								type: "success"			
 							}, function () {
-								location.href = '/ventas/index.php';
+								borrar_datos_venta();
 							});
 						}
 					});
@@ -1324,7 +1347,11 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 			/*FUNCIONES PARA CLIENTE NUEVO*/
 			
 			$("#select_zona_envio").change(function(){
-				console.log("llega" + $(this).val());
+				//console.log("llega" + $(this).val());
+				if($(this).val()=='0'){
+					$("#costoEnvio").val('0');
+					$("#spancostoEnvio").html("");
+				}
 				if($(this).val()=='1'){
 					$("#costoEnvio").val('500');
 					$("#spancostoEnvio").html("min $1 - max $500");
@@ -1365,7 +1392,7 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 					match:{
 						enabled: true
 					},
-			showAnimation:{
+					showAnimation:{
 						type: "fade", //normal|slide|fade
 						time: 400,
 						callback: function() {}
@@ -1374,22 +1401,30 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 						type: "slide", //normal|slide|fade
 						time: 400,
 						callback: function() {}
-			},
-			onChooseEvent:function(){
+					},
+					onChooseEvent:function(){
 				
-						if (typeof( $("#inputBuscaCliente").getSelectedItemData().id_cliente ) != "undefined" ) { 
-							//desde envio
-							var id=$("#inputBuscaCliente").getSelectedItemData().id_cliente;
-							var name=$("#inputBuscaCliente").getSelectedItemData().nombre;
-							var email=$("#inputBuscaCliente").getSelectedItemData().emails;
-							var number=$("#inputBuscaCliente").getSelectedItemData().numbers_type;
+						if (typeof( $("#inputBuscaClienteFromDatos").getSelectedItemData().id_cliente ) != "undefined" ) { 
+							//desde datos
+							var id=$("#inputBuscaClienteFromDatos").getSelectedItemData().id_cliente;	
+							var name=$("#inputBuscaClienteFromDatos").getSelectedItemData().nombre;
+							var email=$("#inputBuscaClienteFromDatos").getSelectedItemData().emails;
+							var number=$("#inputBuscaClienteFromDatos").getSelectedItemData().numbers_type;
 						}
-						if (typeof( $("#inputBuscaCliente_1").getSelectedItemData().id_cliente ) != "undefined" ) { 
+				
+						if (typeof( $("#inputBuscaClienteFromEnvio").getSelectedItemData().id_cliente ) != "undefined" ) { 
+							//desde envio
+							var id=$("#inputBuscaClienteFromEnvio").getSelectedItemData().id_cliente;
+							var name=$("#inputBuscaClienteFromEnvio").getSelectedItemData().nombre;
+							var email=$("#inputBuscaClienteFromEnvio").getSelectedItemData().emails;
+							var number=$("#inputBuscaClienteFromEnvio").getSelectedItemData().numbers_type;
+						}
+						if (typeof( $("#inputBuscaClienteFromFact").getSelectedItemData().id_cliente ) != "undefined" ) { 
 							//desde facturacion
-							var id=$("#inputBuscaCliente_1").getSelectedItemData().id_cliente;
-							var name=$("#inputBuscaCliente_1").getSelectedItemData().nombre;
-							var email=$("#inputBuscaCliente_1").getSelectedItemData().emails;
-							var number=$("#inputBuscaCliente_1").getSelectedItemData().numbers_type; 
+							var id=$("#inputBuscaClienteFromFact").getSelectedItemData().id_cliente;
+							var name=$("#inputBuscaClienteFromFact").getSelectedItemData().nombre;
+							var email=$("#inputBuscaClienteFromFact").getSelectedItemData().emails;
+							var number=$("#inputBuscaClienteFromFact").getSelectedItemData().numbers_type; 
 						}
 						
 						$("#divBuscaClienteInputEnvio").css("display","none");
@@ -1399,154 +1434,30 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 						getClienteDirecciones(id);
 						
 						SelectedItemData(id, name, email, number);
-						/**/
-						swal({
-							title: "Vilculado!",
-							text: "Clinte vinculado correctamente!",
-							type: "success"
-							}, function () {
-							
-						});
-			}
+						
+					}
 				}
 		};
 		
-		var options_0={
-				url: "/clientes/get_clients_search.php",
-				getValue: function(element){
-					var name=element.nombre+' '+element.emails+' '+element.numbers;			
-					return name;
-				},
-				template: {
-					type: "custom",
-					method: function(value, item) {
-						return value;
-					}
-				},
-				list:{
-					match:{
-						enabled: true
-					},
-				showAnimation:{
-						type: "fade", //normal|slide|fade
-						time: 400,
-						callback: function() {}
-					},
-					hideAnimation: {
-						type: "slide", //normal|slide|fade
-						time: 400,
-						callback: function() {}
-			},
-			onChooseEvent:function(){
-						var id=$("#inputBuscaCliente_0").getSelectedItemData().id_cliente;						
-						var name=$("#inputBuscaCliente_0").getSelectedItemData().nombre;
-						var email=$("#inputBuscaCliente_0").getSelectedItemData().emails;
-						var number=$("#inputBuscaCliente_0").getSelectedItemData().numbers_type;
-						
-						$("#divBuscaClienteInputEnvio").css("display","none");
-						$("#divBuscaClienteInputFacturacion").css("display","none");
-						
-						setClienteData(name, email, number);
-						getClienteDirecciones(id);
-						
-						SelectedItemData_0(id, name, email, number);
-						
-						/**/
-						swal({
-							title: "Vilculado!",
-							text: "Clinte vinculado correctamente!",
-							type: "success"
-							}, function () {
-							
-						});
-						
-						
-			}
-				}
-		};
-
 		var SelectedItemData=function(id,name,email,number)
 		{
-			//
-			tableEnvio ='<button style="position:relative; float:right;" type="button" class="btn btn-xs btn-danger" id="removeCliente_'+id+'" onclick="removeCliente('+id+');">Desasociar cliente</button>'+
-			'<table class=""><tbody><tr><td><b>Nombre Completo:</b></td></tr>'+
-				'<tr id="row_'+id+'"><td style="padding-left:10px;">'+name+' &nbsp;&nbsp;<br><br></td><td></td></tr></tbody>'+
-			'</table>';
-			//
-			var table='<button style="position:relative; float:right;" type="button" class="btn btn-xs btn-danger" id="removeCliente_'+id+'" onclick="removeCliente('+id+');">Desasociar cliente</button>';
-			table+='<table class=""><tbody>';
 			
-			var cliente=$("#cliente_"+id).val();
-			
-			if(cliente==undefined)
-			{
-							
-				table+='<tr><td><b>Nombre Completo:</b></td></tr>';
-				table+='<tr id="row_'+id+'"> '+
-							'<td style="padding-left:10px;">'+name+' &nbsp;&nbsp;<br><br> </td>	<td></td>'+
-						'</tr>'+
-						'<tr> <td><b>Direcciones de envío:</b></td> </tr>'+
-						'<tr> <td style="padding-left:10px;"> '+txtDireccionesEnvio+' <br> </td> </tr>'+									
-						'<tr> <td><b>Direcciones de facturación:</b></td> </tr>'+
-						'<tr> <td class="desc" style="padding-left:10px;"> '+txtDireccionesFacturacion+' </td> </tr>'+
-						'</tbody></table>';
-						
-				table_extra = '<b>Teléfonos:</b><br>'+number.replace(/,/g,"<br>")+'<br><br><b>Correos:</b><br>'+email.replace(/,/g,"<br>");
-				
-				$('#divBuscaCliente_0').html(table);				
-				$('#divBuscaCliente_extra_0').html(table_extra);
-				
-				$('#divBuscaClienteEnvio').html(tableEnvio);
-				$('#divBuscaClienteFacturacion').html(tableEnvio);
-				
-				array_emails = email.split(",");
-				for (indice in array_emails){
-					$("#correo_p_facturacion").append('<option value="'+array_emails[indice]+'">'+array_emails[indice]+'</option>')
-				}
-				
-				//$("#inputBuscaCliente").focus(); // foco a input
-				
-				$("#inputBuscaCliente_0").val(''); // reset a input
-				$("#inputBuscaCliente").val('');
-				$("#inputBuscaCliente_1").val('');
-				//$("#product_list").fadeIn();
-							
-				
-			}
-			else
-			{
-				//$("#inputBuscaCliente").focus();
-				//$("#inputBuscaCliente").val('');
-				alert("El cliente ya ha sido ligado");
-			}
-		}
-		
-		var SelectedItemData_0=function(id,name,email,number)
-		{
-			//
-			tableEnvio ='<button style="position:relative; float:right;" type="button" class="btn btn-xs btn-danger" id="removeCliente_'+id+'" onclick="removeCliente('+id+');">Desasociar cliente</button>'+
+			var tableGeneralData ='<button style="position:relative; float:right;" type="button" class="btn btn-xs btn-danger" id="removeCliente_'+id+'" onclick="removeCliente('+id+');">Desasociar cliente</button>'+
 			'<table class=""><tbody><tr><td><b>Nombre Completo:</b></td></tr>'+
-				'<tr id="row_'+id+'"><td style="padding-left:10px;">'+name+' &nbsp;&nbsp;<br><br></td><td></td></tr></tbody>'+
-			'</table>';
-			//
-			var table='<button style="position:relative; float:right;" type="button" class="btn btn-xs btn-danger" id="removeCliente_'+id+'" onclick="removeCliente('+id+');">Desasociar cliente</button>';
-			table+='<table class=""><tbody>';
+				'<tr id="row_'+id+'"><td style="padding-left:10px;"><i class="fa fa-user"></i> '+cssEspacios+name+' &nbsp;&nbsp;<br><br> </td><td></td></tr>'+
+			'</tbody></table>';
 
-			var cliente=$("#cliente_"+id).val();
+			//var cliente=$("#cliente_"+id).val();
 			
-			if(cliente==undefined)
+			if(1)//cliente==undefined)
 			{		
-				table+='<tr><td><b>Nombre Completo:</b></td></tr>';
-				table+='<tr id="row_'+id+'"> '+
-							'<td style="padding-left:10px;">'+name+' &nbsp;&nbsp;<br><br> </td>	<td></td>'+
-						'</tr>'+
-						'<tr> <td><b>Direcciones de envío:</b></td> </tr>'+
-						'<tr> <td style="padding-left:10px;"> '+txtDireccionesEnvio+' <br> </td> </tr>'+									
-						'<tr> <td><b>Direcciones de facturación:</b></td> </tr>'+
-						'<tr> <td class="desc" style="padding-left:10px;"> '+txtDireccionesFacturacion+' </td> </tr>'+
-						'</tbody></table>';
+				var tableDetailedData = tableGeneralData+
+				'<table class=""><tbody><tr> <td><b>Direcciones de envío:</b></td> </tr>'+
+				'<tr> <td style="padding-left:10px;"> '+txtDireccionesEnvio+' <br> </td> </tr>'+									
+				'<tr> <td><b>Direcciones de facturación:</b></td> </tr>'+
+				'<tr> <td class="desc" style="padding-left:10px;"> '+txtDireccionesFacturacion+' </td> </tr>'+
+				'</tbody></table>';
 				
-				//
 				number_detail = number.split(",");
 				var txtTelefonosTipo = '<table>';
 				
@@ -1583,32 +1494,36 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 				
 				txtTelefonosTipo+='</table>';
 				
-				table_extra = '<b>Teléfonos:</b><br>'+txtTelefonosTipo+'<br><br><b>Correos:</b><br>'+email.replace(/,/g,"<br>");
+				table_extra = '<b>Teléfonos:</b><br>'+txtTelefonosTipo+'<br><br><b>Correos:</b><br><i class="fa fa-envelope-o"></i> '+cssEspacios+email.replace(/,/g,'<br><i class="fa fa-envelope-o"></i> '+cssEspacios);
 		
-				$('#divBuscaCliente_0').html(table);
+				email_detail = email.split(",");
+				for(indice in email_detail){
+					
+					$('#correo_p_facturacion').append('<option value="'+(indice+1)+'">'+email_detail[indice]+'</option>');
+				}
+				
+		
+				$('#divBuscaCliente_0').html(tableDetailedData);
 				
 				$('#divBuscaCliente_extra_0').html(table_extra);
 				
-				$('#divBuscaClienteEnvio').html(tableEnvio);
-				$('#divBuscaClienteFacturacion').html(tableEnvio);
+				$('#divBuscaClienteEnvio').html(tableGeneralData);
+				$('#divBuscaClienteFacturacion').html(tableGeneralData);
 		
-				$("#inputBuscaCliente_0").focus();
-				$("#inputBuscaCliente_0").val('');
-				//$("#product_list").fadeIn();
-							
-							//saveClienteEnVenta(id, sku, name, 1, price,urlImage);
-			}
-			else
-			{
-				$("#inputBuscaCliente_0").focus();
-				$("#inputBuscaCliente_0").val('');
-				alert("El cliente ya ha sido ligado");
+				$("#inputBuscaClienteFromDatos").focus();
+				$("#inputBuscaClienteFromDatos").val('');
+				
+				$("#inputBuscaClienteFromEnvio").focus();
+				$("#inputBuscaClienteFromEnvio").val('');
+				
+				$("#inputBuscaClienteFromFact").focus();
+				$("#inputBuscaClienteFromFact").val('');
 			}
 		}
 
-		$("#inputBuscaCliente_0").easyAutocomplete(options_0);
-		$("#inputBuscaCliente").easyAutocomplete(options);
-		$("#inputBuscaCliente_1").easyAutocomplete(options);
+		$("#inputBuscaClienteFromDatos").easyAutocomplete(options);
+		$("#inputBuscaClienteFromEnvio").easyAutocomplete(options);
+		$("#inputBuscaClienteFromFact").easyAutocomplete(options);
 			
        });
 	   
@@ -1734,17 +1649,19 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 				data: {}, 
 				success: function(data)
 				{
+					/*
 					swal({
 						title: "Desvilculado!",
 						text: "Clinte desvinculado correctamente!",
 						type: "success"
 					}, function () {
 						
-					});
+					});*/
 				}
 			});
 			$("#divBuscaClienteInputEnvio").css("display","block");
 			$("#divBuscaClienteInputFacturacion").css("display","block");
+			
 	   }
 	   
 	   function agregaNuevoMetodoPago(){
@@ -1864,14 +1781,14 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 							newDivBtnsFact+= '<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo_'+val.cliente_direccion_id+'">'+val.cliente_direccion_calle+' '+val.cliente_direccion_numero_ext+'...</button> ';
 							newDivsFact+= '<div id="demo_'+val.cliente_direccion_id+'" class="collapse"><font id="demo_font_'+val.cliente_direccion_id+'" '+cssRowDireccion+'>'+val.cliente_direccion_calle+' '+val.cliente_direccion_numero_ext+' '+val.cliente_direccion_numero_int+' '+val.cliente_direccion_colonia+' '+val.cliente_direccion_municipio+', '+globalDataClient['id_'+val.cliente_direccion_id]['estado']+'. C.P. '+val.cliente_direccion_cp+'</font> &nbsp;&nbsp;&nbsp;<i id="demo_ico_'+val.cliente_direccion_id+'" class="fa fa-check-square '+cssIcoElegir+'" style="color:green;"></i><button type="button" class="btn btn-warning btn-xs '+cssBtnElegir+'" onclick="asociaDireccionFact('+val.cliente_direccion_id+');" style="margin:4px 0px;" id="demo_btn_'+val.cliente_direccion_id+'"> Elegir</button></div>';
 							
-							txtDireccionesFacturacion+= '<i class="fa fa-file-text-o"></i> '+val.cliente_direccion_calle+' '+val.cliente_direccion_numero_ext+' '+val.cliente_direccion_numero_int+' '+val.cliente_direccion_colonia+' '+val.cliente_direccion_municipio+', '+val.estado+'. C.P. '+val.cliente_direccion_cp+'<br>';
+							txtDireccionesFacturacion+= '<i class="fa fa-file-text-o"></i> '+cssEspacios+val.cliente_direccion_calle+' '+val.cliente_direccion_numero_ext+' '+val.cliente_direccion_numero_int+' '+val.cliente_direccion_colonia+' '+val.cliente_direccion_municipio+', '+val.estado+'. C.P. '+val.cliente_direccion_cp+'<br>';
 						}
 						if(val.cliente_direccion_tipo_id == 2 || val.cliente_direccion_tipo_id == 3){ //direcciones de envio
 						
 							newDivBtnsEnvio+= '<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo_'+val.cliente_direccion_id+'">'+val.cliente_direccion_calle+' '+val.cliente_direccion_numero_ext+'...</button> ';
 							newDivsEnvio+= '<div id="demo_'+val.cliente_direccion_id+'" class="collapse"><font id="demo_font_'+val.cliente_direccion_id+'" '+cssRowDireccion+'>'+val.cliente_direccion_calle+' '+val.cliente_direccion_numero_ext+' '+val.cliente_direccion_numero_int+' '+val.cliente_direccion_colonia+' '+val.cliente_direccion_municipio+', '+globalDataClient['id_'+val.cliente_direccion_id]['estado']+'. C.P. '+val.cliente_direccion_cp+'</font> &nbsp;&nbsp;&nbsp;<i id="demo_ico_'+val.cliente_direccion_id+'" class="fa fa-check-square '+cssIcoElegir+'" style="color:green;"></i><button type="button" class="btn btn-warning btn-xs '+cssBtnElegir+'" onclick="asociaDireccionEnvio('+val.cliente_direccion_id+');" style="margin:4px 0px;" id="demo_btn_'+val.cliente_direccion_id+'"> Elegir</button></div>';
 							
-							txtDireccionesEnvio+= '<i class="fa fa-map-marker"></i> '+val.cliente_direccion_calle+' '+val.cliente_direccion_numero_ext+' '+val.cliente_direccion_numero_int+' '+val.cliente_direccion_colonia+' '+val.cliente_direccion_municipio+', '+globalDataClient['id_'+val.cliente_direccion_id]['estado']+'. C.P. '+val.cliente_direccion_cp+'<br>';
+							txtDireccionesEnvio+= '<i class="fa fa-map-marker"></i> '+cssEspacios+val.cliente_direccion_calle+' '+val.cliente_direccion_numero_ext+' '+val.cliente_direccion_numero_int+' '+val.cliente_direccion_colonia+' '+val.cliente_direccion_municipio+', '+globalDataClient['id_'+val.cliente_direccion_id]['estado']+'. C.P. '+val.cliente_direccion_cp+'<br>';
 						}
 
 					});
@@ -1903,8 +1820,13 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 	   }
 	   
 	   function ventaConEnvio(){
+		   
+			bandera_datos_completos_envio = true;
+			
 			$("#icoResumenEnvio").removeClass();
+			$("#icoResumenEnvioSelf").removeClass();
 			$("#icoResumenEnvio").addClass("fa fa-check-square-o greenFont");
+			$("#icoResumenEnvioSelf").addClass("fa fa-check-square-o greenFont");
 			
 			txtDireccionEnvio = globalDataClient['id_'+currentClientDireccionIdEnvio]['cliente_direccion_calle']+" "+globalDataClient['id_'+currentClientDireccionIdEnvio]['cliente_direccion_numero_ext']+", "+globalDataClient['id_'+currentClientDireccionIdEnvio]['cliente_direccion_colonia']+"<br>";
 			txtDireccionEnvio+= globalDataClient['id_'+currentClientDireccionIdEnvio]['cliente_direccion_municipio']+", "+globalDataClient['id_'+currentClientDireccionIdEnvio]['estado']+". C.P. "+globalDataClient['id_'+currentClientDireccionIdEnvio]['cliente_direccion_cp']+"<br>";
@@ -1912,19 +1834,27 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 			txtDireccionEnvio+="Fecha y hora de entrega: "+fec_ven_arr[0]+"/"+meses[fec_ven_arr[1]]+"/"+fec_ven_arr[2]+" "+$("#pv_hora_vencimiento").val()+" hrs<br>";
 	
 			$("#divInfoResumenEnvio").html(txtDireccionEnvio);
+			$("#divInfoResumenEnvioSelf").html(txtDireccionEnvio);
 	   }
 	   
 	   function ventaSinEnvio(){
 			$("#icoResumenEnvio").removeClass();
+			$("#icoResumenEnvioSelf").removeClass();
 			$("#icoResumenEnvio").addClass("fa fa-times-circle-o redFont");
+			$("#icoResumenEnvioSelf").addClass("fa fa-times-circle-o redFont");
 			$("#divInfoResumenEnvio").html("Sin envío");
-			
+			$("#divInfoResumenEnvioSelf").html("Sin envío");
 	   }
 	   
 	function ventaSinFactura(){
 		$("#icoResumenFactura").removeClass();
+		$("#icoResumenFacturaSelf").removeClass();
+		
 		$("#icoResumenFactura").addClass("fa fa-times-circle-o redFont");
+		$("#icoResumenFacturaSelf").addClass("fa fa-times-circle-o redFont");
+		
 		$("#divInfoResumenFactura").html("Sin factura");
+		$("#divInfoResumenFacturaSelf").html("Sin factura");
 		
 		var url="/clientes/ajax_set_cliente_sin_factura_data.php";
 
@@ -1953,8 +1883,15 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 	}
 	   
 	function ventaConFactura(){
+		
+		requiere_factura = true;
+		bandera_datos_completos_fact = true;
+		
 		$("#icoResumenFactura").removeClass();
+		$("#icoResumenFacturaSelf").removeClass();
+		
 		$("#icoResumenFactura").addClass("fa fa-check-square-o greenFont");
+		$("#icoResumenFacturaSelf").addClass("fa fa-check-square-o greenFont");
 		
 		txtDireccionFact = "Razón Social: "+globalDataClient['id_'+currentClientDireccionIdFact]['cliente_direccion_razon_social']+"<br>";
 		txtDireccionFact+= "RFC: "+globalDataClient['id_'+currentClientDireccionIdFact]['cliente_direccion_rfc']+"<br>";
@@ -1962,6 +1899,7 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 		txtDireccionFact+= globalDataClient['id_'+currentClientDireccionIdFact]['cliente_direccion_municipio']+", "+globalDataClient['id_'+currentClientDireccionIdFact]['estado']+". C.P. "+globalDataClient['id_'+currentClientDireccionIdFact]['cliente_direccion_cp']+"<br>";
 		
 		$("#divInfoResumenFactura").html(txtDireccionFact);
+		$("#divInfoResumenFacturaSelf").html(txtDireccionFact);
 		
 		$("#h4_iva").html("$ "+( parseInt(subtotal) * 0.16));
 		$("#td_iva").html("$ "+( parseInt(subtotal) * 0.16));
@@ -2007,6 +1945,14 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 		select_planta_text = $("#select_planta option:selected").text();
 		select_planta_extra_text = $("#select_planta_extra option:selected").text();
 		
+		if(currentClientDireccionIdEnvio == '0'){
+			toastr.error("Debe elegir una dirección de envío");
+			return false;
+		}
+		
+		$("#modalDetalleEnvio").modal('hide');
+		ventaConEnvio();
+		
 		$.ajax({
 			type: "POST",
 			url: url,
@@ -2025,9 +1971,9 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 						text: "Los datos de envío han sido guardados correctamente!",
 						type: "success"
 					}, function () {
-						bandera_datos_completos_envio = true;
+						
 						$("#form").steps("next");
-						ventaConEnvio();
+						
 					});
 			}
 		});
@@ -2039,6 +1985,18 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 		var url="/clientes/ajax_set_cliente_factura_data.php";
 		
 		select_correo_factura_text = $("#correo_p_facturacion option:selected").text();
+		if(select_correo_factura_text == 'Elegir un correo electrónico'){
+			toastr.error("Debe elegir un correo electrónico");
+			return false;
+		}
+		//alert(currentClientDireccionIdFact);
+		if(currentClientDireccionIdFact == '0'){
+			toastr.error("Debe elegir una dirección de facturación");
+			return false;
+		}
+		$("#ModalDetalleFacturacion").modal('hide');
+		
+		ventaConFactura();
 		
 		$.ajax({
 			type: "POST",
@@ -2054,10 +2012,9 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 						text: "Los datos de facturación han sido guardados correctamente!",
 						type: "success"
 					}, function () {
-						requiere_factura = true;
-						bandera_datos_completos_fact = true;
+						
 						$("#form").steps("next");
-						ventaConFactura();
+						
 					});
 			}
 		});
@@ -2091,6 +2048,21 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 		var url="/clientes/ajax_set_cliente_sin_envio_data.php";
 		motivo = $("#SelSinEnvio option:selected").text();
 		
+		
+		if(motivo == 'Seleccione una opción'){
+			toastr.error("Debe elegir un motivo");
+			return false;
+		}
+		
+		$("#modalVentaSinEnvio").modal('hide');
+		$("#costoEnvioEnPago").html("$ 0");
+		$("#costoEnvioEnResumen").html("$ 0");
+		$("#costoEnvio").val(0);
+		
+		actualizaResumenVenta();
+		ventaSinEnvio();
+		bandera_datos_completos_envio = true;
+		
 		$.ajax({
 			type: "POST",
 			url: url,
@@ -2104,12 +2076,7 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 						text: "Los datos de NO envío han sido guardados correctamente!",
 						type: "success"
 					}, function () {
-						$("#costoEnvioEnPago").html("$ 0");
-						$("#costoEnvioEnResumen").html("$ 0");
-						$("#costoEnvio").val(0);
-						bandera_datos_completos_envio = true;
 						$("#form").steps("next");
-						actualizaResumenVenta();
 					});
 			}
 		});
@@ -2123,7 +2090,7 @@ if(isset($_SESSION["punto_venta"]["cliente"])){
 			url: url,
 			success: function(data)
 			{
-				
+				location.href = '/ventas/index.php';
 			}
 		});
 	}

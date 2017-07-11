@@ -12,9 +12,11 @@ $inventarios=new Inventarios();
 $proveedores = new Proveedor();
 
 $dataProducts = json_decode($productos->GetDataProductsMainJson());
-/*echo "<pre>";
+/*
+echo "<pre>";
     print_r($dataProducts);
-echo "<pre>";*/
+echo "<pre>";
+*/
 //$dataUnique = $productos->GetProductsUnique();
 
 ?>    
@@ -26,7 +28,7 @@ echo "<pre>";*/
                 <h2>Catalogos</h2>
                 <ol class="breadcrumb">                    
                     <li class="active">
-                        <strong>catalogo de productos</strong>
+                        <strong>Catalogo de Productos</strong>
                     </li>
                 </ol>
             </div>           
@@ -112,9 +114,16 @@ echo "<pre>";*/
             <div class="wrapper wrapper-content animated fadeIn ibox-title">
                 <div class="row">
                     <?php 
-
+                    $indi = 0;
                     foreach($dataProducts as $prod){                                
 
+                    $indi++;
+                    $styleClear = '';
+                    if($indi==5){
+                        $styleClear = 'style="clear: left;"';
+                        $indi = 1;
+                    }    
+                        
                     $active = '';
                     $cantidad  = 1;
                     $verCarrito = 1;
@@ -142,7 +151,7 @@ echo "<pre>";*/
                         $url = 'detalleVariacion';                    
                     }
 
-                    echo '  <div class="col-md-3">    
+                    echo '  <div class="col-md-3" '.$styleClear.'>    
 
                                 <div class="ibox" >
                                     <div class="ibox-content product-box">                                    
@@ -162,7 +171,7 @@ echo "<pre>";*/
                                                 echo '<small>ver modelos</small>';
                                             }
 
-                    echo '                  </span></a>
+                    echo '                  </span>
                                             <small class="text-muted">'.$prod->producto_sku.'</small>
                                             <div class="product-name" >'.$prod->producto_name.'</div>
                                             <div class="small m-t-xs" >'.$prod->producto_description_corta.'</div>
@@ -187,7 +196,7 @@ echo "<pre>";*/
                                             else{
                                                 echo "<div>&nbsp;</div>";
                                             }
-                    echo '                  </div>                                        
+                    echo '                  </div></a>                                        
                                             <div class="m-t text-right">';
                                             if($prod->producto_type!='U'){
                     echo '                  <a href="'.$url.'.php?producto_id='.base64_encode($prod->producto_id).'" class="btn btn-xs btn-outline btn-primary">+ Info</a>
@@ -195,7 +204,7 @@ echo "<pre>";*/
                                             }        
                                             if($prod->producto_type=='U'){
                                                 if($verCarrito==1){
-                                                echo '<input type="text" id="cantidad_'.$prod->producto_id.'" value="'.$cantidad.'" size="3">&nbsp;';
+                                                echo '<input type="number" min="1" id="cantidad_'.$prod->producto_id.'" value="'.$cantidad.'" size="3" style="width: 70px">&nbsp;';
                                                 echo '<a href="#" class="btn btn-xs btn-outline btn-warning addCarrito addPuntoVenta" data-line="line_'.$prod->producto_id.'" id="addPuntoVenta_'.$prod->producto_id.'" 
                                                       data-imagen="'.$prod->imagen.'"
                                                       data-id="'.$prod->producto_id.'"
@@ -269,4 +278,9 @@ echo "<pre>";*/
         font-size: 14px;
         z-index: 999;        
     }
+    @media (min-width: 992px) {
+        .row .col-md-3{
+             
+        }
+    }    
 </style>    

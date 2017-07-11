@@ -17,11 +17,12 @@ if(isset($_SESSION['punto_venta']) && is_array($_SESSION['punto_venta'])){
     $estatus = 1; //por pagar 
     if($pagos){
         $pagos = json_decode($pagos, true);
+
         $totalPago = 0;
-        foreach($pagos as $pago){
-            $totalPago += $pago['pago_monto'];
+        foreach($pagos['pagos'] as $pago){
+            $totalPago += $pago['monto'];
         }
-        
+
         if($sesionVenta['punto_venta']['Subtotal']>=$totalPago){
             $estatus = 1; //por pagar 
         }else{
@@ -29,7 +30,7 @@ if(isset($_SESSION['punto_venta']) && is_array($_SESSION['punto_venta'])){
         }
     }
     
-    $idVenta = $insVentas->nuevaVenta($sesionVenta, $estatus);    
+    $idVenta = $insVentas->nuevaVenta($sesionVenta, $estatus, 0, 2);    
     
     if(is_numeric($idVenta)){
         

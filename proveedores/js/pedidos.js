@@ -1,5 +1,7 @@
 var totalPedido=0;
 var productosPedido = [];
+var productosBorrar = [];
+
 $(document).ready(function(){                        
     
     $('.input-group.date').datepicker({
@@ -50,6 +52,10 @@ $(document).ready(function(){
         if(idProd!=0){
             agregarProductoPedido(idProd);
         }
+    });
+    
+    $("#actualizar_pedido").click(function(){        
+        $('#myModal').modal('hide');
     });
     
     $("#recibir_pedido").click(function(){
@@ -179,6 +185,9 @@ function updatePedido(){
 
 function loadDataUpdate(element){
     
+    
+    productosBorrar = [];
+    
     var productos = $(element).data("productos");    
     var pedido_id = $(element).data("pedido");
     
@@ -191,11 +200,25 @@ function loadDataUpdate(element){
     var html = '';
     $.each(productos, function( index, value ) {
         console.log(value);
-        html += ('<tr><td>'+value.stock+'</td><td>&nbsp;'+value.producto_sku+'</td><td>&nbsp;'+value.producto_name+'</td></tr>');
+        html += ('<tr><td style="padding: 5px"><button class="btn btn-danger btn-xs borrarProductoTabla" type="button" data-pedido="'+value.pedido_id+'" data-producto="'+value.producto_id+'" ><i class="fa fa-trash"></i></button></td><td>'+value.stock+'</td><td>&nbsp;'+value.producto_sku+'</td><td>&nbsp;'+value.producto_name+'</td></tr>');
     });
     
     $("#productosEnPedido").html(html);
     
+    
+    $(".borrarProductoTabla").click(function(){
+        
+        var idProducto = $(this).data('producto');
+        var idPedido = $(this).data('pedido');                        
+        
+        borrarProductosPedido(idProducto, idPedido, this);
+        
+    });
+}
+
+
+function borrarProductosPedido(idProducto, idPedido, elem){
+    $(elem).parent().parent().remove();    
 }
 
 function deletePedido(element){

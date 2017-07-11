@@ -49,8 +49,8 @@ $ventas = $insVentas->obtenerVentas(0,0);
                 </div>
                 <div id="productos">
                     <div class="ibox-content">      
-                        <div class="table-responsive">
-                        <table class="table table-responsive table-striped table-bordered table-hover dataTables-example" id="table" >                        
+                        <div class="table table-responsive">
+                    <table class="table table-striped table-responsive table-bordered table-hover dataTables-example" id="table" >
                             <thead>
                             <tr>
                                 <th>ID</th>
@@ -65,6 +65,7 @@ $ventas = $insVentas->obtenerVentas(0,0);
                                 <th>Flete</th>
                                 <th>Facturación</th>
                                 <th>Estatus</th>                                
+                                <th>Acciones</th>                                
                             </tr>
                             </thead>
                             <tbody>
@@ -92,7 +93,7 @@ $ventas = $insVentas->obtenerVentas(0,0);
                                         $pagos = '';
                                         
                                         foreach($pagosInfo as $pago){
-                                            $pagos .= number_format($pago['monto'],2,'.',',')."&nbsp;".$pago['general_forma_de_pago_desc']."<br />".$insGeneral->getDate($pago['fecha']);
+                                            $pagos .= "$ ".number_format($pago['monto'],2,'.',',')."<br />".$pago['general_forma_de_pago_desc']."<br />".$insGeneral->getDate($pago['fecha'])."<br />-----------<br />";
                                             $resta -= $pago['monto'];
                                         }
                                     }
@@ -100,7 +101,7 @@ $ventas = $insVentas->obtenerVentas(0,0);
                                     $productosVenta = $insVentas->obtenerProductosVenta($venta['venta_id']);
                                     $productosMostrar = '';
                                     foreach($productosVenta as $pv){
-                                        $productosMostrar .= "<b>".$pv['producto_sku']."</b>&nbsp;".$pv['producto_name']."<br />";
+                                        $productosMostrar .= "<b>".$pv['producto_sku']."</b><br />".$pv['producto_name']."<br />";
                                     }
                                     
                                     echo "<tr>";
@@ -110,12 +111,16 @@ $ventas = $insVentas->obtenerVentas(0,0);
                                     echo "<td>".$insGeneral->getDate($venta['fecha_creacion'])."</td>";
                                     echo "<td>".$insGeneral->getDate($venta['fecha_entrega'])."</td>";
                                     echo "<td>".$clienteInfo[0]['nombre']."&nbsp;".$clienteInfo[0]['apellidoP']."&nbsp;".$clienteInfo[0]['apellidoM']."</td>";
-                                    echo "<td>".$venta['monto']."</td>";
+                                    echo "<td>$".number_format($venta['monto'],2,'.',',')."</td>";
                                     echo "<td>".$pagos."</td>";
                                     echo "<td>".$resta."</td>";
                                     echo "<td>".$flete."</td>";
                                     echo "<td>".$factura."</td>";
                                     echo "<td>".$insVentas->getEstatusVenta($venta['venta_estatus_id'])."</td>";                                    
+                                    echo "<td>
+                                            <a href='#'><i class='fa fa-pencil' title='Editar'></i></a>&nbsp;&nbsp;&nbsp;    
+                                            <a href='#' data-venta='".$venta['venta_id']."' class='add_note'><i class='fa fa-file-text-o' title='Agregar nota entrega'></i></a>
+                                          </td>";                                    
 
                                     echo "</tr>";
                                 }
@@ -133,8 +138,13 @@ $ventas = $insVentas->obtenerVentas(0,0);
 <script src="<?php echo $raizProy?>js/plugins/toastr/toastr.min.js"></script>
 <script src="<?php echo $raizProy?>js/plugins/dataTables/datatables.min.js"></script>
 
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
 <script src="<?php echo $raizProy?>js/plugins/sweetalert/sweetalert.min.js"></script>
 <link href="<?php echo $raizProy?>css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
 <!-- Page-Level Scripts -->
 <script>
 
@@ -153,10 +163,38 @@ $ventas = $insVentas->obtenerVentas(0,0);
                 $(this).parent().parent().parent().remove();
             }    
         });
+        
+       $(document).on("click", ".add_note", function(e) {
+           
+         $( "#dialog" ).dialog( "open" );  
+           
+       }); 
+       
+       $(document).on("click", "#closeDialog", function(e) {
+           
+         $( "#dialog" ).dialog( "close" );  
+           
+       });
+       
+        $( "#dialog" ).dialog({
+            autoOpen: false,
+            show: {
+              effect: "fade"              
+            },
+            hide: {
+              effect: "fade"              
+            }
+        });
     });
 
 </script>
-
+<div class="panel panel-primary" id="dialog">        
+    <label>Ingresa nota de Entrega</label>
+    <textarea></textarea>
+    <br />
+    <button class="btn btn-danger" id="closeDialog">Cancelar</button>
+    <button class="btn btn-success">Guardar</button>    
+</div>
 <?php
 include $pathProy.'footer.php';
 ?>

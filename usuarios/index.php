@@ -13,7 +13,7 @@
 		<h2>Control de Usuarios</h2>
 		<ol class="breadcrumb">
 			<li>
-				<a href="">Usuarios</a>
+				<a href="">Lista de Usuarios</a>
 			</li>
 			<li class="active">
 				<strong>Control de Usuarios</strong>
