@@ -2,6 +2,7 @@ $(document).ready(function()
 {
 	//$('.phone').chosen();
 	$("#limpiar_estado").hide();
+	$("#div_facturacion").hide();
 	$('#tipo_datos').chosen();
 	toastr.options=
 	{
@@ -134,8 +135,8 @@ $(document).ready(function()
 		
 	var clean_address=function()
 	{
-		$("#tipo_datos").val('facturacion').trigger('chosen:updated');
-		$("#div_facturacion").show();
+		$("#tipo_datos").val('envio').trigger('chosen:updated');
+		$("#div_facturacion").hide();
 		$("#razonS").val('');
 		$("#rfc").val('');
 		$("#calle").val('');
@@ -381,18 +382,18 @@ $(document).ready(function()
 		}
 	});
 	
-	$(".editAddress a").click(function()
-	{            
+	$('.editAddress').on("click", function ()
+	{    
 		 var id = $(this).attr('id-num');
 		 
 		 edit_address(id);
 	});
 	
-	$(".deleteAddress").click(function()
+	$(".deleteAddress").on("click", function ()
 	{            
 		var bandera=false;
 		
-		$(this).parent().parent().remove();
+		$(this).parent().parent().parent().remove();
 		
 		$('#address_table > tr').each(function()
 		{
@@ -430,7 +431,7 @@ $(document).ready(function()
 		        		var a={};
         				var id = $(this).attr('id-num');
         				var tipo="";
-        				alert(id);
+        				
         				if($("#tipo_datos_"+id).val()=='facturacion')
     					{
         					tipo=1;
@@ -516,13 +517,83 @@ $(document).ready(function()
 				data: $("#form_cliente").serialize(), // serializes the form's elements.
 				success: function(data)
 				{
-					swal({
-		                title: "Guardado!",
-		                text: "Cliente actualizado correctamente!",
-		                type: "success"
-		            }, function () {
-		                window.location.href = 'index.php';
-		            });
+					var idCliente=$("#id_cliente").val();
+					
+					var banderaAddress=false;
+		        	var addressArray=new Array();
+		        	
+		        	$(".editAddress").each(function (index) 
+        	        { 
+		        		banderaAddress=true;
+		        		var a={};
+        				var id = $(this).attr('id-num');
+        				var tipo="";
+        				
+        				if($("#tipo_datos_"+id).val()=='facturacion')
+    					{
+        					tipo=1;
+    					}
+        				else
+        				{
+        					tipo=2;
+        				}
+        				
+        				if(id!=undefined && id!='')
+        				{
+	        				a.tipo=tipo;
+	        				a.razonS=$("#razonS_"+id).val();
+	        				a.rfc=$("#rfc_"+id).val();
+	        				a.calle=$("#calle_"+id).val();
+	        				a.noExt=$("#noExt_"+id).val();
+	        				a.noInt=$("#noInt_"+id).val();
+	        				a.colonia=$("#colonia_"+id).val();
+	        				a.codigoPostal=$("#codigoPostal_"+id).val();
+	        				a.estado=$("#estado_"+id).val();
+	        				a.municipio=$("#municipio_"+id).val();
+	        				a.referencia=$("#referencia_"+id).val();;
+	        				
+	        				addressArray.push(a);
+        				}
+        	        });
+		        	
+		        	if(!banderaAddress)
+		        	{
+		        		swal({
+			                title: "Guardado!",
+			                text: "Cliente guardado correctamente!",
+			                type: "success"
+			            }, function () {
+			                window.location.href = 'index.php';
+			            });
+		        	}
+		        	else
+		        	{
+		        		var jsonAddress=JSON.stringify(addressArray);
+		        		
+		        		$.ajax
+						({
+							type: "POST",
+							url: "sava_data_clients.php?id="+idCliente,
+							data: jsonAddress,
+							contentType: "application/json; charset=utf-8",
+							dataType: "json",
+							complete: function(data)
+							{
+								swal({
+					                title: "Guardado!",
+					                text: "Cliente guardado correctamente!",
+					                type: "success"
+					            }, function () {
+					                window.location.href = 'index.php';
+					            });
+							},
+							failure: function(errMsg)
+							{
+								alert(errMsg);
+							}
+						});
+		        		
+		        	}
 				}
 			});
 		}

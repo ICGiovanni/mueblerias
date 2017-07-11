@@ -32,13 +32,13 @@
 			<input type="hidden" id="address" name="address" value="0">
 			<input type="hidden" id="address_current" name="address_current" value="">
 			<div class="form-group"><label class="col-sm-2 control-label">Nombre</label>
-			<div class="col-sm-6" ><input type="text" class="form-control" id="nombre" name="nombre"></div>
+			<div class="col-sm-5" ><input type="text" class="form-control" id="nombre" name="nombre"></div>
             </div>
             <div class="form-group"><label class="col-sm-2 control-label">Apellido Paterno</label>
-			<div class="col-sm-6" ><input type="text" class="form-control" id="apellidoP" name="apellidoP"></div>
+			<div class="col-sm-5" ><input type="text" class="form-control" id="apellidoP" name="apellidoP"></div>
             </div>
             <div class="form-group"><label class="col-sm-2 control-label">Apellido Materno</label>
-			<div class="col-sm-6" ><input type="text" class="form-control" id="apellidoM" name="apellidoM"></div>
+			<div class="col-sm-5" ><input type="text" class="form-control" id="apellidoM" name="apellidoM"></div>
             </div>
             
             
@@ -52,13 +52,13 @@
             <div class="form-group"><label class="col-sm-2 control-label">Tipo</label>
 			<div class="col-sm-6">
 			<select data-placeholder="Selecciona un Tipo" class="chosen-select" style="width:300px;" tabindex="4" id="tipo_datos" name="tipo_datos">
-			<option value="facturacion">Facturación</option>
 			<option value="envio">Envio</option>
+			<option value="facturacion">Facturación</option>
 			</select>
 			</div>
 			</div>
             
-            <div id="div_facturacion" name=""div_facturacion"">
+            <div id="div_facturacion" name="div_facturacion">
             <div class="form-group"><label class="col-sm-2 control-label">Raz&oacute;n Social</label>
 			<div class="col-sm-6"><input type="text" class="form-control" id="razonS" name="razonS"></div>
             </div>

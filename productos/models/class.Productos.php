@@ -442,9 +442,9 @@ class Productos
 				FROM inventario_productos ip
 				WHERE ip.producto_id=p.producto_id),0) AS stock,
 				CASE producto_type
-				WHEN 'P' THEN 'PRINCIPAL'
-				WHEN 'U' THEN 'GENERAL'
-				WHEN 'V' THEN 'GENERAL'
+				WHEN 'P' THEN 'Producto Compuesto'
+				WHEN 'U' THEN 'Producto Unitario'
+				WHEN 'V' THEN 'Producto Unitario'
 				END AS producto_type_name,producto_type,producto_conjunto,
 				IF(producto_type='V',
 				(SELECT producto_name
@@ -887,10 +887,12 @@ class Productos
 	{
 		$sql="SELECT p.producto_id,p.producto_name,p.producto_sku,
 				c.color_id,c.color_name,c.color_abrev,
-				m.material_id,m.material_name,m.material_abrev
+				m.material_id,m.material_name,m.material_abrev,
+				pr.proveedor_nombre
 				FROM productos p
 				INNER JOIN colores c USING(color_id)
 				INNER JOIN materiales m USING(material_id)
+				INNER JOIN proveedores pr USING(proveedor_id)
 				WHERE producto_id='$producto_id'";
 		
 		$statement=$this->connect->prepare($sql);
@@ -935,9 +937,9 @@ class Productos
 				LIMIT 0,1),'".FINAL_URL."img/imagen-no.png') AS imagen,
 				producto_price_public,producto_description,producto_price_purchase,
 				CASE producto_type
-				WHEN 'P' THEN 'PRINCIPAL'
-				WHEN 'U' THEN 'GENERAL'
-				WHEN 'V' THEN 'GENERAL'
+				WHEN 'P' THEN 'Producto Compuesto'
+				WHEN 'U' THEN 'Producto Unitario'
+				WHEN 'V' THEN 'Producto Unitario'
 				END AS producto_type_name,producto_type,
 				producto_conjunto,
 				producto_description_corta,producto_description
