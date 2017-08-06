@@ -83,11 +83,9 @@ if (!isset($_SESSION)) {
                     <ul class="nav nav-second-level">
                         <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/productos/nuevo_producto.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'productos/nuevo_producto.php'?>" >Nuevo producto</a></li>
                         <li class="<?php if (stristr($_SERVER['SCRIPT_NAME'],'/productos/')){ echo 'active';}?>">
-
-                        <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/productos/index.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'productos/'?>" >Lista de productos</a></li>
-
-
+                        <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/productos/index.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'productos/'?>" >Lista de productos</a></li>                        
                         <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/inventarios/index.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'inventarios/'?>" >Lista de movimientos</a></li>
+                        <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/productos/etiquetas.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'productos/etiquetas.php'?>" >Etiquetas</a></li>
                     </ul>
                 </li>
 

@@ -6,7 +6,7 @@
     include $pathProy.'/menu.php';
     
     $numProd = 0;
-    $total = 0;
+    $total = (int)0;
     $subtotal = 0;
     $iva = 0;
     
@@ -14,9 +14,9 @@
         $puntoVenta = $_SESSION['punto_venta'];
         $numProd = count($puntoVenta['Productos']);
         //$total = $puntoVenta['Total'];
-        $total = $puntoVenta['Subtotal'];
-        $subtotal = $puntoVenta['Subtotal'];
-        $iva = $puntoVenta['IVA'];
+        $total = (float)$puntoVenta['Subtotal'];
+        $subtotal = (float)$puntoVenta['Subtotal'];
+        $iva = (float)$puntoVenta['IVA'];
         
     }
 ?>
@@ -84,33 +84,33 @@
                                 <tbody id="productosVenta">
                                 
                                 <?php 
-                                if(isset($puntoVenta) && is_array($puntoVenta['Productos'])){
+                                if(isset($puntoVenta) && is_array($puntoVenta['Productos']) && count($puntoVenta['Productos'])>0){
                                     foreach($puntoVenta['Productos'] as $prod){
                                         
                                     
-                                    echo '  <tr id="row_'.$prod['ID'].'">
+                                    echo '  <tr id="row_'.$prod['ID'].'" data-sku="'.$prod['SKU'].'" data-modelo="'.$prod['Modelo'].'" data-imagen="'.$prod['Imagen'].'">
                                                 <td width="90">
                                                     <img src="'.$prod['Imagen'].'" height="80" width="80">
                                                 </td>
                                                 <td class="desc">
                                                     <h3><a href="#" class="text-navy">'.$prod['Modelo'].'</a></h3>                                                                                                                      
                                                 </td>
-                                                <td><span id="labelprecio_'.$prod['ID'].'">'.number_format($prod['Precio'],2,'.',',').'</span><br />
-                                                    <input type="number" id="precio_'.$prod['ID'].'" value="'.$prod['Precio'].'" min="'.$prod['Precio'].'" step="50"  /></td>
+                                                <td>$<span id="labelprecio_'.$prod['ID'].'">'.number_format($prod['Precio'],2,'.',',').'</span><br />
+                                                    <input type="number" id="precio_'.$prod['ID'].'" value="'.$prod['Precio'].'" min="'.$prod['Precio'].'" step="50" style="display: none" /></td>
                                                 <td><input id="cantidad_'.$prod['ID'].'" type="number" class="form-control cantidad" placeholder="1" min="1" value='.$prod['Cantidad'].'></td>
-                                                <td><h4>$ '.number_format($prod['Subtotal'],2,'.',',').'</h4></td>
-                                                <td style="text-align: center"><button class="btn btn-danger btn-md" ><i class="fa fa-trash removeCart" role="button" data-sku="'.$prod['SKU'].'" id="removeCart_'.$prod['ID'].'"></i></button></td>                                    
+                                                <td><h4 id="subtotal_'.$prod['ID'].'" class="subtotal_sumar">'.number_format($prod['Subtotal'],2,'.',',').'</h4></td>
+                                                <td style="text-align: center"><button class="btn btn-danger btn-md removeCart " data-sku="'.$prod['SKU'].'" id="removeCart_'.$prod['ID'].'"><i class="fa fa-trash " role="button"></i></button></td>                                    
                                             </tr>';
                                     }
                                 }else{
-                                    echo "<tr><td colspan='6' style='height: 150px'>&nbsp;</td></tr>";
+                                    //echo "<tr><td colspan='6' style='text-align: center; color: #E70030'>Aún no se han agregado productos a la venta</td></tr>";
                                 }
                                 ?>                                                                                                    
                                 </tbody>
                                 <tfoot class="ibox-content">
                                     <tr>                                        
                                         <td colspan="4" class="font-bold" style="text-align: right"><h3>TOTAL</h3></td>
-                                        <td><h3 class="text-right"> $ <?php echo number_format($total,2,'.',',');?></h3></td>
+                                        <td><h3 class="text-right" id="total_sumar"> $ <?php echo number_format($total,2,'.',',');?></h3></td>
                                         <td>&nbsp;</td>
                                     </tr>
                                 </tfoot>
@@ -131,37 +131,6 @@
                 </div>
             </div>
         </div>
-        <!--<div class="col-md-3">
-            <div class="ibox">
-                
-                <div class="ibox-content">
-                    <span>
-                        Subtotal
-                    </span>
-                    <h2 class="font-bold text-right">
-                        $ <?php echo number_format($subtotal,2,'.',',');?>
-                    </h2>                    
-                    <span>
-                        IVA
-                    </span>
-                    <h2 class="font-bold text-right">
-                        $ <?php echo number_format($iva,2,'.',',');?>
-                    </h2>                    
-                    <span>
-                        Total
-                    </span>
-                    <h2 class="font-bold text-right">
-                        $ <?php echo number_format($total,2,'.',',');?>
-                    </h2>
-                    <hr/>
-                    
-                    <div class="m-t-sm">
-                        <a href="<?php echo $ruta.'punto_venta/?apartado=u48f6d1'?>" class="btn btn-warning btn-md"><i class="fa fa-shopping-cart"></i>&nbsp;Apartar</a>&nbsp;                            
-                        <a href="<?php echo $ruta.'punto_venta'?>" class="btn btn-primary btn-md"><i class="fa fa-shopping-cart"></i>&nbsp;Pagar</a>                        
-                    </div>
-                </div>
-            </div>
-        </div>-->
     </div>
 </div>
 
@@ -223,6 +192,7 @@ $(document).ready(function()
 		if(product==undefined)
 		{
                         urlImage = '';
+                        var imagenSave = imagen;
                         if(imagen!=''){                            
                             urlImage = imagen;
                             imagen='<img src="'+imagen+'" height="80" width="80">';
@@ -230,15 +200,17 @@ $(document).ready(function()
                             imagen = '<div class="cart-product-imitation"></div>';
                         }
                         
-                        table +='   <tr id="row_'+id+'"> '+
+                        table +='   <tr id="row_'+id+'" data-sku="'+sku+'" data-modelo="'+name+'" data-imagen="'+imagenSave+'">'+
                                         '<td width="90">'+imagen+'</td>'+
                                         '<td class="desc">'+
                                             '<h3><a href="#" class="text-navy">'+name+'</a></h3>'+
                                         '</td>'+
-                                        '<td>$ '+addCommas(price)+'</td>'+
-                                        '<td><input type="text" class="form-control" placeholder="1" value="1"></td>'+
-                                        '<td><h4>$ '+addCommas(price)+'</h4></td>'+
-                                        '<td><i class="fa fa-trash removeCart" role="button" data-sku="'+sku+'" id="removeCart_'+id+'"></i></td>'+
+                                        '<td>$ <span id="labelprecio_'+id+'">'+addCommas(price)+'</span>'+
+                                        '<input type="number" id="precio_'+id+'" value="'+price+'" min="'+price+'" step="50" style="display: none" />'+
+                                        '</td>'+
+                                        '<td><input id="cantidad_'+id+'" type="number" min="1" class="form-control cantidad" placeholder="1" value="1"></td>'+
+                                        '<td><h4 id="subtotal_'+id+'" class="subtotal_sumar">'+addCommas(price)+'</h4></td>'+
+                                        '<td style="text-align: center"><button class="btn btn-danger btn-md removeCart" data-sku="'+sku+'" id="removeCart_'+id+'"><i class="fa fa-trash" role="button"></i></button></td>'+
                                         '</tr>';					
 	
 			$('#productosVenta').append(table);
@@ -258,8 +230,8 @@ $(document).ready(function()
 	}
 
 	$("#producto").easyAutocomplete(options);
-        
-        $(".removeCart").click(function(){  
+
+	    $(document).on("click", ".removeCart", function(e) {
             var id = $(this).attr('id');              
 
             swal({   
@@ -288,7 +260,19 @@ $(document).ready(function()
         });
         
     $(document).on("click", ".cantidad", function(e) {
-        alert($(this).attr('id'));
+        var id = $(this).attr('id').substr(9, 3);
+        var sku = $("#row_"+id).data('sku');
+        var modelo = $("#row_"+id).data('modelo');
+        var imagen = $("#row_"+id).data('imagen');
+        var precio = $("#precio_"+id).val();
+        var cantidad = $(this).val();
+        
+        $("#subtotal_"+id).html(addCommas(precio * cantidad));     
+        
+        //$(this).change(function(){
+            saveCart(id, sku, modelo, cantidad, precio, imagen);
+        //});
+        
     });
 });
 
@@ -305,9 +289,24 @@ function saveCart(id, sku, modelo, cantidad, precio, imagen){
             precio : precio,
             imagen : imagen
         },
-        success: function (response) {                        
-            console.log(response);
-            window.location.href = 'index.php';                        
+        success: function (response) {
+
+            setTimeout(function(){
+                var totalSumar = 0;
+                $(".subtotal_sumar").each(function(){
+
+                    var txt = $(this).html();
+                    txt = txt.replace(",", "");
+                    totalSumar += parseFloat(txt);
+                });
+                //alert(totalSumar);
+                $("#total_sumar").html("$ " + addCommas(totalSumar));
+
+                console.log(totalSumar);
+
+            }, 600);
+
+            //window.location.href = 'index.php';
             /*swal({
                 title: "Actualizado!",
                 text: "Producto agregado correctamente!",

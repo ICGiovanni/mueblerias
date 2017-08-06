@@ -48,10 +48,14 @@
 			<div class="col-sm-6" >
 				<select data-placeholder="Selecciona el tipo de Producto" class="chosen-select" style="width:300px;" tabindex="4" id="tipo_producto" name="tipo_producto">
 	            <option value="" data-abrev=""></option>
-	            <option value="P" data-abrev="">Principal</option>
-	            <option value="U" data-abrev="" selected>General</option>	            
+	            <option value="P" data-abrev="">Producto Unitario</option>
+	            <option value="U" data-abrev="" selected>Producto Compuesto</option>	            
 				</select>
 			</div>
+            </div>
+            
+            <div class="form-group"><label class="col-sm-2 control-label"></label>
+			<div class="col-sm-6" >*Este campo define un producto que esta compuesto por uno a mas productos asociados, pero pueden seguir utilizados para la venta por separado.</div>
             </div>
 			
 			<div class="form-group"><label class="col-sm-2 control-label">Modelo</label>
@@ -71,14 +75,16 @@
             		
 			<div class="form-group">
             <label class="col-sm-2 control-label">Medida</label>
-			<div class="col-sm-2 "><input type="text" class="form-control" id="medida" name="medida"></div>
+			<div class="col-sm-6 "><input type="text" class="form-control" id="medida" name="medida"></div>
 			</div>
             <div class="form-group"><label class="col-sm-2 control-label">Descripci&oacute;n</label>
 			<div class="col-sm-6" ><textarea class="form-control" id="descripcion" name="descripcion"></textarea></div>
             </div>
             
             <div class="form-group"><label class="col-sm-2 control-label">Descripci&oacute;n Corta</label>
-			<div class="col-sm-6" ><textarea class="form-control" id="descripcionC" name="descripcionC"></textarea></div>
+			<div class="col-sm-6" >
+			<input type="text" class="form-control" id="descripcionC" name="descripcionC" autocomplete="off">
+            </div>
             </div>
             
             <div class="form-group">

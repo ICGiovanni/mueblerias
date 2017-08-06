@@ -6,7 +6,9 @@ $(document).ready(function(){
         keyboardNavigation: false,
         forceParse: false,
         calendarWeeks: true,
-        autoclose: true
+        autoclose: true,
+        forceParse: true,
+        format: 'dd/mm/yyyy'
     });
     
     $("#agregarTelefono").click(function(){
