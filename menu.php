@@ -44,10 +44,10 @@ if (!isset($_SESSION)) {
                             <a href="<?php echo $ruta.'gastos/nomina/'?>" >Nomina <span class="fa arrow"></span></a>
                             <ul class="nav nav-third-level" >
                                 <li>
-                                    <a href="<?php echo $ruta.'gastos/nomina/?grupo=DM'?>">Administracion</a>
+                                    <a href="<?php echo $ruta.'gastos/nomina/?grupo=DM'?>">Administración</a>
                                 </li>
                                 <li>
-                                    <a href="<?php echo $ruta.'gastos/nomina/?grupo=VN'?>">Ventas</a>
+                                    <a href="<?php echo $ruta.'gastos/nomina/?grupo=VN'?>">Empleados</a>
                                 </li>
                             </ul>
                         </li>

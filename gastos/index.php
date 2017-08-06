@@ -237,7 +237,7 @@ while(list(,$dataGasto) = each($rows)){
                     <table class="table table-striped table-bordered table-hover dataTables-example" >
                     <thead>
                     <tr>
-						<th>Folio</th>
+						<th>ID</th>
                         <th>No Documento</th>
                         <th>Fecha Vencimiento</th>
 						<th>Categoría</th>

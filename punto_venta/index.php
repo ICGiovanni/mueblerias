@@ -5,7 +5,7 @@ require_once $pathProy.'/header2.php';
 require_once $pathProy.'/menu.php';
 
 $objGeneral = new General();
-$arrayMetodosPago = $objGeneral->getMetodosPago();
+$arrayMetodosPago = $objGeneral->getMetodosPago();		
 
 $rowsMetodosPago = '<option value="0" style="color:#888;">Selecciona un método de pago</option> ';
 while( list ($KeyMP, $valueMP) = each($arrayMetodosPago) ){
@@ -38,7 +38,7 @@ $totalEnvio = 0;
 if( isset($_SESSION["punto_venta"]["envio"]["costo_envio"]) ){
 	$totalEnvio = $_SESSION["punto_venta"]["envio"]["costo_envio"];
 }
-//print_r($_SESSION);
+//print_r($_SESSION["punto_venta"]["envio"]);
 $clientFromSessionDetailedData = '';
 $clientFromSessionGeneralData = '';
 $clientFromSessionExtra = '';
@@ -710,33 +710,38 @@ if($esApartado){
 									</span>
 								</div>
 							</div>
+							<div class="col-md-5">
+								* La hora es un deseable, no obliga al flete estar a la hora aquí mostrada
+							</div>
 							
 						</div>
 						<div class="form-group">
 										<select class="form-control" id="select_planta">
-											<option value="0">Selecciona número de pisos</option>
-											<option value="1">Planta Baja</option>
-											<option value="2">Piso 1</option>
-											<option value="3">Piso 2</option>
-											<option value="4">Piso 3</option>
-											<option value="4">Piso 4</option>
-											<option value="4">Piso 5</option>
-											<option value="4">Piso 6</option>
-											<option value="4">Piso 7</option>
-											<option value="4">Piso 8</option>
-											<option value="4">Piso 9</option>
-											<option value="4">Piso 10</option>
-											<option value="4">Mas de 10</option>
+											<option <?=(isset($_SESSION["punto_venta"]["envio"]["select_planta"]) && $_SESSION["punto_venta"]["envio"]["select_planta"] == "0")?"selected":""?> value="0">Selecciona número de pisos</option>
+											<option <?=(isset($_SESSION["punto_venta"]["envio"]["select_planta"]) && $_SESSION["punto_venta"]["envio"]["select_planta"] == "PB")?"selected":""?> value="PB">Planta Baja</option>
+											<option <?=(isset($_SESSION["punto_venta"]["envio"]["select_planta"]) && $_SESSION["punto_venta"]["envio"]["select_planta"] == "Piso 1")?"selected":""?> value="Piso 1">Piso 1</option>
+											<option <?=(isset($_SESSION["punto_venta"]["envio"]["select_planta"]) && $_SESSION["punto_venta"]["envio"]["select_planta"] == "Piso 2")?"selected":""?> value="Piso 2">Piso 2</option>
+											<option <?=(isset($_SESSION["punto_venta"]["envio"]["select_planta"]) && $_SESSION["punto_venta"]["envio"]["select_planta"] == "Piso 3")?"selected":""?> value="Piso 3">Piso 3</option>
+											<option <?=(isset($_SESSION["punto_venta"]["envio"]["select_planta"]) && $_SESSION["punto_venta"]["envio"]["select_planta"] == "Piso 4")?"selected":""?> value="Piso 4">Piso 4</option>
+											<option <?=(isset($_SESSION["punto_venta"]["envio"]["select_planta"]) && $_SESSION["punto_venta"]["envio"]["select_planta"] == "Piso 5")?"selected":""?> value="Piso 5">Piso 5</option>
+											<option <?=(isset($_SESSION["punto_venta"]["envio"]["select_planta"]) && $_SESSION["punto_venta"]["envio"]["select_planta"] == "Piso 6")?"selected":""?> value="Piso 6">Piso 6</option>
+											<option <?=(isset($_SESSION["punto_venta"]["envio"]["select_planta"]) && $_SESSION["punto_venta"]["envio"]["select_planta"] == "Piso 7")?"selected":""?> value="Piso 7">Piso 7</option>
+											<option <?=(isset($_SESSION["punto_venta"]["envio"]["select_planta"]) && $_SESSION["punto_venta"]["envio"]["select_planta"] == "Piso 8")?"selected":""?> value="Piso 8">Piso 8</option>
+											<option <?=(isset($_SESSION["punto_venta"]["envio"]["select_planta"]) && $_SESSION["punto_venta"]["envio"]["select_planta"] == "Piso 9")?"selected":""?> value="Piso 9">Piso 9</option>
+											<option <?=(isset($_SESSION["punto_venta"]["envio"]["select_planta"]) && $_SESSION["punto_venta"]["envio"]["select_planta"] == "Piso 10")?"selected":""?> value="Piso 10">Piso 10</option>
+											<option <?=(isset($_SESSION["punto_venta"]["envio"]["select_planta"]) && $_SESSION["punto_venta"]["envio"]["select_planta"] == "Mas de 10 pisos")?"selected":""?> value="Mas de 10 pisos">Mas de 10</option>
 										</select></div>
 										
 										<div class="form-group">
 										<select class="form-control" id="select_planta_extra">
-											<option value="0">Selecione donde se entregará la mercancia</option>
-											<option value="1">Al interior de la vivienda</option>										
-											<option value="1">A pie de puerta</option>
-											<option value="2">Require traslado a pie</option>
+											<option <?=(isset($_SESSION["punto_venta"]["envio"]["select_planta_extra"]) && $_SESSION["punto_venta"]["envio"]["select_planta_extra"] == "0")?"selected":""?> value="0">Seleccione donde se entregará la mercancia</option>
+											<option <?=(isset($_SESSION["punto_venta"]["envio"]["select_planta_extra"]) && $_SESSION["punto_venta"]["envio"]["select_planta_extra"] == "Al interior de la vivienda")?"selected":""?> value="Al interior de la vivienda">Al interior de la vivienda</option>										
+											<option <?=(isset($_SESSION["punto_venta"]["envio"]["select_planta_extra"]) && $_SESSION["punto_venta"]["envio"]["select_planta_extra"] == "A pie de puerta")?"selected":""?> value="A pie de puerta">A pie de puerta</option>
+											<option <?=(isset($_SESSION["punto_venta"]["envio"]["select_planta_extra"]) && $_SESSION["punto_venta"]["envio"]["select_planta_extra"] == "Require traslado a pie")?"selected":""?> value="Require traslado a pie">Require traslado a pie</option>
 											
 										</select></div>
+										
+										<textarea class="form-control" name="flete_observaciones" id="flete_observaciones" placeholder="Observaciones"><?=(isset($_SESSION["punto_venta"]["envio"]["flete_observaciones"]))?$_SESSION["punto_venta"]["envio"]["flete_observaciones"]:""?></textarea>
 						</div>
 				</div>
 										
@@ -940,15 +945,12 @@ if($esApartado){
 
     <!-- Steps -->
     <script src="<?=$raizProy?>js/plugins/staps/jquery.steps.min.js"></script>
-	
 
     <!-- Jquery Validate -->
     <script src="<?=$raizProy?>js/plugins/validate/jquery.validate.min.js"></script>
 	<script src="<?=$raizProy?>js/plugins/chosen/chosen.jquery.js"></script>
 	<script src="<?=$raizProy?>js/plugins/easy-autocomplete/jquery.easy-autocomplete.min.js"></script>
 	<script src="<?=$raizProy?>js/plugins/toastr/toastr.min.js"></script>
-
-
 
     <script>
 	
@@ -1631,6 +1633,7 @@ if($esApartado){
 	   }
 	   
 	   function removeCliente(cliente_id){
+		   
 			$('#divBuscaCliente_0').html('');
 			$('#divBuscaCliente_extra_0').html('');
 			$('#divBuscaClienteEnvio').html('');
@@ -1641,6 +1644,10 @@ if($esApartado){
 			
 			$('#correo_p_facturacion').empty();
 			$('#correo_p_facturacion').append('<option value="0">Elegir un correo electrónico</option>');
+			
+			ventaInterrogacionEnvio();
+			bandera_datos_completos_envio = false;
+			currentClientDireccionIdEnvio = 0;
 
 			var url="/clientes/ajax_remove_cliente_session.php";
 			$.ajax({
@@ -1837,14 +1844,23 @@ if($esApartado){
 			$("#divInfoResumenEnvioSelf").html(txtDireccionEnvio);
 	   }
 	   
-	   function ventaSinEnvio(){
+	function ventaInterrogacionEnvio(){
+			$("#icoResumenEnvio").removeClass();
+			$("#icoResumenEnvioSelf").removeClass();
+			$("#icoResumenEnvio").addClass("fa fa-question-circle");
+			$("#icoResumenEnvioSelf").addClass("fa fa-question-circle");
+			$("#divInfoResumenEnvio").html("");
+			$("#divInfoResumenEnvioSelf").html("");
+	}
+	   
+	function ventaSinEnvio(){
 			$("#icoResumenEnvio").removeClass();
 			$("#icoResumenEnvioSelf").removeClass();
 			$("#icoResumenEnvio").addClass("fa fa-times-circle-o redFont");
 			$("#icoResumenEnvioSelf").addClass("fa fa-times-circle-o redFont");
 			$("#divInfoResumenEnvio").html("Sin envío");
 			$("#divInfoResumenEnvioSelf").html("Sin envío");
-	   }
+	}
 	   
 	function ventaSinFactura(){
 		$("#icoResumenFactura").removeClass();
@@ -1944,9 +1960,27 @@ if($esApartado){
 		fecha_hora_entrega = fec_ven_arr[0]+"/"+meses[fec_ven_arr[1]]+"/"+fec_ven_arr[2]+" "+$("#pv_hora_vencimiento").val()+" hrs";
 		select_planta_text = $("#select_planta option:selected").text();
 		select_planta_extra_text = $("#select_planta_extra option:selected").text();
+		flete_observaciones = $("#flete_observaciones").val();
+		
+		//alert(flete_observaciones);
+		almenos_un_false = false;
+	
+		if(select_planta_text == 'Selecciona número de pisos'){
+			toastr.error("Debe elegir el piso al cual se entregará el mueble");
+			almenos_un_false = true;
+		}
+		
+		if(select_planta_extra_text == 'Seleccione donde se entregará la mercancia'){
+			toastr.error("Debe elegir donde se entregará la mercancia");
+			almenos_un_false = true;
+		}
 		
 		if(currentClientDireccionIdEnvio == '0'){
 			toastr.error("Debe elegir una dirección de envío");
+			almenos_un_false = true;
+		}
+		
+		if(almenos_un_false){
 			return false;
 		}
 		
@@ -1962,7 +1996,8 @@ if($esApartado){
 				costo_envio:costoEnvio,
 				fecha_hora_entrega:fecha_hora_entrega,
 				select_planta:select_planta_text,
-				select_planta_extra:select_planta_extra_text				
+				select_planta_extra:select_planta_extra_text,
+				flete_observaciones:flete_observaciones
 			}, 
 			success: function(data)
 			{
