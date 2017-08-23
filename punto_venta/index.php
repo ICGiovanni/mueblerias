@@ -38,7 +38,7 @@ $totalEnvio = 0;
 if( isset($_SESSION["punto_venta"]["envio"]["costo_envio"]) ){
 	$totalEnvio = $_SESSION["punto_venta"]["envio"]["costo_envio"];
 }
-//print_r($_SESSION["punto_venta"]["envio"]);
+//print_r($_SESSION["punto_venta"]["cliente"]);
 $clientFromSessionDetailedData = '';
 $clientFromSessionGeneralData = '';
 $clientFromSessionExtra = '';
@@ -806,8 +806,10 @@ if($esApartado){
 								$optionsMail = '';
 								while( list($keyMail, $valueMail) = each($arrayMails) ){
 									$opt_selected = '';
-									if($_SESSION["punto_venta"]["facturacion"]["select_correo_factura"] == $valueMail){
-										$opt_selected = 'selected ';
+									if(isset($_SESSION["punto_venta"]["facturacion"]["select_correo_factura"])){
+										if($_SESSION["punto_venta"]["facturacion"]["select_correo_factura"] == $valueMail){
+											$opt_selected = 'selected ';
+										}
 									}
 									$optionsMail.='<option '.$opt_selected.'value="'.$valueMail.'">'.$valueMail.'</option>'; 
 								}
@@ -953,7 +955,7 @@ if($esApartado){
 	<script src="<?=$raizProy?>js/plugins/toastr/toastr.min.js"></script>
 
     <script>
-	
+		var cliente_asociado = <?=isset($_SESSION["punto_venta"]["cliente"])?"true":"false"?>;
 		var currentClientDireccionIdEnvio = 0;
 		var currentClientDireccionIdFact = 0;
 		var bandera_datos_completos_envio = <?=isset($_SESSION["punto_venta"]["envio"])?"true":"false"?>;
@@ -968,7 +970,6 @@ if($esApartado){
 		currentClientDireccionIdFact = ".$_SESSION["punto_venta"]["cliente"]["cliente_direccion_id_fact"]."; ";
 		}
 ?>
-		
 		var globalDataClient = new Array();
 <?php
 		
@@ -1056,8 +1057,23 @@ if($esApartado){
 				},
                 onStepChanging: function (event, currentIndex, newIndex)
                 {
-					if(newIndex == 1){
-						//$("#sel_metodo_pago_01").chosen();
+					//alert(newIndex);
+					
+					
+					if(newIndex === 1){
+						
+						<?php
+							if($esApartado){
+								echo '
+						if(!cliente_asociado){
+							toastr.error("Debe asociar un cliente al Apartado");
+							return false;
+						}
+						';
+							}
+						?>
+						
+						
 					}
                     // Always allow going backward even if the current step contains invalid fields!
                     if (currentIndex > newIndex)
@@ -1219,11 +1235,12 @@ if($esApartado){
 									title: "<?=($esApartado)?'Apartado Realizado!':'Compra Realizada!'?>",
 									text: "<?=($esApartado)?'El apartado':'La compra'?> se ha registrado!",
 									type: "success"
-									}, function () {										
+									}, function () {	
+										borrar_datos_venta();									
 										//mandar impresion de ticket dataJson.idVenta
-										window.location.href = 'index.php';
+										window.location.href = '/ventas/';
 										window.open('../ventas/comprobante_venta.php?v='+dataJson.idVenta,'_blank');
-										borrar_datos_venta();
+										
 								});
 							}
 						});
@@ -1432,6 +1449,8 @@ if($esApartado){
 						$("#divBuscaClienteInputEnvio").css("display","none");
 						$("#divBuscaClienteInputFacturacion").css("display","none");
 						
+						cliente_asociado = true;
+						
 						setClienteData(name, email, number);
 						getClienteDirecciones(id);
 						
@@ -1634,6 +1653,8 @@ if($esApartado){
 	   
 	   function removeCliente(cliente_id){
 		   
+			cliente_asociado = false;
+		   
 			$('#divBuscaCliente_0').html('');
 			$('#divBuscaCliente_extra_0').html('');
 			$('#divBuscaClienteEnvio').html('');
@@ -1645,9 +1666,13 @@ if($esApartado){
 			$('#correo_p_facturacion').empty();
 			$('#correo_p_facturacion').append('<option value="0">Elegir un correo electrónico</option>');
 			
-			ventaInterrogacionEnvio();
+			ventaInterrogacionEnvio();			
 			bandera_datos_completos_envio = false;
 			currentClientDireccionIdEnvio = 0;
+			
+			ventaInterrogacionFact();
+			bandera_datos_completos_fact = false;
+			currentClientDireccionIdFact = 0;
 
 			var url="/clientes/ajax_remove_cliente_session.php";
 			$.ajax({
@@ -1845,21 +1870,30 @@ if($esApartado){
 	   }
 	   
 	function ventaInterrogacionEnvio(){
-			$("#icoResumenEnvio").removeClass();
-			$("#icoResumenEnvioSelf").removeClass();
-			$("#icoResumenEnvio").addClass("fa fa-question-circle");
-			$("#icoResumenEnvioSelf").addClass("fa fa-question-circle");
-			$("#divInfoResumenEnvio").html("");
-			$("#divInfoResumenEnvioSelf").html("");
+		$("#icoResumenEnvio").removeClass();
+		$("#icoResumenEnvioSelf").removeClass();
+		$("#icoResumenEnvio").addClass("fa fa-question-circle");
+		$("#icoResumenEnvioSelf").addClass("fa fa-question-circle");
+		$("#divInfoResumenEnvio").html("");
+		$("#divInfoResumenEnvioSelf").html("");
+	}
+	
+	function ventaInterrogacionFact(){
+		$("#icoResumenFactura").removeClass();
+		$("#icoResumenFacturaSelf").removeClass();
+		$("#icoResumenFactura").addClass("fa fa-question-circle");
+		$("#icoResumenFacturaSelf").addClass("fa fa-question-circle");
+		$("#divInfoResumenFactura").html("");
+		$("#divInfoResumenFacturaSelf").html("");
 	}
 	   
 	function ventaSinEnvio(){
-			$("#icoResumenEnvio").removeClass();
-			$("#icoResumenEnvioSelf").removeClass();
-			$("#icoResumenEnvio").addClass("fa fa-times-circle-o redFont");
-			$("#icoResumenEnvioSelf").addClass("fa fa-times-circle-o redFont");
-			$("#divInfoResumenEnvio").html("Sin envío");
-			$("#divInfoResumenEnvioSelf").html("Sin envío");
+		$("#icoResumenEnvio").removeClass();
+		$("#icoResumenEnvioSelf").removeClass();
+		$("#icoResumenEnvio").addClass("fa fa-times-circle-o redFont");
+		$("#icoResumenEnvioSelf").addClass("fa fa-times-circle-o redFont");
+		$("#divInfoResumenEnvio").html("Sin envío");
+		$("#divInfoResumenEnvioSelf").html("Sin envío");
 	}
 	   
 	function ventaSinFactura(){
