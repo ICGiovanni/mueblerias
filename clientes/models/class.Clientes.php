@@ -103,9 +103,7 @@ class Clientes
 	
 	public function ActualizarCliente($params)
 	{
-		$sql="UPDATE clientes SET nombre=:nombre,apellidoP=:apellidoP,apellidoM=:apellidoM,razon_social=:razonS,rfc=:rfc,
-				calle=:calle,num_exterior=:noExt,num_interior=:noInt,colonia=:colonia,
-				codigo_postal=:codigoPostal,municipio=:municipio,id_estado=:estado
+		$sql="UPDATE clientes SET nombre=:nombre,apellidoP=:apellidoP,apellidoM=:apellidoM
 				WHERE id_cliente=:id_cliente";
 		
 		$statement=$this->connect->prepare($sql);
@@ -113,15 +111,6 @@ class Clientes
 		$statement->bindParam(':nombre', $params['nombre'], PDO::PARAM_STR);
 		$statement->bindParam(':apellidoP', $params['apellidoP'], PDO::PARAM_STR);
 		$statement->bindParam(':apellidoM', $params['apellidoM'], PDO::PARAM_STR);
-		$statement->bindParam(':razonS', $params['razonS'], PDO::PARAM_STR);
-		$statement->bindParam(':rfc', $params['rfc'], PDO::PARAM_STR);
-		$statement->bindParam(':calle', $params['calle'], PDO::PARAM_STR);
-		$statement->bindParam(':noExt', $params['noExt'], PDO::PARAM_STR);
-		$statement->bindParam(':noInt', $params['noInt'], PDO::PARAM_STR);
-		$statement->bindParam(':colonia', $params['colonia'], PDO::PARAM_STR);
-		$statement->bindParam(':codigoPostal', $params['codigoPostal'], PDO::PARAM_STR);
-		$statement->bindParam(':municipio', $params['municipio'], PDO::PARAM_STR);
-		$statement->bindParam(':estado', $params['estado'], PDO::PARAM_STR);
 		
 		$statement->execute();
 		
@@ -203,11 +192,116 @@ class Clientes
 		return $id_cliente;
 	}
 	
+	public function GetBuysClientsAmount($amount)
+	{
+		$sql="SELECT id_cliente,venta_id,monto
+				FROM ventas
+				WHERE monto>='$amount'";
+		
+		$statement=$this->connect->prepare($sql);
+		$statement->execute();
+		$result=$statement->fetchAll(PDO::FETCH_ASSOC);
+		
+		return $result;
+	}
+	
+	public function GetBuysClients($buy,$ventas)
+	{
+		$where="";
+		if($ventas)
+		{
+			$where="WHERE venta_id NOT IN($ventas)";
+		}
+		
+		$sql="SELECT id_cliente,COUNT(*) AS ventas
+				FROM ventas
+				GROUP BY id_cliente
+				HAVING ventas>='$buy'";
+		
+		$statement=$this->connect->prepare($sql);
+		$statement->execute();
+		$result=$statement->fetchAll(PDO::FETCH_ASSOC);
+		
+		return $result;
+	}
+	
+	public function calculateRating()
+	{
+		$json=file_get_contents("json/rating.json");
+		$json=json_decode($json);
+		
+		$amount=$json[0]->{"monto"};
+		$buy=$json[0]->{"compras"};
+		
+		$clients_buys="";
+		$clients_star=array();
+		
+		$amounts=$this->GetBuysClientsAmount($amount);
+		
+		foreach($amounts as $am)
+		{
+			$id_cliente=$am['id_cliente'];
+			$venta_id=$am['venta_id'];
+			
+			if(isset($clients_star[$id_cliente]))
+			{
+				$clients_star[$id_cliente]=$clients_star[$id_cliente]+1;
+			}
+			else
+			{
+				$clients_star[$id_cliente]=1;
+			}
+			
+			if($clients_buys)
+			{
+				$clients_buys=$clients_buys.",".$venta_id;
+			}
+			else
+			{
+				$clients_buys=$venta_id;
+			}
+		}
+		
+		$buys=$this->GetBuysClients($buy,$clients_buys);
+		
+		foreach($buys as $b)
+		{
+			$id_cliente=$b['id_cliente'];
+			
+			if(isset($clients_star[$id_cliente]))
+			{
+				$clients_star[$id_cliente]=$clients_star[$id_cliente]+1;
+			}
+			else
+			{
+				$clients_star[$id_cliente]=1;
+			}
+		}
+		
+		foreach($clients_star as $id_cliente=>$stars)
+		{
+			if($stars>5)
+			{
+				$stars=5;
+			}
+			
+			$sql="UPDATE clientes SET rating=:stars
+				WHERE id_cliente=:id_cliente";
+			
+			$statement=$this->connect->prepare($sql);
+			$statement->bindParam(':id_cliente', $id_cliente, PDO::PARAM_STR);
+			$statement->bindParam(':stars', $stars, PDO::PARAM_STR);
+			
+			$statement->execute();
+		}
+		
+	}
+	
 	public function JsonClientes()
 	{
-		$sql="SELECT c.id_cliente,c.nombre,c.apellidoP,c.apellidoM,c.razon_social,c.rfc,c.calle,c.num_exterior,
-				c.num_interior,c.colonia,c.codigo_postal,c.municipio,
-				e.estado,c.rating,
+		$this->calculateRating();
+		
+		$sql="SELECT c.id_cliente,c.nombre,c.apellidoP,c.apellidoM,c.rating,
 				IF((SELECT ct.number
 				FROM cliente_telefono ct
 				WHERE ct.id_cliente=c.id_cliente
@@ -229,7 +323,6 @@ class Clientes
 				ORDER BY id_email ASC
 				LIMIT 0,1),'') AS email
 				FROM clientes c
-				INNER JOIN estados e USING(id_estado)
 				ORDER BY c.id_cliente";
 		
 		$statement=$this->connect->prepare($sql);
@@ -258,6 +351,8 @@ class Clientes
 		$handler = fopen($jsonPathFile, "w");
 		fwrite($handler, $json);
 		fclose($handler);
+		
+		$this->JsonClientes();
 	}
 	
 	public function GetClientes($id_cliente="",$order="")

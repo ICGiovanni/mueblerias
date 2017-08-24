@@ -48,14 +48,15 @@
 			<div class="col-sm-6" >
 				<select data-placeholder="Selecciona el tipo de Producto" class="chosen-select" style="width:300px;" tabindex="4" id="tipo_producto" name="tipo_producto">
 	            <option value="" data-abrev=""></option>
-	            <option value="P" data-abrev="">Producto Unitario</option>
-	            <option value="U" data-abrev="" selected>Producto Compuesto</option>	            
+	            <option value="U" data-abrev="" selected>Producto Unitario</option>	
+	            <option value="P" data-abrev="">Producto Compuesto</option>
 				</select>
 			</div>
             </div>
             
             <div class="form-group"><label class="col-sm-2 control-label"></label>
-			<div class="col-sm-6" >*Este campo define un producto que esta compuesto por uno a mas productos asociados, pero pueden seguir utilizados para la venta por separado.</div>
+			<div class="col-sm-6" id="descripcion_unitario">*Este campo define un producto es único.</div>
+			<div class="col-sm-6" id="descripcion_compuesto" style="display:none;">*Este campo define un producto que esta compuesto por uno a mas productos asociados, pero pueden seguir utilizados para la venta por separado.</div>
             </div>
 			
 			<div class="form-group"><label class="col-sm-2 control-label">Modelo</label>

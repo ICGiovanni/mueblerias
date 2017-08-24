@@ -634,6 +634,9 @@ $(document).ready(function()
 			$("#categoria").chosen();
 			$('#proveedor').chosen("destroy");
 			$("#proveedor").chosen();
+			$("#descripcion_compuesto").show();
+			$("#descripcion_unitario").hide();
+			
 		}
 		else if(tipo_producto=='V')
 		{	
@@ -650,6 +653,8 @@ $(document).ready(function()
 			$("#material").chosen();
 			$('#proveedor').chosen("destroy");
 			$("#proveedor").chosen();
+			$("#descripcion_compuesto").hide();
+			$("#descripcion_unitario").show();
 		}
 		else if(tipo_producto=='U')
 		{	
@@ -668,6 +673,8 @@ $(document).ready(function()
 			$("#material").chosen();
 			$('#proveedor').chosen("destroy");
 			$("#proveedor").chosen();
+			$("#descripcion_compuesto").hide();
+			$("#descripcion_unitario").show();
 		}
 		else
 		{

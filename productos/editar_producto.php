@@ -3,8 +3,11 @@
     //include $pathProy.'login/session.php';
     require_once($_SERVER["REDIRECT_PATH_CONFIG"].'productos/models/class.Productos.php');
     require_once($_SERVER["REDIRECT_PATH_CONFIG"].'proveedores/models/class.Proveedores.php');
+    require_once($_SERVER["REDIRECT_PATH_CONFIG"].'barcode/BarcodeGeneratorHTML.php');    
+    
     include $pathProy.'/header.php';
     include $pathProy.'/menu.php';
+
 ?>
 <link href="<?php echo $raizProy?>css/plugins/chosen/chosen.css" rel="stylesheet">
 <link href="<?php echo $raizProy?>font-awesome/css/font-awesome.css" rel="stylesheet">
@@ -45,6 +48,7 @@ if($datos[0]["producto_conjunto"]=='1')
 	$checked="checked";	
 }
 
+$generator = new BarcodeGeneratorHTML();
 
 ?>
     <div class="wrapper wrapper-content animated fadeInRight">
@@ -56,7 +60,7 @@ if($datos[0]["producto_conjunto"]=='1')
 			<div class="col-sm-6"><label class="col-sm-2 control-label"><?php echo $datos[0]["producto_id"]?></label></div>
             </div>
             <div class="form-group"><label class="col-sm-2 control-label">Tipo de Producto</label>
-			<div class="col-sm-6"><label class="col-sm-3 control-label"><?php echo utf8_encode($datos[0]["producto_type_name"]);?></label></div>
+			<div class="col-sm-6"><label class="col-sm-4 control-label"><?php echo utf8_encode($datos[0]["producto_type_name"]);?></label></div>
             </div>
             
 <?php
@@ -74,14 +78,20 @@ if($datos[0]["producto_type"]=='V')
             </div>
             <div class="form-group">
             <label class="col-sm-2 control-label">SKU</label>
-			<div class="col-sm-2 ">
+			<div class="col-sm-4 ">
 			<input type="text" class="form-control" id="sku" name="sku" value="<?php echo $datos[0]['producto_sku'];?>" readonly>
 			</div>
 			<label class="col-sm-1 control-label">Manual</label>
 			<div class="col-sm-1 ">
 			<input type="checkbox" name="manual" id="manual" value="">
 			</div>
+				
             </div>
+            
+            <div class="form-group"><label class="col-sm-2 control-label"></label>
+			<div class="col-sm-6"><?php echo $generator->getBarcode($datos[0]['producto_sku'], $generator::TYPE_CODE_128);?></div>
+            </div>
+            
             <div id="div_principal" style="<?php echo ($datos[0]['producto_type']!='P' && $datos[0]['producto_type']!='U') ? "display:none;" : ''; ?>">
             			
 			<div class="form-group">
