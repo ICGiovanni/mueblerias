@@ -19,14 +19,15 @@ class Publicidad
 	public function InsertarPublicidad($params)
 	{
 		$date=date("Y-m-d h:i:s");
-		$sql="INSERT INTO publicidad VALUES('',:nombre,:text,:date)";
+		$status='SE';
+		$sql="INSERT INTO publicidad VALUES('',:nombre,:text,:date,:status)";
 		
 		$statement=$this->connect->prepare($sql);
 		
 		$statement->bindParam(':nombre', $params['nombre'], PDO::PARAM_STR);
 		$statement->bindParam(':text', $params['text'], PDO::PARAM_STR);
 		$statement->bindParam(':date', $date, PDO::PARAM_STR);
-		
+		$statement->bindParam(':status', $status, PDO::PARAM_STR);
 		
 		$statement->execute();
 		
@@ -45,6 +46,19 @@ class Publicidad
 		
 		$statement->execute();
 		return $params['id'];
+	}
+	
+	public function ActualizarStatus($status,$id_publicidad)
+	{
+		$sql="UPDATE publicidad SET status=:status WHERE id_publicidad=:id_publicidad";
+	
+		$statement=$this->connect->prepare($sql);
+	
+		$statement->bindParam(':status', $status, PDO::PARAM_STR);
+		$statement->bindParam(':id_publicidad', $id_publicidad, PDO::PARAM_STR);
+	
+		$statement->execute();
+		return $id_publicidad;
 	}
 	
 	public function BorrarPublicidad($id_publicidad)
@@ -80,7 +94,7 @@ class Publicidad
 	
 	
 		$sql="SELECT p.id_publicidad, p.nombre,
-				p.contenido,p.fecha
+				p.contenido,p.fecha,IF(status='SE' || status='','SE','E') AS status
 				FROM publicidad p
 				$where
 				$orderby";
@@ -187,9 +201,11 @@ class Publicidad
 		$mail->MsgHTML(utf8_decode($mensaje));
 		
 		if(!$mail->send()) {
+			$this->ActualizarStatus('SE', $id_publicidad);
 			echo 'Message could not be sent.';
 			echo 'Mailer Error: ' . $mail->ErrorInfo;
 		} else {
+			$this->ActualizarStatus('E', $id_publicidad);
 			echo 'Message has been sent';
 		}
 		

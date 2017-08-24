@@ -8,6 +8,7 @@
 ?>
 
 	<link rel="stylesheet" type="text/css" href="../css/clientes.css">
+	<link href="<?php echo $raizProy?>css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
     <div class="row wrapper border-bottom white-bg page-heading">
         <div class="col-sm-4">
             <h2>Clientes</h2>
@@ -56,8 +57,8 @@
                     <tr>
                     	<th align="center">ID</th>
                         <th align="center">Cliente</th>
-                        <th align="center">Datos Fiscales</th>
-                        <th align="center">Direcci&oacute;n</th>
+                        <th align="center">Datos Facturación</th>
+                        <th align="center">Datos Envio</th>
                         <th align="center">Telefono</th>
                         <th align="center">E-mail</th>
                         <th align="center">Rating</th>
@@ -78,10 +79,9 @@
                     	$nombre=$d->nombre;
                     	$apellidoP=$d->apellidoP;
                     	$apellidoM=$d->apellidoM;
-                    	$rfc=$d->rfc;
-                    	$razon_social=$d->razon_social;
-                    	
-                    	$email=$d->email;
+                    	$rating=$d->rating;
+                    	                    	
+                    	$email="";
                     	$datos_fiscales="";
                     	$direccion="";
                     	$telefono='';
@@ -98,67 +98,115 @@
                     		$i++;
                     	}
                     	
+                    	$i=0;
+                    	
+                    	foreach($clientes->GetEmailsClient($id_cliente) as $e)
+                    	{
+                    		if($i>0)
+                    		{
+                    			$email.='<br>';
+                    		}
+                    		$email.=$e['email'];
+                    		
+                    		$i++;
+                    	}
+                    	
+                    	
                     	$cliente='<b>'.$nombre.' '.$apellidoP.' '.$apellidoM.'</b>';
                     	
-                    	if($rfc!='')
+                    	$datos="";
+                    	$content="";
+                    	$content2="";
+                    	$direcciones=$clientes->GetDataCliente($id_cliente);
+                    	
+                    	foreach($direcciones as $d)
                     	{
-                    		$datos_fiscales.='RFC: '.$rfc;
+                    		$tipo=$d['cliente_direccion_tipo_desc'];
+                    		$rfc=$d['cliente_direccion_rfc'];
+                    		$razonS=$d['cliente_direccion_razon_social'];
+                    		$calle=$d['cliente_direccion_calle'];
+                    		$noExt=$d['cliente_direccion_numero_ext'];
+                    		$noInt=$d['cliente_direccion_numero_int'];
+                    		$colonia=$d['cliente_direccion_colonia'];
+                    		$codigoP=$d['cliente_direccion_cp'];
+                    		$id_estado=$d['id_estado'];
+                    		$estado=$d['estado'];
+                    		$municipio=$d['cliente_direccion_municipio'];
+                    		$referencia=$d['cliente_direccion_entre_calles'];
+                    	
+                    		                    	
+                    		$datos='';
+                    	
+                    		if($tipo=='envio')
+                    		{
+                    			$tipoR='<div id="addres_tipo_'.$i.'">Envio</div>';
+                    			$datos.="";
+                    		}
+                    		else
+                    		{
+                    			$tipoR='<div id="addres_tipo'.$i.'">Facturación</div>';
+                    			$datos.="<strong>RFC: </strong>".$rfc."<br><strong>Razón Social: </strong>".$razonS."<br>";
+                    		}
+                    	
+                    		$datos.='<strong>Calle: </strong>'.$calle.' <strong>No. Ext: </strong>'.$noExt;
+                    	
+                    		if($noInt)
+                    		{
+                    			$datos.='<strong>No. Int.: </strong>'.$noInt.'<br>';
+                    		}
+                    	
+                    		$datos.='<strong>Colonia: </strong>'.$colonia.' <strong>C.P. </strong>'.$codigoP.'<br><strong>Municipio o Delegación: </strong> '.$municipio.' <strong>Estado: </strong>'.$estado.'<br>';
+                    	
+                    		if($referencia)
+                    		{
+                    			$datos.='<strong>Referencia: </strong>'.$referencia;
+                    		}
+                    	
+                    		if($tipo=='envio')
+                    		{                    			
+                    			$content.='<div id="addres_div_'.$i.'">'.$datos.'</div>';
+                    		}
+                    		else
+                    		{
+                    			$content2.='<div id="addres_div_'.$i.'">'.$datos.'</div>';	
+                    		}
+                    		
+                    		
+                    		$i++;
                     	}
                     	
-                    	if($razon_social)
-                    	{
-                    		$datos_fiscales.='<br>'.$razon_social;
-                    	}
-                    	
-                    	
-                    	if($d->calle!='')
-                    	{
-                    		$direccion.=$d->calle;
-                    	}
-                    	
-                    	if($d->num_exterior!='')
-                    	{
-                    		$direccion.=' No. Exterior '.$d->num_exterior;
-                    	}
-                    	
-                    	if($d->num_interior!='')
-                    	{
-                    		$direccion.=' No. Interior '.$d->num_interior;
-                    	}
-                    	
-                    	if($d->colonia)
-                    	{
-                    		$direccion.=' Col. '.$d->colonia;
-                    	}
-                    	
-                    	if($d->codigo_postal!='')
-                    	{
-                    		$direccion.=' C.P.'.$d->codigo_postal;
-                    	}
-                    	
-                    	if($d->municipio!='' && $d->estado!='')
-                    	{
-                    		$direccion.=' '.$d->municipio.', '.$d->estado;
-                    	}
-                    	else if($d->municipio)
-                    	{
-                    		$direccion.=' '.$d->municipio;
-                    	}
-                    	else if($d->estado!='')
-                    	{
-                    		$direccion.=' '.$d->estado;
-                    	}
-                    	
-                    	$rating=$d->rating;
-                    	
+                    	$datos_cliente="";
+                    	                    	
                     	$tr.='<tr class="gradeX">';
                     	$tr.='<td align="center">'.$id_cliente.'</td>';
                     	$tr.='<td>'.$cliente.'</td>';
-                    	$tr.='<td>'.$datos_fiscales.'</td>';
-                    	$tr.='<td>'.$direccion.'</td>';
+                    	$tr.='<td>'.$content2.'</td>';
+                    	$tr.='<td>'.$content.'</td>';
                     	$tr.='<td>'.$telefono.'</td>';
                     	$tr.='<td align="center">'.$email.'</td>';
-                    	$tr.='<td align="center"><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><span class="numero">'.$rating.'</span></td>';
+                    	
+                    	if($rating)
+                    	{
+                    		$s=0;
+                    		$stars="";
+                    		for($i=0;$i<$rating;$i++)
+                    		{
+                    			$stars.='<i class="fa fa-star"></i>';
+                    			$s++;
+                    		}
+                    		$s=5-$s;
+                    		for($i=0;$i<$s;$i++)
+                    		{
+                    			$stars.='<i class="fa fa-star-o"></i>';
+                    		}
+                    		
+                    		$tr.='<td align="center">'.$stars.'<span class="numero">'.$rating.'</span></td>';
+                    	}
+                    	else
+                    	{
+                    		$tr.='<td align="center"><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><span class="numero">'.$rating.'</span></td>';
+                    	}
+                    	
                     	$tr.='<td align="center"><div class="infont col-md-1 col-sm-1"><a href="editar_cliente.php?id='.$id_cliente.'" title="Editar Cliente"><i class="fa fa-pencil"></i></a></div><div class="infont col-md-1 col-sm-1"><a href="#" onClick="borrar_cliente('.$id_cliente.');" title="Borrar Cliente"><i class="fa fa-trash-o"></i></a></div></td>';
                     	$tr.='</tr>';
                     	
@@ -171,8 +219,8 @@
                     <tr>
                         <th align="center">ID</th>
                         <th align="center">Cliente</th>
-                        <th align="center">Datos Fiscales</th>
-                        <th align="center">Direcci&oacute;n</th>
+                        <th align="center">Datos Facturación</th>
+                        <th align="center">Datos Envio</th>
                         <th align="center">Telefono</th>
                         <th align="center">E-mail</th>
                         <th align="center">Rating</th>
@@ -210,8 +258,8 @@
            </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-          <button type="button" class="btn btn-default" data-dismiss="modal" id="guardarRating">Guardar</button>
+          <button type="button" class="btn btn-danger btn-xs" data-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-primary btn-xs" data-dismiss="modal" id="guardarRating">Guardar</button>
         </div>
       </div>
       
@@ -219,7 +267,7 @@
   </div>
 	
     <script src="<?php echo $raizProy?>js/plugins/dataTables/datatables.min.js"></script>
-    
+    <script src="<?php echo $raizProy?>js/plugins/sweetalert/sweetalert.min.js"></script>
 
 
     <!-- Page-Level Scripts -->
@@ -257,9 +305,13 @@
 	        			data: {monto:monto,compras:compras}, // serializes the form's elements.
 	        			success: function(data)
 	        			{
-	        				alert("Se han actualizado los datos"); // show response from the php script.
-	        			    var url="index.php";
-	        			    $(location).attr("href", url);
+	        			    swal({
+				                title: "Guardado!",
+				                text: "Rating guardado correctamente!",
+				                type: "success"
+				            }, function () {
+				                window.location.href = 'index.php';
+				            });
 	        			}
 	        		});
         		}

@@ -54,6 +54,8 @@
                     </thead>
                     <tbody id="clientes">
                     <?php
+                    $clientes=new Clientes();
+                    
                    	$json=file_get_contents($_SERVER["REDIRECT_PATH_CONFIG"]."clientes/json/lista_clientes.json");
                     $json=json_decode($json);
                     $tr="";
@@ -64,7 +66,19 @@
                     	$apellidoP=$d->apellidoP;
                     	$apellidoM=$d->apellidoM;
                     	$rating="";
-                    	$email=$d->email;
+                    	$email="";
+                    	
+                    	$i=0;
+                    	foreach($clientes->GetEmailsClient($id_cliente) as $e)
+                    	{
+                    		if($i>0)
+                    		{
+                    			$email.='<br>';
+                    		}
+                    		$email.=$e['email'];
+                    		
+                    		$i++;
+                    	}
                     	
                     	$cliente=$nombre.' '.$apellidoP.' '.$apellidoM;
                     	
@@ -132,9 +146,16 @@
                     	$fecha=$fh[0];
                     	$f=explode('-', $fecha);
                     	$fecha=$f[2].'/'.$f[1].'/'.$f[0].' '.$fh[1];
+                    	$status=$p["status"];
+                    	
+                    	$background="";
+                    	if($status=='E')
+                    	{
+                    		$background='style="background-color:#BCF5BD;"';
+                    	}
                     	
                     	
-                    	$tr.='<tr class="gradeX">';
+                    	$tr.='<tr class="gradeX" '.$background.'>';
                     	$tr.='<td align="center">'.$id_publicidad.'</td>';
                     	$tr.='<td>'.$nombre.'</td>';
                     	$tr.='<td align="center">'.$fecha.'</td>';
@@ -284,7 +305,7 @@
 			                text: "Envio de Campa\u00f1a exitoso!",
 			                type: "success"
 			            }, function () {
-			                window.location.href = 'index.php';
+			                window.location.href = 'enviar_campana.php';
 			            });
     					
     				},
