@@ -87,16 +87,16 @@ while(list(,$dataGasto) = each($rows)){
 	
 	switch($dataGasto["gasto_status_id"]){
 		case '1': //pendiente
-			$color_row = "#FBFEC0";
+			$color_row = "#F5AF47";
 			break;
 		case '2': //pagado
-			$color_row = "#BCF5BD";
+			$color_row = "#01C56C";
 			break;
 		case '3': //cancelado
-			$color_row = "#CCD7FF";
+			$color_row = "#71ACD0";
 			break;
 		case '4': //vencido
-			$color_row = "#FFCACA";
+			$color_row = "#E16355";
 			break;
 		default:
 			$color_row = "#F5F5F5";
@@ -237,7 +237,7 @@ while(list(,$dataGasto) = each($rows)){
                     <table class="table table-striped table-bordered table-hover dataTables-example" >
                     <thead>
                     <tr>
-						<th>Folio</th>
+						<th>ID</th>
                         <th>No Documento</th>
                         <th>Fecha Vencimiento</th>
 						<th>Categoría</th>

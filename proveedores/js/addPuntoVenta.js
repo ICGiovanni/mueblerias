@@ -33,7 +33,7 @@ $(document).ready(function(){
                     imagen : $("#"+id).data('imagen')
                 },
                 success: function (response) {            
-                    $("#line_"+cantId).css("visibility","visible");    
+                    $("#line_"+cantId).css("display","block");
                     console.log(response);
                     /*swal({
                         title: "Actualizado!",

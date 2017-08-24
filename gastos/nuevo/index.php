@@ -208,7 +208,7 @@ while(list(,$dataLogin) = each($rowsLogin)){
                         <div class="col-md-3" style="height:35px; padding-left:30px; width: 228px;">
 							<div class="form-group input-group m-b" style="">
 								<span class="input-group-addon" style="border-left:1px solid #E5E6E7; border-right:1px solid #E5E6E7;">
-									 <input type="checkbox" name="pago_automatico" id="pago_automatico" /> <font style="font-size:11px; ">&nbsp;&nbsp;&nbsp;(Se marcara como pagado el gasto que ya fue liquidado con anterioridad)</font>
+									 <input type="checkbox" name="pago_automatico" id="pago_automatico" /> <font style="font-size:11px; ">&nbsp;&nbsp;&nbsp;(Se marcara como pagado)</font>
 								</span> 
 							</div>
 							

@@ -60,8 +60,8 @@ $ventas = $insVentas->obtenerVentas(0,0);
                                 <th>Fecha Entrega</th>
                                 <th>Cliente</th>
                                 <th>Total</th>
-                                <th>Pagos</th>
                                 <th>Resta</th>
+                                <th>Pagos</th>
                                 <th>Flete</th>
                                 <th>Facturación</th>
                                 <th>Estatus</th>                                
@@ -73,20 +73,20 @@ $ventas = $insVentas->obtenerVentas(0,0);
                                 foreach($ventas as $venta){
                                     
                                     $clienteInfo = $insClientes->GetClientes($venta['id_cliente']);
-                                    $flete = 'No Requiere';
+                                    $flete = '';
                                     if($venta['venta_flete_id']!=0){
                                         $dir = end($insVentas->getAddress($venta['venta_flete_id']));
                                         $flete = $dir['cliente_direccion_calle']."&nbsp;".$dir['cliente_direccion_numero_ext']." &nbsp;".$dir['cliente_direccion_entre_calles'];
                                     }
 
-                                    $factura = 'No Requiere';
+                                    $factura = '';
                                     if($venta['cliente_direccion_id']!=0){
                                         $dir = end($insVentas->getAddress($venta['cliente_direccion_id']));
                                         $factura = $dir['cliente_direccion_rfc']."<br />".$dir['cliente_direccion_razon_social'];
                                     }
                                     
                                     $pagosInfo = $insVentas->getPagosVenta($venta['venta_id']);
-                                    $pagos = 'Sin Pago';
+                                    $pagos = '';
                                     $resta = $venta['monto'];
                                     if($pagosInfo){
                                         
@@ -96,6 +96,8 @@ $ventas = $insVentas->obtenerVentas(0,0);
                                             $pagos .= "$ ".number_format($pago['monto'],2,'.',',')."<br />".$pago['general_forma_de_pago_desc']."<br />".$insGeneral->getDate($pago['fecha'])."<br />-----------<br />";
                                             $resta -= $pago['monto'];
                                         }
+
+
                                     }
                                     
                                     $productosVenta = $insVentas->obtenerProductosVenta($venta['venta_id']);
@@ -110,12 +112,30 @@ $ventas = $insVentas->obtenerVentas(0,0);
                                     echo "<td>".$insVentas->getSucursal($venta['sucursal_id'])."</td>";
                                     echo "<td>".$insGeneral->getDate($venta['fecha_creacion'])."</td>";
                                     echo "<td>".$insGeneral->getDate($venta['fecha_entrega'])."</td>";
-                                    echo "<td>".$clienteInfo[0]['nombre']."&nbsp;".$clienteInfo[0]['apellidoP']."&nbsp;".$clienteInfo[0]['apellidoM']."</td>";
-                                    echo "<td>$".number_format($venta['monto'],2,'.',',')."</td>";
-                                    echo "<td>".$pagos."</td>";
-                                    echo "<td>".$resta."</td>";
-                                    echo "<td>".$flete."</td>";
-                                    echo "<td>".$factura."</td>";
+                                    echo "<td>".$clienteInfo[0]['nombre']."<br />".$clienteInfo[0]['apellidoP']."<br />".$clienteInfo[0]['apellidoM']."</td>";
+                                    echo "<td><b>$".number_format($venta['monto'],2,'.',',')."</b></td>";
+                                    echo "<td><b>$".number_format($resta,2,'.',',')."</b></td>";
+                                    echo "<td class='text-center'>";
+                                        if(!empty($pagos)){
+                                            echo "<a href='#' data-content='".$pagos."' data-title='Pagos realizados' class='showDialog'><i class='fa fa-eye success'></i></a>";
+                                        }else{
+                                            echo "<i class='fa fa-eye-slash text-danger'></i>";
+                                        }
+                                    echo "</td>";
+                                    echo "<td class='text-center'>";
+                                        if(!empty($flete)){
+                                            echo "<a href='#' data-content='".$flete."' data-title='Enviar a la dirección' class='showDialog'><i class='fa fa-eye success'></i></a>";
+                                        }else{
+                                            echo "<i class='fa fa-eye-slash text-danger'></i>";
+                                        }
+                                    echo "</td>";
+                                    echo "<td>";
+                                        if(!empty($factura)){
+                                            echo "<a href='#' data-content='".$factura."' data-title='Dirección de facturación' class='showDialog'><i class='fa fa-eye success'></i></a>";
+                                        }else{
+                                            echo "<i class='fa fa-eye-slash text-danger'></i>";
+                                        }
+                                    echo "</td>";
                                     echo "<td>".$insVentas->getEstatusVenta($venta['venta_estatus_id'])."</td>";                                    
                                     echo "<td>
                                             <a href='#'><i class='fa fa-pencil' title='Editar'></i></a>&nbsp;&nbsp;&nbsp;    
@@ -170,20 +190,43 @@ $ventas = $insVentas->obtenerVentas(0,0);
            
        }); 
        
-       $(document).on("click", "#closeDialog", function(e) {
+       $(document).on("click", ".closeDialog", function(e) {
            
-         $( "#dialog" ).dialog( "close" );  
+         $( "#dialog" ).dialog( "close" );
+         $( "#dialogDetalles" ).dialog( "close" );
            
        });
        
         $( "#dialog" ).dialog({
             autoOpen: false,
+            modal: true,
             show: {
               effect: "fade"              
             },
             hide: {
               effect: "fade"              
             }
+        });
+
+        $( "#dialogDetalles" ).dialog({
+            autoOpen: false,
+            modal: true,
+            show: {
+                effect: "fade"
+            },
+            hide: {
+                effect: "fade"
+            }
+        });
+
+        $(document).on("click", ".showDialog", function(e){
+
+            $("#titulo_dialog").html($(this).data('title'));
+            $("#content_dialog").html($(this).data('content'));
+
+            $( "#dialogDetalles" ).dialog( "open" );
+
+
         });
     });
 
@@ -192,8 +235,14 @@ $ventas = $insVentas->obtenerVentas(0,0);
     <label>Ingresa nota de Entrega</label>
     <textarea></textarea>
     <br />
-    <button class="btn btn-danger" id="closeDialog">Cancelar</button>
+    <button class="btn btn-danger closeDialog">Cancelar</button>
     <button class="btn btn-success">Guardar</button>    
+</div>
+
+<div class="panel panel-primary" id="dialogDetalles">
+    <label id="titulo_dialog"></label>
+    <div id="content_dialog"></div>
+    <button class="btn btn-danger closeDialog">Cerrar</button>
 </div>
 <?php
 include $pathProy.'footer.php';
