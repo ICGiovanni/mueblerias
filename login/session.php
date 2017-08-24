@@ -20,7 +20,7 @@
             $pagina = trim($_SERVER['SCRIPT_NAME'],'/');
             
 
-            if(!in_array($pagina, $inArrayPages)){            
+            if(!in_array($pagina, $inArrayPages) || !isset($login_session['sucursal_id'])){            
                header("Location: ".$ruta."login/profile.php");
             }            
             

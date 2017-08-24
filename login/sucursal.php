@@ -1,5 +1,5 @@
 <?php session_start();
-if (isset($_SESSION['login_session'])) {
+if (isset($_SESSION['login_session']['sucursal_id'])) {
     header('location: profile.php');
 }
 include $_SERVER['REDIRECT_PATH_CONFIG'] . 'config.php';
@@ -25,22 +25,22 @@ $sucursales = $insLogin->getSucursales();
         <div class="clear">&nbsp;</div>
         <p>SISTEMA DE INVENTARIOS</p>
         <div class="clear"></div>
-        <form class="m-t" method="post" role="form" action="login.php">
-
-            <div class="input-group m-b" style="text-align: left">
-                <div style="display: inline-block; vertical-align: middle; width: 58%">
-                    <input type="text" name="email" value="<?php if (isset($_GET['email'])) {
-                        echo base64_decode($_GET['email']);
-                    } ?>" placeholder="Usuario" class="form-control" autocomplete="off">
-                </div>
-                <div style="display: inline-block; vertical-align: middle; font-size: 14px; width: 40%; text-align: center">
-                    &nbsp;@globmint.com
-                </div>
-            </div>
+        <form class="m-t" method="post" role="form" action="guarda-sucursal.php">           
             <div class="input-group m-b">
-                <input type="password" name="password" value="" class="form-control" placeholder="Contraseña">
-                <span class="input-group-addon"><i class="fa fa-lock">&nbsp;</i></span>
-            </div>         
+                <select name="sucursal_id" id="sucursal_id" class="form-control">
+                    <?php
+                    if (is_array($sucursales) && count($sucursales) > 0) {
+                        echo "<option value='0'>Selecciona una sucursal</option>";
+                        foreach ($sucursales as $sucursal) {
+                            echo "<option value='" . $sucursal['sucursal_id'] . "'>" . $sucursal['sucursal_name'] . "</option>";
+                        }
+                    } else {
+                        echo "<option value='0'>Aún no se registran sucursales, contacte al administrador</option>";
+                    }
+                    ?>
+                </select>
+            </div>
+
             <div>
                 <?php
                 if (isset($_GET['error'])) {
@@ -52,11 +52,7 @@ $sucursales = $insLogin->getSucursales();
                     <?php
                 }
                 ?></div>
-            <button type="submit" class="btn btn-primary block full-width m-b">Login</button>
-
-            <a href="forgot_password.php">
-                <small>¿Recordar contraseña?</small>
-            </a>
+            <button type="submit" class="btn btn-primary block full-width m-b">Elegir Sucursal</button>            
         </form>
     </div>
 </div>

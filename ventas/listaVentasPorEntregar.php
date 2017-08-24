@@ -20,7 +20,10 @@ $ventas = $insVentas->obtenerVentas(0,0);
 <link rel="stylesheet" type="text/css" href="../css/clientes.css">
 <style type="text/css">
     #productosVenta td{
-        vertical-align: middle;
+        vertical-align: middle;        
+    }
+    .ibox-content{
+        padding: 15px 0px
     }
 </style>
 
@@ -43,18 +46,18 @@ $ventas = $insVentas->obtenerVentas(0,0);
 
     <div class="row">
         <div class="col-md-12">
-            <div class="ibox">
+            <div class="">
                 <div class="ibox-title">
                     &nbsp;
                 </div>
                 <div id="productos">
                     <div class="ibox-content">      
                         <div class="table table-responsive">
-                    <table class="table table-striped table-responsive table-bordered table-hover dataTables-example" id="table" >
+                    <table class="table table-striped table-responsive table-bordered table-hover dataTables-example" id="table" style='font-size: 12px' >
                             <thead>
                             <tr>
-                                <th>ID</th>
-                                <th >Productos</th>
+                                <th>Id</th>                                
+                                <th>Prod</th>
                                 <th>Sucursal</th>                                    
                                 <th>Fecha Compra</th>
                                 <th>Fecha Entrega</th>
@@ -63,9 +66,9 @@ $ventas = $insVentas->obtenerVentas(0,0);
                                 <th>Resta</th>
                                 <th>Pagos</th>
                                 <th>Flete</th>
-                                <th>Facturación</th>
+                                <th>Fact</th>
                                 <th>Estatus</th>                                
-                                <th>Acciones</th>                                
+                                <th>Accion</th>                                
                             </tr>
                             </thead>
                             <tbody>
@@ -102,17 +105,19 @@ $ventas = $insVentas->obtenerVentas(0,0);
                                     
                                     $productosVenta = $insVentas->obtenerProductosVenta($venta['venta_id']);
                                     $productosMostrar = '';
-                                    foreach($productosVenta as $pv){
-                                        $productosMostrar .= "<b>".$pv['producto_sku']."</b><br />".$pv['producto_name']."<br />";
+                                    foreach($productosVenta as $pv){                                        
+                                        $productosMostrar .= "<b>".$pv['producto_sku']."</b>  ".$pv['producto_name']."<br />";
                                     }
+                                    $productosMostrar.='<br />';
                                     
-                                    echo "<tr>";
+                                    $clienteTable = $clienteInfo[0]['nombre']."<br />".$clienteInfo[0]['apellidoP']."<br />".$clienteInfo[0]['apellidoM'];
+                                    echo "<tr>";  
                                     echo "<td>".$venta['venta_id']."</td>";
-                                    echo "<td>".$productosMostrar."</td>";
+                                    echo "<td class='text-center'><a href='#' data-content='".$productosMostrar."' data-title='".count($productosVenta)." productos en venta ID: ".$venta['venta_id']."' class='showDialog'>".count($productosVenta)."</a></td>";
                                     echo "<td>".$insVentas->getSucursal($venta['sucursal_id'])."</td>";
                                     echo "<td>".$insGeneral->getDate($venta['fecha_creacion'])."</td>";
                                     echo "<td>".$insGeneral->getDate($venta['fecha_entrega'])."</td>";
-                                    echo "<td>".$clienteInfo[0]['nombre']."<br />".$clienteInfo[0]['apellidoP']."<br />".$clienteInfo[0]['apellidoM']."</td>";
+                                    echo "<td class='text-center'><a href='#' data-content='".$clienteTable."' data-title='Información de cliente' class='showDialog'><i class='fa fa-eye success'></i></a></td>";
                                     echo "<td><b>$".number_format($venta['monto'],2,'.',',')."</b></td>";
                                     echo "<td><b>$".number_format($resta,2,'.',',')."</b></td>";
                                     echo "<td class='text-center'>";

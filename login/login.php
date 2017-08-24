@@ -8,7 +8,7 @@ if($_POST){
     
     extract($_POST);
         
-    if(!empty($email) && !empty($password) && ($sucursal_id!=0&&$sucursal_id!='')){
+    if(isset($email) && !empty($email) && !empty($password)){
         $stringEmail = $email;
         if(!stristr($email, '@globmint.com')){
             $email = $email.'@globmint.com';
@@ -19,12 +19,10 @@ if($_POST){
         
         if($loginInfo){
             
-            $login->insertLastLogin($loginInfo['login_id']);
+            $login->insertLastLogin($loginInfo['login_id']);           
+            $_SESSION['login_session']=$loginInfo;                        
             
-            $_SESSION['login_session']=$loginInfo;
-            $_SESSION['login_session']['sucursal_id'] = $sucursal_id;
-            
-            header("Location: profile.php");
+            header("Location: sucursal.php");
             exit();
         }
         else{
@@ -36,19 +34,13 @@ if($_POST){
             exit();
         }        
     }
-    else{ 
-        
-        if($sucursal_id==0 || $sucursal_id==''){
-            $error = base64_encode('Se requiere seleccionar una sucursal');        
-        }else{
-            $error = base64_encode('Ingresa correo electrónico y contraseña para acceder al sistema');        
-        }
-        
-        
+    else{                 
+        $error = base64_encode('Ingresa correo electrónico y contraseña para acceder al sistema');                        
         $rutaL =  $ruta."login/index.php?error=".$error.'&email='.base64_encode($email);
         header("Location: ".$rutaL);
         exit();
-    }
+    }        
+    
 }
 
 ?>

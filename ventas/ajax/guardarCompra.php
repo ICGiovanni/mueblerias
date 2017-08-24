@@ -30,7 +30,9 @@ if(isset($_SESSION['punto_venta']) && is_array($_SESSION['punto_venta'])){
         }
     }
     
-    $idVenta = $insVentas->nuevaVenta($sesionVenta, $estatus, 0, 2);    
+    $tipoVenta = isset($apartado)?2:1;
+    
+    $idVenta = $insVentas->nuevaVenta($sesionVenta, $estatus, 0, $tipoVenta);    
     
     if(is_numeric($idVenta)){
         

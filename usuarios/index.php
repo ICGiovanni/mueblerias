@@ -10,13 +10,13 @@
 </style>
 <div class="row wrapper border-bottom white-bg page-heading">
 	<div class="col-sm-4">
-		<h2>Control de Usuarios</h2>
+		<h2>Lista de Usuarios</h2>
 		<ol class="breadcrumb">
 			<li>
-				<a href="">Lista de Usuarios</a>
+				<a href="">Usuarios</a>
 			</li>
 			<li class="active">
-				<strong>Control de Usuarios</strong>
+				<strong>Lista de Usuarios</strong>
 			</li>
 		</ol>
 	</div>

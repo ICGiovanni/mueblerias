@@ -2,6 +2,7 @@
 <?php
 require_once $_SERVER['REDIRECT_PATH_CONFIG'].'config.php';
 //require_once($_SERVER["REDIRECT_PATH_CONFIG"].'login/session.php');
+include $pathProy . 'login/models/class.Login.php';
 require_once $pathProy.'/header2.php';
 require_once $pathProy.'/menu.php';
 
@@ -9,6 +10,7 @@ require_once $pathProy.'/menu.php';
 require_once $_SERVER['REDIRECT_PATH_CONFIG'].'tablero_resumen/models/class.Tablero.php';
 
 $instTablero = new Tablero();
+$insLogin = new Login();
 
 //por default la fecha es la del dia de ejecucion
 $fecha_inicio = date('d/m/Y');
@@ -23,6 +25,9 @@ if($_POST){
         $fecha_final = $_POST['fecha_final'];
     }
 }
+
+
+$sucursales = $insLogin->getSucursales();
 
 ?>
 
@@ -144,6 +149,21 @@ if($_POST){
                           </div>
 
                       </div>
+                      <div class="form-group">
+                            <label for="fecha_final">&nbsp;Sucursal:</label>
+                            <select name="sucursal_id" id="sucursal_id" class="form-control">
+                              <?php
+                              if (is_array($sucursales) && count($sucursales) > 0) {
+                                  echo "<option value='0'>Selecciona una sucursal</option>";
+                                  foreach ($sucursales as $sucursal) {
+                                      echo "<option value='" . $sucursal['sucursal_id'] . "'>" . $sucursal['sucursal_name'] . "</option>";
+                                  }
+                              } else {
+                                  echo "<option value='0'>Aún no se registran sucursales, contacte al administrador</option>";
+                              }
+                              ?>
+                            </select>
+                      </div>    
                       <button class="btn btn-primary" type="submit">Filtar </button>
                   </form>
               </div>

@@ -760,8 +760,11 @@ class Productos
 				WHERE ip.producto_id=p.producto_id
 				ORDER BY imagen_id ASC
 				limit 0,1),'".FINAL_URL."img/imagen-no.png') AS imagen,
-				producto_price_public,producto_description
+				producto_price_public,producto_description, pr.proveedor_nombre, c.color_name, m.material_name
 				FROM productos p
+                                LEFT JOIN proveedores pr USING (proveedor_id)
+                                LEFT JOIN colores c USING (color_id)
+                                LEFT JOIN materiales m USING (material_id)
 				WHERE producto_type IN('U','V')
 				ORDER BY p.producto_name ASC";
 	

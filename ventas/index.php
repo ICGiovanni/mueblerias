@@ -93,7 +93,7 @@
                                                     <img src="'.$prod['Imagen'].'" height="80" width="80">
                                                 </td>
                                                 <td class="desc">
-                                                    <h3><a href="#" class="text-navy">'.$prod['Modelo'].'</a></h3>                                                                                                                      
+                                                    <h3><a href="#" class="text-navy">'.$prod['Modelo'].' '.$prod['Color'].' '.$prod['Material'].' '.$prod['Proveedor'].'</a></h3>                                                                                                                      
                                                 </td>
                                                 <td>$<span id="labelprecio_'.$prod['ID'].'">'.number_format($prod['Precio'],2,'.',',').'</span><br />
                                                     <input type="number" id="precio_'.$prod['ID'].'" value="'.$prod['Precio'].'" min="'.$prod['Precio'].'" step="50" style="display: none" /></td>
@@ -149,7 +149,7 @@ $(document).ready(function()
     var options={
             url: "../productos/get_products_sell.php",
             getValue: function(element){
-                var name=element.producto_sku+' '+element.producto_name;			
+                var name=element.producto_sku+' '+element.producto_name + ' '+element.color_name + ' '+element.material_name + ' '+element.proveedor_nombre;			
                 return name;
             },
             template: {
@@ -176,14 +176,17 @@ $(document).ready(function()
                     var id=$("#producto").getSelectedItemData().producto_id;
                     var sku=$("#producto").getSelectedItemData().producto_sku;
                     var name=$("#producto").getSelectedItemData().producto_name;
+                    var proveedor=$("#producto").getSelectedItemData().proveedor_nombre;
+                    var color=$("#producto").getSelectedItemData().color_name; 
+                    var material=$("#producto").getSelectedItemData().material_name; 
                     var imagen=$("#producto").getSelectedItemData().imagen;
                     var public_price=$("#producto").getSelectedItemData().producto_price_public;
-                    SelectedItemData(id,sku,name,imagen, public_price);
+                    SelectedItemData(id,sku,name,imagen, public_price, proveedor, color, material);
 		}
             }
 	};
 
-	var SelectedItemData=function(id,sku,name,imagen,price)
+	var SelectedItemData=function(id,sku,name,imagen,price,proveedor,color,material)
 	{
 		var table='';
 
@@ -203,7 +206,7 @@ $(document).ready(function()
                         table +='   <tr id="row_'+id+'" data-sku="'+sku+'" data-modelo="'+name+'" data-imagen="'+imagenSave+'">'+
                                         '<td width="90">'+imagen+'</td>'+
                                         '<td class="desc">'+
-                                            '<h3><a href="#" class="text-navy">'+name+'</a></h3>'+
+                                            '<h3><a href="#" class="text-navy">'+name+' '+color+' '+material+' '+proveedor+'</a></h3>'+
                                         '</td>'+
                                         '<td>$ <span id="labelprecio_'+id+'">'+addCommas(price)+'</span>'+
                                         '<input type="number" id="precio_'+id+'" value="'+price+'" min="'+price+'" step="50" style="display: none" />'+
@@ -219,7 +222,7 @@ $(document).ready(function()
 			$("#producto").val('');
 			$("#product_list").fadeIn();
                         
-                        saveCart(id, sku, name, 1, price,urlImage);
+                        saveCart(id, sku, name, 1, price,urlImage,proveedor,color,material);
 		}
 		else
 		{
@@ -276,7 +279,7 @@ $(document).ready(function()
     });
 });
 
-function saveCart(id, sku, modelo, cantidad, precio, imagen){
+function saveCart(id, sku, modelo, cantidad, precio, imagen,proveedor,color,material){
 
     $.ajax({
         url: "<?php echo $raizProy?>proveedores/ajax/addPuntoVenta.php",
@@ -287,10 +290,16 @@ function saveCart(id, sku, modelo, cantidad, precio, imagen){
             modelo : modelo,
             cantidad : cantidad,
             precio : precio,
-            imagen : imagen
+            imagen : imagen,
+            color : color,
+            material: material,
+            proveedor: proveedor
         },
         success: function (response) {
-
+                
+            
+            console.log(response);
+            
             setTimeout(function(){
                 var totalSumar = 0;
                 $(".subtotal_sumar").each(function(){
@@ -304,14 +313,7 @@ function saveCart(id, sku, modelo, cantidad, precio, imagen){
 
                 console.log(totalSumar);
 
-            }, 600);
-
-            //window.location.href = 'index.php';
-            /*swal({
-                title: "Actualizado!",
-                text: "Producto agregado correctamente!",
-                type: "success"
-            });*/            
+            }, 600);                     
         },
         error: function(jqXHR, textStatus, errorThrown) {
            swal("Error, intente nuevamente");

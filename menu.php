@@ -74,9 +74,17 @@ if (!isset($_SESSION)) {
                     </ul>
                 </li>
 
+                <li class="<?php if (stristr($_SERVER['SCRIPT_NAME'],'/proveedores/') && !stristr($_SERVER['SCRIPT_NAME'],'/proveedores/grid.php')){ echo 'active';}?>">
+                    <a href="<?php echo $ruta.'inventarios/'?>">
+                        <i class="fa fa-truck"></i> <span class="nav-label">Proveedores</span>
+                    </a>
+                    <ul class="nav nav-second-level">
+                        <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/proveedores/index.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'proveedores/'?>" >Lista de proveedores</a></li>
+                        <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/proveedores/pedidos.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'proveedores/pedidos.php'?>" >Lista de pedidos</a></li>
+                    </ul>
+                </li>
 
-
-                <li class="<?php if ((stristr($_SERVER['SCRIPT_NAME'],'/inventarios/') || stristr($_SERVER['SCRIPT_NAME'],'/productos/index.php') || stristr($_SERVER['SCRIPT_NAME'],'/productos/nuevo_producto.php')  ) && !stristr($_SERVER['SCRIPT_NAME'], '/inventarios/sucursales/index.php')){ echo 'active';}?>">
+                <li class="<?php if ((stristr($_SERVER['SCRIPT_NAME'],'/inventarios/') || stristr($_SERVER['SCRIPT_NAME'],'/productos/index.php') || stristr($_SERVER['SCRIPT_NAME'],'/productos/etiquetas.php') || stristr($_SERVER['SCRIPT_NAME'],'/productos/nuevo_producto.php')  ) && !stristr($_SERVER['SCRIPT_NAME'], '/inventarios/sucursales/index.php')){ echo 'active';}?>">
                     <a href="<?php echo $ruta.'inventarios/'?>">
                         <i class="fa fa-line-chart"></i> <span class="nav-label">Inventarios</span>
                     </a>
@@ -89,14 +97,12 @@ if (!isset($_SESSION)) {
                     </ul>
                 </li>
 
-                <li class="<?php if (stristr($_SERVER['SCRIPT_NAME'],'/proveedores/') || (stristr($_SERVER['SCRIPT_NAME'],'/productos/') && !stristr($_SERVER['SCRIPT_NAME'],'/productos/index.php') && !stristr($_SERVER['SCRIPT_NAME'],'/productos/nuevo_producto.php') )|| stristr($_SERVER['SCRIPT_NAME'],'sucursales/index.php')){ echo 'active';}?>">
+                <li class="<?php if (stristr($_SERVER['SCRIPT_NAME'],'/proveedores/grid.php') || (stristr($_SERVER['SCRIPT_NAME'],'/productos/') && !stristr($_SERVER['SCRIPT_NAME'],'/productos/index.php') && !stristr($_SERVER['SCRIPT_NAME'],'/productos/nuevo_producto.php') && !stristr($_SERVER['SCRIPT_NAME'],'/productos/etiquetas.php') )|| stristr($_SERVER['SCRIPT_NAME'],'sucursales/index.php')){ echo 'active';}?>">
                     <a href="<?php echo $ruta.'proveedores/'?>">
                         <i class="fa fa-list"></i> <span class="nav-label">Catalogos</span>
                     </a>
                     <ul class="nav nav-second-level">
-                        <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/proveedores/grid.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'proveedores/grid.php'?>" >Catalogo de productos</a></li>
-                        <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/proveedores/index.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'proveedores/'?>" >Lista de proveedores</a></li>
-                        <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/proveedores/pedidos.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'proveedores/pedidos.php'?>" >Lista de pedidos</a></li>
+                        <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/proveedores/grid.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'proveedores/grid.php'?>" >Catalogo de productos</a></li>                        
 
                         <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/inventarios/sucursales/index.php' || $_SERVER['SCRIPT_NAME'] == '/productos/materiales/index.php' || $_SERVER['SCRIPT_NAME'] == '/productos/colores/index.php' ||  $_SERVER['SCRIPT_NAME'] == '/productos/categorias/index.php' || $_SERVER['SCRIPT_NAME'] == '/productos/versiones/index.php'){ echo 'active';}?>">
                             <a href="<?php echo $ruta.'gastos/nomina/'?>" >Atributos<span class="fa arrow"></span></a>
