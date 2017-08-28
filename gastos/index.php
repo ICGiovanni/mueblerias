@@ -87,16 +87,16 @@ while(list(,$dataGasto) = each($rows)){
 	
 	switch($dataGasto["gasto_status_id"]){
 		case '1': //pendiente
-			$color_row = "#F5AF47";
+			$color_row = "#FBFEC0";
 			break;
 		case '2': //pagado
-			$color_row = "#01C56C";
+			$color_row = "#BCF5BD";
 			break;
 		case '3': //cancelado
-			$color_row = "#71ACD0";
+			$color_row = "#CCD7FF";
 			break;
 		case '4': //vencido
-			$color_row = "#E16355";
+			$color_row = "#FFCACA";
 			break;
 		default:
 			$color_row = "#F5F5F5";
