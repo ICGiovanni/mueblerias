@@ -194,6 +194,8 @@ $(document).ready(function()
 
 		if(product==undefined)
 		{
+                    
+                    if($("#row_"+id).html()==undefined){
                         urlImage = '';
                         var imagenSave = imagen;
                         if(imagen!=''){                            
@@ -223,6 +225,15 @@ $(document).ready(function()
 			$("#product_list").fadeIn();
                         
                         saveCart(id, sku, name, 1, price,urlImage,proveedor,color,material);
+                    }else{
+                        var cantInput = parseFloat($("#cantidad_"+id).val())+1;
+                        $("#cantidad_"+id).val(cantInput);
+                        $("#cantidad_"+id).click();
+                        $("#producto").focus();
+			$("#producto").val('');
+			$("#product_list").fadeIn();
+                        
+                    }    
 		}
 		else
 		{

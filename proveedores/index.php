@@ -90,6 +90,12 @@ require_once $pathProy.'/menu.php';
     </div>
 </div>
 
+<div class="panel panel-primary" id="dialogDetalles">
+    <p><label id="titulo_dialog"></label></p>
+    
+    <div id="content_dialog"></div>
+    <button class="btn btn-danger closeDialog">Cerrar</button>
+</div>
 
 <?php 
     require_once $pathProy.'/footer2.php';
@@ -102,4 +108,37 @@ require_once $pathProy.'/menu.php';
 <link href="<?php echo $raizProy?>css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
 
 <script src="js/proveedores.js"></script>
+
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+<script>
+    $(document).ready(function(){
+        $( "#dialogDetalles" ).dialog({
+            autoOpen: false,
+            modal: true,
+            show: {
+                effect: "fade"
+            },
+            hide: {
+                effect: "fade"
+            }
+        });
+
+        $(document).on("click", ".showDialog", function(e){
+            $("#titulo_dialog").html($(this).data('title'));
+            $("#content_dialog").html($(this).data('content'));
+
+            $( "#dialogDetalles" ).dialog( "open" );
+        });
+        
+        $(document).on("click", ".closeDialog", function(e) {                    
+            $( "#dialogDetalles" ).dialog( "close" );           
+        });
+       
+    });
+    
+    </script>
 

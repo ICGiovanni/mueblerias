@@ -13,16 +13,16 @@ require_once($_SERVER["REDIRECT_PATH_CONFIG"].'proveedores/models/class.Proveedo
             $telefono = '';
             
             foreach($telefonos as $phone){
-                $telefono.= "<b>".$phone['type'].":</b>&nbsp;".$phone['number']."<br />";
+                $telefono.= "<b>".$phone['type'].":</b>&nbsp;".$phone['number']."<br /><br />";
             }
                 
-            
+            $direccion = "<b>Calle</b>: ".$prov['street']."<br /><br /><b>Numero Exterior: </b>".$prov['number']."&nbsp; <b>Interior</b>:".$prov['int_number']."<br /><br /><b>Colonia</b>: ".$prov['neighborhood']."<br /><br /><b>C.P.</b>".$prov['zip_code']."<br /><br />";
             echo "  <tr>
                         <td>".$prov['proveedor_nombre']."</td>
                         <td>".$prov['proveedor_nombre_fiscal']."</td>
-                        <td align='center' width='200px'>".$prov['street']."&nbsp;".$prov['number']."&nbsp;".$prov['int_number']."&nbsp;".$prov['neighborhood']."</td>    
+                        <td align='center'><a href='#' data-content='".$direccion."' data-title='Dirección del Proveedor' class='showDialog'><i class='fa fa-eye success'></i></a></td>    
                         <td>".$prov['proveedor_representante']."</td>
-                        <td>".$telefono."</td>
+                        <td align='center'><a href='#' data-content='".$telefono."' data-title='Telefonos del Proveedor' class='showDialog'><i class='fa fa-eye success'></i></a></td>
                         <td>".$prov['email']."</td>
                         
                         <td align='center'>
