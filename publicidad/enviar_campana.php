@@ -88,7 +88,31 @@
                     	$tr.='<td align="center">'.$id_cliente.'</td>';
                     	$tr.='<td>'.$cliente.'</td>';
                     	$tr.='<td align="center">'.$email.'</td>';
-                    	$tr.='<td align="center"><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i> <span class="numero">'.$rating.'</span></td>';
+                    	
+                    	if($rating)
+                    	{
+                    		$s=0;
+                    		$stars="";
+                    		for($i=0;$i<$rating;$i++)
+                    		{
+                    			$stars.='<i class="fa fa-star"></i>';
+                    			$s++;
+                    		}
+                    		$s=5-$s;
+                    		for($i=0;$i<$s;$i++)
+                    		{
+                    			$stars.='<i class="fa fa-star-o"></i>';
+                    		}
+                    		
+                    		$tr.='<td align="center">'.$stars.'<span class="numero">'.$rating.'</span></td>';
+                    	}
+                    	else
+                    	{
+                    		$tr.='<td align="center"><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><span class="numero">'.$rating.'</span></td>';
+                    	}
+                    	
+                    	
+                    	
                     	$tr.='<td align="center"><div class="infont col-md-1 col-sm-1"><input type="checkbox" name="cliente_'.$id_cliente.'" id="cliente_'.$id_cliente.'" value="'.$id_cliente.'" class="clientes"></div></td>';
                     	$tr.='</tr>';
                     	

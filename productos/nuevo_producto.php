@@ -76,7 +76,7 @@
             		
 			<div class="form-group">
             <label class="col-sm-2 control-label">Medida</label>
-			<div class="col-sm-6 "><input type="text" class="form-control" id="medida" name="medida"></div>
+			<div class="col-sm-6 "><textarea class="form-control" id="medida" name="medida"></textarea></div>
 			</div>
             <div class="form-group"><label class="col-sm-2 control-label">Descripci&oacute;n</label>
 			<div class="col-sm-6" ><textarea class="form-control" id="descripcion" name="descripcion"></textarea></div>

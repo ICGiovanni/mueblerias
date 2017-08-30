@@ -96,7 +96,7 @@ if($datos[0]["producto_type"]=='V')
             			
 			<div class="form-group">
             <label class="col-sm-2 control-label">Medida</label>
-			<div class="col-sm-6"><input type="text" class="form-control" id="medida" name="medida" value="<?php echo $datos[0]['producto_medida'];?>"></div>
+			<div class="col-sm-6"><textarea class="form-control" id="medida" name="medida"><?php echo $datos[0]['producto_medida'];?></textarea></div>
 			</div>
             
             <div class="form-group"><label class="col-sm-2 control-label">Descripci&oacute;n</label>
