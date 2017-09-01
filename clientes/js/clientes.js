@@ -150,6 +150,21 @@ $(document).ready(function()
 		$("#referencia").val('');
 	};
 	
+	var clean_address_change=function()
+	{
+		$("#razonS").val('');
+		$("#rfc").val('');
+		$("#calle").val('');
+		$("#noExt").val('');
+		$("#noInt").val('');		
+		$("#colonia").val('');
+		$("#codigoPostal").val('');
+		$("#estado").val('');
+		$("#estado").val('').trigger("chosen:updated");
+		$("#municipio").val('');
+		$("#referencia").val('');
+	};
+	
 	var edit_address=function(id)
 	{	
 		$("#tipo_datos").val($("#tipo_datos_"+id).val()).trigger('chosen:updated');
@@ -185,6 +200,8 @@ $(document).ready(function()
 	$("#tipo_datos").change(function()
 	{
 		var tipo_datos=$(this).val();
+		
+		clean_address_change();
 		
 		if(tipo_datos=='facturacion')
 		{

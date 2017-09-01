@@ -245,7 +245,7 @@
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
           <h4 class="modal-title">Configurar Rating</h4>
-          <label class="col-sm-12 control-label">Esta opci&oacute;n es para generar las estrellas de cada cliente dependiendo del monto que se le haga la venta como tambi&eacute;n del numero de ventas</label>
+          <br><br><label class="col-sm-12 control-label">Esta opci&oacute;n es para generar las estrellas de cada cliente dependiendo del monto que se le haga la venta como tambi&eacute;n del numero de ventas</label>
         </div>
         <div class="modal-body">
         <div class="wrapper wrapper-content animated fadeInRight">

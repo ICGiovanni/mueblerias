@@ -104,7 +104,17 @@
                     			$stars.='<i class="fa fa-star-o"></i>';
                     		}
                     		
-                    		$tr.='<td align="center">'.$stars.'<span class="numero">'.$rating.'</span></td>';
+                    		if($rating==1)
+                    		{
+                    			$nameR=' Estrella';
+                    		}
+                    		else
+                    		{
+                    			$nameR=' Estrellas';
+                    		}
+                    		
+                    		$tr.='<td align="center">'.$stars.'<span class="numero">'.$rating.'</span><strong>'.$nameR.'</strong></td>';
+                    		
                     	}
                     	else
                     	{
