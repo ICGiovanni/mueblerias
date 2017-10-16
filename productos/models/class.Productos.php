@@ -927,7 +927,7 @@ class Productos
 			$where=" AND p.producto_id='$producto_id'";	
 		}
 		
-		$sql="SELECT p.producto_id,p.producto_sku,p.producto_name,
+		$sql="SELECT p.producto_id,p.producto_sku,p.producto_name,proveedor_id,
 				IF((SELECT imagen_route
 				FROM imagenes_productos ip
 				WHERE ip.producto_id=p.producto_id
@@ -953,7 +953,7 @@ class Productos
 		$statement=$this->connect->prepare($sql);
 		$statement->execute();
 		$result=$statement->fetchAll(PDO::FETCH_ASSOC);
-		$result=$this->ChangeUTF8($result);
+		//$result=$this->ChangeUTF8($result);
 		
 		
 		foreach($result as $key=>$r)

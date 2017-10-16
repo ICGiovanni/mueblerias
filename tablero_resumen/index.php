@@ -205,7 +205,7 @@ $sucursales = $insLogin->getSucursales();
                                 "<td>".$ingreso['sucursal_id']."</td>".
                                 "<td>".$ingreso['costo_envio']."</td>".
                                 "<td>".$detalle."</td>".
-                                "<td>".$ingreso['fecha_entrega']."</td>".
+                                "<td>".$detalle_envio['fecha_hora_entrega']."</td>".
                              "</tr>";
                     }
                 }
@@ -224,7 +224,7 @@ $sucursales = $insLogin->getSucursales();
                     <i class="fa fa-plus"></i></button>
             </div>
             <i class="fa fa fa-th"></i>
-            <h3 class="box-title">Salidas / Entradas de mercancía</h3>
+            <h3 class="box-title">Costo de Inventario</h3>
           </div>
           <div class="box-body">
               <table class="table table-bordered dataTables-example">

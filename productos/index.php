@@ -2,12 +2,14 @@
 	include $_SERVER['REDIRECT_PATH_CONFIG'].'/config.php';
 	require_once($_SERVER["REDIRECT_PATH_CONFIG"].'productos/models/class.Productos.php');
 	require_once($_SERVER["REDIRECT_PATH_CONFIG"].'inventarios/models/class.Inventarios.php');
+    require_once($_SERVER["REDIRECT_PATH_CONFIG"].'proveedores/models/class.Proveedores.php');
    // include $pathProy.'login/session.php';
     include $pathProy.'/header.php';
     include $pathProy.'/menu.php';
     
     $productos=new Productos();
     $inventarios=new Inventarios();
+    $proveedores = new Proveedor();
 ?>
 <link href="<?php echo $raizProy?>css/plugins/chosen/chosen.css" rel="stylesheet">
 <link href="<?=$raizProy?>css/plugins/footable/footable.core.css" rel="stylesheet">
@@ -197,7 +199,8 @@ cursor: default;
                         <th>Color</th>
                         <th>Material</th>
                         <th>Categoria</th>
-                        <th align="center">Inventario</th>
+                        <th>Proveedor</th>
+                        <th align="center">Inv</th>
                         <th>Acciones</th>                        
                     </tr>
                     </thead>
@@ -221,8 +224,10 @@ cursor: default;
                     	$description=$p->producto_description;
                     	$price_utilitarian=$p->producto_price_purchase;
                     	$price_public=$p->producto_price_public;
-                    	
-                    	                    	
+                    	//info del proveedor
+                    	$infoProveedor = end($proveedores->getProveedor($p->proveedor_id));             	
+
+
                     	$color="";
                     	foreach($p->colores as $c)
                     	{
@@ -256,6 +261,7 @@ cursor: default;
                     	$tr.='<td>'.$color.'</td>';
                     	$tr.='<td>'.$material.'</td>';
                     	$tr.='<td>'.$categoria.'</td>';
+                        $tr.='<td>'.$infoProveedor['proveedor_nombre'].'</td>';
                     	
                     	if($tipo_abbrev=='P')
                     	{
@@ -310,7 +316,8 @@ cursor: default;
                         <th>Color</th>
                         <th>Material</th>
                         <th>Categoria</th>
-                        <th>Inventario</th>
+                        <th>Proveedor</th>
+                        <th>Inv</th>
                         <th>Acciones</th>                        
                     </tr>
                     </tfoot>

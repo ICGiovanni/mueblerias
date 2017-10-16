@@ -90,7 +90,7 @@ $ventas = $insVentas->obtenerVentas(0,0);
                                     
                                     $pagosInfo = $insVentas->getPagosVenta($venta['venta_id']);
                                     $pagos = '';
-                                    $resta = $venta['monto'];
+                                    $resta = $venta['monto']+$venta['costo_envio'];
                                     if($pagosInfo){
                                         
                                         $pagos = '';
@@ -111,34 +111,36 @@ $ventas = $insVentas->obtenerVentas(0,0);
                                     $productosMostrar.='<br />';
                                     
                                     $clienteTable = $clienteInfo[0]['nombre']."<br />".$clienteInfo[0]['apellidoP']."<br />".$clienteInfo[0]['apellidoM'];
+
+                                    $fechaEntrega = ($venta['fecha_entrega']!='0000-00-00 00:00:00') ? $insGeneral->getDate($venta['fecha_entrega']):'Sin envio';
                                     echo "<tr>";  
                                     echo "<td>".$venta['venta_id']."</td>";
                                     echo "<td class='text-center'><a href='#' data-content='".$productosMostrar."' data-title='".count($productosVenta)." productos en venta ID: ".$venta['venta_id']."' class='showDialog'>".count($productosVenta)."</a></td>";
                                     echo "<td>".$insVentas->getSucursal($venta['sucursal_id'])."</td>";
                                     echo "<td>".$insGeneral->getDate($venta['fecha_creacion'])."</td>";
-                                    echo "<td>".$insGeneral->getDate($venta['fecha_entrega'])."</td>";
-                                    echo "<td class='text-center'><a href='#' data-content='".$clienteTable."' data-title='Información de cliente' class='showDialog'><i class='fa fa-eye success'></i></a></td>";
-                                    echo "<td><b>$".number_format($venta['monto'],2,'.',',')."</b></td>";
+                                    echo "<td>".$fechaEntrega."</td>";
+                                    echo "<td class='text-center'><a href='#' data-content='".$clienteTable."' data-title='Información de cliente' class='showDialog'><i class='fa fa-plus-circle success'></i></a></td>";
+                                    echo "<td><b>$".number_format(($venta['monto']+$venta['costo_envio']),2,'.',',')."</b></td>";
                                     echo "<td><b>$".number_format($resta,2,'.',',')."</b></td>";
                                     echo "<td class='text-center'>";
                                         if(!empty($pagos)){
-                                            echo "<a href='#' data-content='".$pagos."' data-title='Pagos realizados' class='showDialog'><i class='fa fa-eye success'></i></a>";
+                                            echo "<a href='#' data-content='".$pagos."' data-title='Pagos realizados' class='showDialog'><i class='fa fa-plus-circle success'></i></a>";
                                         }else{
-                                            echo "<i class='fa fa-eye-slash text-danger'></i>";
+                                            echo "<i class='fa fa-minus-circle text-danger'></i>";
                                         }
                                     echo "</td>";
                                     echo "<td class='text-center'>";
                                         if(!empty($flete)){
-                                            echo "<a href='#' data-content='".$flete."' data-title='Enviar a la dirección' class='showDialog'><i class='fa fa-eye success'></i></a>";
+                                            echo "<a href='#' data-content='".$flete."' data-title='Enviar a la dirección' class='showDialog'><i class='fa fa-plus-circle success'></i></a>";
                                         }else{
-                                            echo "<i class='fa fa-eye-slash text-danger'></i>";
+                                            echo "<i class='fa fa-minus-circle text-danger'></i>";
                                         }
                                     echo "</td>";
                                     echo "<td>";
                                         if(!empty($factura)){
-                                            echo "<a href='#' data-content='".$factura."' data-title='Dirección de facturación' class='showDialog'><i class='fa fa-eye success'></i></a>";
+                                            echo "<a href='#' data-content='".$factura."' data-title='Dirección de facturación' class='showDialog'><i class='fa fa-plus-circle success'></i></a>";
                                         }else{
-                                            echo "<i class='fa fa-eye-slash text-danger'></i>";
+                                            echo "<i class='fa fa-minus-circle text-danger'></i>";
                                         }
                                     echo "</td>";
                                     echo "<td>".$insVentas->getEstatusVenta($venta['venta_estatus_id'])."</td>";                                    

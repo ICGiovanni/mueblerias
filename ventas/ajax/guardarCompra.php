@@ -30,7 +30,7 @@ if(isset($_SESSION['punto_venta']) && is_array($_SESSION['punto_venta'])){
         }
     }
     
-    $tipoVenta = isset($apartado)?2:1;
+    $tipoVenta = isset($_GET['apartado'])?2:1;
     
     $idVenta = $insVentas->nuevaVenta($sesionVenta, $estatus, 0, $tipoVenta);    
     

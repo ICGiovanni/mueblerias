@@ -12,6 +12,7 @@ $inventarios=new Inventarios();
 $proveedores = new Proveedor();
 
 $dataProducts = json_decode($productos->GetDataProductsMainJson());
+
 /*
 echo "<pre>";
     print_r($dataProducts);
@@ -166,11 +167,11 @@ echo "<pre>";
 
                                 <div class="ibox" >
                                     <div class="ibox-content product-box">                      
-                                        <img class="imgCarrito" id="line_'.$prod->producto_id.'" src="http://globmint.com/img/etiqueta_carrito.png" style="position: absolute; left: 15px; top: 5px; '.$active.'" />
-                                        <img src="http://globmint.com/img/etiqueta_promo.png" style="position: absolute; right: 9px; top: -7px; z-index: 999;'.$imgPromo.'" />          
+                                        <img class="imgCarrito" id="line_'.$prod->producto_id.'" src="//globmint.com/img/etiqueta_carrito.png" style="position: absolute; left: 15px; top: 5px; '.$active.'" />
+                                        <img src="//globmint.com/img/etiqueta_promo.png" style="position: absolute; right: 9px; top: -7px; z-index: 999;'.$imgPromo.'" />          
                                         <a href="'.$url.'.php?producto_id='.base64_encode($prod->producto_id).'">
                                         <div class="product-imitation" style="padding: 5px 0px">                                            
-                                            <img src="'.$prod->imagen.'" alt="'.$prod->producto_sku.'" class="img-thumbnail" height="150px"/>                                                
+                                            <img src="'.str_replace('http:','https:',$prod->imagen).'" alt="'.$prod->producto_sku.'" class="img-thumbnail" height="150px"/>                                                
                                         </div>
                                         </a>
                                         <div class="product-desc">
@@ -186,8 +187,11 @@ echo "<pre>";
                                                 echo '<span class="product-price"><small>ver modelos</small></span>';
                                             }
 
+                                            $infoProveedor = end($proveedores->getProveedor($prod->proveedor_id));
+
                     echo '                  </span>
-                                            <small class="text-muted">'.$prod->producto_sku.'</small>
+                                            <small class="text-muted">'.trim($prod->producto_sku).'</small>
+                                            <div style="font-size: 14px; color: #676a6c; font-weight: bold">'.$infoProveedor['proveedor_nombre'].'</div>
                                             <div class="product-name" >'.$prod->producto_name.'</div>
                                             <div class="small m-t-xs" >'.$prod->producto_description_corta.'</div>
                                             <div class="small m-t-xs">&nbsp;';
@@ -221,7 +225,7 @@ echo "<pre>";
                                                 if($verCarrito==1){
                                                 echo '<input type="number" min="1" id="cantidad_'.$prod->producto_id.'" value="'.$cantidad.'" size="3" style="width: 70px">&nbsp;';
                                                 echo '<a href="#" class="btn btn-xs btn-outline btn-warning addCarrito addPuntoVenta" data-line="line_'.$prod->producto_id.'" id="addPuntoVenta_'.$prod->producto_id.'" 
-                                                      data-imagen="'.$prod->imagen.'"
+                                                      data-imagen="'.str_replace('http:','https:',$prod->imagen).'"
                                                       data-id="'.$prod->producto_id.'"
                                                       data-sku="'.$prod->producto_sku.'"
                                                       data-modelo="'.$prod->producto_name.'"
