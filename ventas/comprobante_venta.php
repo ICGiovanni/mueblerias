@@ -14,9 +14,24 @@ $cliente=new Clientes();
 $v=$ventas->obtenerVentas(0,$venta_id);
 $v=$v[0];
 $idCliente=$v['id_cliente'];
+$banderaIva=false;
+if($v['cliente_direccion_id']!=0)
+{
+	$banderaIva=true;
+}
+
+$banderaEnvio=false;
+if($v['costo_envio']!=0)
+{
+	$banderaEnvio=true;
+	$envio=$v['costo_envio'];
+}
 
 $c=$cliente->GetClientes($idCliente);
 $nombre_cliente=$c[0]['nombre'].' '.$c[0]['apellidoP'].' '.$c[0]['apellidoM'];
+
+$telefonos=$cliente->GetPhonesClient($idCliente);
+
 $telefono='55 22 55 22';
 $celular='55 22 55 22';
 $email='rodriperez@hotmail.com';
@@ -83,17 +98,19 @@ $html.='<table style="padding-right:8px;text-align:left;font-size: 8px;" width="
 $html.='<tr>';
 $html.='<td><strong>Cliente:</strong> '.$nombre_cliente.'</td>';
 
-$html.='</tr>';
-$html.='<tr>';
-$html.='<td><strong>Tel:</strong> '.$telefono.'</td>';
-$html.='</tr>';
+foreach($telefonos as $t)
+{
+	$html.='</tr>';
+	$html.='<tr>';
+	$html.='<td><strong>'.$t['type'].'</strong> '.$t['number'].'</td>';
+	$html.='</tr>';
+	
+}
+
+$emails=$cliente->GetEmailsClient($idCliente);
 
 $html.='<tr>';
-$html.='<td><strong>Cel:</strong> '.$telefono.'</td>';
-$html.='</tr>';
-
-$html.='<tr>';
-$html.='<td><strong>Correo:</strong> '.$telefono.'</td>';
+$html.='<td><strong>Correo:</strong> '.$emails[0]['email'].'</td>';
 $html.='</tr>';
 
 $html.='</table>';
@@ -107,8 +124,8 @@ $html.='<tr>
 	<th align="center" width="14%"><strong>CANT.</strong></th>
 	<th align="center" width="42%"><strong>DESCRIPCIÓN / CODIGO</strong></th>
 	<th align="center" width="22%"><strong>PRECIO</strong></th>
-	<th align="center" width="22%"><strong>IMPORTE</strong></th>
-	</tr>';
+	<th align="center" width="22%"><strong>IMPORTE</strong></th>';
+$html.='</tr>';
 $html.='<tr><td></td><td></td><td align="right"><strong></strong></td><td align=""></td></tr>';
 $productos=$ventas->obtenerProductosVenta($venta_id);
 $totalP=0;
@@ -123,13 +140,16 @@ foreach($productos as $p)
 	}
 	
 	$subtotal=$p['subtotal'];
+	
 	$s=explode('.',$p['subtotal']);
 	if(count($s)==1)
 	{
 		$subtotal.='.00';
 	}
 	
-	$html.='<tr><td align="center">'.$p['cantidad'].'</td><td align="left">'.$p['producto_name'].' '.$p['producto_sku'].'</td><td align="center">$ '.$precio.'</td><td align="center">$ '.$subtotal.'</td></tr>';
+	
+	$html.='<tr><td align="center">'.$p['cantidad'].'</td><td align="left">'.$p['producto_name'].' '.$p['producto_sku'].'</td><td align="center">$ '.$precio.'</td><td align="center">$ '.$subtotal.'</td>';
+	$html.='</tr>';
 	$total=$total+$p['precio'];
 	$totalP++;
 	$html.='<tr><td></td><td></td><td align="right"><strong></strong></td><td align=""></td></tr>';
@@ -143,8 +163,56 @@ if(count($t)==1)
 
 
 $html.='<tr><td></td><td></td><td align="right"><strong>SUBTOTAL</strong></td><td align="">$ '.$total.'</td></tr>';
+if($banderaIva)
+{
+	$iva=$total*0.16;
+	$v=explode('.',$iva);
+	if(count($v)==1)
+	{
+		$iva.='.00';
+	}
+	else
+	{
+		$iva=round($iva,2);
+	}
+	
+	$html.='<tr><td></td><td></td><td align="right"><strong></strong></td><td align=""></td></tr>';
+	$html.='<tr><td></td><td></td><td align="right"><strong>IVA</strong></td><td align="">$ '.$iva.'</td></tr>';
+	
+	$total=$total*1.16;
+	$t=explode('.',$total);
+	if(count($t)==1)
+	{
+		$total.='.00';
+	}
+	else
+	{
+		$total=round($total,2);
+	}
+}
+
+if($banderaEnvio)
+{
+	$html.='<tr><td></td><td></td><td align="right"><strong></strong></td><td align=""></td></tr>';
+	$html.='<tr><td></td><td></td><td align="right"><strong>ENVIO</strong></td><td align="">$ '.$envio.'</td></tr>';
+	
+	$total=$total+$envio;
+	$t=explode('.',$total);
+	if(count($t)==1)
+	{
+		$total.='.00';
+	}
+	else
+	{
+		$total=round($total,2);
+	}
+	
+}
+
 $html.='<tr><td></td><td></td><td align="right"><strong></strong></td><td align=""></td></tr>';
 $html.='<tr><td></td><td></td><td align="right"><strong>TOTAL</strong></td><td align=""><strong>$ '.$total.'</strong></td></tr>';
+
+
 
 $html.='</table>';
 
@@ -242,6 +310,8 @@ anteriormente, en caso contrario se entendera que
 usted los recibió a su entera satisfacción. - En caso de apartados: Después de 90 días el precio
 está sujeto a cambio sin previo aviso. Toda cancelación causará un 20% de cargos por gastos
 de Administración.';
+$html.='<br>* La hora es un deseable, no obliga al flete estar a la hora aquí mostrada';
+
 $html.='</div>';
 $html.='<div style="text-align:center;width:100%;font-size: 6px;">';
 $html.='<strong>No atenderemos ninguna reclamación sin la presentación de este
