@@ -14,6 +14,8 @@ $cliente=new Clientes();
 $v=$ventas->obtenerVentas(0,$venta_id);
 $v=$v[0];
 $idCliente=$v['id_cliente'];
+$detalleEnvio=json_decode($v['detalle_envio']);
+
 $banderaIva=false;
 if($v['cliente_direccion_id']!=0)
 {
@@ -193,6 +195,16 @@ if($banderaIva)
 
 if($banderaEnvio)
 {
+	$e=explode('.',$envio);
+	if(count($t)==1)
+	{
+		$envio.='.00';
+	}
+	else
+	{
+		$envio=round($envio,2);
+	}
+	
 	$html.='<tr><td></td><td></td><td align="right"><strong></strong></td><td align=""></td></tr>';
 	$html.='<tr><td></td><td></td><td align="right"><strong>ENVIO</strong></td><td align="">$ '.$envio.'</td></tr>';
 	
@@ -268,6 +280,7 @@ if($flete)
 	$html.='<tr><td align="left" width="45%"><strong>Colonia:</strong></td><td align="left" width="55%">'.$flete['cliente_direccion_colonia'].'</td></tr>';
 	$html.='<tr><td align="left" width="45%"><strong>C.P.:</strong></td><td align="left" width="55%">'.$flete['cliente_direccion_cp'].'</td></tr>';
 	$html.='<tr><td align="left" width="45%"><strong>Delegación o Municipio:</strong></td><td align="left" width="55%">'.$flete['cliente_direccion_municipio'].'</td></tr>';
+	$html.='<tr><td align="left" width="45%"><strong>Fecha y Hora:</strong></td><td align="left" width="55%">'.$detalleEnvio->{fecha_hora_entrega}.'</td></tr>';
 	
 	$html.='</table>';
 	$html.='<div style="text-align:center;width:100%;font-size: 8px;">';
