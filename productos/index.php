@@ -224,6 +224,8 @@ cursor: default;
                     	$description=$p->producto_description;
                     	$price_utilitarian=$p->producto_price_purchase;
                     	$price_public=$p->producto_price_public;
+                    	$minimo_stock=$p->minimo_stock;
+                    	$maximo_stock=$p->maximo_stock;
                     	//info del proveedor
                     	$infoProveedor = end($proveedores->getProveedor($p->proveedor_id));             	
 
@@ -272,14 +274,26 @@ cursor: default;
                     		$stock=$inventarios->GetStockbySucursal($producto_id);
                     	}
                     	
+                    	if($stock<=$minimo_stock)
+                    	{
+                    		$background="#ed5565";
+                    	}
+                    	else if($stock>=$maximo_stock)
+                    	{
+                    		$background="#1c84c6";
+                    	}
+                    	else
+                    	{
+                    		$background="#1ab394";
+                    	}
                     	                    	
                     	if($stock>0 && $tipo_abbrev!='P')
                     	{
-                    		$tr.='<td align="center"><a href="#" class="link_modal" data-toggle="modal" data-target="#modal_view" data-id="'.$producto_id.'"  id="open_modal">'.$stock.'</a></td>';
+                    		$tr.='<td align="center" bgcolor="'.$background.'"><a href="#" class="link_modal" data-toggle="modal" data-target="#modal_view" data-id="'.$producto_id.'"  id="open_modal" style="color:white;">'.$stock.'</a></td>';
                     	}
                     	else if($stock>0 && $tipo_abbrev=='P')
                     	{
-                    		$tr.='<td align="center"><a href="#" class="modal_variaciones_stock" data-toggle="modal" data-target="#modal_variaciones_stock" data-id="'.$producto_id.'" data-json=\''.json_encode($p->variaciones).'\' data-root="'.$nombre.'" id="open_modal">'.$stock.'</a></div>';
+                    		$tr.='<td align="center" bgcolor="'.$background.'"><a href="#" class="modal_variaciones_stock" data-toggle="modal" data-target="#modal_variaciones_stock" data-id="'.$producto_id.'" data-json=\''.json_encode($p->variaciones).'\' data-root="'.$nombre.'" id="open_modal" style="color:white;">'.$stock.'</a></div>';
                     	}
                     	else
                     	{
@@ -287,8 +301,8 @@ cursor: default;
                     		{
                     			$stock=0;
                     		}
-                    		$stock="-";
-                    		$tr.='<td align="center">'.$stock.'</td>';
+                    		//$stock="-";
+                    		$tr.='<td align="center" bgcolor="'.$background.'" style="color:white;">'.$stock.'</td>';
                     	}
                     	$tr.='<td>';
                     	

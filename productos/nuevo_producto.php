@@ -5,6 +5,7 @@
     require_once($_SERVER["REDIRECT_PATH_CONFIG"].'proveedores/models/class.Proveedores.php');
     include $pathProy.'/header.php';
     include $pathProy.'/menu.php';
+   
 ?>
 <link href="<?php echo $raizProy?>css/plugins/chosen/chosen.css" rel="stylesheet">
 <link href="<?php echo $raizProy?>css/plugins/easy-autocomplete/easy-autocomplete.min.css" rel="stylesheet">
@@ -370,7 +371,38 @@
             
             </div>
             
+             <div class="col-lg-11">
+			<div class="panel panel-default">
+            <div class="panel-heading">
+            <label class="control-label">Almacen</label>
+			</div>
+            <div class="panel-body">
             
+            <div class="form-group">
+            <label class="col-sm-2 control-label">Mínimo en Alamacen</label>
+            
+            <div class="col-sm-2">
+			<div class="input-group m-b">
+			<input type="text" class="form-control" id="minimoA" name="minimoA" onkeypress="return validateCantidad(event)" value="">
+			</div>			
+			</div>
+            
+            </div>
+            
+            <div class="form-group">
+            <label class="col-sm-2 control-label">Maximo en Alamacen</label>
+            
+            <div class="col-sm-2">
+			<div class="input-group m-b">
+			<input type="text" class="form-control" id="maximoA" name="maximoA" onkeypress="return validateCantidad(event)" value="">
+			</div>			
+			</div>
+            
+            </div>
+            
+             </div>
+			</div>
+            </div>
             
             
             <div class="form-group"><label class="col-sm-2 control-label">Imagenes</label>

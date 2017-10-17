@@ -74,7 +74,7 @@ class Productos
 			$conjunto=1;
 		}
 		
-		$sql="INSERT INTO productos VALUES('',:nombre,:sku,:descripcion,:descripcionC,:precio_utilitario,:precio_utilitario_descuento,:porcentaje_utilidad,:precio_publico,:precio_publico_min,:producto_price_public_discount,:producto_price_min_public_percent,:color,:material,:proveedor,:conjunto,:version,:medida,:type,:producto_parent)";
+		$sql="INSERT INTO productos VALUES('',:nombre,:sku,:descripcion,:descripcionC,:precio_utilitario,:precio_utilitario_descuento,:porcentaje_utilidad,:precio_publico,:precio_publico_min,:producto_price_public_discount,:producto_price_min_public_percent,:minimo_stock,:maximo_stock,:color,:material,:proveedor,:conjunto,:version,:medida,:type,:producto_parent)";
 		
 		$statement=$this->connect->prepare($sql);
 		
@@ -102,6 +102,8 @@ class Productos
 		$statement->bindParam(':precio_publico_min', $price_public_min, PDO::PARAM_STR);
 		$statement->bindParam(':producto_price_public_discount', $price_public_discount, PDO::PARAM_STR);
 		$statement->bindParam(':producto_price_min_public_percent', $params['precioPMM'], PDO::PARAM_STR);
+		$statement->bindParam(':minimo_stock', $params['minimoA'], PDO::PARAM_STR);
+		$statement->bindParam(':maximo_stock', $params['maximoA'], PDO::PARAM_STR);
 		$statement->bindParam(':color', $params['color'], PDO::PARAM_STR);
 		$statement->bindParam(':material', $params['material'], PDO::PARAM_STR);
 		$statement->bindParam(':proveedor', $params['proveedor'], PDO::PARAM_STR);
@@ -452,7 +454,8 @@ class Productos
 				WHERE producto_id=p.producto_parent),'') AS producto_principal,
 				producto_description_corta,producto_price_min_public_percent,
 				producto_price_purchase_percent,
-				p.producto_conjunto AS conjunto
+				p.producto_conjunto AS conjunto,
+				minimo_stock,maximo_stock
 				FROM productos p
 				INNER JOIN proveedores pr USING(proveedor_id)".
 				$where.
@@ -616,7 +619,7 @@ class Productos
 		
 		$this->DeleteProductGroup($params['id_producto']);
 		
-		$sql="UPDATE productos SET producto_name=:nombre,producto_sku=:sku,producto_description=:descripcion,producto_price_purchase=:precio_utilitario,producto_price_public=:precio_publico,proveedor_id=:proveedor,color_id=:color,material_id=:material,version_id=:version,	producto_medida=:medida,producto_price_purchase_discount=:precio_utilitario_descuento,producto_price_public_min=:precio_publico_min,producto_price_public_discount=:producto_price_public_discount,producto_conjunto=:conjunto,producto_description_corta=:descripcionC,producto_price_purchase_percent=:porcentaje_utilidad,producto_price_min_public_percent=:producto_price_min_public_percent
+		$sql="UPDATE productos SET producto_name=:nombre,producto_sku=:sku,producto_description=:descripcion,producto_price_purchase=:precio_utilitario,producto_price_public=:precio_publico,proveedor_id=:proveedor,color_id=:color,material_id=:material,version_id=:version,	producto_medida=:medida,producto_price_purchase_discount=:precio_utilitario_descuento,producto_price_public_min=:precio_publico_min,producto_price_public_discount=:producto_price_public_discount,producto_conjunto=:conjunto,producto_description_corta=:descripcionC,producto_price_purchase_percent=:porcentaje_utilidad,producto_price_min_public_percent=:producto_price_min_public_percent,minimo_stock=:minimo_stock,maximo_stock=:maximo_stock
 				WHERE producto_id=:producto";
 		
 		
@@ -645,6 +648,8 @@ class Productos
 		$statement->bindParam(':precio_publico_min', $price_public_min, PDO::PARAM_STR);
 		$statement->bindParam(':producto_price_public_discount', $price_public_discount, PDO::PARAM_STR);
 		$statement->bindParam(':producto_price_min_public_percent', $params['precioPMM'], PDO::PARAM_STR);
+		$statement->bindParam(':minimo_stock', $params['minimoA'], PDO::PARAM_STR);
+		$statement->bindParam(':maximo_stock', $params['maximoA'], PDO::PARAM_STR);
 		$statement->bindParam(':proveedor', $params['proveedor'], PDO::PARAM_STR);
 		$statement->bindParam(':color', $params['color'], PDO::PARAM_STR);
 		$statement->bindParam(':material', $params['material'], PDO::PARAM_STR);
@@ -945,7 +950,8 @@ class Productos
 				WHEN 'V' THEN 'Producto Unitario'
 				END AS producto_type_name,producto_type,
 				producto_conjunto,
-				producto_description_corta,producto_description
+				producto_description_corta,producto_description,
+				minimo_stock,maximo_stock
 				FROM productos p
 				WHERE producto_type IN('U','P')
 				$where";

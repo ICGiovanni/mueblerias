@@ -149,6 +149,18 @@ $(document).ready(function()
 			$("#precioU").val('');
 			$("#precioU").focus();		
 		}
+		else if($("#minimoA").val()=='' && (tipo_producto=='U' || tipo_producto=='V'))
+		{
+			toastr.error('Debe de agregar el Mínimo en almacen');
+			$("#minimoA").val('');
+			$("#minimoA").focus();		
+		}
+		else if($("#maximoA").val()=='' && (tipo_producto=='U' || tipo_producto=='V'))
+		{
+			toastr.error('Debe de agregar el Maximo en almacen');
+			$("#maximoA").val('');
+			$("#maximoA").focus();		
+		}
 		else if($('#conjunto').is(":checked") && bandera==false)
         {
 			toastr.error('Debe de agregar un producto para armar el Conjunto');
@@ -359,6 +371,18 @@ $(document).ready(function()
 			toastr.error('Debe de agregar el Precio P\u00FAblico');
 			$("#precioU").val('');
 			$("#precioU").focus();		
+		}
+		else if($("#minimoA").val()=='' && (tipo_producto=='U' || tipo_producto=='V'))
+		{
+			toastr.error('Debe de agregar el Mínimo en almacen');
+			$("#minimoA").val('');
+			$("#minimoA").focus();		
+		}
+		else if($("#maximoA").val()=='' && (tipo_producto=='U' || tipo_producto=='V'))
+		{
+			toastr.error('Debe de agregar el Maximo en almacen');
+			$("#maximoA").val('');
+			$("#maximoA").focus();		
 		}
 		else if($('#conjunto').is(":checked") && bandera==false)
         {
