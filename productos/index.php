@@ -274,9 +274,14 @@ cursor: default;
                     		$stock=$inventarios->GetStockbySucursal($producto_id);
                     	}
                     	
-                    	if($stock<=$minimo_stock)
+                    	
+                    	if($stock==$minimo_stock)
                     	{
                     		$background="#ed5565";
+                    	}
+                    	else if($stock<$minimo_stock)
+                    	{
+                    		$background="#f8ac59";
                     	}
                     	else if($stock>=$maximo_stock)
                     	{
