@@ -237,6 +237,18 @@ class Login {
             return(!empty($result))?$result:false;
             
         }
+
+         public function getSucursal($id){
+            
+            $sql = "SELECT sucursal_name FROM inv_sucursales where sucursal_id='".$id."'";
+            $statement = $this->connect->prepare($sql);                   
+
+            $statement->execute();
+            $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+            
+            return(!empty($result))?$result[0]['sucursal_name']:false;
+            
+        }
 }
 
 ?>

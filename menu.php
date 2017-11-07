@@ -2,6 +2,17 @@
 if (!isset($_SESSION)) {
     session_start();
 }
+
+
+require_once($_SERVER["REDIRECT_PATH_CONFIG"].'ventas/models/class.Ventas.php');
+$instVentas = new Ventas();
+
+$numVentas = count($instVentas->obtenerVentas());
+$numVentasEntregadas = count($instVentas->obtenerVentas(1));
+
+$numApartados = count($instVentas->obtenerApartados());
+$numApartadosVencidos = count($instVentas->obtenerApartados(0,0));
+
 ?>
 
 <div id="wrapper">
@@ -12,11 +23,11 @@ if (!isset($_SESSION)) {
                     <div class="dropdown profile-element">
                         <img alt="image" class="img-circle" src="<?php echo $raizProy.$_SESSION['login_session']['url_image']; ?>" height="50px" style="background-color: #FFF"/>
                         <span class="clear">
-                                <span class="block m-t-xs"> 
-                                    <strong class="font-bold"><?php echo $_SESSION['login_session']['firstName']."&nbsp".$_SESSION['login_session']['lastName'];?></strong>
-                                </span> 
-                                <span class="text-muted text-xs block"><?php echo $_SESSION['login_session']['profile_name']; ?></span> 
-                            </span>
+                            <span class="block m-t-xs"> 
+                                <strong class="font-bold"><?php echo $_SESSION['login_session']['firstName']."&nbsp".$_SESSION['login_session']['lastName'];?></strong>
+                            </span> 
+                            <span class="text-muted text-xs block"><?php echo $_SESSION['login_session']['profile_name']; ?></span> 
+                        </span>
                     </div>
                     <div class="logo-element">
                         <img src="<?php echo $raizProy?>img/logo_globmint.png" class="img-responsive" />
@@ -126,15 +137,15 @@ if (!isset($_SESSION)) {
                         <li class="<?php if ( stristr($_SERVER['SCRIPT_NAME'],'/ventas/listaVentasEntregadas.php') || stristr($_SERVER['SCRIPT_NAME'],'/ventas/listaVentasPorEntregar.php')){ echo 'active';}?>">
                             <a href="<?php echo $ruta.'ventas/'?>" >Lista de ventas<span class="fa arrow"></span></a>
                             <ul class="nav nav-third-level" >
-                                <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/ventas/listaVentasPorEntregar.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'ventas/listaVentasPorEntregar.php'?>" >Por Entregar</a></li>
-                                <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/ventas/listaVentasEntregadas.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'ventas/listaVentasEntregadas.php'?>" >Entregadas</a></li>
+                                <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/ventas/listaVentasPorEntregar.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'ventas/listaVentasPorEntregar.php'?>" >Por Entregar <span class="label label-danger pull-right"><?php echo $numVentas?></span></a></li>
+                                <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/ventas/listaVentasEntregadas.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'ventas/listaVentasEntregadas.php'?>" >Entregadas <span class="label label-primary pull-right"><?php echo $numVentasEntregadas?></span></a></li>
                             </ul>
                         </li>
                         <li class="<?php if ( stristr($_SERVER['SCRIPT_NAME'],'/ventas/listaApartadosVigentes.php') || stristr($_SERVER['SCRIPT_NAME'],'/ventas/listaApartadosVencidos.php')){ echo 'active';}?>">
                             <a href="<?php echo $ruta.'ventas/'?>" >Lista de apartados<span class="fa arrow"></span></a>
                             <ul class="nav nav-third-level" >
-                                <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/ventas/listaApartadosVigentes.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'ventas/listaApartadosVigentes.php'?>" >Vigentes</a></li>
-                                <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/ventas/listaApartadosVencidos.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'ventas/listaApartadosVencidos.php'?>" >Vencidos</a></li>
+                                <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/ventas/listaApartadosVigentes.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'ventas/listaApartadosVigentes.php'?>" >Vigentes <span class="label label-primary pull-right"><?php echo $numApartados?></span></a></li>
+                                <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/ventas/listaApartadosVencidos.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'ventas/listaApartadosVencidos.php'?>" >Vencidos <span class="label label-danger pull-right"><?php echo $numApartadosVencidos?></span></a></li>
                             </ul>
                         </li>
                     </ul>
@@ -172,7 +183,7 @@ if (!isset($_SESSION)) {
                 </div>
                 <ul class="nav navbar-top-links navbar-right">
                     <li>
-                        <span class="m-r-sm text-muted welcome-message">Bienvenido a Globmint.</span>
+                        <span class="m-r-sm text-muted welcome-message">Bienvenido a Globmint. Sucursal &nbsp;<?php echo $_SESSION['login_session']['sucursal_name']; ?></span>
                     </li>
                     <li class="dropdown">
                         <a class="dropdown-toggle count-info"  href="<?php echo $ruta.'proveedores/grid.php'?>">

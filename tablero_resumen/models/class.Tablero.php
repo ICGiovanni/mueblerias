@@ -30,5 +30,22 @@ class Tablero
 
     }
 
+    public function getInventarioSucursal($sucursal_id=0){        
+
+        $sql="  SELECT * FROM inventario_productos 
+                LEFT JOIN inv_sucursales USING (sucursal_id)
+                LEFT JOIN productos USING (producto_id)";
+
+        if($sucursal_id!=0){
+            $sql .= ' WHERE sucursal_id = '.$sucursal_id;
+        }
+
+        $statement=$this->connect->prepare($sql);
+
+        $statement->execute();
+        $result=$statement->fetchAll(PDO::FETCH_ASSOC);
+
+        return $result;
+    }
 
 }

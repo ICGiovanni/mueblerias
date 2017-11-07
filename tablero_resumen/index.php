@@ -15,7 +15,7 @@ $insLogin = new Login();
 //por default la fecha es la del dia de ejecucion
 $fecha_inicio = date('d/m/Y');
 $fecha_final = date('d/m/Y');
-
+$sucursal_id = 0;
 //si se envian las fechas de inicio y final se toman como intervalo para el reporte
 if($_POST){
     if(isset($_POST['fecha_inicio'])){
@@ -24,6 +24,12 @@ if($_POST){
     if(isset($_POST['fecha_final'])){
         $fecha_final = $_POST['fecha_final'];
     }
+
+    if(isset($_POST['sucursal_id']) && $_POST['sucursal_id']>0){
+      $sucursal_id = $_POST['sucursal_id'];
+    }
+
+
 }
 
 
@@ -156,7 +162,12 @@ $sucursales = $insLogin->getSucursales();
                               if (is_array($sucursales) && count($sucursales) > 0) {
                                   echo "<option value='0'>Selecciona una sucursal</option>";
                                   foreach ($sucursales as $sucursal) {
-                                      echo "<option value='" . $sucursal['sucursal_id'] . "'>" . $sucursal['sucursal_name'] . "</option>";
+                                      $selected = '';
+                                      if($sucursal_id == $sucursal['sucursal_id']){
+                                        $selected = 'selected = "selected"';
+                                      }
+
+                                      echo "<option value='" . $sucursal['sucursal_id'] . "' ".$selected.">" . $sucursal['sucursal_name'] . "</option>";
                                   }
                               } else {
                                   echo "<option value='0'>Aún no se registran sucursales, contacte al administrador</option>";
@@ -203,7 +214,7 @@ $sucursales = $insLogin->getSucursales();
                                 "<td>".$ingreso['venta_id']."</td>".
                                 "<td>".$ingreso['fecha_creacion']."</td>".
                                 "<td>".$ingreso['sucursal_id']."</td>".
-                                "<td>".$ingreso['costo_envio']."</td>".
+                                "<td style='text-align: right'>$".number_format($ingreso['costo_envio'],2,'.',',')."</td>".
                                 "<td>".$detalle."</td>".
                                 "<td>".$detalle_envio['fecha_hora_entrega']."</td>".
                              "</tr>";
@@ -212,6 +223,10 @@ $sucursales = $insLogin->getSucursales();
 
               ?>
               </tbody>
+
+              <tfoot>
+                  
+              </tfoot>  
             </table>
           </div>
         </div> 
@@ -230,32 +245,57 @@ $sucursales = $insLogin->getSucursales();
               <table class="table table-bordered dataTables-example">
               <thead class="th-green">
                 <tr>
-                  <th>#</th>
-                  <th>First Name</th>
-                  <th>Last Name</th>
-                  <th>Username</th>
+
+                  <th>SKU</th>
+                  <th>Modelo</th>
+                  <th>Sucursal</th>
+                  <th>Cantidad</th>                  
+                  <th>Precio Compra</th>
+                  <th>Subtotal Compra</th>
+                  <th>Precio Publico</th>                  
+                  <th>Subtotal Venta</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>1</td>
-                  <td>Mark</td>
-                  <td>Otto</td>
-                  <td>@mdo</td>
-                </tr>
-                <tr>
-                  <td>2</td>
-                  <td>Jacob</td>
-                  <td>Thornton</td>
-                  <td>@fat</td>
-                </tr>
-                <tr>
-                  <td>3</td>
-                  <td>Larry</td>
-                  <td>the Bird</td>
-                  <td>@twitter</td>
-                </tr>
+
+                <?php 
+
+                  $inventarioSucursal = $instTablero->getInventarioSucursal($sucursal_id);
+
+                  $totalPurchase = 0;
+                  $totalPublic = 0;  
+                  if(is_array($inventarioSucursal) && count($inventarioSucursal)>0){
+                    foreach($inventarioSucursal as $invSuc){                      
+                      $pricePurch = ($invSuc['cantidad'] * $invSuc['producto_price_purchase']);
+                      $totalPurchase += $pricePurch;
+
+                      $pricePub = ($invSuc['cantidad']* $invSuc['producto_price_public']);
+                      $totalPublic += $pricePub;
+
+                      echo "<tr>
+                              <td>".$invSuc['producto_sku']."</td>
+                              <td>".$invSuc['producto_name']."</td>
+                              <td>".$invSuc['sucursal_name']."</td>
+                              <td>".$invSuc['cantidad']."</td>
+                              <td style='text-align: right'>".number_format($invSuc['producto_price_purchase'],2,'.',',')."</td>
+                              <td style='text-align: right'>".number_format($pricePurch,2,'.',',')."</td>
+                              <td style='text-align: right'>".number_format($invSuc['producto_price_public'],2,'.',',')."</td>
+                              <td style='text-align: right'>".number_format($pricePub,2,'.',',')."</td>
+                            </tr>";  
+                    }
+                    
+                  }                  
+                ?>                
               </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan='4'></td>
+                  <td>Total Precio Compra</td>
+                  <td style='text-align: right'>$ <?php echo number_format($totalPurchase,2,'.',',');?></td>
+                  <td>Total Precio Publico</td>
+                  <td style='text-align: right'>$ <?php echo number_format($totalPublic,2,'.',',');?></td>
+                </tr>
+              </tfoot>
             </table>
           </div>
 
