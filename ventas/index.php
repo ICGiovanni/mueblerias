@@ -95,8 +95,8 @@
                                                 <td class="desc">
                                                     <h3><a href="#" class="text-navy">'.$prod['Modelo'].' '.$prod['Color'].' '.$prod['Material'].' '.$prod['Proveedor'].'</a></h3>                                                                                                                      
                                                 </td>
-                                                <td><span id="labelprecio_'.$prod['ID'].'" style="display: none">'.number_format($prod['Precio'],2,'.',',').'</span><br />
-                                                    <input type="number" id="precio_'.$prod['ID'].'" value="'.$prod['Precio'].'" min="'.$prod['PrecioMin'].'" step="10" class="precio_change" /></td>
+                                                <td><span id="labelprecio_'.$prod['ID'].'" style="display: none">'.number_format($prod['Precio'],2,'.',',').'</span>
+                                                    <input type="number" id="precio_'.$prod['ID'].'" value="'.$prod['Precio'].'" min="'.$prod['PrecioMin'].'" step="10" class="form-control precio_change" /></td>
                                                 <td><input id="cantidad_'.$prod['ID'].'" type="number" class="form-control cantidad" placeholder="1" min="1" value='.$prod['Cantidad'].'></td>
                                                 <td><h4 id="subtotal_'.$prod['ID'].'" class="subtotal_sumar">'.number_format($prod['Subtotal'],2,'.',',').'</h4></td>
                                                 <td style="text-align: center"><button class="btn btn-danger btn-md removeCart " data-sku="'.$prod['SKU'].'" id="removeCart_'.$prod['ID'].'"><i class="fa fa-trash " role="button"></i></button></td>                                                                                    
@@ -212,7 +212,7 @@ $(document).ready(function()
                                             '<h3><a href="#" class="text-navy">'+name+' '+color+' '+material+' '+proveedor+'</a></h3>'+
                                         '</td>'+
                                         '<td><span id="labelprecio_'+id+'" style="display: none">'+addCommas(price)+'</span>'+
-                                        '<input type="number" id="precio_'+id+'" value="'+price+'" min="'+ price_min+'" step="10" class="precio_change" />'+
+                                        '<input type="number" id="precio_'+id+'" value="'+price+'" min="'+ price_min+'" step="10" class="form-control precio_change" />'+
                                         '</td>'+
                                         '<td><input id="cantidad_'+id+'" type="number" min="1" class="form-control cantidad" placeholder="1" value="1"></td>'+
                                         '<td><h4 id="subtotal_'+id+'" class="subtotal_sumar">'+addCommas(price)+'</h4></td>'+
@@ -290,12 +290,19 @@ $(document).ready(function()
         
     });
 
-    $(document).on("click", ".precio_change", function(e) {
+    $(document).on("click, change", ".precio_change", function(e) {
+
         var id = $(this).attr('id').substr(7, 3);
-        
-        $("#cantidad_"+id).click();
-        //alert(id);            
-        
+        var minValue = parseFloat($(this).prop('min'));
+        var precioValue = parseFloat($(this).val());
+
+        if(precioValue<minValue){
+            swal('Revisar',"Esta intentando colocar un precio por debajo del minimo permitido",'error');
+            $(this).val(minValue);
+            $("#cantidad_"+id).click();
+        }else{
+            $("#cantidad_"+id).click();
+        }
     });
 
     
@@ -384,7 +391,11 @@ function addCommas(nStr)
     return x1 + x2;
 }
 
+
 </script>
+<script src="<?php echo $raizProy?>js/plugins/sweetalert/sweetalert.min.js"></script>
+<link href="<?php echo $raizProy?>css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+
 <style type="text/css">
     .btn-danger {
         margin-top: -10px !important;

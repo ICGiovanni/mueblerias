@@ -183,7 +183,7 @@ $numApartadosVencidos = count($instVentas->obtenerApartados(0,0));
                 </div>
                 <ul class="nav navbar-top-links navbar-right">
                     <li>
-                        <span class="m-r-sm text-muted welcome-message">Bienvenido a Globmint. Sucursal &nbsp;<?php echo $_SESSION['login_session']['sucursal_name']; ?></span>
+                        <span class="m-r-sm text-muted welcome-message">Bienvenido a Globmint. &nbsp;<b><?php echo $_SESSION['login_session']['sucursal_name']; ?></b></span>
                     </li>
                     <li class="dropdown">
                         <a class="dropdown-toggle count-info"  href="<?php echo $ruta.'proveedores/grid.php'?>">
