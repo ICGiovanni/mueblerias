@@ -55,7 +55,7 @@ $sucursales = $insLogin->getSucursales();
     background-color: #C37D0E !important;
     border-color: #4cae4c !important;
   }
-  
+
   .btn-red{
     color: #fff !important;
     background-color: #C64333 !important;
@@ -63,7 +63,7 @@ $sucursales = $insLogin->getSucursales();
   }
 
   th{
-    color: #999 !important;   
+    color: #999 !important;
     font-weight: bold;
   }
 
@@ -87,32 +87,32 @@ $sucursales = $insLogin->getSucursales();
   .dataTables_filter input, .dataTables_paginate{
       color: #999;
   }
-  
+
   .dataTables_wrapper{
       background-color: #FFF;
       color: #999;
       padding-top: 10px;
-      
+
   }
-  
+
   .box-body{
       padding: 2px !important;
   }
-  
+
   .box-title{
       font-size: 15px !important;
   }
-    
+
     .dataTables_wrapper .table{
         margin-left: 1%;
         margin-right: 1%;
         width: 98%;
     }
-    
+
     .pagination{
         margin-right: 1% !important;
     }
-    
+
 </style>
 <link href="<?php echo $raizProy?>css/plugins/datapicker/datepicker3.css" rel="stylesheet">
 <link href="<?php echo $raizProy?>css/plugins/dataTables/datatables.min.css" rel="stylesheet">
@@ -134,9 +134,9 @@ $sucursales = $insLogin->getSucursales();
 
     <style scoped>
        @import "../css/AdminLTE.css";
-    </style>      
-    
-    <div class="row" >          
+    </style>
+
+    <div class="row" >
       <section class="col-lg-12 connectedSortable ibox">
           <div class="ibox">
               <div class="ibox-title">
@@ -174,7 +174,7 @@ $sucursales = $insLogin->getSucursales();
                               }
                               ?>
                             </select>
-                      </div>    
+                      </div>
                       <button class="btn btn-primary" type="submit">Filtar </button>
                   </form>
               </div>
@@ -182,7 +182,7 @@ $sucursales = $insLogin->getSucursales();
 
         <div class="box box-solid bg-light-blue-gradient">
 
-          <div class="box-header">    
+          <div class="box-header">
             <div class="pull-right box-tools">
               <button type="button" class="btn btn-primary btn-sm pull-right btn-blue" data-widget="collapse" data-toggle="tooltip" title="Collapse" style="margin-right: 5px;">
                     <i class="fa fa-minus"></i></button>
@@ -225,16 +225,16 @@ $sucursales = $insLogin->getSucursales();
               </tbody>
 
               <tfoot>
-                  
-              </tfoot>  
+
+              </tfoot>
             </table>
           </div>
-        </div> 
+        </div>
 
 
         <div class="box box-solid bg-green collapsed-box">
-          <div class="box-header">    
-            <div class="pull-right box-tools">                
+          <div class="box-header">
+            <div class="pull-right box-tools">
               <button type="button" class="btn btn-success btn-sm pull-right btn-green" data-widget="collapse" data-toggle="tooltip" title="Collapse" style="margin-right: 5px;">
                     <i class="fa fa-plus"></i></button>
             </div>
@@ -249,10 +249,10 @@ $sucursales = $insLogin->getSucursales();
                   <th>SKU</th>
                   <th>Modelo</th>
                   <th>Sucursal</th>
-                  <th>Cantidad</th>                  
-                  <th>Precio Publico</th>                  
-                  <th>Subtotal Venta</th>                                    
-                  <th>Precio Compra</th>                  
+                  <th>Cantidad</th>
+                  <th>Precio Publico</th>
+                  <th>Subtotal Venta</th>
+                  <th>Precio Compra</th>
                   <th>Subtotal Compra</th>
                   <th>Precio Compra Descuento</th>
                   <th>Subtotal Compra Descuento</th>
@@ -260,17 +260,17 @@ $sucursales = $insLogin->getSucursales();
               </thead>
               <tbody>
 
-                <?php 
+                <?php
 
                   $inventarioSucursal = $instTablero->getInventarioSucursal($sucursal_id);
 
                   $totalPurchase = 0;
-                  $totalPublic = 0;  
+                  $totalPublic = 0;
                   if(is_array($inventarioSucursal) && count($inventarioSucursal)>0){
-                    foreach($inventarioSucursal as $invSuc){                      
+                    foreach($inventarioSucursal as $invSuc){
                       $pricePurch = ($invSuc['cantidad'] * $invSuc['producto_price_purchase']);
                       $pricePurchDiscount = ($invSuc['cantidad'] * $invSuc['producto_price_purchase_discount']);
-                      
+
                       $totalPurchase += $pricePurch;
 
                       $pricePub = ($invSuc['cantidad']* $invSuc['producto_price_public']);
@@ -282,16 +282,16 @@ $sucursales = $insLogin->getSucursales();
                               <td>".$invSuc['sucursal_name']."</td>
                               <td>".$invSuc['cantidad']."</td>
                               <td style='text-align: right'>".number_format($invSuc['producto_price_public'],2,'.',',')."</td>
-                              <td style='text-align: right'>".number_format($pricePub,2,'.',',')."</td>                                                            
+                              <td style='text-align: right'>".number_format($pricePub,2,'.',',')."</td>
                               <td style='text-align: right'>".number_format($invSuc['producto_price_purchase'],2,'.',',')."</td>
                               <td style='text-align: right'>".number_format($pricePurch,2,'.',',')."</td>
                               <td style='text-align: right'>".number_format($invSuc['producto_price_purchase_discount'],2,'.',',')."</td>
-                              <td style='text-align: right'>".number_format($pricePurchDiscount,2,'.',',')."</td>                                                                                          
-                            </tr>";  
+                              <td style='text-align: right'>".number_format($pricePurchDiscount,2,'.',',')."</td>
+                            </tr>";
                     }
-                    
-                  }                  
-                ?>                
+
+                  }
+                ?>
               </tbody>
               <tfoot>
                 <tr>
@@ -305,11 +305,11 @@ $sucursales = $insLogin->getSucursales();
             </table>
           </div>
 
-        </div>  
+        </div>
 
         <div class="box box-solid bg-yellow collapsed-box collapsed-box">
-          <div class="box-header">    
-            <div class="pull-right box-tools">                
+          <div class="box-header">
+            <div class="pull-right box-tools">
               <button type="button" class="btn btn-primary btn-sm pull-right btn-blue btn-yellow" data-widget="collapse" data-toggle="tooltip" title="Collapse" style="margin-right: 5px;">
                     <i class="fa fa-plus"></i></button>
             </div>
@@ -349,12 +349,12 @@ $sucursales = $insLogin->getSucursales();
             </table>
           </div>
 
-        </div>  
+        </div>
 
 
         <div class="box box-solid bg-red collapsed-box collapsed-box">
-          <div class="box-header">    
-            <div class="pull-right box-tools">                
+          <div class="box-header">
+            <div class="pull-right box-tools">
               <button type="button" class="btn btn-primary btn-sm pull-right btn-red" data-widget="collapse" data-toggle="tooltip" title="Collapse" style="margin-right: 5px;">
                     <i class="fa fa-plus"></i></button>
             </div>
@@ -365,10 +365,10 @@ $sucursales = $insLogin->getSucursales();
               <table class="table table-bordered dataTables-example">
               <thead class="th-red">
                 <tr>
-                  <th>#</th>
-                  <th>First Name</th>
-                  <th>Last Name</th>
-                  <th>Username</th>
+                  <th>ID</th>
+                  <th>Tipo de Movimiento</th>
+                  <th>Fecha</th>
+                  <th>Monto</th>
                 </tr>
               </thead>
               <tbody>
@@ -394,12 +394,12 @@ $sucursales = $insLogin->getSucursales();
             </table>
           </div>
 
-        </div> 
+        </div>
 
 
         <div class="box box-solid bg-light-blue-gradient collapsed-box">
-          <div class="box-header">    
-            <div class="pull-right box-tools">                
+          <div class="box-header">
+            <div class="pull-right box-tools">
               <button type="button" class="btn btn-primary btn-sm pull-right btn-blue" data-widget="collapse" data-toggle="tooltip" title="Collapse" style="margin-right: 5px;">
                     <i class="fa fa-plus"></i></button>
             </div>
@@ -439,11 +439,11 @@ $sucursales = $insLogin->getSucursales();
             </table>
           </div>
 
-        </div>  
+        </div>
 
         <div class="box box-solid bg-green collapsed-box">
-          <div class="box-header">    
-            <div class="pull-right box-tools">                
+          <div class="box-header">
+            <div class="pull-right box-tools">
               <button type="button" class="btn btn-primary btn-sm pull-right btn-green" data-widget="collapse" data-toggle="tooltip" title="Collapse" style="margin-right: 5px;">
                     <i class="fa fa-plus"></i></button>
             </div>
@@ -483,11 +483,11 @@ $sucursales = $insLogin->getSucursales();
             </table>
           </div>
 
-        </div>  
+        </div>
 
       </section>
     </div>
-    
+
     <div class="footer">
       <div class="pull-right">
             10GB of <strong>250GB</strong> Free.
@@ -548,5 +548,3 @@ $sucursales = $insLogin->getSucursales();
 
 
 </script>
-
-
