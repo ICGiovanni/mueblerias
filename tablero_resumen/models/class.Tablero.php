@@ -11,13 +11,13 @@ class Tablero
         $this->connect = $c->db;
     }
 
-    public function ingresosPorEnvio($fechaInicio, $fechaFinal){        
+    public function ingresosPorEnvio($fechaInicio, $fechaFinal){
 
-        $arr = explode('/', $fechaInicio);         
+        $arr = explode('/', $fechaInicio);
         $fechaInicio = $arr[2].'-'.$arr[1].'-'.$arr[0];
 
-        $arr2 = explode('/', $fechaFinal);                 
-        $fechaFinal = $arr2[2].'-'.$arr2[1].'-'.$arr2[0];        
+        $arr2 = explode('/', $fechaFinal);
+        $fechaFinal = $arr2[2].'-'.$arr2[1].'-'.$arr2[0];
 
         $sql="SELECT venta_id, fecha_creacion, costo_envio, detalle_envio, sucursal_id, fecha_entrega FROM ventas WHERE venta_flete_id != 0 AND fecha_creacion BETWEEN '".$fechaInicio." 00:00:00' AND '".$fechaFinal." 23:59:59'";
 
@@ -30,14 +30,31 @@ class Tablero
 
     }
 
-    public function getInventarioSucursal($sucursal_id=0){        
+    public function getInventarioSucursal($sucursal_id=0){
 
-        $sql="  SELECT * FROM inventario_productos 
+        $sql="  SELECT * FROM inventario_productos
                 LEFT JOIN inv_sucursales USING (sucursal_id)
                 LEFT JOIN productos USING (producto_id)";
 
         if($sucursal_id!=0){
             $sql .= ' WHERE sucursal_id = '.$sucursal_id;
+        }
+
+        $statement=$this->connect->prepare($sql);
+
+        $statement->execute();
+        $result=$statement->fetchAll(PDO::FETCH_ASSOC);
+
+        return $result;
+    }
+
+    public function getGastosVsIngresos($fechaInicio, $fechaFinal, $sucursal_id=0){
+        $sql = 'SELECT gastos_pagos_id, gastos_pagos_monto,gastos_pagos_fecha
+                FROM gastos_pagos
+                INNER JOIN gastos USING (gasto_id)
+                WHERE gastos_pagos_fecha BETWEEN \''.$fechaInicio.' 00:00:00\' AND \''.$fechaFinal.' 23:59:59\'';
+        if($sucursal_id!=0){
+            $sql .= ' AND sucursal_id = '.$sucursal_id;
         }
 
         $statement=$this->connect->prepare($sql);
