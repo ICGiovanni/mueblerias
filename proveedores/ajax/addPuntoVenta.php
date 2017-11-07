@@ -11,12 +11,15 @@ if(!isset($_SESSION['punto_venta'])){
 
 if($_POST){    
     extract($_POST);
+
+    print_r($_POST);
     
     $cant = 0;
     foreach($_SESSION['punto_venta']['Productos'] as $k => $product){                        
         if($product['SKU']==$sku){
             $cant++;
             $_SESSION['punto_venta']['Productos'][$k]['Cantidad'] = $cantidad;
+            $_SESSION['punto_venta']['Productos'][$k]['Precio'] = $precio;
             $_SESSION['punto_venta']['Productos'][$k]['Subtotal'] = $_SESSION['punto_venta']['Productos'][$k]['Cantidad'] * $precio;
         }
     }
@@ -32,6 +35,7 @@ if($_POST){
                     "Imagen"=>$imagen,
                     "Cantidad"=>$cantidad,
                     "Precio"=>$precio,
+                    "PrecioMin"=>$precio_min,
                     "Subtotal"=>($precio*$cantidad)
                 );
         $_SESSION['punto_venta']['Productos'][] = $producto;     

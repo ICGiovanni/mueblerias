@@ -87,7 +87,7 @@
                                 if(isset($puntoVenta) && is_array($puntoVenta['Productos']) && count($puntoVenta['Productos'])>0){
                                     foreach($puntoVenta['Productos'] as $prod){
                                         
-                                    
+                                                                    
                                     echo '  <tr id="row_'.$prod['ID'].'" data-sku="'.$prod['SKU'].'" data-modelo="'.$prod['Modelo'].'" data-imagen="'.$prod['Imagen'].'">
                                                 <td width="90">
                                                     <img src="'.$prod['Imagen'].'" height="80" width="80">
@@ -95,11 +95,11 @@
                                                 <td class="desc">
                                                     <h3><a href="#" class="text-navy">'.$prod['Modelo'].' '.$prod['Color'].' '.$prod['Material'].' '.$prod['Proveedor'].'</a></h3>                                                                                                                      
                                                 </td>
-                                                <td>$<span id="labelprecio_'.$prod['ID'].'">'.number_format($prod['Precio'],2,'.',',').'</span><br />
-                                                    <input type="number" id="precio_'.$prod['ID'].'" value="'.$prod['Precio'].'" min="'.$prod['Precio'].'" step="50" style="display: none" /></td>
+                                                <td><span id="labelprecio_'.$prod['ID'].'" style="display: none">'.number_format($prod['Precio'],2,'.',',').'</span><br />
+                                                    <input type="number" id="precio_'.$prod['ID'].'" value="'.$prod['Precio'].'" min="'.$prod['PrecioMin'].'" step="10" class="precio_change" /></td>
                                                 <td><input id="cantidad_'.$prod['ID'].'" type="number" class="form-control cantidad" placeholder="1" min="1" value='.$prod['Cantidad'].'></td>
                                                 <td><h4 id="subtotal_'.$prod['ID'].'" class="subtotal_sumar">'.number_format($prod['Subtotal'],2,'.',',').'</h4></td>
-                                                <td style="text-align: center"><button class="btn btn-danger btn-md removeCart " data-sku="'.$prod['SKU'].'" id="removeCart_'.$prod['ID'].'"><i class="fa fa-trash " role="button"></i></button></td>                                    
+                                                <td style="text-align: center"><button class="btn btn-danger btn-md removeCart " data-sku="'.$prod['SKU'].'" id="removeCart_'.$prod['ID'].'"><i class="fa fa-trash " role="button"></i></button></td>                                                                                    
                                             </tr>';
                                     }
                                 }else{
@@ -181,12 +181,13 @@ $(document).ready(function()
                     var material=$("#producto").getSelectedItemData().material_name; 
                     var imagen=$("#producto").getSelectedItemData().imagen;
                     var public_price=$("#producto").getSelectedItemData().producto_price_public;
-                    SelectedItemData(id,sku,name,imagen, public_price, proveedor, color, material);
+                    var public_price_min=$("#producto").getSelectedItemData().producto_price_public_min;
+                    SelectedItemData(id,sku,name,imagen, public_price, proveedor, color, material, public_price_min);
 		}
             }
 	};
 
-	var SelectedItemData=function(id,sku,name,imagen,price,proveedor,color,material)
+	var SelectedItemData=function(id,sku,name,imagen,price,proveedor,color,material, price_min)
 	{
 		var table='';
 
@@ -210,8 +211,8 @@ $(document).ready(function()
                                         '<td class="desc">'+
                                             '<h3><a href="#" class="text-navy">'+name+' '+color+' '+material+' '+proveedor+'</a></h3>'+
                                         '</td>'+
-                                        '<td>$ <span id="labelprecio_'+id+'">'+addCommas(price)+'</span>'+
-                                        '<input type="number" id="precio_'+id+'" value="'+price+'" min="'+price+'" step="50" style="display: none" />'+
+                                        '<td><span id="labelprecio_'+id+'" style="display: none">'+addCommas(price)+'</span>'+
+                                        '<input type="number" id="precio_'+id+'" value="'+price+'" min="'+ price_min+'" step="10" class="precio_change" />'+
                                         '</td>'+
                                         '<td><input id="cantidad_'+id+'" type="number" min="1" class="form-control cantidad" placeholder="1" value="1"></td>'+
                                         '<td><h4 id="subtotal_'+id+'" class="subtotal_sumar">'+addCommas(price)+'</h4></td>'+
@@ -224,7 +225,7 @@ $(document).ready(function()
 			$("#producto").val('');
 			$("#product_list").fadeIn();
                         
-                        saveCart(id, sku, name, 1, price,urlImage,proveedor,color,material);
+                        saveCart(id, sku, name, 1, price,urlImage,proveedor,color,material, price_min);
                     }else{
                         var cantInput = parseFloat($("#cantidad_"+id).val())+1;
                         $("#cantidad_"+id).val(cantInput);
@@ -288,9 +289,19 @@ $(document).ready(function()
         //});
         
     });
+
+    $(document).on("click", ".precio_change", function(e) {
+        var id = $(this).attr('id').substr(7, 3);
+        
+        $("#cantidad_"+id).click();
+        //alert(id);            
+        
+    });
+
+    
 });
 
-function saveCart(id, sku, modelo, cantidad, precio, imagen,proveedor,color,material){
+function saveCart(id, sku, modelo, cantidad, precio, imagen,proveedor,color,material,price_min){
 
     $.ajax({
         url: "<?php echo $raizProy?>proveedores/ajax/addPuntoVenta.php",
@@ -304,7 +315,8 @@ function saveCart(id, sku, modelo, cantidad, precio, imagen,proveedor,color,mate
             imagen : imagen,
             color : color,
             material: material,
-            proveedor: proveedor
+            proveedor: proveedor,
+            precio_min: price_min
         },
         success: function (response) {
                 

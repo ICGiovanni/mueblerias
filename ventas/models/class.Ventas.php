@@ -151,7 +151,7 @@ class Ventas {
             $sql .= " AND venta_id = ".$idVenta;
         }                                                
 
-        echo $sql;
+        //echo $sql;
         $statement=$this->connect->prepare($sql);        
 
         $statement->execute();

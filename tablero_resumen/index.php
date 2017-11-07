@@ -250,10 +250,12 @@ $sucursales = $insLogin->getSucursales();
                   <th>Modelo</th>
                   <th>Sucursal</th>
                   <th>Cantidad</th>                  
-                  <th>Precio Compra</th>
-                  <th>Subtotal Compra</th>
                   <th>Precio Publico</th>                  
-                  <th>Subtotal Venta</th>
+                  <th>Subtotal Venta</th>                                    
+                  <th>Precio Compra</th>                  
+                  <th>Subtotal Compra</th>
+                  <th>Precio Compra Descuento</th>
+                  <th>Subtotal Compra Descuento</th>
                 </tr>
               </thead>
               <tbody>
@@ -267,6 +269,8 @@ $sucursales = $insLogin->getSucursales();
                   if(is_array($inventarioSucursal) && count($inventarioSucursal)>0){
                     foreach($inventarioSucursal as $invSuc){                      
                       $pricePurch = ($invSuc['cantidad'] * $invSuc['producto_price_purchase']);
+                      $pricePurchDiscount = ($invSuc['cantidad'] * $invSuc['producto_price_purchase_discount']);
+                      
                       $totalPurchase += $pricePurch;
 
                       $pricePub = ($invSuc['cantidad']* $invSuc['producto_price_public']);
@@ -277,10 +281,12 @@ $sucursales = $insLogin->getSucursales();
                               <td>".$invSuc['producto_name']."</td>
                               <td>".$invSuc['sucursal_name']."</td>
                               <td>".$invSuc['cantidad']."</td>
+                              <td style='text-align: right'>".number_format($invSuc['producto_price_public'],2,'.',',')."</td>
+                              <td style='text-align: right'>".number_format($pricePub,2,'.',',')."</td>                                                            
                               <td style='text-align: right'>".number_format($invSuc['producto_price_purchase'],2,'.',',')."</td>
                               <td style='text-align: right'>".number_format($pricePurch,2,'.',',')."</td>
-                              <td style='text-align: right'>".number_format($invSuc['producto_price_public'],2,'.',',')."</td>
-                              <td style='text-align: right'>".number_format($pricePub,2,'.',',')."</td>
+                              <td style='text-align: right'>".number_format($invSuc['producto_price_purchase_discount'],2,'.',',')."</td>
+                              <td style='text-align: right'>".number_format($pricePurchDiscount,2,'.',',')."</td>                                                                                          
                             </tr>";  
                     }
                     
