@@ -127,12 +127,13 @@ $numApartadosVencidos = count($instVentas->obtenerApartados(0,0));
                         </li>
                     </ul>
                 </li>
-                <li class="<?php if (stristr($_SERVER['SCRIPT_NAME'],'/ventas/')){ echo 'active';}?>">
+                <li class="<?php if (stristr($_SERVER['SCRIPT_NAME'],'/ventas/') || stristr($_SERVER['SCRIPT_NAME'],'/punto_venta/corte_caja.php')){ echo 'active';}?>">
                     <a href="<?php echo $ruta.'ventas/'?>">
                         <i class="fa fa-shopping-cart"></i> <span class="nav-label">Ventas</span>
                     </a>
                     <ul class="nav nav-second-level">
                         <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/ventas/index.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'ventas/index.php'?>" >Nueva Venta</a></li>
+
 
                         <li class="<?php if ( stristr($_SERVER['SCRIPT_NAME'],'/ventas/listaVentasEntregadas.php') || stristr($_SERVER['SCRIPT_NAME'],'/ventas/listaVentasPorEntregar.php')){ echo 'active';}?>">
                             <a href="<?php echo $ruta.'ventas/'?>" >Lista de ventas<span class="fa arrow"></span></a>
@@ -148,6 +149,8 @@ $numApartadosVencidos = count($instVentas->obtenerApartados(0,0));
                                 <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/ventas/listaApartadosVencidos.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'ventas/listaApartadosVencidos.php'?>" >Vencidos <span class="label label-danger pull-right"><?php echo $numApartadosVencidos?></span></a></li>
                             </ul>
                         </li>
+
+                        <li class="<?php if ($_SERVER['SCRIPT_NAME'] == '/punto_venta/corte_caja.php'){ echo 'active';} ?>"><a href="<?php echo $ruta.'/punto_venta/corte_caja.php'?>" >Corte de Caja</a></li>
                     </ul>
                 </li>
                 <li class="<?php if (stristr($_SERVER['SCRIPT_NAME'],'/tablero_resumen/')){ echo 'active';}?>">

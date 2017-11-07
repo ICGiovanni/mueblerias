@@ -59,7 +59,7 @@ class Ventas {
             }
 
             $sql = "INSERT INTO ventas (venta_id, fecha_creacion, monto, sucursal_id, id_cliente, venta_flete_id, costo_envio, detalle_envio, cliente_direccion_id, email_facturacion, venta_estatus_id, venta_entrega, venta_tipo, factura_generada, fecha_entrega) 
-                        VALUES (0, NOW(), $total, 1, $clienteId, $dirEnvio, $costoEnvio, '".$detalle_envio."', $dirFactura, '".$emailFacturacion."', $status, $entregado, $tipoVenta, 0, '$fecha_entrega')";
+                        VALUES (0, NOW(), $total,".$infoVenta['login_session']['sucursal_id'].", $clienteId, $dirEnvio, $costoEnvio, '".$detalle_envio."', $dirFactura, '".$emailFacturacion."', $status, $entregado, $tipoVenta, 0, '$fecha_entrega')";
 
             $statement=$this->connect->prepare($sql);
 
