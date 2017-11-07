@@ -277,11 +277,11 @@ cursor: default;
                     	
                     	if($stock==$minimo_stock)
                     	{
-                    		$background="#ed5565";
+                    		$background="#f8ac59";
                     	}
                     	else if($stock<$minimo_stock)
                     	{
-                    		$background="#f8ac59";
+                    		$background="#ed5565";
                     	}
                     	else if($stock>=$maximo_stock)
                     	{
