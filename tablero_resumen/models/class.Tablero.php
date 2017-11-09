@@ -49,13 +49,32 @@ class Tablero
     }
 
     public function getGastosVsIngresos($fechaInicio, $fechaFinal, $sucursal_id=0){
-        $sql = 'SELECT gastos_pagos_id, gastos_pagos_monto,gastos_pagos_fecha
+
+      $arr = explode('/', $fechaInicio);
+      $fechaInicio = $arr[2].'-'.$arr[1].'-'.$arr[0];
+
+      $arr2 = explode('/', $fechaFinal);
+      $fechaFinal = $arr2[2].'-'.$arr2[1].'-'.$arr2[0];
+
+        $sql = "SELECT
+                  gastos_pagos_id as movimiento_id,
+                  gastos_pagos_monto as movimiento_monto,
+                  gastos_pagos_fecha as movimiento_fecha,
+                  'gasto' as movimiento_tipo
                 FROM gastos_pagos
-                INNER JOIN gastos USING (gasto_id)
-                WHERE gastos_pagos_fecha BETWEEN \''.$fechaInicio.' 00:00:00\' AND \''.$fechaFinal.' 23:59:59\'';
-        if($sucursal_id!=0){
-            $sql .= ' AND sucursal_id = '.$sucursal_id;
-        }
+                UNION
+                SELECT
+                    ingreso_id as movimiento_id,
+                    ingreso_monto as movimiento_monto,
+                    ingreso_fecha as movimiento_fecha,
+                    'ingreso' as movimiento_tipo"
+                ;
+        //echo $sql;
+
+      //  WHERE gastos_pagos_fecha BETWEEN \''.$fechaInicio.' 00:00:00\' AND \''.$fechaFinal.' 23:59:59\''
+      //  if($sucursal_id!=0){
+        //    $sql .= ' AND sucursal_id = '.$sucursal_id;
+        //}
 
         $statement=$this->connect->prepare($sql);
 

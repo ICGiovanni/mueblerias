@@ -372,24 +372,34 @@ $sucursales = $insLogin->getSucursales();
                 </tr>
               </thead>
               <tbody>
+
+                <?php
+                  $gastosIngresos = $instTablero->getGastosVsIngresos($fecha_inicio, $fecha_final);
+                  //print_r($gastosIngresos);
+
+                  if(count($gastosIngresos) >0 ){
+                    $totalGastos = 0;
+                      foreach($gastosIngresos as $rowIngresoGasto){
+
+                          echo "<tr>".
+                                  "<td>".$rowIngresoGasto['gastos_pagos_id']."</td>".
+                                  "<td>Gasto</td>".
+                                  "<td>".$rowIngresoGasto['gastos_pagos_fecha']."</td>".
+                                  "<td style='text-align: right; color:red;'>$".number_format($rowIngresoGasto['gastos_pagos_monto'],2,'.',',')."</td>".
+                               "</tr>";
+                        $totalGastos+=$rowIngresoGasto['gastos_pagos_monto'];
+                      }
+                  }
+
+
+                 ?>
                 <tr>
-                  <td>1</td>
-                  <td>Mark</td>
-                  <td>Otto</td>
-                  <td>@mdo</td>
+                  <td></td>
+                  <td></td>
+                  <td>Balance</td>
+                  <td style='text-align: right; color:red;'><?=number_format($totalGastos,2,'.',',')?></td>
                 </tr>
-                <tr>
-                  <td>2</td>
-                  <td>Jacob</td>
-                  <td>Thornton</td>
-                  <td>@fat</td>
-                </tr>
-                <tr>
-                  <td>3</td>
-                  <td>Larry</td>
-                  <td>the Bird</td>
-                  <td>@twitter</td>
-                </tr>
+
               </tbody>
             </table>
           </div>
