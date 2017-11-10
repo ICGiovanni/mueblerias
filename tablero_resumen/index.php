@@ -361,13 +361,13 @@ $sucursales = $insLogin->getSucursales();
             <i class="fa fa fa-th"></i>
             <h3 class="box-title">Corte Gastos / Ingresos</h3>
           </div>
-          <div class="box-body">
-              <table class="table table-bordered dataTables-example">
-              <thead class="th-red">
+          <div class="box-body table-responsive">
+              <table class="table table-striped table-bordered table-hover dataTables-example">
+              <thead class="">
                 <tr>
-                  <th>ID</th>
-                  <th>Tipo de Movimiento</th>
                   <th>Fecha</th>
+                  <th>Tipo de Movimiento</th>
+
                   <th>Monto</th>
                 </tr>
               </thead>
@@ -375,29 +375,41 @@ $sucursales = $insLogin->getSucursales();
 
                 <?php
                   $gastosIngresos = $instTablero->getGastosVsIngresos($fecha_inicio, $fecha_final);
-                  //print_r($gastosIngresos);
+                //print_r($gastosIngresos);
 
                   if(count($gastosIngresos) >0 ){
-                    $totalGastos = 0;
+                    $totalBalance = 0;
                       foreach($gastosIngresos as $rowIngresoGasto){
 
+
+                          if($rowIngresoGasto['movimiento_tipo'] == 'ingreso'){
+                            $totalBalance+=$rowIngresoGasto['movimiento_monto'];
+                            $color_mov = "green";
+                          } else {
+                            $totalBalance-=$rowIngresoGasto['movimiento_monto'];
+                            $color_mov = "red";
+                          }
                           echo "<tr>".
-                                  "<td>".$rowIngresoGasto['gastos_pagos_id']."</td>".
-                                  "<td>Gasto</td>".
-                                  "<td>".$rowIngresoGasto['gastos_pagos_fecha']."</td>".
-                                  "<td style='text-align: right; color:red;'>$".number_format($rowIngresoGasto['gastos_pagos_monto'],2,'.',',')."</td>".
+                                  "<td>".$rowIngresoGasto['movimiento_fecha']."</td>".
+                                  "<td>".$rowIngresoGasto['movimiento_tipo']."</td>".
+
+                                  "<td style='text-align: right; color:".$color_mov.";'>$".number_format($rowIngresoGasto['movimiento_monto'],2,'.',',')."</td>".
                                "</tr>";
-                        $totalGastos+=$rowIngresoGasto['gastos_pagos_monto'];
+
                       }
                   }
-
+                  if($totalBalance < 0){
+                    $color_bal = "red";
+                  } else {
+                    $color_bal = "green";
+                  }
 
                  ?>
                 <tr>
-                  <td></td>
+
                   <td></td>
                   <td>Balance</td>
-                  <td style='text-align: right; color:red;'><?=number_format($totalGastos,2,'.',',')?></td>
+                  <td style='text-align: right; color:<?=$color_bal?>;'>$<?=number_format($totalBalance,2,'.',',')?></td>
                 </tr>
 
               </tbody>

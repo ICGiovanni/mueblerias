@@ -67,8 +67,17 @@ class Tablero
                     ingreso_id as movimiento_id,
                     ingreso_monto as movimiento_monto,
                     ingreso_fecha as movimiento_fecha,
-                    'ingreso' as movimiento_tipo"
-                ;
+                    'ingreso' as movimiento_tipo
+                FROM ingresos
+                UNION
+                Select
+                  ventas_pagos_id as movimiento_id,
+                  monto as movimiento_monto,
+                  fecha as movimiento_fecha,
+                  'ingreso' as movimiento_tipo
+                FROM ventas_pagos
+
+                ORDER BY movimiento_fecha";
         //echo $sql;
 
       //  WHERE gastos_pagos_fecha BETWEEN \''.$fechaInicio.' 00:00:00\' AND \''.$fechaFinal.' 23:59:59\''
