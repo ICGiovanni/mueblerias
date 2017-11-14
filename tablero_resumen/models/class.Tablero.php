@@ -60,23 +60,30 @@ class Tablero
                   gastos_pagos_id as movimiento_id,
                   gastos_pagos_monto as movimiento_monto,
                   gastos_pagos_fecha as movimiento_fecha,
-                  'gasto' as movimiento_tipo
+                  'Gasto' as movimiento_tipo,
+                  sucursal_id as sucursal_id
                 FROM gastos_pagos
+                INNER JOIN gastos USING (gasto_id)
+                WHERE gastos_pagos_fecha BETWEEN '".$fechaInicio." 00:00:00' AND '".$fechaFinal." 00:00:00'
                 UNION
                 SELECT
                     ingreso_id as movimiento_id,
                     ingreso_monto as movimiento_monto,
                     ingreso_fecha as movimiento_fecha,
-                    'ingreso' as movimiento_tipo
+                    'Pago prestamo de nomina' as movimiento_tipo,
+                    '1' as sucursal_id
                 FROM ingresos
+                WHERE ingreso_fecha BETWEEN '".$fechaInicio." 00:00:00' AND '".$fechaFinal." 00:00:00'
                 UNION
-                Select
+                SELECT
                   ventas_pagos_id as movimiento_id,
-                  monto as movimiento_monto,
+                  ventas_pagos.monto as movimiento_monto,
                   fecha as movimiento_fecha,
-                  'ingreso' as movimiento_tipo
+                  'Venta' as movimiento_tipo,
+                  sucursal_id as sucursal_id
                 FROM ventas_pagos
-
+                INNER JOIN ventas USING (venta_id)
+                WHERE fecha BETWEEN '".$fechaInicio." 00:00:00' AND '".$fechaFinal." 00:00:00'
                 ORDER BY movimiento_fecha";
         //echo $sql;
 

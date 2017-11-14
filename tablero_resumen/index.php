@@ -8,6 +8,10 @@ require_once $pathProy.'/menu.php';
 
 
 require_once $_SERVER['REDIRECT_PATH_CONFIG'].'tablero_resumen/models/class.Tablero.php';
+require_once($_SERVER["REDIRECT_PATH_CONFIG"].'models/general/class.General.php');
+
+$objGeneral = new General();
+
 
 $instTablero = new Tablero();
 $insLogin = new Login();
@@ -365,9 +369,9 @@ $sucursales = $insLogin->getSucursales();
               <table class="table table-striped table-bordered table-hover dataTables-example">
               <thead class="">
                 <tr>
+                  <!-- <th>ID</th> -->
                   <th>Fecha</th>
                   <th>Tipo de Movimiento</th>
-
                   <th>Monto</th>
                 </tr>
               </thead>
@@ -379,10 +383,11 @@ $sucursales = $insLogin->getSucursales();
 
                   if(count($gastosIngresos) >0 ){
                     $totalBalance = 0;
+                    $i = 0;
                       foreach($gastosIngresos as $rowIngresoGasto){
 
 
-                          if($rowIngresoGasto['movimiento_tipo'] == 'ingreso'){
+                          if($rowIngresoGasto['movimiento_tipo'] == 'Pago prestamo de nomina' || $rowIngresoGasto['movimiento_tipo'] == 'Venta'){
                             $totalBalance+=$rowIngresoGasto['movimiento_monto'];
                             $color_mov = "green";
                           } else {
@@ -390,9 +395,9 @@ $sucursales = $insLogin->getSucursales();
                             $color_mov = "red";
                           }
                           echo "<tr>".
-                                  "<td>".$rowIngresoGasto['movimiento_fecha']."</td>".
-                                  "<td>".$rowIngresoGasto['movimiento_tipo']."</td>".
-
+                                  "<!-- <td>".$i++."</td> -->".
+                                  "<td>".$objGeneral->getDate($rowIngresoGasto['movimiento_fecha'])."</td>".
+                                  "<td style='color:".$color_mov.";'>".$rowIngresoGasto['movimiento_tipo']."</td>".
                                   "<td style='text-align: right; color:".$color_mov.";'>$".number_format($rowIngresoGasto['movimiento_monto'],2,'.',',')."</td>".
                                "</tr>";
 
@@ -406,9 +411,9 @@ $sucursales = $insLogin->getSucursales();
 
                  ?>
                 <tr>
-
-                  <td></td>
-                  <td>Balance</td>
+<!-- <td ></td> -->
+                  <td ></td>
+<td><b>BALANCE</b></td>
                   <td style='text-align: right; color:<?=$color_bal?>;'>$<?=number_format($totalBalance,2,'.',',')?></td>
                 </tr>
 
