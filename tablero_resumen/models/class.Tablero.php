@@ -48,7 +48,7 @@ class Tablero
         return $result;
     }
 
-    public function getGastosVsIngresos($fechaInicio, $fechaFinal, $sucursal_id=0){
+    public function getGastosVsIngresos($fechaInicio, $fechaFinal, $sucursal_id){
 
       $arr = explode('/', $fechaInicio);
       $fechaInicio = $arr[2].'-'.$arr[1].'-'.$arr[0];
@@ -56,41 +56,56 @@ class Tablero
       $arr2 = explode('/', $fechaFinal);
       $fechaFinal = $arr2[2].'-'.$arr2[1].'-'.$arr2[0];
 
+      $if_sucursal = "";
+      if($sucursal_id!=0){
+          $if_sucursal = " AND sucursal_id = '".$sucursal_id."'";
+      }
+
         $sql = "SELECT
                   gastos_pagos_id as movimiento_id,
                   gastos_pagos_monto as movimiento_monto,
                   gastos_pagos_fecha as movimiento_fecha,
                   'Gasto' as movimiento_tipo,
-                  sucursal_id as sucursal_id
+                  gasto_categoria_desc as movimiento_concepto,
+                  sucursal_id,
+                  sucursal_name,
+                  sucursal_abrev
                 FROM gastos_pagos
                 INNER JOIN gastos USING (gasto_id)
-                WHERE gastos_pagos_fecha BETWEEN '".$fechaInicio." 00:00:00' AND '".$fechaFinal." 00:00:00'
+                INNER JOIN inv_sucursales USING (sucursal_id)
+                INNER JOIN gasto_categoria USING (gasto_categoria_id)
+                WHERE gastos_pagos_fecha BETWEEN '".$fechaInicio." 00:00:00' AND '".$fechaFinal." 00:00:00' ".$if_sucursal."
                 UNION
                 SELECT
                     ingreso_id as movimiento_id,
                     ingreso_monto as movimiento_monto,
                     ingreso_fecha as movimiento_fecha,
-                    'Pago prestamo de nomina' as movimiento_tipo,
-                    '1' as sucursal_id
+                    'Ingreso' as movimiento_tipo,
+                    'Pago prestamo de nomina' as movimiento_concepto,
+                    sucursal_id,
+                    sucursal_name,
+                    sucursal_abrev
                 FROM ingresos
-                WHERE ingreso_fecha BETWEEN '".$fechaInicio." 00:00:00' AND '".$fechaFinal." 00:00:00'
+                INNER JOIN ingreso_gasto USING (ingreso_id)
+                INNER JOIN gastos USING (gasto_id)
+                INNER JOIN inv_sucursales USING (sucursal_id)
+                WHERE ingreso_fecha BETWEEN '".$fechaInicio." 00:00:00' AND '".$fechaFinal." 00:00:00' ".$if_sucursal."
                 UNION
                 SELECT
                   ventas_pagos_id as movimiento_id,
                   ventas_pagos.monto as movimiento_monto,
                   fecha as movimiento_fecha,
-                  'Venta' as movimiento_tipo,
-                  sucursal_id as sucursal_id
+                  'Ingreso' as movimiento_tipo,
+                  'Venta' as movimiento_concepto,
+                  sucursal_id,
+                  sucursal_name,
+                  sucursal_abrev
                 FROM ventas_pagos
                 INNER JOIN ventas USING (venta_id)
-                WHERE fecha BETWEEN '".$fechaInicio." 00:00:00' AND '".$fechaFinal." 00:00:00'
+                INNER JOIN inv_sucursales USING (sucursal_id)
+                WHERE fecha BETWEEN '".$fechaInicio." 00:00:00' AND '".$fechaFinal." 00:00:00' ".$if_sucursal."
                 ORDER BY movimiento_fecha";
-        //echo $sql;
-
-      //  WHERE gastos_pagos_fecha BETWEEN \''.$fechaInicio.' 00:00:00\' AND \''.$fechaFinal.' 23:59:59\''
-      //  if($sucursal_id!=0){
-        //    $sql .= ' AND sucursal_id = '.$sucursal_id;
-        //}
+    //echo $sql;
 
         $statement=$this->connect->prepare($sql);
 

@@ -372,13 +372,15 @@ $sucursales = $insLogin->getSucursales();
                   <!-- <th>ID</th> -->
                   <th>Fecha</th>
                   <th>Tipo de Movimiento</th>
+                  <th>Concepto</th>
+                  <th>Sucursal</th>
                   <th>Monto</th>
                 </tr>
               </thead>
               <tbody>
 
                 <?php
-                  $gastosIngresos = $instTablero->getGastosVsIngresos($fecha_inicio, $fecha_final);
+                  $gastosIngresos = $instTablero->getGastosVsIngresos($fecha_inicio, $fecha_final, $sucursal_id);
                 //print_r($gastosIngresos);
 
                   if(count($gastosIngresos) >0 ){
@@ -387,7 +389,7 @@ $sucursales = $insLogin->getSucursales();
                       foreach($gastosIngresos as $rowIngresoGasto){
 
 
-                          if($rowIngresoGasto['movimiento_tipo'] == 'Pago prestamo de nomina' || $rowIngresoGasto['movimiento_tipo'] == 'Venta'){
+                          if($rowIngresoGasto['movimiento_tipo'] == 'Ingreso'){
                             $totalBalance+=$rowIngresoGasto['movimiento_monto'];
                             $color_mov = "green";
                           } else {
@@ -398,6 +400,8 @@ $sucursales = $insLogin->getSucursales();
                                   "<!-- <td>".$i++."</td> -->".
                                   "<td>".$objGeneral->getDate($rowIngresoGasto['movimiento_fecha'])."</td>".
                                   "<td style='color:".$color_mov.";'>".$rowIngresoGasto['movimiento_tipo']."</td>".
+                                  "<td>".ucwords(strtolower($rowIngresoGasto['movimiento_concepto']))."</td>".
+                                  "<td>".$rowIngresoGasto['sucursal_name']."</td>".
                                   "<td style='text-align: right; color:".$color_mov.";'>$".number_format($rowIngresoGasto['movimiento_monto'],2,'.',',')."</td>".
                                "</tr>";
 
@@ -411,9 +415,9 @@ $sucursales = $insLogin->getSucursales();
 
                  ?>
                 <tr>
-<!-- <td ></td> -->
-                  <td ></td>
-<td><b>BALANCE</b></td>
+
+                  <td ></td><td><b>BALANCE</b></td><td ></td><td ></td>
+
                   <td style='text-align: right; color:<?=$color_bal?>;'>$<?=number_format($totalBalance,2,'.',',')?></td>
                 </tr>
 
