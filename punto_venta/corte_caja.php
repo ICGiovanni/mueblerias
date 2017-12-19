@@ -32,7 +32,7 @@
         </div>
     </div>
 
-    <div class="wrapper wrapper-content animated fadeInRight">
+    
 	<div class="col-lg-11">
 			<div class="panel panel-default">
             <div class="panel-heading">
@@ -43,6 +43,7 @@
             <div class="form-group">
 
             <div class="col-sm-2"><button class="btn btn-primary btn-xs" id="guardar_corte_parcial" type="button">Realizar Corte Parcial</button></div>
+            <div class="col-sm-2"><button class="btn btn-primary btn-xs" id="guardar_monto_inicial" type="button" id="monto_inicial" data-toggle="modal" data-target="#montoInicial">Agregar Monto Inicial</button></div>
             </div>
 			
             </div>
@@ -73,7 +74,7 @@
                     	$tr.='<td>'.$usuario.'</td>';
                     	$tr.='<td>'.$fecha.'</td>';
                     	$tr.='<td align="center">';
-                    	$tr.='<div class="infont col-md-1 col-sm-1"><a href="get_cash_register.php?cp='.$caja_id.'" title="Imprimir" target="_blank"><i class="fa fa-print"></i></a></div><div class="infont col-md-1 col-sm-1"><a href="#" onClick="borrar_cliente('.$caja_id.');" title="Borrar"><i class="fa fa-trash-o"></i></a></div>';
+                    	$tr.='<div class="infont col-md-1 col-sm-1"><a href="get_cash_register.php?cp='.$caja_id.'" title="Imprimir" target="_blank"><i class="fa fa-print"></i></a></div><div class="infont col-md-1 col-sm-1"><a href="#" title="Borrar" class="deleteBoxCutPartial" data-id="'.$caja_id.'"><i class="fa fa-trash-o"></i></a></div>';
     					$tr.='</td>';
                     	$tr.='</tr>';
                     	echo $tr;
@@ -88,10 +89,91 @@
             </div>
 			</div>
             </div>
-	</div>
 	
 	
 	
+	<div class="col-lg-11">
+			<div class="panel panel-default">
+            <div class="panel-heading">
+            <label class="control-label">Corte de Caja Final</label>
+			</div>
+            <div class="panel-body">
+            	
+            <div class="form-group">
+
+            <div class="col-sm-2"><button class="btn btn-primary btn-xs" id="guardar_corte_final" type="button">Realizar Corte Final</button></div>
+            
+            </div>
+			
+            </div>
+            
+            <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover dataTables-example" id="tabla_corte_final">
+                    <thead>
+                    <tr>
+                    	<th align="center">ID</th>
+                        <th align="center">Usuario</th>
+                        <th align="center">Fecha</th>
+                        <th align="center">Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody id="caja_final">
+                    <?php
+                    $parcial=$caja->getCashRegisterDataFinal();
+                    
+                    foreach($parcial as $p)
+                    {
+                    	$caja_id=$p['corte_final_id'];
+                    	$usuario=$p['firstName']." ".$p["lastName"];
+                    	$fecha=$general->getDateSimple($p['date']);
+                    	
+                    	$tr="";
+                    	$tr.='<tr class="gradeX">';
+                    	$tr.='<td align="center">'.$caja_id.'</td>';
+                    	$tr.='<td>'.$usuario.'</td>';
+                    	$tr.='<td>'.$fecha.'</td>';
+                    	$tr.='<td align="center">';
+                    	$tr.='<div class="infont col-md-1 col-sm-1"><a href="get_cash_register_final.php?cf='.$caja_id.'" title="Imprimir" target="_blank"><i class="fa fa-print"></i></a></div><div class="infont col-md-1 col-sm-1"><a href="#" class="deleteBoxCutFinal" data-id="'.$caja_id.'" title="Borrar"><i class="fa fa-trash-o"></i></a></div>';
+    					$tr.='</td>';
+                    	$tr.='</tr>';
+                    	echo $tr;
+                    }
+                    
+                    ?>
+                    
+                    </tbody>
+                    </table>
+
+            
+            </div>
+			</div>
+            </div>
+	
+	
+	
+	<div class="modal fade" id="montoInicial" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Monto Inicial</h4>
+        </div>
+        <div class="modal-body">
+        <div class="wrapper wrapper-content animated fadeInRight">
+          <label class="col-sm-2 control-label">Monto</label>
+			<div class="col-sm-4" ><input type="text" class="form-control" id="monto" name="monto" onkeypress="return validateCantidad(event)" onkeyup="run(this)"></div>            
+           </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger btn-xs" data-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-primary btn-xs" data-dismiss="modal" id="guardarMonto">Guardar</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
 	
 	
 	

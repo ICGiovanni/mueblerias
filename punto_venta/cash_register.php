@@ -12,5 +12,20 @@ if($type=='P')
 }
 else if($type=='F')
 {
-	
+	$caja->CashRegisterFinal();
+}
+else if($type=='M')
+{
+	$mount=$_REQUEST['m'];
+	$caja->CashRegisterMountInit($mount);
+}
+else if($type=='DP')
+{
+	$corte_parcial_id=$_REQUEST['cp'];
+	$caja->DeleteBoxCutPartial($corte_parcial_id);
+}
+else if($type=='DF')
+{
+	$corte_final_id=$_REQUEST['cf'];
+	$caja->DeleteBoxCutFinal($corte_final_id);
 }

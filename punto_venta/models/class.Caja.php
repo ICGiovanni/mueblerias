@@ -5,6 +5,7 @@ class Caja
 {
 	private $connect;
 	private $login_session;
+	private $sucursal_id;
 	
 	function __construct()
 	{
@@ -14,27 +15,52 @@ class Caja
 		if(isset($_SESSION['login_session']))
 		{
 			$this->login_session = $_SESSION['login_session'];
+			$this->sucursal_id=$_SESSION['login_session']['sucursal_id'];
 		}
 		else
 		{
 			$this->login_session['login_id']=1;
+			$this->sucursal_id=1;
 		}
+	}
+	
+	public function CashRegisterMountInit($mount)
+	{
+		$user_id=$this->login_session['login_id'];
+		$date=date("Y-m-d h:i:s");
+		$sucursal_id=$this->sucursal_id;
+		
+		$sql="INSERT INTO montos_iniciales VALUES('',:monto_inicial,:user_id,:sucursal_id,:date)";
+		
+		$statement=$this->connect->prepare($sql);
+		
+		$statement->bindParam(':monto_inicial', $mount, PDO::PARAM_STR);
+		$statement->bindParam(':user_id', $user_id, PDO::PARAM_STR);
+		$statement->bindParam(':sucursal_id', $sucursal_id, PDO::PARAM_STR);
+		$statement->bindParam(':date', $date, PDO::PARAM_STR);
+		
+		$statement->execute();
+		$this->connect->lastInsertId();
+		
+		return true;
 	}
 	
 	public function CashRegisterPartial()
 	{
 		$user_id=$this->login_session['login_id'];
 		$date=date("Y-m-d h:i:s");
+		$sucursal_id=$this->sucursal_id;
 				
 		$sales=$this->getSales();
 		
 		if(count($sales))
 		{
-			$sql="INSERT INTO corte_caja_parcial VALUES('',:user_id,:date)";
+			$sql="INSERT INTO corte_caja_parcial VALUES('',:user_id,:sucursal_id,:date)";
 			
 			$statement=$this->connect->prepare($sql);
 			
 			$statement->bindParam(':user_id', $user_id, PDO::PARAM_STR);
+			$statement->bindParam(':sucursal_id', $sucursal_id, PDO::PARAM_STR);
 			$statement->bindParam(':date', $date, PDO::PARAM_STR);
 						
 			$statement->execute();
@@ -60,11 +86,99 @@ class Caja
 					$statement->execute();
 				}
 			}
+			
+			$mounts=$this->getMountsInit();
+			
+			foreach($mounts as $mount)
+			{
+				$mount_id=$mount['monto_inicial_id'];
+				
+				$sql="INSERT INTO montos_corte_caja VALUES(:montos_corte_caja,:corte_parcial_id)";
+				
+				$statement=$this->connect->prepare($sql);
+				
+				$statement->bindParam(':corte_parcial_id', $caja_parcial_id, PDO::PARAM_STR);
+				$statement->bindParam(':montos_corte_caja', $mount_id, PDO::PARAM_STR);
+				
+				$statement->execute();				
+			}
 		}
 		else
 		{
 			return false;	
 		}
+	}
+	
+	public function CashRegisterFinal()
+	{
+		$user_id=$this->login_session['login_id'];
+		$date=date("Y-m-d h:i:s");
+		$sucursal_id=$this->sucursal_id;
+		
+		$corte_parcial=$this->getBoxCut();
+		
+		if(count($corte_parcial))
+		{
+			$sql="INSERT INTO corte_caja_final VALUES('',:user_id,:sucursal_id,:date)";
+			
+			$statement=$this->connect->prepare($sql);
+			
+			$statement->bindParam(':user_id', $user_id, PDO::PARAM_STR);
+			$statement->bindParam(':sucursal_id', $sucursal_id, PDO::PARAM_STR);
+			$statement->bindParam(':date', $date, PDO::PARAM_STR);
+			
+			$statement->execute();
+			$caja_final_id=$this->connect->lastInsertId();
+			
+			foreach($corte_parcial as $cp)
+			{
+				$corte_parcial_id=$cp['corte_parcial_id'];
+				
+				$sql="INSERT INTO corte_caja_final_parcial VALUES(:caja_final_id,:corte_parcial_id)";
+				
+				$statement=$this->connect->prepare($sql);
+				
+				$statement->bindParam(':corte_parcial_id', $corte_parcial_id, PDO::PARAM_STR);
+				$statement->bindParam(':caja_final_id', $caja_final_id, PDO::PARAM_STR);
+				
+				$statement->execute();				
+			}
+		}
+		else
+		{
+			return false;
+		}
+		
+	}
+	
+	public function getBoxCut()
+	{
+		$sql="SELECT DISTINCT(corte_parcial_id)
+				FROM corte_caja_parcial cp
+				WHERE corte_parcial_id NOT IN (
+				SELECT corte_parcial_id
+				FROM corte_caja_final_parcial)";
+		
+		$statement=$this->connect->prepare($sql);
+		$statement->execute();
+		$result=$statement->fetchAll(PDO::FETCH_ASSOC);
+		
+		return $result;
+	}
+	
+	public function getMountsInit()
+	{
+		$sql="SELECT monto_inicial_id
+				FROM montos_iniciales mi
+				WHERE monto_inicial_id NOT IN(SELECT monto_inicial_id
+				FROM montos_corte_caja mc)
+				AND mi.sucursal_id='".$this->sucursal_id."'";
+		
+		$statement=$this->connect->prepare($sql);
+		$statement->execute();
+		$result=$statement->fetchAll(PDO::FETCH_ASSOC);
+		
+		return $result;
 	}
 	
 	public function getSales()
@@ -125,12 +239,30 @@ class Caja
 		return $result;
 	}
 	
+	public function getBoxCutPartial($corte_final_id)
+	{
+		$sql="SELECT corte_parcial_id,date,firstName,lastName
+				FROM corte_caja_parcial cp
+				INNER JOIN inv_login l ON l.login_id=cp.usuario_id
+				INNER JOIN corte_caja_final_parcial ccf USING(corte_parcial_id)
+				WHERE ccf.corte_final_id='$corte_final_id'";
+		
+		$statement=$this->connect->prepare($sql);
+		$statement->execute();
+		$result=$statement->fetchAll(PDO::FETCH_ASSOC);
+		
+		return $result;
+	}
+	
+	
+	
 	public function getCashRegisterData($corte_parcial_id="")
 	{
-		$where="";
+		$sucursal_id=$this->sucursal_id;
+		$where="WHERE cp.sucursal_id='$sucursal_id'";
 		if($corte_parcial_id)
 		{
-			$where=	"WHERE corte_parcial_id='$corte_parcial_id'";
+			$where=	"AND corte_parcial_id='$corte_parcial_id'";
 		}
 		
 		$sql="SELECT corte_parcial_id,date,firstName,lastName
@@ -138,6 +270,28 @@ class Caja
 				INNER JOIN inv_login l ON l.login_id=cp.usuario_id
 				$where
 				ORDER BY date";
+		
+		$statement=$this->connect->prepare($sql);
+		$statement->execute();
+		$result=$statement->fetchAll(PDO::FETCH_ASSOC);
+		
+		return $result;
+	}
+	
+	public function getCashRegisterDataFinal($corte_final_id="")
+	{
+		$sucursal_id=$this->sucursal_id;
+		$where="WHERE cf.sucursal_id='$sucursal_id'";
+		if($corte_final_id)
+		{
+			$where=	"AND corte_final_id='$corte_final_id'";
+		}
+		
+		$sql="SELECT corte_final_id,date,firstName,lastName
+		FROM corte_caja_final cf
+		INNER JOIN inv_login l ON l.login_id=cf.usuario_id
+		$where
+		ORDER BY date";
 		
 		$statement=$this->connect->prepare($sql);
 		$statement->execute();
@@ -166,5 +320,59 @@ class Caja
 		return $result;
 	}
 	
+	public function getMountsInitBoxCut($corte_parcial_id)
+	{
+		$sql="SELECT monto_inicial_id,monto_inicial
+				FROM montos_iniciales mi
+				INNER JOIN montos_corte_caja mc USING(monto_inicial_id)
+				WHERE mc.corte_parcial_id=$corte_parcial_id";
+		
+		$statement=$this->connect->prepare($sql);
+		$statement->execute();
+		$result=$statement->fetchAll(PDO::FETCH_ASSOC);
+		
+		return $result;
+	}
 	
+	public function DeleteBoxCutPartial($corte_parcial_id)
+	{
+		$sql="DELETE FROM corte_caja_final_parcial WHERE corte_parcial_id=:corte_parcial_id";
+		
+		$statement=$this->connect->prepare($sql);
+		$statement->bindParam(':corte_parcial_id', $corte_parcial_id, PDO::PARAM_STR);
+		
+		$statement->execute();
+		
+		$sql="DELETE FROM corte_parcial_ventas WHERE corte_parcial_id=:corte_parcial_id";
+		
+		$statement=$this->connect->prepare($sql);
+		$statement->bindParam(':corte_parcial_id', $corte_parcial_id, PDO::PARAM_STR);
+		
+		$statement->execute();
+		
+		$sql="DELETE FROM corte_caja_parcial WHERE corte_parcial_id=:corte_parcial_id";
+		
+		$statement=$this->connect->prepare($sql);
+		$statement->bindParam(':corte_parcial_id', $corte_parcial_id, PDO::PARAM_STR);
+		
+		$statement->execute();
+	}
+	
+	public function DeleteBoxCutFinal($corte_final_id)
+	{
+		$sql="DELETE FROM corte_caja_final_parcial WHERE corte_final_id=:corte_final_id";
+		
+		$statement=$this->connect->prepare($sql);
+		$statement->bindParam(':corte_final_id', $corte_final_id, PDO::PARAM_STR);
+		
+		$statement->execute();
+		
+		
+		$sql="DELETE FROM corte_caja_final WHERE corte_final_id=:corte_final_id";
+		
+		$statement=$this->connect->prepare($sql);
+		$statement->bindParam(':corte_final_id', $corte_final_id, PDO::PARAM_STR);
+		
+		$statement->execute();
+	}
 }
