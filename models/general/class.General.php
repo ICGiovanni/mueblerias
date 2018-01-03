@@ -265,4 +265,15 @@ class General
 				$end_num=ucfirst($tex).' pesos '.$float[1].'/100 M.N.';
 				return $end_num;
 	}
+
+	public function addZeros($monto)
+	{
+		$m=explode('.',$monto);
+		if(count($m)==1)
+		{
+			$monto.='.00';
+		}
+
+		return $monto;
+	}
 }

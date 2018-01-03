@@ -16,6 +16,10 @@ $caja_data=$caja->getCashRegisterData($corte_parcial_id);
 
 $usuario=$caja_data[0]['firstName']." ".$caja_data[0]["lastName"];
 $fecha=$general->getDateSimple($caja_data[0]["date"]);
+$f=explode(" ",$fecha);
+$fecha=$f[0];
+$hora=$f[1];
+$enviosT=0;
 
 $ventas=$caja->getCashRegister($corte_parcial_id);
 
@@ -40,53 +44,99 @@ Del. Cuahutemoc, Ciudad de Mexico<br>
 Tel. 5526 - 2734</td>';
 $html.='</tr>';
 $html.='</table>';
+
 $html.='-----------------------------------------------------------------------------------------';
 $html.='</div>';
 
 $html.='<table style="padding-right:8px;text-align:center;font-size: 8px;" width="100%" cellspacing="2">';
 $html.='<tr>';
-$html.='<td align="left" width="70%"><strong>Fecha:</strong> '.$fecha.'</td>';
-$html.='<td align="rigth" width="30%"></td>';
+$html.='<td align="left" width="50%"><strong>Fecha:</strong> '.$fecha.'</td>';
+$html.='<td align="rigth" width="50%"><strong>Hora: </strong>'.$hora.'</td>';
 $html.='</tr>';
 $html.='<tr>';
-$html.='<td align="left"><strong>No. Corte Parcial:</strong> '.$corte_parcial_id.'</td>';
+$html.='<td align="left"><strong>No. Corte:</strong> '.$corte_parcial_id.' (Parcial)</td>';
 $html.='<td></td>';
 $html.='</tr>';
 $html.='<tr>';
-$html.='<td align="left"><strong>Realizo:</strong> '.$usuario.'</td>';
+$html.='<td align="left"><strong>Vendedor:</strong> '.$usuario.'</td>';
 $html.='<td></td>';
 $html.='</tr>';
+$html.='<tr>';
+$html.='<td align="center" colspan="2"></td>';
+$html.='</tr>';
+$html.='<tr>';
+$html.='<td align="center" colspan="2">++++++++++++  <strong>CORTE PARCIAL</strong>  ++++++++++++</td>';
+$html.='</tr>';
+$html.='<tr>';
+$html.='<td align="center" colspan="2"></td>';
+$html.='</tr>';
+
 $html.='</table>';
 
 foreach($ventas as $v)
 {
 	$venta_id=$v['venta_id'];
 	
-	
-	$html.='<div style="text-align:left;font-size: 8px;">';
-	$html.='-----------------------------------------------------------------------------------------';
-	$html.='               <STRONG> Ticket No. '.$venta_id.'</STRONG> <br>';
-	$html.='</div>';
-	
-	$html.='<table style="padding-right:8px;font-size: 8px;" width="100%" cellspacing="2">';
-	$html.='<tr>
-	<th align="center" width="50%"><strong>T. DE PAGO</strong></th>
-	<th align="center" width="42%"><strong>MONTO</strong></th>';
-	
-	$html.='</tr>';
-	
+	$ds=$caja->getDataSale($venta_id);
 	$payments=$caja->getPaymentsData($corte_parcial_id, $venta_id);
-	$html.='<table style="padding-right:8px;font-size: 8px;" width="100%" cellspacing="2">';
+
+	$monto_venta=$general->addZeros($ds['monto']);
+	$monto_envio=$general->addZeros($ds['costo_envio']);
+	$nombre_cliente=$ds['cliente'];
+	$ticket=strtotime($ds['fecha_creacion']).'-'.$venta_id;
+	$subtotal=$general->addZeros($monto_venta+$monto_envio);
+
+	//$html.='<div style="text-align:left;font-size: 8px;">';
+	
+	$html.='<div style="font-size: 8px;border-top-style: solid;border-right-style: solid;border-bottom-style: solid;border-left-style: solid;text-align:center;"><strong>VENTA NORMAL</strong></div>';
+	$html.='<br>';
+	//$html.='</div>';
+
+	$html.='<table style="margin-bottom:10px;font-size: 8px;" width="100%" cellspacing="1">';
+	$html.='<thead >';
+	$html.='<tr style="text-align:center;font-size: 8px !important;">';
+	$html.='<td  style="border-top-width:1px; border-bottom-width:1px;text-align:center;border-style: dotted;">NO. TICKET</td>';
+	$html.='<td  style="border-top-width:1px; border-bottom-width:1px;text-align:center;">CLIENTE</td>';
+	$html.='<td  style="border-top-width:1px; border-bottom-width:1px;text-align:center;">DETALLE</td>';
+	$html.='<td  style="border-top-width:1px; border-bottom-width:1px;text-align:center;">IMPORTE</td>';
+	$html.='</tr>';
+	$html.='</thead>';
+	$html.='<tbody>';
+	$html.='<tr style="text-align:center;font-size: 7px !important;">';
+	$html.='<td>'.$ticket.'</td>';
+	$html.='<td>'.$nombre_cliente.'</td>';
+	$html.='<td style="text-align:right;">VENTA</td>';
+	$html.='<td style="text-align:right;">$ '.$monto_venta.'</td>';
+	$html.='</tr>';
+
+	if($monto_envio)
+	{
+		$html.='<tr style="text-align:center;font-size: 7px !important;">';
+		$html.='<td></td>';
+		$html.='<td></td>';
+		$html.='<td style="text-align:right;">ENVIO</td>';
+		$html.='<td style="text-align:right;">$ '.$monto_envio.'</td>';
+		$html.='</tr>';
+		$enviosT=$enviosT+$monto_envio;
+	}
+
+	$html.='<tr style="text-align:center;font-size: 7px !important;">';
+	$html.='<td></td>';
+	$html.='<td></td>';
+	$html.='<td style="text-align:right;"><strong>SUB-TOTAL</strong></td>';
+	$html.='<td style="text-align:right;"><strong>$ '.$subtotal.'</strong></td>';
+	$html.='</tr>';
+
+	$html.='<tr style="text-align:left;font-size: 7px !important;">';
+	$html.='<td colspan="2">Detalle de Pago:</td>';
+	$html.='<td style="text-align:right;"></td>';
+	$html.='<td style="text-align:right;"></td>';
+	$html.='</tr>';
+
 	foreach($payments as $p)
 	{
 		$forma_pago=$p["general_forma_de_pago_desc"];
-		$monto=$p["monto"];
-		
-		$m=explode('.',$monto);
-		if(count($m)==1)
-		{
-			$monto.='.00';
-		}
+		$monto=$general->addZeros($p["monto"]);
 		
 		if(isset($pagos[$forma_pago]))
 		{
@@ -97,15 +147,42 @@ foreach($ventas as $v)
 			$pagos[$forma_pago]=$monto;
 		}
 		
-		$html.='<tr>
-	<th align="center" width="50%">'.$forma_pago.'</th>
-	<th align="center" width="42%">'.$monto.'</th>';
+		$html.='<tr style="text-align:center;font-size: 7px !important;">';
+		$html.='<td></td>';
+		$html.='<td></td>';
+		$html.='<td style="text-align:right;">'.$forma_pago.'</td>';
+		$html.='<td style="text-align:right;">$ '.$monto.'</td>';
 		$html.='</tr>';
 	}
-	
+
+	$html.='<tr style="text-align:center;font-size: 7px !important;">';
+	$html.='<td></td>';
+	$html.='<td></td>';
+	$html.='<td style="text-align:right;"><strong>TOTAL</strong></td>';
+	$html.='<td style="text-align:right;">$ '.$subtotal.'</td>';
+	$html.='</tr>';
+
+	$html.='<tr>';
+	$html.='<td></td>';
+	$html.='<td></td>';
+	$html.='<td></td>';
+	$html.='<td></td>';
+	$html.='</tr>';
+
+	$html.='</tbody>';
 	$html.='</table>';
 }
 
+$html.='<table style="text-align:center;font-size: 8px !important;">';
+$html.='<tr>';
+$html.='<td style="border-top-width:1px; border-bottom-width:1px;border-right-width:1px;border-left-width:1px;text-align:center;"><strong>CORTE TOTAL</strong></td>';
+$html.='</tr>';
+$html.='<tr>';
+$html.='<td></td>';
+$html.='</tr>';
+$html.='<tr>';
+$html.='<td style="border-top-width:1px; border-bottom-width:1px;border-right-width:1px;border-left-width:1px;">';
+$html.='<table style="margin-bottom:10px;font-size: 7px;" width="100%" cellspacing="1">';
 $mounts=$caja->getMountsInitBoxCut($corte_parcial_id);
 
 foreach($mounts as $mount)
@@ -120,68 +197,139 @@ foreach($mounts as $mount)
 	}
 }
 
-
-$html.='<table style="padding-right:8px;font-size: 8px;" width="100%" cellspacing="2">';
+$html.='<tr>';
+$html.='<td></td>';
+$html.='<td></td>';
+$html.='<td></td>';
+$html.='<td></td>';
+$html.='</tr>';
 
 $total=0;
-foreach($pagos as $k=>$p)
+foreach($pagos as $k=>$pago)
 {
-	$total=$total+$p;
+	$pago=$general->addZeros($pago);
+	$tipo=$k;
+	$total=$total+$pago;
 	
-	$m=explode('.',$p);
-	if(count($m)==1)
-	{
-		$p.='.00';
-	}
-	
-	$html.='<tr><td></td><td></td><td align="right"><strong>'.$k.'</strong></td><td align="">$ '.$p.'</td></tr>';
+	$html.='<tr>';
+	$html.='<td></td>';
+	$html.='<td></td>';
+	$html.='<td style="text-align:right;">'.$tipo.'</td>';
+	$html.='<td style="text-align:right;">$ '.$pago.'</td>';
+	$html.='</tr>';
 }
 
-$m=explode('.',$total);
-if(count($m)==1)
+$total=$general->addZeros($total);
+
+$html.='<tr>';
+$html.='<td></td>';
+$html.='<td></td>';
+$html.='<td></td>';
+$html.='<td></td>';
+$html.='</tr>';
+
+$html.='<tr>';
+$html.='<td></td>';
+$html.='<td></td>';
+$html.='<td style="text-align:right;"><strong>SUB-TOTAL</strong></td>';
+$html.='<td style="text-align:right;">$ '.$total.'</td>';
+$html.='</tr>';
+
+$html.='<tr>';
+$html.='<td></td>';
+$html.='<td></td>';
+$html.='<td></td>';
+$html.='<td></td>';
+$html.='</tr>';
+
+$html.='<tr>';
+$html.='<td colspan="4">'.strtoupper($general->num2letras($total)).'</td>';
+$html.='</tr>';
+
+$html.='<tr>';
+$html.='<td></td>';
+$html.='<td></td>';
+$html.='<td></td>';
+$html.='<td></td>';
+$html.='</tr>';
+
+$html.='<tr>';
+$html.='<td><strong>TOTAL:</strong></td>';
+$html.='<td></td>';
+$html.='<td></td>';
+$html.='<td></td>';
+$html.='</tr>';
+
+$totalVentas=$general->addZeros($total-$enviosT);
+$enviosT=$general->addZeros($enviosT);
+
+
+$html.='<tr>';
+$html.='<td></td>';
+$html.='<td style="text-align:right;" colspan="2"><strong>TOTAL VENTAS</strong></td>';
+$html.='<td style="text-align:right;">$ '.$totalVentas.'</td>';
+$html.='</tr>';
+
+if($enviosT)
 {
-	$total.='.00';
+	$html.='<tr>';
+	$html.='<td></td>';
+	$html.='<td style="text-align:right;" colspan="2"><strong>TOTAL ENVIOS</strong></td>';
+	$html.='<td style="text-align:right;">$ '.$enviosT.'</td>';
+	$html.='</tr>';
 }
 
-$html.='<tr><td></td><td></td><td align="right"><strong></strong></td><td align=""></td></tr>';
-$html.='<tr><td></td><td></td><td align="right"><strong>Total</strong></td><td align="">$ '.$total.'</td></tr>';
+$html.='<tr>';
+$html.='<td></td>';
+$html.='<td></td>';
+$html.='<td></td>';
+$html.='<td></td>';
+$html.='</tr>';
+
+$html.='</table>';
+$html.='</td>';
+$html.='</tr>';
+$html.='</table>';
+$html.='<br>';
+
+$html.='<div style="font-size: 8px;text-align:left;">Observaciones:_____________________________________________________________________________________________________________________________________________________</div>';
+
+$html.='<br>';
+
+$html.='<table style="margin-bottom:10px;font-size: 8px;" width="100%" cellspacing="1">';
+$html.='<tr>';
+$html.='<td style="border-top-width:1px; border-bottom-width:1px;border-right-width:1px;border-left-width:1px;width:100%;height:45px;"></td>';
+$html.='</tr>';
+$html.='<tr>';
+$html.='<td style="width:100%;text-align:center;">Firma de Recibido</td>';
+$html.='</tr>';
+$html.='</table>';
+
+
 
 $width="72";
 $height="315";
 $custom_layout = array($width, $height);
 $pdf = new TCPDF('P', 'mm', $custom_layout, true, 'UTF-8', false);
-/*$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
-$width = 175;
-$height = 266;
-$orientation = ($height>$width) ? 'P' : 'L';
-$pdf->addFormat("custom", $width, $height);
-$pdf->reFormat("custom", $orientation);
-*/
 $pdf->SetCreator(PDF_CREATOR);
 $pdf->setPrintHeader(false);
 $pdf->setPrintFooter(false);
 
-//$pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
 
 $pdf->SetMargins(3,1,1,true);
-//$pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
-//$pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
 
 $pdf->SetAutoPageBreak(TRUE,0);
 
 $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
-
-//$pdf->SetFont('times', '', 8);
 
 $pdf->AddPage();
 
 $pdf->writeHTML($html, true, 0, true, 0);
 
 $js = 'print(true);';
-$pdf->IncludeJS($js);
+//$pdf->IncludeJS($js);
 
 $pdf->Output('ticket'.'.pdf', 'I');
-
 
 ?>

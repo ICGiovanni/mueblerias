@@ -200,6 +200,22 @@ class Caja
 		return $result;
 	}
 	
+	public function getDataSale($venta_id)
+	{
+		$sql="SELECT v.venta_id,v.monto,v.costo_envio,
+				CONCAT(c.nombre,' ',c.apellidoP) AS cliente,
+				fecha_creacion
+				FROM ventas v
+				INNER JOIN clientes c USING(id_cliente)
+				WHERE v.venta_id='$venta_id'";
+
+		$statement=$this->connect->prepare($sql);
+		$statement->execute();
+		$result=$statement->fetchAll(PDO::FETCH_ASSOC);
+		
+		return $result[0];
+	}
+
 	public function getPaymentsbySale($venta_id)
 	{
 		$sql="SELECT v.venta_id,ventas_pagos_id
