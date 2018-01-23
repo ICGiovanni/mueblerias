@@ -273,6 +273,10 @@ class General
 		{
 			$monto.='.00';
 		}
+		else
+		{
+			$monto=round($monto,2);
+		}
 
 		return $monto;
 	}

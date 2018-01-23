@@ -80,6 +80,13 @@ foreach($ventas as $v)
 	$ds=$caja->getDataSale($venta_id);
 	$payments=$caja->getPaymentsData($corte_parcial_id, $venta_id);
 
+	$detalle_envio='';
+	if($ds['detalle_envio'])
+	{
+		$detalle_envio=json_decode($ds['detalle_envio']);
+	}
+
+
 	$monto_venta=$general->addZeros($ds['monto']);
 	$monto_envio=$general->addZeros($ds['costo_envio']);
 	$nombre_cliente=$ds['cliente'];
@@ -161,6 +168,35 @@ foreach($ventas as $v)
 	$html.='<td style="text-align:right;"><strong>TOTAL</strong></td>';
 	$html.='<td style="text-align:right;">$ '.$subtotal.'</td>';
 	$html.='</tr>';
+
+	if($detalle_envio)
+	{
+		$html.='<tr>';
+		$html.='<td></td>';
+		$html.='<td></td>';
+		$html.='<td></td>';
+		$html.='<td></td>';
+		$html.='</tr>';
+		
+		$fecha_envio=$detalle_envio->{'fecha_hora_entrega'};
+		$seccion=$detalle_envio->{'select_zona_envio'};
+		$planta=$detalle_envio->{'select_planta'};
+		$planta_extra=$detalle_envio->{'select_planta_extra'};
+
+		if($planta_extra)
+		{
+			$planta.=' ';
+		}
+		else
+		{
+			$planta_extra='';
+		}
+
+
+		$html.='<tr>';
+		$html.='<td colspan="4"><strong>Envio: </strong>'.$fecha_envio.' '.$seccion.' '.$planta.' '.$planta_extra.'</td>';
+		$html.='</tr>';
+	}
 
 	$html.='<tr>';
 	$html.='<td></td>';

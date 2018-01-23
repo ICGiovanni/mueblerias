@@ -204,7 +204,7 @@ class Caja
 	{
 		$sql="SELECT v.venta_id,v.monto,v.costo_envio,
 				CONCAT(c.nombre,' ',c.apellidoP) AS cliente,
-				fecha_creacion
+				fecha_creacion,detalle_envio
 				FROM ventas v
 				INNER JOIN clientes c USING(id_cliente)
 				WHERE v.venta_id='$venta_id'";
