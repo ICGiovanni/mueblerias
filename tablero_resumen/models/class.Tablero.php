@@ -69,11 +69,13 @@ class Tablero
                   gasto_categoria_desc as movimiento_concepto,
                   sucursal_id,
                   sucursal_name,
-                  sucursal_abrev
+                  sucursal_abrev,
+                  gastos_pagos_forma_de_pago_desc as metodo_pago
                 FROM gastos_pagos
                 INNER JOIN gastos USING (gasto_id)
                 INNER JOIN inv_sucursales USING (sucursal_id)
                 INNER JOIN gasto_categoria USING (gasto_categoria_id)
+                INNER JOIN gastos_pagos_forma_de_pago USING (gastos_pagos_forma_de_pago_id)
                 WHERE gastos_pagos_fecha BETWEEN '".$fechaInicio." 00:00:00' AND '".$fechaFinal." 00:00:00' ".$if_sucursal."
                 UNION
                 SELECT
@@ -84,7 +86,8 @@ class Tablero
                     'Pago prestamo de nomina' as movimiento_concepto,
                     sucursal_id,
                     sucursal_name,
-                    sucursal_abrev
+                    sucursal_abrev,
+                    'Efectivo' as metodo_pago
                 FROM ingresos
                 INNER JOIN ingreso_gasto USING (ingreso_id)
                 INNER JOIN gastos USING (gasto_id)
@@ -99,10 +102,12 @@ class Tablero
                   'Venta' as movimiento_concepto,
                   sucursal_id,
                   sucursal_name,
-                  sucursal_abrev
+                  sucursal_abrev,
+                  general_forma_de_pago_desc as metodo_pago
                 FROM ventas_pagos
                 INNER JOIN ventas USING (venta_id)
                 INNER JOIN inv_sucursales USING (sucursal_id)
+                INNER JOIN general_formas_de_pago USING (general_forma_de_pago_id)
                 WHERE fecha BETWEEN '".$fechaInicio." 00:00:00' AND '".$fechaFinal." 00:00:00' ".$if_sucursal."
                 ORDER BY movimiento_fecha";
     //echo $sql;

@@ -374,6 +374,7 @@ $sucursales = $insLogin->getSucursales();
                   <th>Tipo de Movimiento</th>
                   <th>Concepto</th>
                   <th>Sucursal</th>
+									<th>Metodo pago</th>
                   <th>Monto</th>
                 </tr>
               </thead>
@@ -402,6 +403,7 @@ $sucursales = $insLogin->getSucursales();
                                   "<td style='color:".$color_mov.";'>".$rowIngresoGasto['movimiento_tipo']."</td>".
                                   "<td>".ucwords(strtolower($rowIngresoGasto['movimiento_concepto']))."</td>".
                                   "<td>".$rowIngresoGasto['sucursal_name']."</td>".
+																	"<td>".$rowIngresoGasto['metodo_pago']."</td>".
                                   "<td style='text-align: right; color:".$color_mov.";'>$".number_format($rowIngresoGasto['movimiento_monto'],2,'.',',')."</td>".
                                "</tr>";
 
@@ -416,7 +418,7 @@ $sucursales = $insLogin->getSucursales();
                  ?>
                 <tr>
 
-                  <td ></td><td><b>BALANCE</b></td><td ></td><td ></td>
+                  <td ></td><td><b>BALANCE</b></td><td ></td><td ></td><td ></td>
 
                   <td style='text-align: right; color:<?=$color_bal?>;'>$<?=number_format($totalBalance,2,'.',',')?></td>
                 </tr>
