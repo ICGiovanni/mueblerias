@@ -95,7 +95,7 @@ foreach($ventas as $v)
 
 	//$html.='<div style="text-align:left;font-size: 8px;">';
 	
-	$html.='<div style="font-size: 8px;border-top-style: solid;border-right-style: solid;border-bottom-style: solid;border-left-style: solid;text-align:center;"><strong>VENTA NORMAL</strong></div>';
+	/*$html.='<div style="font-size: 8px;border-top-style: solid;border-right-style: solid;border-bottom-style: solid;border-left-style: solid;text-align:center;"><strong>VENTA NORMAL</strong></div>';
 	$html.='<br>';
 	//$html.='</div>';
 
@@ -114,9 +114,9 @@ foreach($ventas as $v)
 	$html.='<td>'.$nombre_cliente.'</td>';
 	$html.='<td style="text-align:right;">VENTA</td>';
 	$html.='<td style="text-align:right;">$ '.$monto_venta.'</td>';
-	$html.='</tr>';
+	$html.='</tr>';*/
 
-	if($monto_envio)
+	/*if($monto_envio)
 	{
 		$html.='<tr style="text-align:center;font-size: 7px !important;">';
 		$html.='<td></td>';
@@ -138,7 +138,7 @@ foreach($ventas as $v)
 	$html.='<td colspan="2">Detalle de Pago:</td>';
 	$html.='<td style="text-align:right;"></td>';
 	$html.='<td style="text-align:right;"></td>';
-	$html.='</tr>';
+	$html.='</tr>';*/
 
 	foreach($payments as $p)
 	{
@@ -154,22 +154,22 @@ foreach($ventas as $v)
 			$pagos[$forma_pago]=$monto;
 		}
 		
-		$html.='<tr style="text-align:center;font-size: 7px !important;">';
+		/*$html.='<tr style="text-align:center;font-size: 7px !important;">';
 		$html.='<td></td>';
 		$html.='<td></td>';
 		$html.='<td style="text-align:right;">'.$forma_pago.'</td>';
 		$html.='<td style="text-align:right;">$ '.$monto.'</td>';
-		$html.='</tr>';
+		$html.='</tr>';*/
 	}
 
-	$html.='<tr style="text-align:center;font-size: 7px !important;">';
+	/*$html.='<tr style="text-align:center;font-size: 7px !important;">';
 	$html.='<td></td>';
 	$html.='<td></td>';
 	$html.='<td style="text-align:right;"><strong>TOTAL</strong></td>';
 	$html.='<td style="text-align:right;">$ '.$subtotal.'</td>';
-	$html.='</tr>';
+	$html.='</tr>';*/
 
-	if($detalle_envio)
+	/*if($detalle_envio)
 	{
 		$html.='<tr>';
 		$html.='<td></td>';
@@ -206,9 +206,9 @@ foreach($ventas as $v)
 	$html.='</tr>';
 
 	$html.='</tbody>';
-	$html.='</table>';
+	$html.='</table>';*/
 }
-
+/*
 $html.='<table style="text-align:center;font-size: 8px !important;">';
 $html.='<tr>';
 $html.='<td style="border-top-width:1px; border-bottom-width:1px;border-right-width:1px;border-left-width:1px;text-align:center;"><strong>CORTE TOTAL</strong></td>';
@@ -327,6 +327,61 @@ $html.='</td>';
 $html.='</tr>';
 $html.='</table>';
 $html.='<br>';
+*/
+//Incial el Corte Parcial
+
+$html.='<table style="margin-bottom:10px;font-size: 8px;" width="100%" cellspacing="1">';
+$html.='<thead >';
+$html.='<tr style="border-top-width:1px; border-bottom-width:1px;text-align:center;font-size: 8px !important;">';
+//$html.='<td  style="border-top-width:1px; border-bottom-width:1px;text-align:center;"></td>';
+$html.='<td  style="border-top-width:1px; border-bottom-width:1px;text-align:center;border-style: dotted;" colspan="2">CORTE PARCIAL</td>';
+$html.='<td  style="border-top-width:1px; border-bottom-width:1px;text-align:center;">DETALLE</td>';
+$html.='<td  style="border-top-width:1px; border-bottom-width:1px;text-align:center;">IMPORTE</td>';
+$html.='</tr>';
+$html.='</thead>';
+$html.='<tbody>';
+
+$mounts=$caja->getMountsInitBoxCut($corte_parcial_id);
+
+foreach($mounts as $mount)
+{
+	if(isset($pagos["Caja"]))
+	{
+		$pagos["Caja"]=$pagos["Caja"]+$mount["monto_inicial"];
+	}
+	else
+	{
+		$pagos["Caja"]=$mount["monto_inicial"];
+	}
+}
+
+$monto="";
+$totalC=0;
+foreach($pagos as $k=>$p)
+{
+	$totalC=$general->addZeros($totalC+$p);
+	$p=$general->addZeros($p);
+
+	$html.='<tr><td></td><td></td><td align="right"><strong>'.$k.'</strong></td><td align="right">$ '.$p.'</td></tr>';
+}
+
+$html.='<tr><td></td><td align="right" colspan="2"><strong>TOTAL A CUENTA:</strong></td><td align="right">$ '.$totalC.'</td></tr>';
+
+
+$html.='</tbody>';
+$html.='<tfoot>';
+$html.='<tr style="border-top-width:1px; border-bottom-width:1px;text-align:center;font-size: 8px !important;">';
+$html.='<td colspan="4" style="border-top-width:1px; border-bottom-width:1px;text-align:center;border-style: dotted;">';
+$html.=strtoupper($general->num2letras($totalC));
+$html.='</td>';
+$html.='</tr>';
+$html.='<tr>';
+$html.='<td>';
+$html.='</td>';
+$html.='</tr>';
+$html.='</tfoot>';
+$html.='</table>';
+
 
 $html.='<div style="font-size: 8px;text-align:left;">Observaciones:_____________________________________________________________________________________________________________________________________________________</div>';
 

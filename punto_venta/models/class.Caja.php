@@ -300,11 +300,13 @@ class Caja
 		$where="WHERE cf.sucursal_id='$sucursal_id'";
 		if($corte_final_id)
 		{
-			$where=	"AND corte_final_id='$corte_final_id'";
+			$where.=" AND corte_final_id='$corte_final_id'";
 		}
 		
-		$sql="SELECT corte_final_id,date,firstName,lastName
+		$sql="SELECT corte_final_id,date,firstName,lastName,
+		s.sucursal_id,sucursal_name
 		FROM corte_caja_final cf
+		INNER JOIN inv_sucursales s USING(sucursal_id)
 		INNER JOIN inv_login l ON l.login_id=cf.usuario_id
 		$where
 		ORDER BY date";

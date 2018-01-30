@@ -273,7 +273,7 @@ class General
 		{
 			$monto.='.00';
 		}
-		else
+		else if($m[1]>'0')
 		{
 			$monto=round($monto,2);
 		}
