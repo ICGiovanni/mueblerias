@@ -249,17 +249,31 @@
         </div>
         <div class="modal-body">
         <div class="wrapper wrapper-content animated fadeInRight">
-          <label class="col-sm-2 control-label">Monto</label>
-			<div class="col-sm-4" ><input type="text" class="form-control" id="monto" name="monto" onkeypress="return validateCantidad(event)" onkeyup="run(this)"></div>
-          
-          <label class="col-sm-2 control-label">Compras</label>
-			<div class="col-sm-4" ><input type="text" class="form-control" id="compras" name="compras" onkeypress="return validateNumber(event)" onkeyup="run(this)"></div>
-            
+        <div class="row">
+            <h4 class="modal-title">Criterio por Monto</h4><br>
+            <div class="col-lg-12">
+            <div class="row" style="margin-bottom:10px;">
+            <div class="form-group">
+              <label class="col-sm-2 control-label">Monto</label>
+    			<div class="col-sm-4" ><input type="text" class="form-control" id="monto" name="monto" onkeypress="return validateCantidad(event)" onkeyup="run(this)"></div>
+            </div>
+        </div>
+        <div class="row">
+            <h4 class="modal-title">Criterio por Compra</h4><br>
+            <div class="form-group">   
+              <label class="col-sm-2 control-label">Compras</label>
+    		  <div class="col-sm-4" ><input type="text" class="form-control" id="compras" name="compras" onkeypress="return validateNumber(event)" onkeyup="run(this)"></div>
+              <label class="col-sm-2 control-label">Monto Minimo</label>
+              <div class="col-sm-4" ><input type="text" class="form-control" id="compras_monto" name="compras_monto" onkeypress="return validateNumber(event)" onkeyup="run(this)"></div>
+            </div>
+        </div>
+               </div>
            </div>
+            </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-danger btn-xs" data-dismiss="modal">Cancelar</button>
-          <button type="button" class="btn btn-primary btn-xs" data-dismiss="modal" id="guardarRating">Guardar</button>
+          <button type="button" class="btn btn-primary btn-xs" id="guardarRating">Guardar</button>
         </div>
       </div>
       
@@ -268,11 +282,30 @@
 	
     <script src="<?php echo $raizProy?>js/plugins/dataTables/datatables.min.js"></script>
     <script src="<?php echo $raizProy?>js/plugins/sweetalert/sweetalert.min.js"></script>
+    <script src="<?php echo $raizProy?>js/plugins/toastr/toastr.min.js"></script>
 
 
     <!-- Page-Level Scripts -->
     <script>
         $(document).ready(function(){
+
+            toastr.options=
+            {
+                  "closeButton": true,
+                  "debug": false,
+                  "progressBar": true,
+                  "preventDuplicates": false,
+                  "positionClass": "toast-top-right",
+                  "onclick": null,
+                  "showDuration": "400",
+                  "hideDuration": "1000",
+                  "timeOut": "7000",
+                  "extendedTimeOut": "1000",
+                  "showEasing": "swing",
+                  "hideEasing": "linear",
+                  "showMethod": "fadeIn",
+                  "hideMethod": "fadeOut"
+            }
 
         	$('.dataTables-example').DataTable({
                 dom: '<"html5buttons"B>lTfgitp',
@@ -286,15 +319,26 @@
         	{
 				var monto=$("#monto").val();
 				var compras=$("#compras").val();
+                var compras_monto=$("#compras_monto").val();
 
         		if(monto=='' || monto==0)
         		{
-					alert("El monto debe de ser mayor a 0");
+                    toastr.error('El monto debe de ser mayor a 0');
+                    $("#monto").val('');
+                    $("#monto").focus();        
         		}
         		else if(compras=='' || compras==0)
         		{
-					alert("Las compras deben ser mayores a 0");
+                    toastr.error('Las compras deben ser mayores a 0"');
+                    $("#compras").val('');
+                    $("#compras").focus();
         		}
+                else if(compras_monto=='' || compras_monto==0)
+                {
+                    toastr.error('El monto de las compras deben ser mayores a 0"');
+                    $("#compras_monto").val('');
+                    $("#compras_monto").focus();
+                }
         		else
         		{
             		url="rating.php";
@@ -302,7 +346,7 @@
 	        		{
 	        			type: "POST",
 	        			url: url,
-	        			data: {monto:monto,compras:compras}, // serializes the form's elements.
+	        			data: {monto:monto,compras:compras,compras_monto:compras_monto}, // serializes the form's elements.
 	        			success: function(data)
 	        			{
 	        			    swal({
@@ -326,6 +370,7 @@
         		{
             		var monto=result[0].monto;
             		var compras=result[0].compras;
+                    var compras_monto=result[0].compras_monto;
         			
         			if(monto!=0)
         			{
@@ -344,6 +389,15 @@
     				{
     					$("#compras").val('');
     				}
+
+                    if(compras_monto!=0)
+                    {
+                        $("#compras_monto").val(compras_monto);
+                    }
+                    else
+                    {
+                        $("#compras_monto").val('');
+                    }
         		});        		
             });
             

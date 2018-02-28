@@ -205,7 +205,7 @@ class Clientes
 		return $result;
 	}
 	
-	public function GetBuysClients($buy,$ventas)
+	public function GetBuysClients($buy,$buy_mount,$ventas)
 	{
 		$where="";
 		if($ventas)
@@ -215,6 +215,7 @@ class Clientes
 		
 		$sql="SELECT id_cliente,COUNT(*) AS ventas
 				FROM ventas
+				WHERE monto>='$buy_mount'
 				GROUP BY id_cliente
 				HAVING ventas>='$buy'";
 		
@@ -232,6 +233,7 @@ class Clientes
 		
 		$amount=$json[0]->{"monto"};
 		$buy=$json[0]->{"compras"};
+		$buy_mount=$json[0]->{"compras_monto"};
 		
 		$clients_buys="";
 		$clients_star=array();
@@ -262,7 +264,7 @@ class Clientes
 			}
 		}
 		
-		$buys=$this->GetBuysClients($buy,$clients_buys);
+		$buys=$this->GetBuysClients($buy,$buy_mount,$clients_buys);
 		
 		foreach($buys as $b)
 		{
@@ -341,8 +343,9 @@ class Clientes
 	{
 		$monto=$params['monto'];
 		$compras=$params['compras'];
+		$compras_monto=$params['compras_monto'];
 		
-		$json=array(array("monto"=>$monto,"compras"=>$compras));
+		$json=array(array("monto"=>$monto,"compras"=>$compras,"compras_monto"=>$compras_monto));
 		
 		$json=json_encode($json);
 		
