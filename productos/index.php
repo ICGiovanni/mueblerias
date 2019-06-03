@@ -6,7 +6,7 @@
    // include $pathProy.'login/session.php';
     include $pathProy.'/header.php';
     include $pathProy.'/menu.php';
-    
+
     $productos=new Productos();
     $inventarios=new Inventarios();
     $proveedores = new Proveedor();
@@ -90,17 +90,17 @@ cursor: default;
 					<div id="div_search_tools">
 					FILTRAR BUSQUEDA POR
 					<form method="post" action="/" id="form_filtro" enctype="multipart/form-data">
-					
+
 					<table class="table-form" id="table_search">
 					<tr>
 						<td>
 							<div class="form-group" id="data_sku" >
-								SKU<input type="text" id="sku" name="sku" class="form-control"> 
+								SKU<input type="text" id="sku" name="sku" class="form-control">
 							</div>
 						</td>
 						<td>
 							<div class="form-group" id="data_nombre" >
-								Modelo<input type="text" id="nombre" name="nombre" class="form-control"> 
+								Modelo<input type="text" id="nombre" name="nombre" class="form-control">
 							</div>
 						</td>
 						<td>
@@ -110,7 +110,7 @@ cursor: default;
 					            <option value=""></option>
 					            <option value="U">&Uacute;nico</option>
 					            <option value="C">Conjunto</option>
-					            </select> 
+					            </select>
 							</div>
 						</td>
 						<td>
@@ -118,20 +118,20 @@ cursor: default;
 								Color
 								<select data-placeholder="Selecciona un color" class="chosen-select form-control" multiple style="width:200px;" tabindex="4" id="color" name="color[]">
 					            <option value=""></option>
-					            <?php 
-					            					            
+					            <?php
+
 					            $result=$productos->GetColors();
-					            
+
 					            $list="";
 					            foreach($result as $r)
 					            {
 					            	$list.='<option value="'.$r['color_id'].'">'.$r['color_name'].'</option>';
 					            }
-					            
+
 					            echo $list;
-					            
+
 					            ?>
-								</select> 
+								</select>
 							</div>
 						</td>
 						<td>
@@ -139,40 +139,40 @@ cursor: default;
 								Material
 								<select data-placeholder="Selecciona un material" class="chosen-select" multiple style="width:200px;" tabindex="4" id="material" name="material[]">
 					            <option value=""></option>
-					            <?php 
+					            <?php
 					            $result=$productos->GetMaterials();
-					            
+
 					            $list="";
 					            foreach($result as $r)
 					            {
 					            	$list.='<option value="'.$r['material_id'].'">'.$r['material_name'].'</option>';
 					            }
-					            
+
 					            echo $list;
-					            
+
 					            ?>
 								</select>
 							</div>
 						</td>
 					</tr>
 					<tr>
-						
+
 						<td>
 						<div class="form-group" id="data_material">
 								Categoria
 								<select data-placeholder="Selecciona una categoria" class="chosen-select" multiple style="width:200px;" tabindex="4" id="categoria" name="categoria[]">
 	            <option value=""></option>
-	            <?php 
+	            <?php
 	           $result=$productos->GetCategories();
-	            
+
 	            $list="";
 	            foreach($result as $r)
 	            {
 	            	$list.='<option value="'.$r['categoria_id'].'">'.$r['categoria_name'].'</option>';
 	            }
-	            
+
 	            echo $list;
-	            
+
 	            ?>
 				</select>
 							</div>
@@ -183,12 +183,12 @@ cursor: default;
 							</td>
 					</tr>
 					</table>
-					
+
 					</form>
-					
+
 					</div>
-					
-					
+
+
                         <div class="table-responsive">
                     <table class="table table-striped table-bordered table-hover dataTables-example" id="tabla_productos">
                     <thead>
@@ -201,20 +201,20 @@ cursor: default;
                         <th>Categoria</th>
                         <th>Proveedor</th>
                         <th align="center">Inv</th>
-                        <th>Acciones</th>                        
+                        <th>Acciones</th>
                     </tr>
                     </thead>
                     <tbody id="productos">
                     <?php
                     $producto=new Productos();
-                    
+
                     $productos=$producto->GetDataProductsMainJson();
-                    
+
                    	$productos=json_decode($productos);
                    	$tr="";
                     foreach($productos as $p)
                     {
-                    	
+
                     	$producto_id=$p->producto_id;
                     	$nombre=$p->producto_name;
                     	$conjunto=$p->producto_conjunto;
@@ -226,8 +226,10 @@ cursor: default;
                     	$price_public=$p->producto_price_public;
                     	$minimo_stock=$p->minimo_stock;
                     	$maximo_stock=$p->maximo_stock;
+						$imagen=$p->imagen_principal;
+
                     	//info del proveedor
-                    	$infoProveedor = end($proveedores->getProveedor($p->proveedor_id));             	
+                    	$infoProveedor = end($proveedores->getProveedor($p->proveedor_id));
 
 
                     	$color="";
@@ -237,7 +239,7 @@ cursor: default;
 	                    	$color.='<li><a href="" class="href_colores"><i class="fa fa-tag"></i> '.$c->color_name.'</a></li>';
 	                    	$color.='</ul>';
                     	}
-                    	
+
                     	$material="";
                     	foreach($p->materiales as $m)
                     	{
@@ -245,36 +247,39 @@ cursor: default;
 	                    	$material.='<li><a href="" class="href_colores"><i class="fa fa-tag"></i> '.$m->material_name.'</a></li>';
 	                    	$material.='</ul>';
                     	}
-                    	
+
                     	$categorias=$producto->GetProductCategory($producto_id);
-                    	
+
                     	$categoria='<ul style="padding: 0" class="tag-list">';
                     	foreach($categorias as $c)
                     	{
                     		$categoria.='<li><a href="" class="href_colores"><i class="fa fa-tag"></i> '.$c.'</a></li>';
                     	}
                     	$categoria.='</ul>';
-                    	
-                    	
+
+
                     	$tr.='<tr class="gradeX">';
-                    	$tr.='<td align="center">'.$sku.'</td>';
+                    	$tr.='<td align="center">';
+						$tr.='<img src="'.$imagen.'" height="50" width="50"><br>';
+						$tr.=$sku;
+						$tr.='</td>';
                     	$tr.='<td>'.$nombre.'</td>';
                     	$tr.='<td align="center">'.$tipo.'</td>';
                     	$tr.='<td>'.$color.'</td>';
                     	$tr.='<td>'.$material.'</td>';
                     	$tr.='<td>'.$categoria.'</td>';
                         $tr.='<td>'.$infoProveedor['proveedor_nombre'].'</td>';
-                    	
+
                     	if($tipo_abbrev=='P')
                     	{
-                    		$stock=$inventarios->GetStockVariation($producto_id);                    		
+                    		$stock=$inventarios->GetStockVariation($producto_id);
                     	}
-                    	else if($tipo_abbrev=='U') 
+                    	else if($tipo_abbrev=='U')
                     	{
                     		$stock=$inventarios->GetStockbySucursal($producto_id);
                     	}
-                    	
-                    	
+
+
                     	if($stock==$minimo_stock)
                     	{
                     		$background="#f8ac59";
@@ -291,7 +296,7 @@ cursor: default;
                     	{
                     		$background="#1ab394";
                     	}
-                    	                    	
+
                     	if($stock>0 && $tipo_abbrev!='P')
                     	{
                     		$tr.='<td align="center" bgcolor="'.$background.'"><a href="#" class="link_modal" data-toggle="modal" data-target="#modal_view" data-id="'.$producto_id.'"  id="open_modal" style="color:white;">'.$stock.'</a></td>';
@@ -310,7 +315,7 @@ cursor: default;
                     		$tr.='<td align="center" bgcolor="'.$background.'" style="color:white;">'.$stock.'</td>';
                     	}
                     	$tr.='<td>';
-                    	
+
                     	if(isset($p->variaciones))
                     	{
                     		if(count($p->variaciones))
@@ -320,12 +325,12 @@ cursor: default;
                     	}
                     	$tr.='<div class="infont col-md-1 col-sm-1"><a href="editar_producto.php?id='.$producto_id.'" title="Editar Producto"><i class="fa fa-pencil"></i></a></div><div class="infont col-md-1 col-sm-1"><a href="#" onClick="borrar_producto('.$producto_id.');" title="Borrar Producto"><i class="fa fa-trash-o"></i></a></div></td>';
                     	$tr.='</tr>';
-                    	
+
                     }
-                    
-                    echo $tr;      
+
+                    echo $tr;
                     ?>
-                   
+
                     </tbody>
                     <tfoot>
                     <tr>
@@ -337,7 +342,7 @@ cursor: default;
                         <th>Categoria</th>
                         <th>Proveedor</th>
                         <th>Inv</th>
-                        <th>Acciones</th>                        
+                        <th>Acciones</th>
                     </tr>
                     </tfoot>
                     </table>
@@ -348,7 +353,7 @@ cursor: default;
             </div>
             </div>
 	</div>
-	
+
 	<div class="modal inmodal fade" id="modal_view" tabindex="-1" role="dialog"  aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -356,11 +361,11 @@ cursor: default;
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Cerrar</span></button>
                 <h3 class="modal-title">Stock por Sucursal</h3>
             </div>
-            <div class="modal-body" style="padding-bottom: 0px !important; margin-bottom: -15px !important">    
+            <div class="modal-body" style="padding-bottom: 0px !important; margin-bottom: -15px !important">
                <div class="form-group">
-	           	
+
 	           	<div class="col-sm-12" >
-	           	           	
+
 	           	<table class="footable table table-bordered dataTables-example toggle-square">
 	           	<thead>
 					<tr>
@@ -369,11 +374,11 @@ cursor: default;
 					</tr>
 				</thead>
 	           	<tbody id="products_table_list">
-	           	
+
 	           	</tbody>
 	           	</table>
-	           
-    
+
+
     </div>
                </div>
             </div>
@@ -391,11 +396,11 @@ cursor: default;
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Cerrar</span></button>
                 <h3 class="modal-title">Stock por Sucursal</h3>
             </div>
-            <div class="modal-body" style="padding-bottom: 0px !important; margin-bottom: -15px !important">    
+            <div class="modal-body" style="padding-bottom: 0px !important; margin-bottom: -15px !important">
                <div class="form-group">
-	           	
+
 	           	<div class="col-sm-12" >
-	           	           	
+
 	           	<table class="table table-striped">
 	           	<thead>
 					<tr>
@@ -404,11 +409,11 @@ cursor: default;
 					</tr>
 				</thead>
 	           	<tbody id="products_table_list">
-	           	
+
 	           	</tbody>
 	           	</table>
-	           
-    
+
+
     </div>
                </div>
             </div>
@@ -441,11 +446,11 @@ cursor: default;
 					</tr>
 				</thead>
 	           	<tbody id="products_variable">
-	           	
+
 	           	</tbody>
 	           	</table>
 		   	</div>
-              
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger btn-xs" data-dismiss="modal">Cerrar</button>
@@ -476,11 +481,11 @@ cursor: default;
 					</tr>
 				</thead>
 	           	<tbody id="products_variable_stock">
-	           	
+
 	           	</tbody>
 	           	</table>
 		   	</div>
-              
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger btn-xs" data-dismiss="modal">Cerrar</button>
@@ -491,9 +496,9 @@ cursor: default;
 
 
 	<script src="<?=$raizProy?>js/plugins/footable/footable.all.min.js"></script>
-	
+
     <script src="<?php echo $raizProy?>js/plugins/dataTables/datatables.min.js"></script>
-    
+
 	<script src="<?php echo $raizProy?>js/plugins/chosen/chosen.jquery.js"></script>
 
     <!-- Page-Level Scripts -->
@@ -501,7 +506,7 @@ cursor: default;
         $(document).ready(function(){
 
 
-        	
+
         	var table=$('#tabla_productos').DataTable({
                 dom: '<"html5buttons"B>lTfgitp',
                 buttons: [],
@@ -514,7 +519,7 @@ cursor: default;
             $("#filtar").click(function()
 			{
             	var url="product_search.php";
-   			 
+
     			$.ajax(
     			{
     		    	type: "POST",
@@ -524,7 +529,7 @@ cursor: default;
     		        {
     		        	var filas="";
     		        	table.destroy();
-    		        	
+
     		        	$("#productos tr").remove();
         		        $.each( data, function( key, item )
             	    	{
@@ -556,31 +561,31 @@ cursor: default;
 							}
 			    	    	filas+='</ul>';
 			    	    	filas+='</td>';
-							
+
 							filas+='<td align="center">'+item.stock+'</td>';
 							filas+='<td><div class="infont col-md-1 col-sm-1"><a href="editar_producto.php?id='+item.producto_id+'" title="Editar Producto"><i class="fa fa-pencil"></i></a></div><div class="infont col-md-1 col-sm-1"><a href="#" onClick="borrar_producto('+item.producto_id+');" title="Borrar Producto"><i class="fa fa-trash-o"></i></a></div></td>';
     		        		filas+='</tr>';
             	    	});
         		        $("#productos").append(filas);
-    		        	
+
     		        	setTimeout(function(){
     		        		table=$('#tabla_productos').DataTable({
 	    		                dom: '<"html5buttons"B>lTfgitp',
 	    		                buttons: [],"language": {
 	    		                    "url": "../js/plugins/dataTables/Spanish.json"
 	    		            	}
-	
+
 	    		            });
     		        	}, 1000);
     				}
-    			});            		
+    			});
             });
-	
+
             $("a.link_modal").click(function()
         	{
         		var id=$(this).data("id");
         		var action=$(this).data("action");
-        			
+
         		$.getJSON( "../inventarios/inventario.php?t=is&id="+id, function( result )
         		{
         			var table="";
@@ -593,13 +598,13 @@ cursor: default;
         				tr+='<label>'+field.stock+'</label>';
         				tr+='</td>';
         				tr+='</tr>';
-        						
+
 					});
 
         			$("#products_table_list").html(tr);
         		});
-			});	
-            
+			});
+
 
         	$("#color").chosen();
         	$("#tipo").chosen();
@@ -607,12 +612,12 @@ cursor: default;
         	$("#categoria").chosen();
 
         	$("a.modal_variaciones").click(function()
-        	{	
+        	{
             	var root=$(this).data("root");
         		var json=$(this).data("json");
-				
+
         		$("#title_variations").html(root);
-        		
+
 				var tr="";
         		$.each(json, function(i, field)
                 {
@@ -623,19 +628,19 @@ cursor: default;
 					tr+='<td>'+field.color_name+'</td>';
 					tr+='<td>'+field.material_name+'</td>';
 					tr+='<td style="text-align:center;">';
-					
+
 					tr+='<label>'+field.stock+'</label>';
-					
+
 					tr+='</td>';
 
-					
+
 					tr+='<td style="display: none;">';
 					var stock_sucursal="<b>Cantidad por Sucursal:</b><br>";
 					var bandera=false;
 					$.each(field.stock_sucursal, function(k,j)
 			        {
 						stock_sucursal+=j.sucursal_name+' <i class="fa fa-long-arrow-right"></i> '+j.stock;
-						bandera=true;	
+						bandera=true;
 			        });
 
 			        if(!bandera)
@@ -645,13 +650,13 @@ cursor: default;
 
 			        tr+=stock_sucursal;
 					tr+='</td>';
-					
+
 					tr+='<td>'+'<div class="infont col-md-1 col-sm-1"><a href="editar_producto.php?id='+producto_id+'" title="Editar Producto"><i class="fa fa-pencil"></i></a></div><div class="infont col-md-1 col-sm-1"><a href="#" onClick="borrar_producto('+producto_id+');" title="Borrar Producto"><i class="fa fa-trash-o"></i></a></div>'+'</td>';
 					tr+='</tr>';
                 });
 
         		$("#products_variable").html(tr);
-        		
+
         		setTimeout(function(){
         		$('#tabla_variaciones').footable({
         			"paging": {
@@ -668,12 +673,12 @@ cursor: default;
 
 
         	$("a.modal_variaciones_stock").click(function()
-                	{	
+                	{
                     	var root=$(this).data("root");
                 		var json=$(this).data("json");
-        				
+
                 		$("#title_variations_stock").html(root);
-                		
+
         				var tr="";
                 		$.each(json, function(i, field)
                         {
@@ -684,19 +689,19 @@ cursor: default;
         					tr+='<td>'+field.color_name+'</td>';
         					tr+='<td>'+field.material_name+'</td>';
         					tr+='<td style="text-align:center;">';
-        					
+
         					tr+='<label>'+field.stock+'</label>';
-        					
+
         					tr+='</td>';
 
-        					
+
         					tr+='<td style="display: none;">';
         					var stock_sucursal="<b>Cantidad por Sucursal:</b><br>";
         					var bandera=false;
         					$.each(field.stock_sucursal, function(k,j)
         			        {
         						stock_sucursal+=j.sucursal_name+' <i class="fa fa-long-arrow-right"></i> '+j.stock;
-        						bandera=true;	
+        						bandera=true;
         			        });
 
         			        if(!bandera)
@@ -706,13 +711,13 @@ cursor: default;
 
         			        tr+=stock_sucursal;
         					tr+='</td>';
-        					
+
         					tr+='<td>'+'<div class="infont col-md-1 col-sm-1"><a href="editar_producto.php?id='+producto_id+'" title="Editar Producto"><i class="fa fa-pencil"></i></a></div><div class="infont col-md-1 col-sm-1"><a href="#" onClick="borrar_producto('+producto_id+');" title="Borrar Producto"><i class="fa fa-trash-o"></i></a></div>'+'</td>';
         					tr+='</tr>';
                         });
 
                 		$("#products_variable_stock").html(tr);
-                		
+
                 		setTimeout(function(){
                 		$('#tabla_variaciones_stock').footable({
                 			"paging": {
@@ -726,7 +731,7 @@ cursor: default;
                 			}
                 		});},500);
                 	});
-            
+
         });
 
         function borrar_producto(producto_id)
@@ -735,7 +740,7 @@ cursor: default;
         	var r=confirm("\u00BFDesea continuar?");
 
         	if(r==true)
-        	{			 
+        	{
 				$.ajax(
 				{
 			    	type: "POST",

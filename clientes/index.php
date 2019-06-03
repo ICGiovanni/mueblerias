@@ -4,7 +4,7 @@
    // include $pathProy.'login/session.php';
     include $pathProy.'/header.php';
     include $pathProy.'/menu.php';
-    
+
 ?>
 
 	<link rel="stylesheet" type="text/css" href="../css/clientes.css">
@@ -26,10 +26,10 @@
                 <a href="./nuevo_cliente.php" class="btn btn-primary btn-xs">+ Nuevo Cliente</a>
                 <!--<a href="#" id="rating" data-toggle="modal" data-target="#ratingModal" class="btn btn-success btn-xs">Configurar Rating</a>-->
             </div>
-            
+
         </div>
     </div>
-    
+
 
     <div class="wrapper wrapper-content animated fadeInRight">
             <div class="row">
@@ -37,7 +37,7 @@
                 <div class="ibox float-e-margins">
                     <div class="ibox-title">
                         <div class="ibox-tools">
-                             
+
                             <a class="dropdown-toggle btn btn-success btn-xs" style="color:#FFFFFF" id="rating" data-toggle="modal" data-target="#ratingModal" href="#">
                                 Configurar Rating <i class="fa fa-wrench"></i>
                             </a>
@@ -63,13 +63,13 @@
                         <th align="center">E-mail</th>
                         <th align="center">Rating</th>
                         <th align="center">Acciones</th>
-                        
+
                     </tr>
                     </thead>
                     <tbody id="clientes">
                     <?php
                     $clientes=new Clientes();
-                    
+
                    	$json=file_get_contents("json/lista_clientes.json");
                     $json=json_decode($json);
                     $tr="";
@@ -80,12 +80,12 @@
                     	$apellidoP=$d->apellidoP;
                     	$apellidoM=$d->apellidoM;
                     	$rating=$d->rating;
-                    	                    	
+
                     	$email="";
                     	$datos_fiscales="";
                     	$direccion="";
                     	$telefono='';
-                    	
+
                     	$i=0;
                     	foreach($clientes->GetPhonesClient($id_cliente) as $p)
                     	{
@@ -94,12 +94,12 @@
                     			$telefono.='<br>';
                     		}
                     		$telefono.='<b>'.$p['type'].':</b>'.$p['number'];
-                    		
+
                     		$i++;
                     	}
-                    	
+
                     	$i=0;
-                    	
+
                     	foreach($clientes->GetEmailsClient($id_cliente) as $e)
                     	{
                     		if($i>0)
@@ -107,18 +107,18 @@
                     			$email.='<br>';
                     		}
                     		$email.=$e['email'];
-                    		
+
                     		$i++;
                     	}
-                    	
-                    	
+
+
                     	$cliente='<b>'.$nombre.' '.$apellidoP.' '.$apellidoM.'</b>';
-                    	
+
                     	$datos="";
                     	$content="";
                     	$content2="";
                     	$direcciones=$clientes->GetDataCliente($id_cliente);
-                    	
+
                     	foreach($direcciones as $d)
                     	{
                     		$tipo=$d['cliente_direccion_tipo_desc'];
@@ -133,10 +133,10 @@
                     		$estado=$d['estado'];
                     		$municipio=$d['cliente_direccion_municipio'];
                     		$referencia=$d['cliente_direccion_entre_calles'];
-                    	
-                    		                    	
+
+
                     		$datos='';
-                    	
+
                     		if($tipo=='envio')
                     		{
                     			$tipoR='<div id="addres_tipo_'.$i.'">Envio</div>';
@@ -147,36 +147,38 @@
                     			$tipoR='<div id="addres_tipo'.$i.'">Facturación</div>';
                     			$datos.="<strong>RFC: </strong>".$rfc."<br><strong>Razón Social: </strong>".$razonS."<br>";
                     		}
-                    	
+
                     		$datos.='<strong>Calle: </strong>'.$calle.' <strong>No. Ext: </strong>'.$noExt;
-                    	
+
                     		if($noInt)
                     		{
-                    			$datos.='<strong>No. Int.: </strong>'.$noInt.'<br>';
+                    			$datos.='<strong>No. Int.: </strong>'.$noInt;
                     		}
-                    	
-                    		$datos.='<strong>Colonia: </strong>'.$colonia.' <strong>C.P. </strong>'.$codigoP.'<br><strong>Municipio o Delegación: </strong> '.$municipio.' <strong>Estado: </strong>'.$estado.'<br>';
-                    	
+
+							$datos.='<br>';
+
+                    		$datos.='<strong>Colonia: </strong>'.$colonia.'<br><strong>C.P. </strong>'.$codigoP.'<br><strong>Municipio o Delegación: </strong> '.$municipio.'<br><strong>Estado: </strong>'.$estado.'<br>';
+
                     		if($referencia)
                     		{
                     			$datos.='<strong>Referencia: </strong>'.$referencia;
                     		}
-                    	
+
                     		if($tipo=='envio')
-                    		{                    			
+                    		{
                     			$content.='<div id="addres_div_'.$i.'">'.$datos.'</div>';
                     		}
                     		else
                     		{
-                    			$content2.='<div id="addres_div_'.$i.'">'.$datos.'</div>';	
+                    			$content2.='<div id="addres_div_'.$i.'">'.$datos.'</div>';
                     		}
-                    		
-                    		
+
+
                     		$i++;
                     	}
-                    	
+
                     	$datos_cliente="";
-                    	                    	
+
                     	$tr.='<tr class="gradeX">';
                     	$tr.='<td align="center">'.$id_cliente.'</td>';
                     	$tr.='<td>'.$cliente.'</td>';
@@ -184,7 +186,7 @@
                     	$tr.='<td>'.$content.'</td>';
                     	$tr.='<td>'.$telefono.'</td>';
                     	$tr.='<td align="center">'.$email.'</td>';
-                    	
+
                     	if($rating)
                     	{
                     		$s=0;
@@ -199,21 +201,21 @@
                     		{
                     			$stars.='<i class="fa fa-star-o"></i>';
                     		}
-                    		
+
                     		$tr.='<td align="center">'.$stars.'<span class="numero">'.$rating.'</span></td>';
                     	}
                     	else
                     	{
                     		$tr.='<td align="center"><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><span class="numero">'.$rating.'</span></td>';
                     	}
-                    	
+
                     	$tr.='<td align="center"><div class="infont col-md-1 col-sm-1"><a href="editar_cliente.php?id='.$id_cliente.'" title="Editar Cliente"><i class="fa fa-pencil"></i></a></div><div class="infont col-md-1 col-sm-1"><a href="#" onClick="borrar_cliente('.$id_cliente.');" title="Borrar Cliente"><i class="fa fa-trash-o"></i></a></div></td>';
                     	$tr.='</tr>';
-                    	
+
                     }
-                    echo $tr;                    
+                    echo $tr;
                     ?>
-                   
+
                     </tbody>
                     <tfoot>
                     <tr>
@@ -235,11 +237,11 @@
             </div>
             </div>
 	</div>
-	
-	
+
+
 	<div class="modal fade" id="ratingModal" role="dialog">
     <div class="modal-dialog">
-    
+
       <!-- Modal content-->
       <div class="modal-content">
         <div class="modal-header">
@@ -260,7 +262,7 @@
         </div>
         <div class="row">
             <h4 class="modal-title">Criterio por Compra</h4><br>
-            <div class="form-group">   
+            <div class="form-group">
               <label class="col-sm-2 control-label">Compras</label>
     		  <div class="col-sm-4" ><input type="text" class="form-control" id="compras" name="compras" onkeypress="return validateNumber(event)" onkeyup="run(this)"></div>
               <label class="col-sm-2 control-label">Monto Minimo</label>
@@ -276,10 +278,10 @@
           <button type="button" class="btn btn-primary btn-xs" id="guardarRating">Guardar</button>
         </div>
       </div>
-      
+
     </div>
   </div>
-	
+
     <script src="<?php echo $raizProy?>js/plugins/dataTables/datatables.min.js"></script>
     <script src="<?php echo $raizProy?>js/plugins/sweetalert/sweetalert.min.js"></script>
     <script src="<?php echo $raizProy?>js/plugins/toastr/toastr.min.js"></script>
@@ -325,7 +327,7 @@
         		{
                     toastr.error('El monto debe de ser mayor a 0');
                     $("#monto").val('');
-                    $("#monto").focus();        
+                    $("#monto").focus();
         		}
         		else if(compras=='' || compras==0)
         		{
@@ -365,13 +367,13 @@
             {
         		$("#monto").focus();
         		var n = Date.now();
-                
+
         		$.getJSON("json/rating.json?"+n,function(result)
         		{
             		var monto=result[0].monto;
             		var compras=result[0].compras;
                     var compras_monto=result[0].compras_monto;
-        			
+
         			if(monto!=0)
         			{
     					$("#monto").val(monto);
@@ -398,9 +400,9 @@
                     {
                         $("#compras_monto").val('');
                     }
-        		});        		
+        		});
             });
-            
+
         });
 
         function borrar_cliente(id_cliente)
@@ -409,7 +411,7 @@
         	var r=confirm("\u00BFDesea continuar?");
 
         	if(r==true)
-        	{			 
+        	{
 				$.ajax(
 				{
 			    	type: "POST",
@@ -425,14 +427,14 @@
         	}
         }
 
-        
+
 
         function validateCantidad(evt)
     	{
     		evt = (evt) ? evt : window.event;
     	    var charCode = (evt.which) ? evt.which : evt.keyCode;
-    		
-    		
+
+
     	    if ((charCode > 31 && (charCode < 48 || charCode > 57) && charCode!=46))
     		{
     	        return false;
